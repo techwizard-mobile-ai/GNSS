@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">VSP Tracker</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">info@vsptracker.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+
+    <string name="home">Home</string>
+    <string name="settings">Settings</string>
+    <string name="report_error">Report Error</string>
+    <string name="login">Login</string>
+    <string name="logout">Logout</string>
+
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="hour_meter_start">Hour Meter Start</string>
+    <string name="continuetext">Continue</string>
+    <string name="load">Load</string>
+    <string name="stop_machine">Stop Machine</string>
+    <string name="hour_meter_finish">Hour Meter Finish</string>
+    <string name="save">Save</string>
+    <string name="machine_type">Machine Type</string>
+    <string name="machine_number">Machine Number</string>
+    <string name="unload">Unload</string>
+
+
+    <string-array name="theme_array">
+        <item>Default-Theme</item>
+        <item>Night-Mode</item>
+    </string-array>
+</resources>

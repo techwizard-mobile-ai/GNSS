@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/login_main_layout"
+        android:background="@color/white"
+>
+    <LinearLayout
+            style="@style/default_linearlayout"
+            android:layout_gravity="center_horizontal"
+            tools:context=".activities.LoginActivity">
+
+        <ImageView
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:id="@+id/signin_image"
+                android:layout_width="@dimen/_220sdp"
+                android:layout_height="@dimen/_180sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
+        />
+
+        <android.support.v7.widget.CardView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:layout_margin="@dimen/_10sdp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                card_view:cardCornerRadius="5dp"
+                card_view:contentPadding="5dp"
+                card_view:cardElevation="6dp"
+                card_view:cardMaxElevation="5dp"
+        >
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    android:layout_marginEnd="@dimen/_5sdp"
+                    android:gravity="center_horizontal"
+                    android:background="@color/cardview_light"
+            >
+                <EditText
+                        android:id="@+id/signin_email"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginEnd="0dp"
+                        android:textColor="@color/black"
+                        style="@style/et_background"
+                        android:inputType="textEmailAddress"
+                        android:hint="@string/email"
+                />
+
+                <EditText
+                        android:inputType="textPassword"
+                        android:id="@+id/signin_pass"
+                        android:layout_marginStart="0dp"
+                        android:textColor="@color/black"
+                        android:layout_marginEnd="0dp"
+                        style="@style/et_background"
+                        android:hint="@string/password"
+                />
+
+                <TextView
+                        android:id="@+id/signin_forgot_pass"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/forgot_password"
+                        android:padding="@dimen/_5sdp"
+                        android:layout_marginTop="@dimen/_30sdp"
+                        android:textSize="@dimen/_12sdp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        style="@style/avenirnext_fontstyle"
+                        android:layout_marginBottom="@dimen/_30sdp"
+                />
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+
+        <ProgressBar
+                android:id="@+id/signin_pb"
+                android:layout_gravity="center_horizontal"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:visibility="gone"
+                android:indeterminate="true"
+                android:indeterminateTintMode="src_atop"
+                android:indeterminateTint="@color/colorPrimary"
+                android:layout_height="wrap_content"/>
+        <TextView
+                android:id="@+id/signin_signin"
+                style="@style/signin_btn"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:text="@string/login"
+        />
+
+
+        <TextView
+                android:id="@+id/signin_signup"
+                android:layout_marginTop="@dimen/_30sdp"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Don't have an Account? Sign Up"
+                android:textSize="@dimen/_16sdp"
+                android:padding="@dimen/_5sdp"
+                style="@style/avenirnext_fontstyle"
+                android:layout_marginBottom="@dimen/_20sdp"
+        />
+    </LinearLayout>
+</ScrollView>

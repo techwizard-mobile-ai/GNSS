@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+                android:id="@+id/nav_home"
+                android:icon="@drawable/ic_home"
+                android:title="@string/home"/>
+        <item
+                android:id="@+id/nav_settings"
+                android:visible="false"
+                android:icon="@drawable/ic_settings"
+                android:title="@string/settings"/>
+        <item
+                android:id="@+id/nav_stop_machine"
+                android:icon="@drawable/ic_stop_machine"
+                android:title="@string/stop_machine"/>
+        <item
+                android:id="@+id/nav_change_machine"
+                android:icon="@drawable/ic_change_machine"
+                android:title="Change Machine"/>
+        <item
+                android:id="@+id/nav_wait"
+                android:icon="@drawable/ic_wait"
+                android:title="Delay"/>
+        <item
+                android:id="@+id/nav_night_mode"
+                android:icon="@drawable/ic_night_mode"
+                android:title="Night Mode"/>
+
+        <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_logout"
+                android:title="@string/logout"/>
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                    android:id="@+id/nav_email"
+                    android:icon="@drawable/ic_email"
+                    android:title="@string/report_error"/>
+
+        </menu>
+    </item>
+
+</menu>

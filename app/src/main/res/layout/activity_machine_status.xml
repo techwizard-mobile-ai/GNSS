@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".activities.MachineStatusActivity">
+
+
+    <TextView style="@style/activity_title"
+              android:text="Machine Status"
+    />
+    <LinearLayout style="@style/default_linearlayout">
+
+        <LinearLayout
+                android:id="@+id/machine_start_layout"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                    style="@style/home_tv"
+                    android:text="Machine Stopped Reason"
+            />
+            <TextView
+                    android:id="@+id/mstatus_stopped_reason"
+                    style="@style/tv_background"
+                    android:text="Machine Stopped Reason"
+            />
+
+            <Button
+                    android:id="@+id/mstatus_start"
+                    style="@style/next_button"
+                    android:layout_marginTop="@dimen/_50sdp"
+                    android:text="Start Machine"
+            />
+        </LinearLayout>
+        <LinearLayout
+                android:id="@+id/machine_stop_layout"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                    style="@style/home_tv"
+                    android:text="Machine Stop Reason"
+            />
+            <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/mstop_reason_spinner"
+                    style="@style/home_spinner"
+            />
+
+            <Button
+                    android:id="@+id/mstatus_stop"
+                    style="@style/next_button"
+                    android:layout_marginTop="@dimen/_50sdp"
+                    android:text="Stop Machine"
+            />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>
