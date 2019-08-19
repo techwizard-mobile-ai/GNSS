@@ -6,29 +6,34 @@ import android.support.design.widget.NavigationView
 import android.view.View
 import android.widget.FrameLayout
 import com.lysaan.malik.vsptracker.BaseActivity
-import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.R
 import kotlinx.android.synthetic.main.activity_hour_meter_stop.*
 
 class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
 
     private val TAG = this::class.java.simpleName
-    private lateinit var myHelper: MyHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
 
         val contentFrameLayout = findViewById(R.id.base_content_frame) as FrameLayout
         layoutInflater.inflate(R.layout.activity_hour_meter_stop, contentFrameLayout)
         val navigationView = findViewById(R.id.base_nav_view) as NavigationView
         navigationView.menu.getItem(0).isChecked = true
 
-        myHelper = MyHelper(TAG, this)
+        helper.setTag(TAG)
 
         sfinish_minus.setOnClickListener(this)
         sfinish_plus.setOnClickListener(this)
         sfinish_logout.setOnClickListener(this)
+
+        helper.log("getMachineTotalTime:${helper.getMachineTotalTime()}")
+        helper.log("getMachineStartTime:${helper.getMachineStartTime()}")
+
+//        val meterONTime = helper.getMachineTotalTime() + helper.getMachineStartTime()
+//        sfinish_reading.setText(helper.getRoundedDecimal(meterONTime/60.0).toString())
+
+        sfinish_reading.setText(helper.getMeterTimeForFinish())
 
     }
 
@@ -36,28 +41,36 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
         when(view!!.id){
             R.id.sfinish_minus ->{
                 val value = sfinish_reading.text.toString().toFloat()
-                myHelper.log("beforeValue:$value")
                 if(value >0){
                     val newValue = value - 0.1
-                val number3digits:Double = Math.round(newValue* 1000.0) / 1000.0
-                val number2digits:Double = Math.round(number3digits * 100.0) / 100.0
-                val solution:Double = Math.round(number2digits * 10.0) / 10.0
-                myHelper.log("afterValue:$newValue")
-                    sfinish_reading.setText(solution.toString())
+                    sfinish_reading.setText(helper.getRoundedDecimal(newValue).toString())
                 }
-
             }
+
             R.id.sfinish_plus -> {
                 val value = sfinish_reading.text.toString().toFloat()
-                myHelper.log("value:$value")
                 val newValue = value + 0.1
-                val number3digits:Double = Math.round(newValue * 1000.0) / 1000.0
-                val number2digits:Double = Math.round(number3digits * 100.0) / 100.0
-                val solution:Double = Math.round(number2digits * 10.0) / 10.0
-                myHelper.log("afterValue:$newValue")
-                sfinish_reading.setText(solution.toString())
+                sfinish_reading.setText(helper.getRoundedDecimal(newValue).toString())
             }
+
             R.id.sfinish_logout -> {
+                if(!helper.getMeterTimeForFinish().equals(sfinish_reading.text.toString(), true)){
+                    val meter = helper.getMeter()
+                    meter.isMachineTimeCustom = true
+                    helper.setMeter(meter)
+                    helper.log("Custom Time : True, Original reading:${helper.getMeterTimeForFinish()}, New Reading: ${sfinish_reading.text}")
+                }else{
+                    val meter = helper.getMeter()
+                    meter.isMachineTimeCustom = false
+                    helper.setMeter(meter)
+                    helper.log("Custom Time : False, Original reading:${helper.getMeterTimeForFinish()}, New Reading: ${sfinish_reading.text}")
+                }
+                val value = sfinish_reading.text.toString().toDouble()
+                val minutes = value * 60
+                val newMinutes = helper.getRoundedInt(minutes)
+                helper.log("Minutes: $newMinutes")
+                helper.setMachineTotalTime(newMinutes)
+
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
                 finishAffinity()

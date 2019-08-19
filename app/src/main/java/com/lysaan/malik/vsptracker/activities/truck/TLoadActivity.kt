@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.FrameLayout
 import com.lysaan.malik.vsptracker.BaseActivity
-import com.lysaan.malik.vsptracker.MyHelper
+import com.lysaan.malik.vsptracker.Helper
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.adapters.SelectLocationAdapter
 import com.lysaan.malik.vsptracker.adapters.SelectStateAdapter
@@ -24,7 +24,6 @@ class TLoadActivity : BaseActivity(), View.OnClickListener {
     private var selectedMachine = Material(0, "Select Machine")
 
     private val TAG = this::class.java.simpleName
-    private lateinit var myHelper: MyHelper
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,40 +34,40 @@ class TLoadActivity : BaseActivity(), View.OnClickListener {
         val navigationView = findViewById(R.id.base_nav_view) as NavigationView
         navigationView.menu.getItem(0).isChecked = true
 
-        myHelper = MyHelper(TAG, this)
+        helper = Helper(TAG, this)
 
         var bundle :Bundle ?=intent.extras
         if(bundle != null){
             isRepeatJourney = bundle!!.getBoolean("repeat")
-            myHelper.log("isRepeat:$isRepeatJourney")
+            helper.log("isRepeat:$isRepeatJourney")
         }
 
         selectMachine()
         selectMaterial()
         selectLocation()
 
-        myHelper.hideKeybaordOnClick(tload_machine_spinner)
-        myHelper.hideKeybaordOnClick(tload_main_layout)
-        myHelper.hideKeybaordOnClick(tload_material_spinner)
-        myHelper.hideKeybaordOnClick(tload_location_spinner)
+        helper.hideKeybaordOnClick(tload_machine_spinner)
+        helper.hideKeybaordOnClick(tload_main_layout)
+        helper.hideKeybaordOnClick(tload_material_spinner)
+        helper.hideKeybaordOnClick(tload_location_spinner)
 
 //        tload_machine_spinner.setOnTouchListener(View.OnTouchListener { v, event ->
-//            myHelper.hideKeyboard(tload_machine_spinner)
+//            helper.hideKeyboard(tload_machine_spinner)
 //            false
 //        })
 
 //        tload_main_layout.setOnTouchListener(View.OnTouchListener { v, event ->
-//            myHelper.hideKeyboard(tload_main_layout)
+//            helper.hideKeyboard(tload_main_layout)
 //            false
 //        })
 //
 //        tload_material_spinner.setOnTouchListener(View.OnTouchListener { v, event ->
-//            myHelper.hideKeyboard(tload_material_spinner)
+//            helper.hideKeyboard(tload_material_spinner)
 //            false
 //        })
 //
 //        tload_location_spinner.setOnTouchListener(View.OnTouchListener { v, event ->
-//            myHelper.hideKeyboard(tload_location_spinner)
+//            helper.hideKeyboard(tload_location_spinner)
 //            false
 //        })
 
@@ -83,14 +82,14 @@ class TLoadActivity : BaseActivity(), View.OnClickListener {
                 val materialWeight = tload_weight.text.toString()
 
                 if(selectedMachine.id == 0){
-                    myHelper.toast("Please Select Machine")
+                    helper.toast("Please Select Machine")
                 }else if(selectedMaterial.id == 0){
-                    myHelper.toast("Please Select Material")
+                    helper.toast("Please Select Material")
                 }else if (selectedLocation.id == 0){
-                    myHelper.toast("Please Select Location")
+                    helper.toast("Please Select Location")
                 }
 //                else if (materialWeight.isNullOrBlank()){
-//                    myHelper.toast("Please Enter Material Weight")
+//                    helper.toast("Please Enter Material Weight")
 //                }
                 else {
                     val intent = Intent (this, THomeActivity::class.java)
@@ -104,7 +103,7 @@ class TLoadActivity : BaseActivity(), View.OnClickListener {
 
 
     private fun selectMachine() {
-        var materials = myHelper.getMachines()
+        var materials = helper.getMachines()
         val selectMaterialAdapter = SelectStateAdapter(this@TLoadActivity, materials)
 
         tload_machine_spinner!!.setAdapter(selectMaterialAdapter)
@@ -140,7 +139,7 @@ class TLoadActivity : BaseActivity(), View.OnClickListener {
 
 
     private fun selectMaterial() {
-        var materials = myHelper.getMaterials()
+        var materials = helper.getMaterials()
         val selectMaterialAdapter = SelectStateAdapter(this@TLoadActivity, materials)
 
         tload_material_spinner!!.setAdapter(selectMaterialAdapter)
@@ -174,12 +173,12 @@ class TLoadActivity : BaseActivity(), View.OnClickListener {
         }
     }
     private fun selectLocation() {
-        var locations = myHelper.getLocations()
+        var locations = helper.getLocations()
         val locationAdapter = SelectLocationAdapter(this@TLoadActivity, locations)
         tload_location_spinner!!.setAdapter(locationAdapter)
 
         if(isRepeatJourney){
-            myHelper.log("inSelectLocation")
+            helper.log("inSelectLocation")
             tload_location_spinner.setSelection(1)
         }else{
             tload_location_spinner.setSelection(0, false)

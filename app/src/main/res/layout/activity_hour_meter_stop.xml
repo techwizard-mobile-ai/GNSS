@@ -2,7 +2,6 @@
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:background="@color/white"
         android:orientation="vertical"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
@@ -39,7 +38,7 @@
                 style="@style/tv_background"
                 android:text="1"
                 android:layout_width="wrap_content"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 android:hint="@string/hour_meter_finish"
         />
         <ImageView

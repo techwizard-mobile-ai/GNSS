@@ -3,23 +3,33 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activities.excavator.ELocation1Activity">
+        android:orientation="vertical"
+        tools:context=".activities.common.LMachine1Activity">
 
-    <TextView style="@style/activity_title"
-              android:text="Select Location"
+    <TextView
+            android:id="@+id/lm_title"
+            style="@style/activity_title"
+            android:text="Select Loading Machine"
     />
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/gridview"
+              android:id="@+id/tlm_gridview"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:columnWidth="@dimen/_120sdp"
               android:numColumns="auto_fit"
-              android:verticalSpacing="10dp"
+              android:verticalSpacing="0dp"
+              android:horizontalSpacing="0dp"
               android:layout_margin="@dimen/_5sdp"
-              android:horizontalSpacing="10dp"
               android:stretchMode="columnWidth"
               android:gravity="center"/>
+
+    <!--<GridView-->
+    <!--android:id="@+id/gridview"-->
+    <!--android:stretchMode="none"-->
+    <!--android:horizontalSpacing="0dp"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content">-->
+    <!--</GridView>-->
 </LinearLayout>

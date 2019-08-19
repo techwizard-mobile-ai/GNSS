@@ -6,28 +6,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".activities.excavator.EHome1Activity">
+        tools:context=".activities.common.Material1Activity">
 
         <TextView style="@style/activity_title"
                 android:text="Select Material"
         />
         <GridView xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:id="@+id/gridview"
+                  android:id="@+id/em_gridview"
                   android:layout_width="match_parent"
                   android:layout_height="match_parent"
                   android:columnWidth="@dimen/_120sdp"
                   android:numColumns="auto_fit"
-                  android:verticalSpacing="10dp"
+                  android:verticalSpacing="0dp"
+                  android:horizontalSpacing="0dp"
                   android:layout_margin="@dimen/_5sdp"
-                  android:horizontalSpacing="10dp"
                   android:stretchMode="columnWidth"
                   android:gravity="center"/>
 
-        <!--<GridView-->
-        <!--android:id="@+id/gridview"-->
-        <!--android:stretchMode="none"-->
-        <!--android:horizontalSpacing="0dp"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content">-->
-        <!--</GridView>-->
 </LinearLayout>

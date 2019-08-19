@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:layout_height="match_parent">
+    <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".activities.common.RUnloadActivity">
+
+        <LinearLayout
+                android:id="@+id/trul_top"
+                android:layout_marginTop="@dimen/_30sdp"
+                android:gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+        >
+            <TextView
+                    style="@style/activity_title"
+                    android:text="Repeat Journey"
+            />
+            <TextView
+                    android:id="@+id/trul_task"
+                    android:text="1. Task"
+                    style="@style/load_tv"
+            />
+            <View
+                    style="@style/navigation_border"
+            />
+            <TextView
+                    android:id="@+id/trul_material"
+                    style="@style/load_tv"
+                    android:text="2. Material"
+            />
+
+            <View
+                    style="@style/navigation_border"
+            />
+            <TextView
+                    android:id="@+id/trul_location"
+                    android:text="3. Location"
+                    style="@style/load_tv"
+            />
+
+            <View
+                    style="@style/navigation_border"
+            />
+            <TextView
+                    android:id="@+id/trul_weight"
+                    android:text="4. Weight(461)"
+                    style="@style/load_tv"
+            />
+        </LinearLayout>
+        <Button
+                android:layout_below="@id/trul_top"
+                android:layout_centerInParent="true"
+                android:id="@+id/trunload_unload"
+                android:layout_marginTop="@dimen/_40sdp"
+                style="@style/next_button"
+                android:text="Unload"
+                android:layout_width="match_parent"
+        />
+    </RelativeLayout>
+</ScrollView>

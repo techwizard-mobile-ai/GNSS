@@ -15,9 +15,31 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme.NoActionBar"
             tools:replace="android:appComponentFactory">
-        <activity android:name=".activities.excavator.ELocation1Activity">
+        <activity android:name=".activities.common.RUnloadActivity">
         </activity>
-        <activity android:name=".activities.excavator.EHome1Activity">
+        <activity android:name=".activities.common.RLoadActivity">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN"/>-->
+                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+            <!--</intent-filter>-->
+        </activity>
+        <activity android:name=".activities.LoadHistoryActivity">
+        </activity>
+        <activity android:name=".activities.common.UnloadTaskActivity">
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN"/> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER"/> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity android:name=".activities.common.MachineStatus1Activity">
+        </activity>
+        <activity android:name=".activities.common.Weight1Activity">
+        </activity>
+        <activity android:name=".activities.common.LMachine1Activity">
+        </activity>
+        <activity android:name=".activities.common.Location1Activity">
+        </activity>
+        <activity android:name=".activities.common.Material1Activity">
         </activity>
         <activity android:name=".activities.truck.TUnloadAfterActivity">
         </activity>
@@ -30,7 +52,6 @@
         <activity android:name=".activities.HourMeterStartActivity">
         </activity>
         <activity android:name=".activities.HourMeterStopActivity">
-
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN"/> -->
             <!-- <category android:name="android.intent.category.LAUNCHER"/> -->
@@ -38,7 +59,7 @@
         </activity>
         <activity android:name=".activities.scrapper.SUnloadAfterActivity">
         </activity>
-        <activity android:name=".activities.MachineStatusActivity">
+        <activity android:name=".activities.notused.MachineStatusActivity">
         </activity>
         <activity android:name=".activities.scrapper.SUnloadActivity">
         </activity>
@@ -53,7 +74,6 @@
         <activity android:name=".activities.notused.FinishActivity">
         </activity>
         <activity android:name=".activities.excavator.ELoadTruckActivity">
-
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN"/> -->
             <!-- <category android:name="android.intent.category.LAUNCHER"/> -->
@@ -62,16 +82,10 @@
         <activity android:name=".activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activities.excavator.EHomeActivity">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN"/> -->
-            <!-- <category android:name="android.intent.category.LAUNCHER"/> -->
-            <!-- </intent-filter> -->
+        <activity android:name=".activities.notused.EHomeActivity">
         </activity>
         <activity
                 android:name=".BaseActivity"

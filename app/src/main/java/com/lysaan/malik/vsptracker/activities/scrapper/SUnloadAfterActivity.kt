@@ -6,15 +6,18 @@ import android.support.design.widget.NavigationView
 import android.view.View
 import android.widget.FrameLayout
 import com.lysaan.malik.vsptracker.BaseActivity
-import com.lysaan.malik.vsptracker.MyHelper
+import com.lysaan.malik.vsptracker.Helper
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.activities.HourMeterStopActivity
+import com.lysaan.malik.vsptracker.activities.common.Location1Activity
+import com.lysaan.malik.vsptracker.activities.common.Material1Activity
+import com.lysaan.malik.vsptracker.activities.common.RLoadActivity
+import com.lysaan.malik.vsptracker.others.Data
 import kotlinx.android.synthetic.main.activity_sunload_after.*
 
 class SUnloadAfterActivity : BaseActivity(), View.OnClickListener {
     private val TAG = this::class.java.simpleName
 
-    private lateinit var myHelper: MyHelper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -23,7 +26,7 @@ class SUnloadAfterActivity : BaseActivity(), View.OnClickListener {
         val navigationView = findViewById(R.id.base_nav_view) as NavigationView
         navigationView.menu.getItem(0).isChecked = true
 
-        myHelper = MyHelper(TAG, this)
+        helper = Helper(TAG, this)
 
         sul_after_new.setOnClickListener(this)
         sul_after_repeat.setOnClickListener(this)
@@ -34,13 +37,19 @@ class SUnloadAfterActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         when(view!!.id){
             R.id.sul_after_new -> {
-                val intent = Intent (this, SLoadActivity::class.java)
-                intent.putExtra("repeat", false)
+
+                val intent = Intent(this, Material1Activity::class.java)
+                val myData = Data()
+                myData.isUnload = false
+                intent.putExtra("data", myData)
                 startActivity(intent)
             }
             R.id.sul_after_repeat -> {
-                val intent = Intent (this, SLoadActivity::class.java)
-                intent.putExtra("repeat", true)
+
+                val intent = Intent(this, RLoadActivity::class.java)
+//                val myData = Data()
+//                myData.isUnload = false
+//                intent.putExtra("data", myData)
                 startActivity(intent)
             }
             R.id.sul_after_finish -> {

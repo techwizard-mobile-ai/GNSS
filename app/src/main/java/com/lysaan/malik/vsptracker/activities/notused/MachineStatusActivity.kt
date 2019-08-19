@@ -1,4 +1,4 @@
-package com.lysaan.malik.vsptracker.activities
+package com.lysaan.malik.vsptracker.activities.notused
 
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.FrameLayout
 import com.lysaan.malik.vsptracker.BaseActivity
-import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.adapters.SelectStateAdapter
 import com.lysaan.malik.vsptracker.classes.Material
@@ -16,7 +15,7 @@ import kotlinx.android.synthetic.main.activity_machine_status.*
 class MachineStatusActivity : BaseActivity(), View.OnClickListener {
 
     private val TAG = this::class.java.simpleName
-    private lateinit var myHelper: MyHelper
+
     private var selectedStopReason = Material(0, "Select Stop Reason")
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,11 +26,11 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
         val navigationView = findViewById(R.id.base_nav_view) as NavigationView
         navigationView.menu.getItem(2).isChecked = true
 
-        myHelper = MyHelper(TAG, this)
+        helper.setTag(TAG)
 
-        if(myHelper.getIsMachineStopped()){
+        if(helper.getIsMachineStopped()){
             machine_start_layout.visibility = View.VISIBLE
-            mstatus_stopped_reason.text = myHelper.getMachineStoppedReason()
+            mstatus_stopped_reason.text = helper.getMachineStoppedReason()
             machine_stop_layout.visibility = View.GONE
         }else{
             machine_stop_layout.visibility = View.VISIBLE
@@ -46,22 +45,24 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
         when(view!!.id){
             R.id.mstatus_stop ->{
                 if(selectedStopReason.id == 0){
-                    myHelper.toast("Please Select Machine Stop Reason.")
+                    helper.toast("Please Select Machine Stop Reason.")
                 }else {
-                    myHelper.setIsMachineStopped(true , selectedStopReason.name)
-                    myHelper.startHomeActivityByType()
+                    helper.setIsMachineStopped(true , selectedStopReason.name)
+                    helper.stopMachine()
+                    helper.startHomeActivityByType(data)
                 }
             }
             R.id.mstatus_start ->{
-                    myHelper.setIsMachineStopped(false , "")
-                    myHelper.startHomeActivityByType()
+                    helper.setIsMachineStopped(false , "")
+
+                    helper.startHomeActivityByType(data)
 
             }
         }
     }
 
     private fun selectStopReason() {
-        var materials = myHelper.getMachineStopReasons()
+        var materials = helper.getMachineStopReasons()
         val selectMaterialAdapter = SelectStateAdapter(this@MachineStatusActivity, materials)
         mstop_reason_spinner!!.setAdapter(selectMaterialAdapter)
         mstop_reason_spinner.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))

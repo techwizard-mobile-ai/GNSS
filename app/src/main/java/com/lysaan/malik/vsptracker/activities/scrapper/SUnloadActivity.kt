@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.FrameLayout
 import com.lysaan.malik.vsptracker.BaseActivity
-import com.lysaan.malik.vsptracker.MyHelper
+import com.lysaan.malik.vsptracker.Helper
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.adapters.SelectLocationAdapter
 import com.lysaan.malik.vsptracker.classes.Location
@@ -18,7 +18,6 @@ class SUnloadActivity : BaseActivity(), View.OnClickListener {
     private var selectedLocation = Location(0, "Select Location")
 
     private val TAG = this::class.java.simpleName
-    private lateinit var myHelper: MyHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +27,7 @@ class SUnloadActivity : BaseActivity(), View.OnClickListener {
         val navigationView = findViewById(R.id.base_nav_view) as NavigationView
         navigationView.menu.getItem(0).isChecked = true
 
-        myHelper = MyHelper(TAG, this)
+        helper = Helper(TAG, this)
 
         selectLocation()
 
@@ -39,7 +38,7 @@ class SUnloadActivity : BaseActivity(), View.OnClickListener {
         when(view!!.id){
             R.id.sunload_next ->{
                 if(selectedLocation.id == 0){
-                    myHelper.toast("Please Select Location")
+                    helper.toast("Please Select Location")
                 }else {
                     val intent = Intent (this, SUnloadAfterActivity::class.java)
                     startActivity(intent)
@@ -50,7 +49,7 @@ class SUnloadActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun selectLocation() {
-        var locations = myHelper.getLocations()
+        var locations = helper.getLocations()
         val locationAdapter = SelectLocationAdapter(this@SUnloadActivity, locations)
         sunload_location_spinner!!.setAdapter(locationAdapter)
         sunload_location_spinner.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))

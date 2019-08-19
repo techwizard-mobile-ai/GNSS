@@ -1,8 +1,6 @@
 package com.lysaan.malik.vsptracker
 
 import android.content.Intent
-import android.content.SharedPreferences
-import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -11,13 +9,20 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 import android.text.Html
 import android.view.MenuItem
 import android.view.View
-import com.lysaan.malik.vsptracker.activities.LoginActivity
-import com.lysaan.malik.vsptracker.activities.MachineStatusActivity
+import android.widget.LinearLayout
+import com.lysaan.malik.vsptracker.activities.HourMeterStopActivity
+import com.lysaan.malik.vsptracker.activities.LoadHistoryActivity
 import com.lysaan.malik.vsptracker.activities.MachineTypeActivity
+import com.lysaan.malik.vsptracker.activities.common.MachineStatus1Activity
+import com.lysaan.malik.vsptracker.adapters.BaseNavigationAdapter
+import com.lysaan.malik.vsptracker.classes.Material
+import com.lysaan.malik.vsptracker.database.DatabaseAdapter
+import com.lysaan.malik.vsptracker.others.Data
 import com.lysaan.malik.vsptracker.others.Utils
 import kotlinx.android.synthetic.main.app_bar_base.*
 
@@ -25,45 +30,24 @@ import kotlinx.android.synthetic.main.app_bar_base.*
 open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     val TAG1 = "BaseActivity"
-    private lateinit var myHelper: MyHelper
-//    private lateinit var sessionManager: SessionManager
-//
-//    internal var PRIVATE_MODE = 0
-//    private val PREF_NAME = "VSPTracker"
-//    private val KEY_NIGHT_MODE= "night_mode"
+    protected lateinit var helper: Helper
+    protected lateinit var db : DatabaseAdapter
+    protected lateinit var data : Data
 
-//    internal var pref = getSharedPreferences(PREF_NAME, PRIVATE_MODE)
-//    internal var editor = pref.edit()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
-
-//        val nightMode = pref.getBoolean(KEY_NIGHT_MODE, false)
-//
-//        if(nightMode){
-//            setTheme(R.style.AppTheme_AppBarOverlay)
-//        }else{
-//            setTheme(R.style.AppTheme)
-//        }
-
         Utils.onActivityCreateSetTheme(this);
-
 //        setTheme(R.style.AppTheme_AppBarOverlay)
 
         setContentView(R.layout.activity_base)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        myHelper = MyHelper(TAG1, this)
-        myHelper.log("NightMode: ${myHelper.isNightMode()}")
-//        if(myHelper.isNightMode()){
-//            setTheme(R.style.AppTheme_AppBarOverlay)
-//        }else{
-//            setTheme(R.style.AppTheme)
-//        }
-
+        helper = Helper(TAG1, this)
+        db = DatabaseAdapter(this)
+        data = Data()
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.base_nav_view)
@@ -74,7 +58,7 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
         toggle.syncState()
         navView.setNavigationItemSelectedListener(this)
 
-        when(myHelper.getMachineType()){
+        when(helper.getMachineType()){
             1 -> {
                 toolbar_title.text = "VSP Tracker - Excavator"
             }
@@ -87,26 +71,33 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             }
         }
 
-
-
         base_machine_status.setOnClickListener {
-            val intent = Intent(this@BaseActivity, MachineStatusActivity::class.java)
+            val intent = Intent(this@BaseActivity, MachineStatus1Activity::class.java)
             startActivity(intent)
-
         }
+
+        helper.hideKeybaordOnClick(base_content_frame)
+
+        val navItems = ArrayList<Material>()
+        navItems.add(Material(1,"Loading Machine"))
+        navItems.add(Material(2,"Loaded Material"))
+        navItems.add(Material(3,"Loading Location"))
+        navItems.add(Material(4,"Loaded Material Weigh"))
+
+        val aa = BaseNavigationAdapter(this@BaseActivity,navItems)
+        base_navigation_rv.layoutManager = LinearLayoutManager(this, LinearLayout.HORIZONTAL, false)
+        base_navigation_rv!!.setAdapter(aa)
     }
 
     override fun onResume() {
         super.onResume()
-        if(myHelper.getIsMachineStopped()){
+        if(helper.getIsMachineStopped()){
 
-            val text = "<font color=#FF382A>Machine is Stopped. </font><font color=#024064><u>Click here to Start Machine</u>.</font>"
-
-//            val text1 = "<font color=#FFFFFF>Don't have an account?</font> <font color=#CA333A><b>SIGN UP</b></font>"
+            val text = "<font color=#FF382A>Machine is Stopped. </font><font color=#106d14><u>Click here to Start Machine</u>.</font>"
             base_machine_status.setText(Html.fromHtml(text))
 
             base_machine_status.visibility = View.VISIBLE
-            myHelper.log("Is Machine Stopped: ${myHelper.getIsMachineStopped()}")
+            helper.log("Is Machine Stopped: ${helper.getIsMachineStopped()}")
         }else{
             base_machine_status.visibility = View.GONE
         }
@@ -122,50 +113,46 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_home -> {
-
-//                val intent = Intent (this, EHomeActivity::class.java)
-//                startActivity(intent)
-
-                myHelper.startHomeActivityByType()
+                val data = Data()
+                helper.startHomeActivityByType(data)
             }
             R.id.nav_settings-> {
 
             }
             R.id.nav_logout-> {
 
-                val intent = Intent (this, LoginActivity::class.java)
+                val intent = Intent (this, HourMeterStopActivity::class.java)
                 startActivity(intent)
                 finishAffinity()
             }
             R.id.nav_stop_machine -> {
 
-                val intent = Intent (this, MachineStatusActivity::class.java)
+                val intent = Intent (this, MachineStatus1Activity::class.java)
                 startActivity(intent)
             }
             R.id.nav_night_mode -> {
 
-
-
-                if(myHelper.isNightMode()){
+                helper.log("theme:"+applicationContext.theme)
+                helper.log("theme1:"+theme)
+                if(helper.isNightMode()){
                     Utils.changeToTheme(this@BaseActivity, 0);
-                    myHelper.setNightMode(false)
+                    helper.setNightMode(false)
                 }else {
                     Utils.changeToTheme(this@BaseActivity, 1);
-                    myHelper.setNightMode(true)
+                    helper.setNightMode(true)
                 }
-//
-//                this.finish()
-//                val intent = Intent(this, this::class.java)
-//                this.startActivity(intent)
-
             }
             R.id.nav_change_machine -> {
-
                 val intent = Intent (this, MachineTypeActivity::class.java)
                 startActivity(intent)
+            }
+
+            R.id.nav_load_history -> {
+                val intent = Intent (this, LoadHistoryActivity::class.java)
+                startActivity(intent)
+
             }
             R.id.nav_email-> {
                 doEmail()

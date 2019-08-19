@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.FrameLayout
 import com.lysaan.malik.vsptracker.BaseActivity
-import com.lysaan.malik.vsptracker.MyHelper
+import com.lysaan.malik.vsptracker.Helper
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.adapters.SelectLocationAdapter
 import com.lysaan.malik.vsptracker.adapters.SelectStateAdapter
@@ -23,7 +23,6 @@ class SLoadActivity : BaseActivity(), View.OnClickListener {
     private var selectedLocation = Location(0, "Select Location")
     private var selectedMaterial = Material(0, "Select Material")
     private val TAG = this::class.java.simpleName
-    private lateinit var myHelper: MyHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,33 +32,33 @@ class SLoadActivity : BaseActivity(), View.OnClickListener {
         val navigationView = findViewById(R.id.base_nav_view) as NavigationView
         navigationView.menu.getItem(0).isChecked = true
 
-        myHelper = MyHelper(TAG, this)
+        helper = Helper(TAG, this)
 
         var bundle :Bundle ?=intent.extras
 
         if(bundle != null){
             isRepeatJourney = bundle!!.getBoolean("repeat")
-            myHelper.log("isRepeat:$isRepeatJourney")
+            helper.log("isRepeat:$isRepeatJourney")
         }
         selectMaterial()
         selectLocation()
 
-        myHelper.hideKeybaordOnClick(sload_main_layout)
-        myHelper.hideKeybaordOnClick(sload_material_spinner)
-        myHelper.hideKeybaordOnClick(sload_location_spinner)
+        helper.hideKeybaordOnClick(sload_main_layout)
+        helper.hideKeybaordOnClick(sload_material_spinner)
+        helper.hideKeybaordOnClick(sload_location_spinner)
 
 //        sload_main_layout.setOnTouchListener(OnTouchListener { v, event ->
-//            myHelper.hideKeyboard(sload_main_layout)
+//            helper.hideKeyboard(sload_main_layout)
 //            false
 //        })
 //
 //        sload_material_spinner.setOnTouchListener(OnTouchListener { v, event ->
-//            myHelper.hideKeyboard(sload_material_spinner)
+//            helper.hideKeyboard(sload_material_spinner)
 //            false
 //        })
 //
 //        sload_location_spinner.setOnTouchListener(OnTouchListener { v, event ->
-//            myHelper.hideKeyboard(sload_location_spinner)
+//            helper.hideKeyboard(sload_location_spinner)
 //            false
 //        })
 
@@ -73,12 +72,12 @@ class SLoadActivity : BaseActivity(), View.OnClickListener {
                 val materialWeight = sload_weight.text.toString()
 
                 if(selectedMaterial.id == 0){
-                    myHelper.toast("Please Select Material")
+                    helper.toast("Please Select Material")
                 }else if (selectedLocation.id == 0){
-                    myHelper.toast("Please Select Location")
+                    helper.toast("Please Select Location")
                 }
 //                else if (materialWeight.isNullOrBlank()){
-//                    myHelper.toast("Please Enter Material Weight")
+//                    helper.toast("Please Enter Material Weight")
 //                }
                 else {
                     val intent = Intent (this, SHomeActivity::class.java)
@@ -92,7 +91,7 @@ class SLoadActivity : BaseActivity(), View.OnClickListener {
 
 
     private fun selectMaterial() {
-        var materials = myHelper.getMaterials()
+        var materials = helper.getMaterials()
         val selectMaterialAdapter = SelectStateAdapter(this@SLoadActivity, materials)
 
         sload_material_spinner!!.setAdapter(selectMaterialAdapter)
@@ -126,12 +125,12 @@ class SLoadActivity : BaseActivity(), View.OnClickListener {
         }
     }
     private fun selectLocation() {
-        var locations = myHelper.getLocations()
+        var locations = helper.getLocations()
         val locationAdapter = SelectLocationAdapter(this@SLoadActivity, locations)
         sload_location_spinner!!.setAdapter(locationAdapter)
 
         if(isRepeatJourney){
-            myHelper.log("inSelectLocation")
+            helper.log("inSelectLocation")
             sload_location_spinner.setSelection(1)
         }else{
             sload_location_spinner.setSelection(0, false)

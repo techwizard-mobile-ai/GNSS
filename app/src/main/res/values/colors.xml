@@ -33,4 +33,6 @@
     <color name="settings_border">#E3E3E3</color>
     <color name="red">#FF382A</color>
     <color name="organe">#f44336</color>
+
+    <color name="grey">#9f9e9e</color>
 </resources>

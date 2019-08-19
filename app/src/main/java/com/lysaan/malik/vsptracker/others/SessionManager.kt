@@ -4,6 +4,9 @@ import android.content.SharedPreferences
 import android.content.Context
 import android.content.SharedPreferences.Editor
 import android.util.Log
+import com.google.gson.Gson
+import com.lysaan.malik.vsptracker.others.Data
+import com.lysaan.malik.vsptracker.others.Meter
 
 class SessionManager(internal var _context: Context) {
 
@@ -24,11 +27,65 @@ class SessionManager(internal var _context: Context) {
     private val KEY_MACHINE_STOPPED_REASON = "machine_stopped_reason"
     private val KEY_NIGHT_MODE= "night_mode"
 
+    private val KEY_METER_RUNNING = "meter_running"
+    private val KEY_METER_START_TIME = "meter_start_time"
+
+    private val KEY_LAST_JOURNEY = "last_journey"
+    private val KEY_METER = "meter"
+
     private val TAG = SessionManager::class.java.simpleName
 
     init {
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE)
         editor = pref.edit()
+    }
+
+
+    fun getLastJourney(): Data {
+        val gson = Gson()
+        val json = pref.getString(KEY_LAST_JOURNEY, "")
+        val obj = gson.fromJson<Data>(json, Data::class.java)
+        if(obj == null){
+            return Data()
+        }else{
+            return obj
+        }
+    }
+    fun setLastJourney (data : Data){
+        val gson = Gson()
+        val json = gson.toJson(data)
+        editor.putString(KEY_LAST_JOURNEY, json)
+        editor.commit();
+    }
+
+    fun getMeter () : Meter{
+        val gson = Gson()
+        val json = pref.getString(KEY_METER, "")
+        val obj = gson.fromJson<Meter>(json, Meter::class.java)
+        if(obj == null){
+            return Meter()
+        }else{
+            return obj
+        }
+    }
+
+    fun setMeter ( meter: Meter){
+        val gson = Gson()
+        val json = gson.toJson(meter);
+        editor.putString(KEY_METER, json);
+        editor.commit();
+    }
+
+    fun getMeterTime() = pref.getLong(KEY_METER_RUNNING, 0)
+    fun setMeterTime(time: Long){
+        editor.putLong(KEY_METER_RUNNING, time)
+        editor.commit()
+    }
+
+    fun getMeterStartTime () = pref.getLong(KEY_METER_START_TIME, 0)
+    fun setMeterStartTime(time : Long){
+        editor.putLong(KEY_METER_START_TIME, time)
+        editor.commit()
     }
 
     fun isNightMode() = pref.getBoolean(KEY_NIGHT_MODE, false)

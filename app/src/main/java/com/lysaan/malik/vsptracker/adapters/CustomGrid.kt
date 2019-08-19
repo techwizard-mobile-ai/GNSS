@@ -43,9 +43,9 @@ class CustomGrid(private val mContext: Context, private val arrayList: ArrayList
             val textView = grid.findViewById(R.id.grid_text) as TextView
             val imageView = grid.findViewById(R.id.grid_image) as ImageView
 //            textView.text = web[position]
-            if(arrayList.get(position).id == 0){
-                arrayList.removeAt(0)
-            }
+//            if(arrayList.get(position).id == 0){
+//                arrayList.removeAt(0)
+//            }
             textView.text = arrayList.get(position).name
 
 //            imageView.setLayoutParams(AbsListView.LayoutParams(350, 350))

@@ -2,33 +2,36 @@ package com.lysaan.malik.vsptracker.activities
 
 import android.os.Bundle
 import android.support.design.widget.NavigationView
+import android.support.v4.widget.DrawerLayout
 import android.view.View
 import android.widget.FrameLayout
 import com.lysaan.malik.vsptracker.BaseActivity
-import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.R
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_hour_meter_start.*
+import kotlinx.android.synthetic.main.activity_hour_meter_stop.*
 
 class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
-
     private val TAG = this::class.java.simpleName
-    private lateinit var myHelper: MyHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
 
         val contentFrameLayout = findViewById(R.id.base_content_frame) as FrameLayout
         layoutInflater.inflate(R.layout.activity_hour_meter_start, contentFrameLayout)
         val navigationView = findViewById(R.id.base_nav_view) as NavigationView
         navigationView.menu.getItem(0).isChecked = true
 
-        myHelper = MyHelper(TAG, this)
-        myHelper.hideKeybaordOnClick(hour_meter_main_layout)
+        drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+
+        helper.setTag(TAG)
+        helper.hideKeybaordOnClick(hour_meter_main_layout)
 
         ms_minus.setOnClickListener(this)
         ms_plus.setOnClickListener(this)
         ms_continue.setOnClickListener(this)
+//        ms_reading.setText(helper.getRoundedDecimal(helper.getMachineTotalTime()/60.0).toString())
+        ms_reading.setText(helper.getMeterTimeForStart())
 
     }
 
@@ -36,29 +39,39 @@ class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
         when(view!!.id){
             R.id.ms_minus ->{
                 val value = ms_reading.text.toString().toFloat()
-                myHelper.log("beforeValue:$value")
                 if(value >0){
                     val newValue = value - 0.1
-                    val number3digits:Double = Math.round(newValue* 1000.0) / 1000.0
-                    val number2digits:Double = Math.round(number3digits * 100.0) / 100.0
-                    val solution:Double = Math.round(number2digits * 10.0) / 10.0
-                    myHelper.log("afterValue:$newValue")
-                    ms_reading.setText(solution.toString())
+                    ms_reading.setText(helper.getRoundedDecimal(newValue).toString())
                 }
-
             }
+
             R.id.ms_plus -> {
                 val value = ms_reading.text.toString().toFloat()
-                myHelper.log("value:$value")
                 val newValue = value + 0.1
-                val number3digits:Double = Math.round(newValue * 1000.0) / 1000.0
-                val number2digits:Double = Math.round(number3digits * 100.0) / 100.0
-                val solution:Double = Math.round(number2digits * 10.0) / 10.0
-                myHelper.log("afterValue:$newValue")
-                ms_reading.setText(solution.toString())
+                ms_reading.setText(helper.getRoundedDecimal(newValue).toString())
             }
+
             R.id.ms_continue -> {
-                myHelper.startHomeActivityByType()
+
+                if(!helper.getMeterTimeForStart().equals(ms_reading.text.toString(), true)){
+                    val meter = helper.getMeter()
+                    meter.isMachineTimeCustom = true
+                    helper.setMeter(meter)
+                    helper.log("Custom Time : True, Original reading:${helper.getMeterTimeForStart()}, New Reading: ${ms_reading.text}")
+                }else{
+                    val meter = helper.getMeter()
+                    meter.isMachineTimeCustom = false
+                    helper.setMeter(meter)
+                    helper.log("Custom Time : False, Original reading:${helper.getMeterTimeForStart()}, New Reading: ${ms_reading.text}")
+                }
+
+                val value = ms_reading.text.toString().toDouble()
+                val minutes = value * 60
+                val newMinutes = helper.getRoundedInt(minutes)
+                helper.log("Minutes: $newMinutes")
+                helper.setMachineTotalTime(newMinutes)
+                helper.startHomeActivityByType(data)
+                helper.startMachine()
                 finishAffinity()
             }
         }

@@ -1,4 +1,4 @@
-package com.lysaan.malik.vsptracker.activities.excavator
+package com.lysaan.malik.vsptracker.activities.notused
 
 
 import android.content.Intent
@@ -9,8 +9,9 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.FrameLayout
 import com.lysaan.malik.vsptracker.BaseActivity
-import com.lysaan.malik.vsptracker.MyHelper
+import com.lysaan.malik.vsptracker.Helper
 import com.lysaan.malik.vsptracker.R
+import com.lysaan.malik.vsptracker.activities.excavator.ELoadTruckActivity
 import com.lysaan.malik.vsptracker.adapters.SelectLocationAdapter
 import com.lysaan.malik.vsptracker.adapters.SelectStateAdapter
 import kotlinx.android.synthetic.main.activity_ehome.*
@@ -18,7 +19,6 @@ import kotlinx.android.synthetic.main.activity_ehome.*
 class EHomeActivity : BaseActivity(), View.OnClickListener {
 
     private val TAG = this::class.java.simpleName
-    private lateinit var myHelper: MyHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +28,7 @@ class EHomeActivity : BaseActivity(), View.OnClickListener {
         val navigationView = findViewById(R.id.base_nav_view) as NavigationView
         navigationView.menu.getItem(0).isChecked = true
 
-        myHelper = MyHelper(TAG, this)
+        helper = Helper(TAG, this)
 
         selectMaterial()
         selectLocation()
@@ -48,7 +48,7 @@ class EHomeActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun selectMaterial() {
-        var materials = myHelper.getMaterials()
+        var materials = helper.getMaterials()
         val selectMaterialAdapter = SelectStateAdapter(this@EHomeActivity, materials)
         ehome_material_spinner!!.setAdapter(selectMaterialAdapter)
         ehome_material_spinner.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
@@ -76,7 +76,7 @@ class EHomeActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun selectLocation() {
-        var locations = myHelper.getLocations()
+        var locations = helper.getLocations()
         val locationAdapter = SelectLocationAdapter(this@EHomeActivity, locations)
         ehome_location_spinner!!.setAdapter(locationAdapter)
         ehome_location_spinner.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
@@ -87,7 +87,6 @@ class EHomeActivity : BaseActivity(), View.OnClickListener {
                 arg0: AdapterView<*>, arg1: View,
                 position: Int, arg3: Long
             ) {
-
 //                selectedState = states.get(position)
                 if (locations.get(position).id != 0) {
                     ehome_location_spinner.setBackground(resources.getDrawable(R.drawable.spinner_border))

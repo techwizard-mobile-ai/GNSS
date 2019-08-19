@@ -5,7 +5,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/login_main_layout"
-        android:background="@color/white"
 >
     <LinearLayout
             style="@style/default_linearlayout"
@@ -39,7 +38,6 @@
                     android:layout_marginStart="@dimen/_5sdp"
                     android:layout_marginEnd="@dimen/_5sdp"
                     android:gravity="center_horizontal"
-                    android:background="@color/cardview_light"
             >
                 <EditText
                         android:id="@+id/signin_email"
@@ -70,7 +68,7 @@
                         android:layout_marginTop="@dimen/_30sdp"
                         android:textSize="@dimen/_12sdp"
                         android:textStyle="bold"
-                        android:textColor="@color/black"
+                        android:textColor="@color/colorPrimary"
                         style="@style/avenirnext_fontstyle"
                         android:layout_marginBottom="@dimen/_30sdp"
                 />

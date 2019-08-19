@@ -17,21 +17,149 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
-import com.lysaan.malik.vsptracker.activities.excavator.EHome1Activity
+import com.lysaan.malik.vsptracker.activities.common.Material1Activity
 import com.lysaan.malik.vsptracker.activities.scrapper.SHomeActivity
-import com.lysaan.malik.vsptracker.activities.excavator.EHomeActivity
 import com.lysaan.malik.vsptracker.activities.truck.THomeActivity
 import com.lysaan.malik.vsptracker.classes.Location
 import com.lysaan.malik.vsptracker.classes.Material
-import kotlinx.android.synthetic.main.activity_tload.*
+import com.lysaan.malik.vsptracker.others.Data
+import com.lysaan.malik.vsptracker.others.Meter
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
-class MyHelper(val TAG: String, val context: Context) {
+
+class Helper(var TAG: String, val context: Context) {
 
 
     private lateinit var dialog: ProgressDialog
     private lateinit var progressBar: ProgressBar
     private var  sessionManager :SessionManager = SessionManager(context)
 
+
+    fun getLastJourney () = sessionManager.getLastJourney()
+    fun setLastJourney(data: Data) = sessionManager.setLastJourney(data)
+
+
+    fun getRoundedDecimal(minutes: Double): Double {
+        val number3digits:Double = Math.round(minutes * 1000.0) / 1000.0
+        val number2digits:Double = Math.round(number3digits * 100.0) / 100.0
+        val solution:Double = Math.round(number2digits * 10.0) / 10.0
+        return solution
+    }
+    fun getRoundedInt(minutes: Double): Long {
+        val newMinutes = Math.round(getRoundedDecimal(minutes))
+        return newMinutes
+    }
+
+    fun getMeter () = sessionManager.getMeter()
+    fun setMeter (meter: Meter){ sessionManager.setMeter(meter)}
+
+    fun getMeterTimeForFinish() : String{
+        val meterONTime = getMachineTotalTime() + getMachineStartTime()
+        return getRoundedDecimal(meterONTime/60.0).toString()
+    }
+    fun getMeterTimeForStart() : String {
+        return getRoundedDecimal(getMachineTotalTime()/60.0).toString()
+    }
+
+    fun getMachineTotalTime() = sessionManager.getMeter().machineTotalTime
+    fun setMachineTotalTime(time : Long){
+        val meter = sessionManager.getMeter()
+        meter.machineTotalTime = time
+        sessionManager.setMeter(meter)
+//        sessionManager.setMachineTotalTime( time)
+    }
+
+    fun getMachineStartTime(): Long {
+//        val startTime = sessionManager.getMachineStartTime()
+        val meter = sessionManager.getMeter()
+
+        log("meter:$meter")
+
+        if(meter.isMachineStopped){
+            return 0
+        }else{
+            val startTime = meter.machineStartTime
+            val currentTime = System.currentTimeMillis()
+            val ONTime = currentTime - startTime
+            val minutes = (ONTime / 1000 / 60) as Long
+            return minutes
+        }
+
+    }
+
+    fun stopMachine(){
+        val meter = sessionManager.getMeter()
+
+        if(!meter.isMachineStopped){
+            val meterONTime = getMachineTotalTime() + getMachineStartTime()
+            meter.machineTotalTime = meterONTime
+            meter.isMachineStopped = true
+            sessionManager.setMeter(meter)
+            toast("Machine is Stopped.\n Machine Total Time : $meterONTime (mins)")
+        }else{
+            toast("Machine is Already Stopped.")
+        }
+    }
+
+    fun startMachine() {
+        val currentTime  = System.currentTimeMillis()
+        val meter = sessionManager.getMeter()
+        meter.machineStartTime = currentTime
+        meter.isMachineStopped = false
+        sessionManager.setMeter(meter)
+//        sessionManager.setMeterStartTime(currentTime)
+
+    }
+
+    fun getDateTime(s: Long): String {
+        try {
+            val sdf = SimpleDateFormat("dd MMM yyyy HH:mm")
+//            val sdf = SimpleDateFormat("HH:mm")
+            val netDate = Date(s)
+            return sdf.format(netDate)
+        } catch (e: Exception) {
+            log("getDatetime:${e}")
+            return s.toString()
+        }
+    }
+
+    fun getTime(s: Long): String {
+        try {
+//            val sdf = SimpleDateFormat("dd MMM yyyy HH:mm")
+            val sdf = SimpleDateFormat("HH:mm")
+            val netDate = Date(s)
+            return sdf.format(netDate)
+        } catch (e: Exception) {
+            log("getDatetime:${e}")
+            return s.toString()
+        }
+    }
+
+    fun getDate(s: String): String {
+        try {
+//            val sdf = SimpleDateFormat("MM/dd/yy")
+            val sdf = SimpleDateFormat("dd MMM yyyy")
+            val netDate = Date(s.toLong())
+            return sdf.format(netDate)
+        } catch (e: Exception) {
+            log("getDateString:${e}")
+            return s.toString()
+        }
+    }
+
+    fun getDate(s: Long): String {
+        try {
+//            val sdf = SimpleDateFormat("MM/dd/yy")
+            val sdf = SimpleDateFormat("dd MMM yyyy")
+            val netDate = Date(s)
+            return sdf.format(netDate)
+        } catch (e: Exception) {
+            log("getDate:${e}")
+            return s.toString()
+        }
+    }
 
     fun isNightMode() = sessionManager.isNightMode()
     fun setNightMode(mode : Boolean) { sessionManager.setNightMode(mode)}
@@ -58,7 +186,6 @@ class MyHelper(val TAG: String, val context: Context) {
         states.add(Material(3, "Other 1"))
         return states
     }
-
 
     fun getMachineLocations(): ArrayList<Material> {
         val states = ArrayList<Material>()
@@ -121,6 +248,10 @@ class MyHelper(val TAG: String, val context: Context) {
     fun getMachineNumber() = sessionManager.getMachineNumber()
     fun setMachineNumber(number : String) { sessionManager.setMachineNumber(number)}
 
+
+    //    type = 1 excavator
+    //    type = 2 scrapper
+    //    type = 3 truck
     fun getMachineType() = sessionManager.getMachineType()
     fun setMachineType(type : Int){
         sessionManager.setMachineType(type)
@@ -165,7 +296,7 @@ class MyHelper(val TAG: String, val context: Context) {
                         target: com.bumptech.glide.request.target.Target<Drawable>?,
                         isFirstResource: Boolean
                     ): Boolean {
-//                                myHelper.hideDialog()
+//                                helper.hideDialog()
                         return false
                     }
 
@@ -176,14 +307,14 @@ class MyHelper(val TAG: String, val context: Context) {
                         dataSource: DataSource?,
                         isFirstResource: Boolean
                     ): Boolean {
-//                                myHelper.hideDialog()
+//                                helper.hideDialog()
                         return false
                     }
 
                 })
                 .into(imageView)
         }else{
-//                    myHelper.hideDialog()
+//                    helper.hideDialog()
             log("else$url")
             imageView.setImageResource(R.drawable.user_img)
         }
@@ -250,6 +381,9 @@ class MyHelper(val TAG: String, val context: Context) {
         }
     }
 
+    fun setTag(tag: String){
+        this.TAG = tag
+    }
     fun setProgressBar(progressBar: ProgressBar?) {
         this.progressBar = progressBar!!
     }
@@ -257,21 +391,21 @@ class MyHelper(val TAG: String, val context: Context) {
     //    type = 1 excavator
     //    type = 2 scrapper
     //    type = 3 truck
-    fun startHomeActivityByType() {
+    fun startHomeActivityByType(data: Data) {
         when(getMachineType()){
             1 -> {
-                val intent = Intent(context, EHome1Activity::class.java)
-
+                val intent = Intent(context, Material1Activity::class.java)
+                intent.putExtra("data", data)
                 context.startActivity(intent)
-
             }
             2 -> {
                 val intent = Intent(context, SHomeActivity::class.java)
+                intent.putExtra("data", data)
                 context.startActivity(intent)
-
             }
             3 -> {
                 val intent = Intent(context, THomeActivity::class.java)
+                intent.putExtra("data", data)
                 context.startActivity(intent)
 
             }
@@ -280,3 +414,4 @@ class MyHelper(val TAG: String, val context: Context) {
 
 
 }
+

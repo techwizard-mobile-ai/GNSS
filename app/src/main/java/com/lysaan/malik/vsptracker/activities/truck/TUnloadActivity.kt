@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.FrameLayout
 import com.lysaan.malik.vsptracker.BaseActivity
-import com.lysaan.malik.vsptracker.MyHelper
+import com.lysaan.malik.vsptracker.Helper
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.adapters.SelectLocationAdapter
 import com.lysaan.malik.vsptracker.classes.Location
@@ -19,8 +19,7 @@ class TUnloadActivity: BaseActivity(), View.OnClickListener {
     private var selectedLocation = Location(0, "Select Location")
 
     private val TAG = this::class.java.simpleName
-    private lateinit var myHelper: MyHelper
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -29,32 +28,29 @@ class TUnloadActivity: BaseActivity(), View.OnClickListener {
         val navigationView = findViewById(R.id.base_nav_view) as NavigationView
         navigationView.menu.getItem(0).isChecked = true
 
-        myHelper = MyHelper(TAG, this)
+        helper = Helper(TAG, this)
 
         selectLocation()
 
         tul_return_load.setOnClickListener(this)
         tul_unload.setOnClickListener(this)
-
     }
-
 
     override fun onClick(view: View?) {
         when(view!!.id){
             R.id.tul_unload ->{
                 if(selectedLocation.id == 0){
-                    myHelper.toast("Please Select Location")
+                    helper.toast("Please Select Location")
                 }else {
                     val intent = Intent (this, TUnloadAfterActivity::class.java)
                     startActivity(intent)
                 }
             }
         }
-
     }
 
     private fun selectLocation() {
-        var locations = myHelper.getLocations()
+        var locations = helper.getLocations()
         val locationAdapter = SelectLocationAdapter(this@TUnloadActivity, locations)
         tunload_location_spinner!!.setAdapter(locationAdapter)
         tunload_location_spinner.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
