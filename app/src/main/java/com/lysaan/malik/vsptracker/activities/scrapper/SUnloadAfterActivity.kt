@@ -28,6 +28,12 @@ class SUnloadAfterActivity : BaseActivity(), View.OnClickListener {
 
         helper = Helper(TAG, this)
 
+        var bundle :Bundle ?=intent.extras
+        if(bundle != null){
+            data = bundle!!.getSerializable("data") as Data
+            helper.log("data:$data")
+        }
+
         sul_after_new.setOnClickListener(this)
         sul_after_repeat.setOnClickListener(this)
         sul_after_finish.setOnClickListener(this)
@@ -40,16 +46,14 @@ class SUnloadAfterActivity : BaseActivity(), View.OnClickListener {
 
                 val intent = Intent(this, Material1Activity::class.java)
                 val myData = Data()
-                myData.isUnload = false
                 intent.putExtra("data", myData)
                 startActivity(intent)
             }
             R.id.sul_after_repeat -> {
 
                 val intent = Intent(this, RLoadActivity::class.java)
-//                val myData = Data()
-//                myData.isUnload = false
-//                intent.putExtra("data", myData)
+                data.isRepeatJourney = true
+                intent.putExtra("data", data)
                 startActivity(intent)
             }
             R.id.sul_after_finish -> {

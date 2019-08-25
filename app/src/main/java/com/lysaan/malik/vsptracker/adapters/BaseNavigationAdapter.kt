@@ -16,7 +16,8 @@ class BaseNavigationAdapter(
 ) : RecyclerView.Adapter<BaseNavigationAdapter
 .ViewHolder>() {
 
-    val TAG = "BaseNavigationAdapter"
+    private val TAG = this::class.java.simpleName
+
      lateinit var helper : Helper
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseNavigationAdapter.ViewHolder {

@@ -5,6 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingBottom="@dimen/_10sdp"
         tools:context=".activities.common.Location1Activity">
 
     <TextView
@@ -29,10 +30,9 @@
               android:gravity="center"/>
     <Button
             android:id="@+id/elocation1_back"
+            android:layout_marginBottom="@dimen/_10sdp"
             android:layout_alignParentBottom="true"
             android:layout_centerInParent="true"
-            style="@style/back_button"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
+            style="@style/back_button_single"
     />
 </RelativeLayout>

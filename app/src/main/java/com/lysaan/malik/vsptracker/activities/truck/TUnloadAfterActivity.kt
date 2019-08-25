@@ -44,12 +44,14 @@ class TUnloadAfterActivity : BaseActivity(), View.OnClickListener {
         when(view!!.id){
             R.id.tul_after_new -> {
                 val intent = Intent (this, LMachine1Activity::class.java)
-//                intent.putExtra("repeat", false)
+                val data = Data()
+                intent.putExtra("data", data)
                 startActivity(intent)
             }
             R.id.tul_after_repeat -> {
                 val intent = Intent (this, RLoadActivity::class.java)
-//                intent.putExtra("repeat", true)
+                data.isRepeatJourney = true
+                intent.putExtra("data", data)
                 startActivity(intent)
             }
             R.id.tul_after_finish -> {

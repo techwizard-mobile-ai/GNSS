@@ -17,17 +17,39 @@
     <string name="forgot_password">Forgot Password?</string>
     <string name="hour_meter_start">Hour Meter Start</string>
     <string name="continuetext">Continue</string>
-    <string name="load">Load</string>
     <string name="stop_machine">Stop Machine</string>
     <string name="hour_meter_finish">Hour Meter Finish</string>
     <string name="save">Save</string>
     <string name="machine_type">Machine Type</string>
     <string name="machine_number">Machine Number</string>
     <string name="unload">Unload</string>
+    <string name="finish">Finish</string>
+    <string name="load">Load</string>
 
 
     <string-array name="theme_array">
         <item>Default-Theme</item>
         <item>Night-Mode</item>
     </string-array>
+
+
+    <string name="digging">Digging</string>
+    <string name="treching">Treching</string>
+    <string name="loading">Loading</string>
+    <string name="trenching_history">Trenching History</string>
+    <string name="loading_history">Loading History</string>
+    <string name="general_digging_history">General Digging History</string>
+    <string name="off_loading">Off Loading</string>
+    <string name="start">Start</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="night_mode">Night Mode</string>
+    <string name="day_works">Day Works</string>
+    <string name="change_machine">Change Machine</string>
+    <string name="end_work">END WORK</string>
+    <string name="next">NEXT</string>
+    <string name="history">History</string>
+    <string name="delay">Delay</string>
+    <string name="wait_history">Wait History</string>
 </resources>

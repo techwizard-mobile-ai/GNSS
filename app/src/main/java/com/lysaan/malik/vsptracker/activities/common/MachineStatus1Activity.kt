@@ -2,13 +2,17 @@ package com.lysaan.malik.vsptracker.activities.common
 
 import android.os.Bundle
 import android.support.design.widget.NavigationView
+import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.AdapterView
 import android.widget.FrameLayout
 import android.widget.GridView
+import android.widget.LinearLayout
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.adapters.CustomGrid
+import com.lysaan.malik.vsptracker.adapters.MachineStatusAdapter
+import com.lysaan.malik.vsptracker.others.Data
 import kotlinx.android.synthetic.main.activity_machine_status1.*
 
 class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
@@ -23,7 +27,7 @@ class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
         val contentFrameLayout = findViewById(R.id.base_content_frame) as FrameLayout
         layoutInflater.inflate(R.layout.activity_machine_status1, contentFrameLayout)
         val navigationView = findViewById(R.id.base_nav_view) as NavigationView
-        navigationView.menu.getItem(0).isChecked = true
+        navigationView.menu.getItem(2).isChecked = true
 
         helper.setTag(TAG)
 
@@ -36,27 +40,33 @@ class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
         if(helper.getIsMachineStopped()){
             machine_status_title.text = "Machine Stopped Reason"
             machine_start_layout.visibility = View.VISIBLE
-            machinestatus_gridview.visibility = View.GONE
+            machine_status_rv.visibility = View.GONE
             machine_stopped_reason.text = helper.getMachineStoppedReason()
         }else{
             machine_status_title.text = "Select Machine Stop Reason"
             machine_start_layout.visibility = View.GONE
-            machinestatus_gridview.visibility = View.VISIBLE
+            machine_status_rv.visibility = View.VISIBLE
         }
 
-        val gv = findViewById(R.id.machinestatus_gridview) as GridView
         val stoppedReasons = helper.getMachineStopReasons()
         stoppedReasons.removeAt(0)
-        val adapter = CustomGrid(this@MachineStatus1Activity, stoppedReasons)
 
+        val mAdapter = MachineStatusAdapter(this, stoppedReasons)
+        machine_status_rv.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
+        machine_status_rv.setAdapter(mAdapter)
 
-        gv.setAdapter(adapter)
-        gv.setOnItemClickListener(AdapterView.OnItemClickListener { parent, view, position, id ->
-            helper.toast("Machine Stopped due to : " + stoppedReasons.get(position).name)
-            helper.setIsMachineStopped(true , stoppedReasons.get(position).name)
-            helper.stopMachine()
-            helper.startHomeActivityByType(data)
-        })
+//        val gv = findViewById(R.id.machinestatus_gridview) as GridView
+//        val stoppedReasons = helper.getMachineStopReasons()
+//        stoppedReasons.removeAt(0)
+//        val adapter = CustomGrid(this@MachineStatus1Activity, stoppedReasons)
+//        gv.setAdapter(adapter)
+//
+//        gv.setOnItemClickListener(AdapterView.OnItemClickListener { parent, view, position, id ->
+//            helper.toast("Machine Stopped due to : " + stoppedReasons.get(position).name)
+//            helper.setIsMachineStopped(true , stoppedReasons.get(position).name)
+//            helper.stopMachine()
+//            helper.startHomeActivityByType(Data())
+//        })
 
         machine_status_start.setOnClickListener(this)
 
@@ -69,7 +79,7 @@ class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
                 helper.toast("Machine Started Successfully")
                 helper.setIsMachineStopped(false , "")
                 helper.startMachine()
-                helper.startHomeActivityByType(data)
+                helper.startHomeActivityByType(Data())
             }
         }
     }

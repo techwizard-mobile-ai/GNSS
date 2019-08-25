@@ -33,6 +33,7 @@ class SHomeActivity : BaseActivity(), View.OnClickListener {
             helper.log("data:$data")
         }
 
+        shome_logout.setOnClickListener(this)
         shome_load.setOnClickListener(this)
         shome_unload.setOnClickListener(this)
 
@@ -42,18 +43,23 @@ class SHomeActivity : BaseActivity(), View.OnClickListener {
         when(view!!.id){
             R.id.shome_load -> {
                 val intent = Intent(this, Material1Activity::class.java)
+                if(data == null){
+                    data = Data()
+                }
                 data.isUnload = false
                 intent.putExtra("data", data)
                 startActivity(intent)
-
             }
             R.id.shome_unload -> {
-
                 val intent = Intent(this, UnloadTaskActivity::class.java)
+                if(data == null){
+                    data = Data()
+                }
                 data.isUnload = true
                 intent.putExtra("data", data)
                 startActivity(intent)
             }
+            R.id.shome_logout ->{ helper.logout(this)}
         }
 
     }

@@ -10,9 +10,7 @@ import android.widget.FrameLayout
 import android.widget.GridView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.activities.excavator.ELoadTruckActivity
-import com.lysaan.malik.vsptracker.activities.scrapper.SUnloadAfterActivity
-import com.lysaan.malik.vsptracker.activities.truck.TUnloadAfterActivity
+import com.lysaan.malik.vsptracker.activities.excavator.ELoadActivity
 import com.lysaan.malik.vsptracker.adapters.CustomGrid
 import com.lysaan.malik.vsptracker.others.Data
 import kotlinx.android.synthetic.main.activity_location1.*
@@ -65,79 +63,54 @@ class Location1Activity : BaseActivity(), View.OnClickListener {
                 //    type = 3 truck
                 when(helper.getMachineType()){
                     1 -> {
+
+                        val intent = Intent(this, Material1Activity::class.java)
+                        data.loadingLocation = locations.get(position).name
+                        intent.putExtra("data", data)
+                        startActivity(intent)
+
+                    }
+                    2 , 3 -> {
                         if(data.isUnload){
-                            val intent = Intent (this, ELoadTruckActivity::class.java)
+
+                            val intent = Intent(this, RUnloadActivity::class.java)
                             data.unloadingLocation = locations.get(position).name
+                            data.unloadingMaterial = helper.getLastJourney().loadingMaterial
+                            helper.setLastJourney(data)
+                            helper.toast("Journey Saved.")
+
                             intent.putExtra("data", data)
                             startActivity(intent)
                         }else {
-                            val intent = Intent(this, ELoadTruckActivity::class.java)
+                            val intent = Intent(this, Weight1Activity::class.java)
                             data.loadingLocation = locations.get(position).name
                             intent.putExtra("data", data)
                             startActivity(intent)
                         }
                     }
-                    2 -> {
+                   /* 3 -> {
                         if(data.isUnload){
-                            val intent = Intent(this, SUnloadAfterActivity::class.java)
-                            data.unloadingLocation = locations.get(position).name
 
-                            if(data.unloadingMaterial.isNullOrBlank()){
-                                data.unloadingMaterial = data.loadingMaterial
-                            }
+                            val intent = Intent(this, RUnloadActivity::class.java)
+                            data.unloadingLocation = locations.get(position).name
 
                             val data1 = helper.getLastJourney()
                             data1.unloadingTask = data.unloadingTask
                             data1.unloadingMaterial = data.loadingMaterial
                             data1.unloadingLocation = data.loadingLocation
 
-                            helper.setLastJourney(data)
-                            helper.toast("Journey Saved.")
+                            helper.setLastJourney(data1)
 
-//                            val insertID = db.insertJourney(data)
-//                            if(insertID > 0){
-//                                helper.toast("Journey Saved.")
-//                            }else{
-//                                helper.toast("Journey Not Saved.")
-//                            }
                             intent.putExtra("data", data)
                             startActivity(intent)
+
                         }else {
                             val intent = Intent(this, Weight1Activity::class.java)
                             data.loadingLocation = locations.get(position).name
                             intent.putExtra("data", data)
                             startActivity(intent)
                         }
-                    }
-                    3 -> {
-                        if(data.isUnload){
-                            val intent = Intent(this, TUnloadAfterActivity::class.java)
-                            data.unloadingLocation = locations.get(position).name
-
-                            if(data.unloadingMaterial.isNullOrBlank()){
-                                data.unloadingMaterial = data.loadingMaterial
-                            }
-
-                            helper.setLastJourney(data)
-                            helper.toast("Journey Saved.")
-
-//                            val insertID = db.insertJourney(data)
-//                            if(insertID > 0){
-//                                helper.toast("Journey Saved.")
-//                            }else{
-//                                helper.toast("Journey Not Saved.")
-//                            }
-
-
-                            intent.putExtra("data", data)
-                            startActivity(intent)
-                        }else {
-                            val intent = Intent(this, Weight1Activity::class.java)
-                            data.loadingLocation = locations.get(position).name
-                            intent.putExtra("data", data)
-                            startActivity(intent)
-                        }
-                    }
+                    }*/
                 }
             }
 
@@ -148,8 +121,7 @@ class Location1Activity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         when(view!!.id){
-            R.id.elocation1_back -> {finish()
-            }
+            R.id.elocation1_back -> { finish() }
         }
     }
 }

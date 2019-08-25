@@ -18,8 +18,6 @@ class LMachine1Activity : BaseActivity(), View.OnClickListener {
 
     private val TAG = this::class.java.simpleName
 
-//    private var data = Data()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -86,7 +84,7 @@ class LMachine1Activity : BaseActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         when(view!!.id){
 //            R.id.ehome_next -> {
-//                val intent = Intent(this@Material1Activity, ELoadTruckActivity::class.java)
+//                val intent = Intent(this@Material1Activity, ELoadActivity::class.java)
 //                startActivity(intent)
 //            }
         }

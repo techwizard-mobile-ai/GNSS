@@ -19,7 +19,7 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
         val contentFrameLayout = findViewById(R.id.base_content_frame) as FrameLayout
         layoutInflater.inflate(R.layout.activity_hour_meter_stop, contentFrameLayout)
         val navigationView = findViewById(R.id.base_nav_view) as NavigationView
-        navigationView.menu.getItem(0).isChecked = true
+        navigationView.menu.getItem(7).isChecked = true
 
         helper.setTag(TAG)
 

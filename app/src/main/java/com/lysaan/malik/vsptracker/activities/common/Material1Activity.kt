@@ -13,6 +13,8 @@ import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.adapters.CustomGrid
 import com.lysaan.malik.vsptracker.others.Data
 import android.app.Activity
+import com.lysaan.malik.vsptracker.activities.excavator.ELoadActivity
+import kotlinx.android.synthetic.main.activity_material1.*
 
 
 class Material1Activity : BaseActivity(), View.OnClickListener {
@@ -42,10 +44,6 @@ class Material1Activity : BaseActivity(), View.OnClickListener {
         materials.removeAt(0)
         val adapter = CustomGrid(this@Material1Activity, materials)
 
-
-
-
-
         gv.setAdapter(adapter)
         gv.setOnItemClickListener(AdapterView.OnItemClickListener { parent, view, position, id ->
             helper.toast("Selected Material: " + materials.get(position).name)
@@ -63,32 +61,41 @@ class Material1Activity : BaseActivity(), View.OnClickListener {
                 setResult(Activity.RESULT_OK, intent)
                 finish()
             }else{
-                if(data.isUnload){
-                    val intent = Intent(this, Location1Activity::class.java)
-                    data.unloadingMaterial = materials.get(position).name
-                    intent.putExtra("data", data)
-                    startActivity(intent)
-                }else{
-                    val intent = Intent(this, Location1Activity::class.java)
-                    data.loadingMaterial = materials.get(position).name
-                    intent.putExtra("data", data)
-                    startActivity(intent)
+                when(helper.getMachineType()){
+                    1 ->{
+                        val intent = Intent(this, ELoadActivity::class.java)
+                        data.loadingMaterial = materials.get(position).name
+                        intent.putExtra("data", data)
+                        startActivity(intent)
+
+                    }
+                    2,3 ->{
+                        if(data.isUnload){
+                            val intent = Intent(this, Location1Activity::class.java)
+                            data.unloadingMaterial = materials.get(position).name
+                            intent.putExtra("data", data)
+                            startActivity(intent)
+                        }else{
+                            val intent = Intent(this, Location1Activity::class.java)
+                            data.loadingMaterial = materials.get(position).name
+                            intent.putExtra("data", data)
+                            startActivity(intent)
+                        }
+
+                    }
                 }
+
             }
 
-
-
-
         })
+
+        ematerial1_back.setOnClickListener(this)
 
     }
 
     override fun onClick(view: View?) {
         when(view!!.id){
-//            R.id.ehome_next -> {
-//                val intent = Intent(this@Material1Activity, ELoadTruckActivity::class.java)
-//                startActivity(intent)
-//            }
+            R.id.ematerial1_back -> {finish()}
         }
     }
 }

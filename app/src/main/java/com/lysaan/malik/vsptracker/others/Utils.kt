@@ -2,6 +2,7 @@ package com.lysaan.malik.vsptracker.others
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Bundle
 import com.lysaan.malik.vsptracker.Helper
 import com.lysaan.malik.vsptracker.R
 
@@ -17,8 +18,19 @@ object Utils {
 
     fun changeToTheme(activity: Activity, theme: Int) {
         sTheme = theme
+
+        var dataNew = Data()
+        var bundle : Bundle?=activity.intent.extras
+        if(bundle != null){
+            dataNew = bundle!!.getSerializable("data") as Data
+            helper.log("data:$dataNew")
+        }
+
         activity.finish()
-        activity.startActivity(Intent(activity, activity.javaClass))
+
+        val intent = Intent(activity, activity.javaClass)
+            intent.putExtra("data",dataNew)
+        activity.startActivity(intent)
         activity.overridePendingTransition(
             android.R.anim.fade_in,
             android.R.anim.fade_out

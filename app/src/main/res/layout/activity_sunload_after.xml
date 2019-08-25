@@ -43,7 +43,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="@dimen/_30sdp"
                 style="@style/next_button"
-                android:text="Finish"
+                android:text="@string/end_work"
         />
     </RelativeLayout>
 </LinearLayout>

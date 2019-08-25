@@ -8,6 +8,8 @@ import android.view.View
 import android.widget.FrameLayout
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
+import com.lysaan.malik.vsptracker.activities.scrapper.SUnloadAfterActivity
+import com.lysaan.malik.vsptracker.activities.truck.TUnloadAfterActivity
 import com.lysaan.malik.vsptracker.others.Data
 import kotlinx.android.synthetic.main.activity_rload.*
 import kotlinx.android.synthetic.main.activity_runload.*
@@ -43,10 +45,13 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
 //            lastJourney = lastJourneyList.get(0)
 //        }
 
-        trul_task.text = "1. " +lastJourney.unloadingTask
-        trul_material.text = "2. " +lastJourney.unloadingMaterial
-        trul_location.text = "3. " +lastJourney.unloadingLocation
-        trul_weight.text = "4. Tons ("+lastJourney.loadedWeight +")"
+        trul_task.text = lastJourney.unloadingTask
+        trul_material.text = lastJourney.unloadingMaterial
+        trul_location.text = lastJourney.unloadingLocation
+        trul_weight.text = "Tonnes ("+lastJourney.loadedWeight +")"
+
+        runload_home.setOnClickListener(this)
+        runload_finish.setOnClickListener(this)
 
         trunload_unload.setOnClickListener(this)
         trul_task.setOnClickListener(this)
@@ -57,11 +62,28 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         when(view!!.id){
 
+
+            R.id.runload_home -> {
+                helper.startHomeActivityByType(data)
+            }
+            R.id.runload_finish -> {
+                helper.logout(this)
+            }
             R.id.trunload_unload -> {
-                val intent = Intent(this, RLoadActivity::class.java)
-                intent.putExtra("data", helper.getLastJourney())
-                startActivity(intent)
-                finish()
+                if(data.isRepeatJourney){
+                    val intent = Intent(this, RLoadActivity::class.java)
+                    intent.putExtra("data", data)
+                    startActivity(intent)
+                    finish()
+                }else{
+
+                    helper.startLoadAfterActivityByType(data)
+
+
+//                    helper.setLastJourney(data)
+//                    helper.toast("Journey Saved.")
+                }
+
             }
             R.id.trul_task -> {
                 val intent = Intent(this, UnloadTaskActivity::class.java)
@@ -96,9 +118,9 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                 data = bundle!!.getSerializable("data") as Data
                 helper.log("data:$data")
 
-                trul_task.text = "1. " +data.unloadingTask
-                trul_material.text = "2. " +data.unloadingMaterial
-                trul_location.text = "3. " +data.unloadingLocation
+                trul_task.text = data.unloadingTask
+                trul_material.text = data.unloadingMaterial
+                trul_location.text = data.unloadingLocation
                 data.isForUnloadResult = false
                 data.isForLoadResult = false
                 helper.setLastJourney(data)

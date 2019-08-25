@@ -10,9 +10,9 @@ import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.adapters.LoadingHistoryAdapter
 import com.lysaan.malik.vsptracker.others.Data
-import kotlinx.android.synthetic.main.activity_load_history.*
+import kotlinx.android.synthetic.main.activity_history.*
 
-class LoadHistoryActivity : BaseActivity(), View.OnClickListener {
+class HistoryActivity : BaseActivity(), View.OnClickListener {
 
     private val TAG = this::class.java.simpleName
 
@@ -21,7 +21,7 @@ class LoadHistoryActivity : BaseActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
 
         val contentFrameLayout = findViewById(R.id.base_content_frame) as FrameLayout
-        layoutInflater.inflate(R.layout.activity_load_history, contentFrameLayout)
+        layoutInflater.inflate(R.layout.activity_history, contentFrameLayout)
         val navigationView = findViewById(R.id.base_nav_view) as NavigationView
         navigationView.menu.getItem(5).isChecked = true
 
@@ -43,9 +43,9 @@ class LoadHistoryActivity : BaseActivity(), View.OnClickListener {
 
         helper.log("Loads:${db.getLoadHistroy()}")
 
-        val aa = LoadingHistoryAdapter(this@LoadHistoryActivity,db.getLoadHistroy())
+        val mAdapter = LoadingHistoryAdapter(this@HistoryActivity,db.getLoadHistroy())
         lh_rv.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
-        lh_rv!!.setAdapter(aa)
+        lh_rv!!.setAdapter(mAdapter)
 
 
 

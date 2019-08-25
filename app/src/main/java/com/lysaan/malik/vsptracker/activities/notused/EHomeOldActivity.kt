@@ -11,12 +11,12 @@ import android.widget.FrameLayout
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.Helper
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.activities.excavator.ELoadTruckActivity
+import com.lysaan.malik.vsptracker.activities.excavator.ELoadActivity
 import com.lysaan.malik.vsptracker.adapters.SelectLocationAdapter
 import com.lysaan.malik.vsptracker.adapters.SelectStateAdapter
-import kotlinx.android.synthetic.main.activity_ehome.*
+import kotlinx.android.synthetic.main.activity_ehomeold.*
 
-class EHomeActivity : BaseActivity(), View.OnClickListener {
+class EHomeOldActivity : BaseActivity(), View.OnClickListener {
 
     private val TAG = this::class.java.simpleName
 
@@ -24,7 +24,7 @@ class EHomeActivity : BaseActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
 
         val contentFrameLayout = findViewById(R.id.base_content_frame) as FrameLayout
-        layoutInflater.inflate(R.layout.activity_ehome, contentFrameLayout)
+        layoutInflater.inflate(R.layout.activity_ehomeold, contentFrameLayout)
         val navigationView = findViewById(R.id.base_nav_view) as NavigationView
         navigationView.menu.getItem(0).isChecked = true
 
@@ -32,7 +32,6 @@ class EHomeActivity : BaseActivity(), View.OnClickListener {
 
         selectMaterial()
         selectLocation()
-
         ehome_next.setOnClickListener(this)
 
     }
@@ -41,7 +40,7 @@ class EHomeActivity : BaseActivity(), View.OnClickListener {
         when(view!!.id){
 
             R.id.ehome_next -> {
-                val intent = Intent(this@EHomeActivity, ELoadTruckActivity::class.java)
+                val intent = Intent(this@EHomeOldActivity, ELoadActivity::class.java)
                 startActivity(intent)
             }
         }
@@ -49,7 +48,7 @@ class EHomeActivity : BaseActivity(), View.OnClickListener {
 
     private fun selectMaterial() {
         var materials = helper.getMaterials()
-        val selectMaterialAdapter = SelectStateAdapter(this@EHomeActivity, materials)
+        val selectMaterialAdapter = SelectStateAdapter(this@EHomeOldActivity, materials)
         ehome_material_spinner!!.setAdapter(selectMaterialAdapter)
         ehome_material_spinner.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
         ehome_material_spinner.setSelection(0, false)
@@ -77,7 +76,7 @@ class EHomeActivity : BaseActivity(), View.OnClickListener {
 
     private fun selectLocation() {
         var locations = helper.getLocations()
-        val locationAdapter = SelectLocationAdapter(this@EHomeActivity, locations)
+        val locationAdapter = SelectLocationAdapter(this@EHomeOldActivity, locations)
         ehome_location_spinner!!.setAdapter(locationAdapter)
         ehome_location_spinner.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
         ehome_location_spinner.setSelection(0, false)

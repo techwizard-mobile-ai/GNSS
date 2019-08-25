@@ -34,6 +34,7 @@ class THomeActivity : BaseActivity(), View.OnClickListener {
             helper.log("data:$data")
         }
 
+        thome_logout.setOnClickListener(this)
         thome_load.setOnClickListener(this)
         thome_unload.setOnClickListener(this)
     }
@@ -52,6 +53,7 @@ class THomeActivity : BaseActivity(), View.OnClickListener {
                 intent.putExtra("data", data)
                 startActivity(intent)
             }
+            R.id.thome_logout ->{ helper.logout(this)}
         }
 
     }

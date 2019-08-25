@@ -67,6 +67,7 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
                     helper.setMachineNumber(machineNumber)
 
 //                    helper.toast("Data Saved Successfully.")
+                    helper.stopDailyMode()
                     val intent = Intent(this, LoginActivity::class.java)
                     startActivity(intent)
                     finishAffinity()

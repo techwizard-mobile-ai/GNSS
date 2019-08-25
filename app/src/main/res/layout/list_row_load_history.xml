@@ -15,6 +15,7 @@
         card_view:contentPadding="5dp"
         card_view:cardElevation="6dp"
         card_view:cardMaxElevation="10dp"
+            style="?attr/cardStyle"
         >
         <LinearLayout
             android:layout_width="match_parent"
@@ -52,7 +53,8 @@
             </LinearLayout>
             <LinearLayout
                     android:id="@+id/lhr_loaded_machine_layout"
-                style="@style/load_history_row_item"
+                    android:visibility="gone"
+                    style="@style/load_history_row_item"
                 >
                 <TextView
                     style="@style/load_history_text"
@@ -116,6 +118,20 @@
                     />
                 <TextView
                     android:id="@+id/lhr_time"
+                    style="@style/load_history_desc"
+                    android:text=":  Morning 7am - 12am"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                    android:id="@+id/lhr_workmode_layout"
+                style="@style/load_history_row_item"
+                >
+                <TextView
+                    style="@style/load_history_text"
+                    android:text="Work Mode"
+                    />
+                <TextView
+                    android:id="@+id/lhr_workmode"
                     style="@style/load_history_desc"
                     android:text=":  Morning 7am - 12am"
                     />

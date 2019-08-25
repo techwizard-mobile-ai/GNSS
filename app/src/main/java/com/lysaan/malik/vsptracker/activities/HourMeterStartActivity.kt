@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.FrameLayout
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
+import com.lysaan.malik.vsptracker.others.Data
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_hour_meter_start.*
 import kotlinx.android.synthetic.main.activity_hour_meter_stop.*
@@ -25,6 +26,7 @@ class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
         drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
         helper.setTag(TAG)
+        data = Data()
         helper.hideKeybaordOnClick(hour_meter_main_layout)
 
         ms_minus.setOnClickListener(this)

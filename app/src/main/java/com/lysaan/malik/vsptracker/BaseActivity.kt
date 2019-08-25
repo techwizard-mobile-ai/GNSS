@@ -15,10 +15,10 @@ import android.text.Html
 import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
-import com.lysaan.malik.vsptracker.activities.HourMeterStopActivity
-import com.lysaan.malik.vsptracker.activities.LoadHistoryActivity
+import com.lysaan.malik.vsptracker.activities.DayWorksActivity
 import com.lysaan.malik.vsptracker.activities.MachineTypeActivity
 import com.lysaan.malik.vsptracker.activities.common.MachineStatus1Activity
+import com.lysaan.malik.vsptracker.activities.truck.TWaitActivity
 import com.lysaan.malik.vsptracker.adapters.BaseNavigationAdapter
 import com.lysaan.malik.vsptracker.classes.Material
 import com.lysaan.malik.vsptracker.database.DatabaseAdapter
@@ -47,7 +47,6 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
 
         helper = Helper(TAG1, this)
         db = DatabaseAdapter(this)
-        data = Data()
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.base_nav_view)
@@ -67,7 +66,6 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             }
             3 -> {
                 toolbar_title.text = "VSP Tracker - Truck"
-
             }
         }
 
@@ -75,6 +73,13 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             val intent = Intent(this@BaseActivity, MachineStatus1Activity::class.java)
             startActivity(intent)
         }
+
+        base_daily_mode.setOnClickListener {
+            val intent = Intent(this@BaseActivity, DayWorksActivity::class.java)
+            startActivity(intent)
+        }
+
+
 
         helper.hideKeybaordOnClick(base_content_frame)
 
@@ -92,7 +97,6 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
     override fun onResume() {
         super.onResume()
         if(helper.getIsMachineStopped()){
-
             val text = "<font color=#FF382A>Machine is Stopped. </font><font color=#106d14><u>Click here to Start Machine</u>.</font>"
             base_machine_status.setText(Html.fromHtml(text))
 
@@ -100,6 +104,14 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             helper.log("Is Machine Stopped: ${helper.getIsMachineStopped()}")
         }else{
             base_machine_status.visibility = View.GONE
+        }
+
+        if(helper.isDailyModeStarted()){
+            val text = "<font color=#FF382A>Day Works is ON. </font><font color=#106d14><u>Switch Standard Mode</u>.</font>"
+            base_daily_mode.setText(Html.fromHtml(text))
+            base_daily_mode.visibility = View.VISIBLE
+        }else{
+            base_daily_mode.visibility = View.GONE
         }
     }
 
@@ -118,14 +130,13 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
                 val data = Data()
                 helper.startHomeActivityByType(data)
             }
-            R.id.nav_settings-> {
+            R.id.nav_day_works-> {
 
+                val intent = Intent (this, DayWorksActivity::class.java)
+                startActivity(intent)
             }
             R.id.nav_logout-> {
-
-                val intent = Intent (this, HourMeterStopActivity::class.java)
-                startActivity(intent)
-                finishAffinity()
+                helper.logout(this)
             }
             R.id.nav_stop_machine -> {
 
@@ -150,12 +161,15 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             }
 
             R.id.nav_load_history -> {
-                val intent = Intent (this, LoadHistoryActivity::class.java)
-                startActivity(intent)
-
+                helper.startHistoryByType()
             }
             R.id.nav_email-> {
                 doEmail()
+            }
+
+            R.id.nav_delay ->{
+                val intent = Intent (this, TWaitActivity::class.java)
+                startActivity(intent)
             }
         }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)

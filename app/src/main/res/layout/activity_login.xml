@@ -27,6 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 card_view:cardCornerRadius="5dp"
+                style="?attr/cardStyle"
                 card_view:contentPadding="5dp"
                 card_view:cardElevation="6dp"
                 card_view:cardMaxElevation="5dp"

@@ -1,6 +1,7 @@
 package com.lysaan.malik.vsptracker.activities.common
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.view.View
@@ -40,6 +41,8 @@ class Weight1Activity : BaseActivity(), View.OnClickListener {
             R.id.w1_next -> {
 
                 if(data.isForLoadResult){
+                    //This code will be executed when this Activity is used for startActivity for Result in RLoadActivity
+                    // taking Weight of material in Tons
                     val intent = intent
 
                     val sload_weight = sload_weight.text.toString()
@@ -50,16 +53,19 @@ class Weight1Activity : BaseActivity(), View.OnClickListener {
                     setResult(Activity.RESULT_OK, intent)
                     finish()
                 }else if (data.isForUnloadResult){
+
+                    //This code will be executed when this Activity is used for startActivity for Result in RUnloadActivity
+                    // taking Weight of material in Tons
                     val intent = intent
 
                     val sload_weight = sload_weight.text.toString()
                     if(!sload_weight.isNullOrBlank())
                         data.loadedWeight = sload_weight.toDouble()
-
                     intent.putExtra("data", data)
                     setResult(Activity.RESULT_OK, intent)
                     finish()
                 }else{
+
                     val sload_weight = sload_weight.text.toString()
                     if(!sload_weight.isNullOrBlank())
                         data.loadedWeight = sload_weight.toDouble()
@@ -73,14 +79,10 @@ class Weight1Activity : BaseActivity(), View.OnClickListener {
                     helper.setLastJourney(data1)
 
 
+                    val intent = Intent(this, RLoadActivity::class.java)
+                    intent.putExtra("data", data)
+                    startActivity(intent)
 
-                    val insertID = db.insertLoad(data)
-                    if(insertID > 0){
-                        helper.toast("Loading Successful.\nLoaded Number # $insertID")
-                        helper.startHomeActivityByType(data)
-                    }else{
-                        helper.toast("Error while Saving Record.")
-                    }
                 }
 
             }
