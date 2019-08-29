@@ -10,7 +10,7 @@ import com.lysaan.malik.vsptracker.Helper
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.database.DatabaseAdapter
 import com.lysaan.malik.vsptracker.fragments.excavator.EOffloadingLoadsFragment
-import com.lysaan.malik.vsptracker.others.EWork
+import com.lysaan.malik.vsptracker.classes.EWork
 import kotlinx.android.synthetic.main.list_row_et_history.view.*
 
 
@@ -53,6 +53,16 @@ class ETHistoryAdapter(
         holder.itemView.eth_date.setText(":  "+helper.getDateTime(eWork.stopTime)+" Hrs")
         holder.itemView.eth_mode.setText(":  ${eWork.workMode}")
 
+
+        holder.itemView.lhr_gps_loading.text = ": ${helper.getRoundedDecimal(eWork.loadingGPSLocation.latitude)} / ${helper.getRoundedDecimal(eWork.loadingGPSLocation.longitude)} "
+        holder.itemView.lhr_gps_unloading.text = ": ${helper.getRoundedDecimal(eWork.unloadingGPSLocation.latitude)} / ${helper.getRoundedDecimal(eWork.unloadingGPSLocation.longitude)} "
+
+        holder.itemView.lhr_gps_loading_layout.setOnClickListener {
+            helper.showOnMap(eWork.loadingGPSLocation,"GPS Location")
+        }
+        holder.itemView.lhr_gps_unloading_layout.setOnClickListener {
+            helper.showOnMap(eWork.unloadingGPSLocation, "GPS Location")
+        }
 
         holder.itemView.eth_row.setOnClickListener {
             if(eWork.workActionType == 2){

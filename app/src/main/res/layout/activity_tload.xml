@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/tload_main_layout"
-        tools:context=".activities.truck.TLoadActivity">
+        tools:context=".activities.notused.TLoadActivity">
 
     <TextView style="@style/activity_title"
               android:text="Load Truck"

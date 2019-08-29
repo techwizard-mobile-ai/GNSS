@@ -4,15 +4,12 @@ import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
-import android.widget.AdapterView
 import android.widget.FrameLayout
-import android.widget.GridView
 import android.widget.LinearLayout
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.adapters.CustomGrid
 import com.lysaan.malik.vsptracker.adapters.MachineStatusAdapter
-import com.lysaan.malik.vsptracker.others.Data
+import com.lysaan.malik.vsptracker.classes.Data
 import kotlinx.android.synthetic.main.activity_machine_status1.*
 
 class MachineStatus1Activity : BaseActivity(), View.OnClickListener {

@@ -11,7 +11,7 @@ import android.widget.GridView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.adapters.CustomGrid
-import com.lysaan.malik.vsptracker.others.Data
+import com.lysaan.malik.vsptracker.classes.Data
 import kotlinx.android.synthetic.main.activity_lmachine1.*
 
 class LMachine1Activity : BaseActivity(), View.OnClickListener {
@@ -33,12 +33,23 @@ class LMachine1Activity : BaseActivity(), View.OnClickListener {
             data = bundle!!.getSerializable("data") as Data
             helper.log("data:$data")
         }
+//        data = helper.getLastJourney()
 
-        if(data.isUnload){
-            lm_title.text = "Select Unloading Machine"
-        }else{
-            lm_title.text = "Select Loading Machine"
+        when(data.nextAction){
+            0 -> {lm_title.text = "Select Loading Machine"}
+            1 -> {lm_title.text = "Select Unloading Machine"}
+            2 -> {lm_title.text = "Select Back Loading Machine"}
+            3 -> {lm_title.text = "Select Back Unloading Machine"}
         }
+//        if(data.isForBackLoad){
+//            lm_title.text = "Select Back Loading Machine"
+//        }else if(data.isForBackUnload){
+//            lm_title.text = "Select Back Unloading Machine"
+//        }else if(data.isUnload){
+//            lm_title.text = "Select Unloading Machine"
+//        }else{
+//            lm_title.text = "Select Loading Machine"
+//        }
 
         val gv = findViewById(R.id.tlm_gridview) as GridView
         val machines = helper.getMachines()
@@ -61,21 +72,67 @@ class LMachine1Activity : BaseActivity(), View.OnClickListener {
                 intent.putExtra("data", data)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
-            }else{
-                if(data.isUnload){
-                    val intent = Intent(this, Location1Activity::class.java)
-                    data.unloadingMachine = machines.get(position).name
-                    intent.putExtra("data", data)
-                    startActivity(intent)
-                }else{
-                    val intent = Intent(this, Material1Activity::class.java)
-                    data.loadingMachine = machines.get(position).name
-                    intent.putExtra("data", data)
-                    startActivity(intent)
+            }else if(data.isForBackLoadResult){
+                val intent = intent
+                data.backLoadingMachine = machines.get(position).name
+                intent.putExtra("data", data)
+                setResult(Activity.RESULT_OK, intent)
+                finish()
+            }else if (data.isForBackUnloadResult){
+                val intent = intent
+                data.backUnloadingMachine = machines.get(position).name
+                intent.putExtra("data", data)
+                setResult(Activity.RESULT_OK, intent)
+                finish()
+            }else {
+                when(data.nextAction){
+                    0 -> {
+                        val intent = Intent(this, Material1Activity::class.java)
+                        data.loadingMachine = machines.get(position).name
+                        intent.putExtra("data", data)
+                        startActivity(intent)
+                    }
+                    1 -> {
+                        val intent = Intent(this, Location1Activity::class.java)
+                        data.unloadingMachine = machines.get(position).name
+                        intent.putExtra("data", data)
+                        startActivity(intent)
+                    }
+                    2 -> {
+                        val intent = Intent(this, Material1Activity::class.java)
+                        data.backLoadingMachine = machines.get(position).name
+                        intent.putExtra("data", data)
+                        startActivity(intent)
+                    }
+                    3 -> {
+                        val intent = Intent(this, Location1Activity::class.java)
+                        data.backUnloadingMachine = machines.get(position).name
+                        intent.putExtra("data", data)
+                        startActivity(intent)
+                    }
                 }
             }
-
-
+//                if(data.isForBackUnload){
+//                val intent = Intent(this, Location1Activity::class.java)
+//                data.backUnloadingMachine = machines.get(position).name
+//                intent.putExtra("data", data)
+//                startActivity(intent)
+//            }else if(data.isForBackLoad){
+//                val intent = Intent(this, Material1Activity::class.java)
+//                data.backLoadingMachine = machines.get(position).name
+//                intent.putExtra("data", data)
+//                startActivity(intent)
+//            }else if(data.isUnload){
+//                    val intent = Intent(this, Location1Activity::class.java)
+//                    data.unloadingMachine = machines.get(position).name
+//                    intent.putExtra("data", data)
+//                    startActivity(intent)
+//                }else{
+//                    val intent = Intent(this, Material1Activity::class.java)
+//                    data.loadingMachine = machines.get(position).name
+//                    intent.putExtra("data", data)
+//                    startActivity(intent)
+//            }
         })
 
     }

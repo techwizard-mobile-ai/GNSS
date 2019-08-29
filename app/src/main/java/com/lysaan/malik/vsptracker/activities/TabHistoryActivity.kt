@@ -9,18 +9,19 @@ import android.view.View
 import android.widget.FrameLayout
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.fragments.excavator.*
-import com.lysaan.malik.vsptracker.others.Data
+import com.lysaan.malik.vsptracker.classes.Data
+import com.lysaan.malik.vsptracker.fragments.common.DelayHistoryFragment
+import com.lysaan.malik.vsptracker.fragments.truck.LoadingHistoryFragment
 import kotlinx.android.synthetic.main.activity_tab_history.*
 
 class TabHistoryActivity : BaseActivity(), View.OnClickListener,
-    ELoadingHistoryFragment.OnFragmentInteractionListener,
+    LoadingHistoryFragment.OnFragmentInteractionListener,
     DelayHistoryFragment.OnFragmentInteractionListener {
 
 
     override fun onFragmentInteraction(uri: Uri) {}
 
-    private val E_LOADHISTORY: String = "E_LOADHISTORY"
+    private val LOADING_HISTORY: String = "LOADING_HISTORY"
     private val DELAY_HISTORY : String = "DELAY_HISTORY"
     private val TAG = this::class.java.simpleName
 
@@ -30,7 +31,7 @@ class TabHistoryActivity : BaseActivity(), View.OnClickListener,
         val contentFrameLayout = findViewById(R.id.base_content_frame) as FrameLayout
         layoutInflater.inflate(R.layout.activity_tab_history, contentFrameLayout)
         val navigationView = findViewById(R.id.base_nav_view) as NavigationView
-        navigationView.menu.getItem(0).isChecked = true
+        navigationView.menu.getItem(5).isChecked = true
 
         helper.setTag(TAG)
 
@@ -51,16 +52,16 @@ class TabHistoryActivity : BaseActivity(), View.OnClickListener,
                 val delayFragment = DelayHistoryFragment.newInstance(this, DELAY_HISTORY)
                 openFragment(delayFragment, DELAY_HISTORY)
             }else{
-                val homeFragment = ELoadingHistoryFragment.newInstance(this)
-                openFragment(homeFragment,E_LOADHISTORY)
+                val homeFragment = LoadingHistoryFragment.newInstance(this)
+                openFragment(homeFragment,LOADING_HISTORY)
             }
         }else{
-            val homeFragment = ELoadingHistoryFragment.newInstance(this)
-            openFragment(homeFragment,E_LOADHISTORY)
+            val homeFragment = LoadingHistoryFragment.newInstance(this)
+            openFragment(homeFragment,LOADING_HISTORY)
         }
 
-        val eLoadingHistoryFragment = ELoadingHistoryFragment.newInstance(this)
-        openFragment(eLoadingHistoryFragment,E_LOADHISTORY)
+        val eLoadingHistoryFragment = LoadingHistoryFragment.newInstance(this)
+        openFragment(eLoadingHistoryFragment,LOADING_HISTORY)
     }
 
     private fun openFragment(fragment: Fragment, FRAGMENT_TAG: String?) {
@@ -72,9 +73,9 @@ class TabHistoryActivity : BaseActivity(), View.OnClickListener,
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navf_loading -> {
-                val eLoadingHistoryFragment =
-                    ELoadingHistoryFragment.newInstance(this)
-                openFragment(eLoadingHistoryFragment,E_LOADHISTORY)
+                val loadingHistoryFragment =
+                    LoadingHistoryFragment.newInstance(this)
+                openFragment(loadingHistoryFragment,LOADING_HISTORY)
                 return@OnNavigationItemSelectedListener true
             }
 
@@ -83,6 +84,7 @@ class TabHistoryActivity : BaseActivity(), View.OnClickListener,
                 openFragment(delayHistoryFragment, DELAY_HISTORY)
                 return@OnNavigationItemSelectedListener  true
             }
+            R.id.navf_finish ->{ finish()}
         }
         false
     }
@@ -92,7 +94,7 @@ class TabHistoryActivity : BaseActivity(), View.OnClickListener,
     }
     fun setNavItem(currentFragmentTag: String?) {
         when(currentFragmentTag){
-            E_LOADHISTORY -> navigationView.selectedItemId = R.id.navf_loading
+            LOADING_HISTORY -> navigationView.selectedItemId = R.id.navf_loading
             DELAY_HISTORY -> navigationView.selectedItemId = R.id.nav_delay }
     }
     override fun onBackPressed() {

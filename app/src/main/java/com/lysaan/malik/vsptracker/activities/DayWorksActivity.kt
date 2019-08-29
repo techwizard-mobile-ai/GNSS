@@ -1,6 +1,5 @@
 package com.lysaan.malik.vsptracker.activities
 
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.SystemClock
@@ -9,7 +8,7 @@ import android.view.View
 import android.widget.FrameLayout
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.others.Data
+import com.lysaan.malik.vsptracker.classes.Data
 import kotlinx.android.synthetic.main.activity_day_works.*
 
 class DayWorksActivity : BaseActivity(), View.OnClickListener {

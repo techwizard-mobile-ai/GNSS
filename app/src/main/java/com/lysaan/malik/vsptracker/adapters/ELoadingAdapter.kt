@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.others.Data
+import com.lysaan.malik.vsptracker.classes.Data
 import kotlinx.android.synthetic.main.list_row_eloading.view.*
 
 class ELoadingAdapter(

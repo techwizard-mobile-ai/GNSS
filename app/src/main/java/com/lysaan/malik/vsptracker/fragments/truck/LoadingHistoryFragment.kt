@@ -1,4 +1,4 @@
-package com.lysaan.malik.vsptracker.fragments.excavator
+package com.lysaan.malik.vsptracker.fragments.truck
 
 import android.app.Activity
 import android.content.Context
@@ -13,29 +13,28 @@ import android.widget.LinearLayout
 import com.lysaan.malik.vsptracker.Helper
 
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.activities.excavator.EHistoryActivity
-import com.lysaan.malik.vsptracker.adapters.DelayHistoryAdapter
+import com.lysaan.malik.vsptracker.adapters.LoadingHistoryAdapter
+import com.lysaan.malik.vsptracker.classes.Data
 import com.lysaan.malik.vsptracker.database.DatabaseAdapter
-import com.lysaan.malik.vsptracker.others.EWork
-import kotlinx.android.synthetic.main.fragment_delay_history.view.*
+import kotlinx.android.synthetic.main.fragment_loading_history.*
 
+class LoadingHistoryFragment : Fragment() {
 
-class DelayHistoryFragment : Fragment() {
-    private var listener: OnFragmentInteractionListener? = null
-
+    private lateinit var loadingHistory: MutableList<Data>
     private val TAG = this::class.java.simpleName
+
     private lateinit var helper: Helper
     private var root: View? = null
-    private lateinit var diggingHistory: MutableList<EWork>
-    private lateinit var db: DatabaseAdapter
+
+    private lateinit var db : DatabaseAdapter
+    private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             helper = Helper(TAG,myContext)
             db = DatabaseAdapter(myContext)
-            diggingHistory = db.getEWorks(1)
-            helper.log("Digging:$diggingHistory ")
+            loadingHistory = db.getTrips()
         }
     }
 
@@ -43,18 +42,16 @@ class DelayHistoryFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        root = inflater.inflate(R.layout.fragment_delay_history, container, false)
+        root = inflater.inflate(R.layout.fragment_loading_history, container, false)
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        val workType = 1
-        val dataList = db.getTWaits()
-        val mAdapter = DelayHistoryAdapter(myContext, dataList)
-        root!!.dh_rv.layoutManager = LinearLayoutManager(myContext, LinearLayout.VERTICAL, false)
-        root!!.dh_rv!!.setAdapter(mAdapter)
+        val mAdapter = LoadingHistoryAdapter(myContext,loadingHistory)
+        flh_rv.layoutManager = LinearLayoutManager(myContext, LinearLayout.VERTICAL, false)
+        flh_rv!!.setAdapter(mAdapter)
     }
 
     fun onButtonPressed(uri: Uri) {
@@ -81,19 +78,12 @@ class DelayHistoryFragment : Fragment() {
 
     companion object {
 
-
-        private lateinit var myContext: Activity
-        private lateinit var FRAGMENT_TAG: String
-
+        private lateinit var myContext : Activity
         @JvmStatic
-        fun newInstance(
-            eHistoryActivity: Activity,
-            FRAGMENT_TG: String
-        ) =
-            DelayHistoryFragment().apply {
+        fun newInstance( activity : Activity) =
+            LoadingHistoryFragment().apply {
                 arguments = Bundle().apply {
-                    myContext = eHistoryActivity
-                    FRAGMENT_TAG = FRAGMENT_TG
+                    myContext = activity
                 }
             }
     }

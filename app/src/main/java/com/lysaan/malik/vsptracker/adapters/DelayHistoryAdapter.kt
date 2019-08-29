@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.lysaan.malik.vsptracker.Helper
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.others.EWork
+import com.lysaan.malik.vsptracker.classes.EWork
 import kotlinx.android.synthetic.main.list_row_delay_history.view.*
 
 
@@ -44,6 +44,15 @@ class DelayHistoryAdapter(
         holder.itemView.eth_date.setText(":  "+helper.getDateTime(eWork.stopTime)+" Hrs")
         holder.itemView.eth_mode.setText(":  ${eWork.workMode}")
 
+        holder.itemView.lhr_gps_loading.text = ": ${helper.getRoundedDecimal(eWork.loadingGPSLocation.latitude)} / ${helper.getRoundedDecimal(eWork.loadingGPSLocation.longitude)} "
+        holder.itemView.lhr_gps_unloading.text = ": ${helper.getRoundedDecimal(eWork.unloadingGPSLocation.latitude)} / ${helper.getRoundedDecimal(eWork.unloadingGPSLocation.longitude)} "
+
+        holder.itemView.lhr_gps_loading_layout.setOnClickListener {
+            helper.showOnMap(eWork.loadingGPSLocation,"Delay Start Location")
+        }
+        holder.itemView.lhr_gps_unloading_layout.setOnClickListener {
+            helper.showOnMap(eWork.unloadingGPSLocation, "Delay Stop Location")
+        }
 
     }
 

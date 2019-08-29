@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import com.lysaan.malik.vsptracker.Helper
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.classes.Material
-import com.lysaan.malik.vsptracker.others.Data
+import com.lysaan.malik.vsptracker.classes.Data
 import kotlinx.android.synthetic.main.list_row_machine_status.view.*
 
 

@@ -136,7 +136,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">0.5</item>
         <item name="android:text">BACK</item>
-        <item name="android:background">@drawable/bback_background</item>
+        <item name="android:background">@drawable/bnext_background</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:layout_margin">@dimen/_1sdp</item>
         <item name="android:textSize">18dp</item>
@@ -245,7 +245,7 @@
 
 
     <style name="ehome_tv" parent="grid_tv">
-        <item name="android:layout_width">@dimen/_160sdp</item>
+        <item name="android:layout_width">@dimen/_180sdp</item>
     </style>
 
     <style name="machine_status_tv" parent="grid_tv">

@@ -1,13 +1,24 @@
 package com.lysaan.malik.vsptracker
 
+import android.Manifest
+import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.NavigationView
+import android.support.design.widget.Snackbar
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
@@ -15,6 +26,8 @@ import android.text.Html
 import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.TextView
+import com.bumptech.glide.Glide
 import com.lysaan.malik.vsptracker.activities.DayWorksActivity
 import com.lysaan.malik.vsptracker.activities.MachineTypeActivity
 import com.lysaan.malik.vsptracker.activities.common.MachineStatus1Activity
@@ -22,18 +35,25 @@ import com.lysaan.malik.vsptracker.activities.truck.TWaitActivity
 import com.lysaan.malik.vsptracker.adapters.BaseNavigationAdapter
 import com.lysaan.malik.vsptracker.classes.Material
 import com.lysaan.malik.vsptracker.database.DatabaseAdapter
-import com.lysaan.malik.vsptracker.others.Data
+import com.lysaan.malik.vsptracker.classes.Data
+import com.lysaan.malik.vsptracker.classes.GPSLocation
 import com.lysaan.malik.vsptracker.others.Utils
 import kotlinx.android.synthetic.main.app_bar_base.*
 
 
 open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
+    private lateinit var location: Location
+    lateinit var gpsLocation :GPSLocation
     val TAG1 = "BaseActivity"
     protected lateinit var helper: Helper
     protected lateinit var db : DatabaseAdapter
     protected lateinit var data : Data
+    private var locationManager : LocationManager? = null
+    var latitude : Double = 0.0
+    var longitude : Double = 0.0
 
+    private val REQUEST_ACCESS_FINE_LOCATION = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +66,7 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
         setSupportActionBar(toolbar)
 
         helper = Helper(TAG1, this)
+        gpsLocation = GPSLocation()
         db = DatabaseAdapter(this)
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
@@ -97,13 +118,27 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
     override fun onResume() {
         super.onResume()
         if(helper.getIsMachineStopped()){
+            base_machine_status_layout.visibility = View.VISIBLE
+
+            when(helper.getMachineStoppedReason()){
+                "Weather" ->{
+                    Glide.with(this).load(resources.getDrawable(R.drawable.ic_action_beach_access)).into(base_machine_status_icon)
+                }
+                "Other 1" ->{
+                    Glide.with(this).load(resources.getDrawable(R.drawable.ic_action_restaurant)).into(base_machine_status_icon)
+                }
+                else ->{
+                    Glide.with(this).load(resources.getDrawable(R.drawable.ic_action_report)).into(base_machine_status_icon)
+                }
+            }
+
+
             val text = "<font color=#FF382A>Machine is Stopped. </font><font color=#106d14><u>Click here to Start Machine</u>.</font>"
             base_machine_status.setText(Html.fromHtml(text))
-
-            base_machine_status.visibility = View.VISIBLE
             helper.log("Is Machine Stopped: ${helper.getIsMachineStopped()}")
+            helper.log("Machine Stopped Reason: ${helper.getMachineStoppedReason()}")
         }else{
-            base_machine_status.visibility = View.GONE
+            base_machine_status_layout.visibility = View.GONE
         }
 
         if(helper.isDailyModeStarted()){
@@ -114,7 +149,6 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             base_daily_mode.visibility = View.GONE
         }
     }
-
     override fun onBackPressed() {
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -123,7 +157,6 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             super.onBackPressed()
         }
     }
-
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_home -> {
@@ -201,5 +234,172 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
         if (intent.resolveActivity(packageManager) != null) {
             startActivity(intent)
         }
+    }
+
+
+    fun stopGPS(){
+        locationManager?.removeUpdates(locationListener)
+    }
+    fun startGPS(){
+
+        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?;
+        try {
+            helper.log("Permission Granted.")
+            locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0f, locationListener);
+
+        } catch(ex: SecurityException) {
+            helper.log("No Location Available:${ex.message}")
+            requestPermission()
+        }
+
+    }
+
+    fun requestPermission(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+                ActivityCompat.requestPermissions(this,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    REQUEST_ACCESS_FINE_LOCATION)
+
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    REQUEST_ACCESS_FINE_LOCATION)
+
+            }
+
+
+        } else {
+            // Permission has already been granted
+
+            if (locationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                //                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListener);
+                locationManager!!.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    1000,
+                    0f,
+                    locationListener
+                )
+            } else {
+                showGPSDisabledAlertToUser()
+            }
+        }
+    }
+    private fun showGPSDisabledAlertToUser() {
+        val alertDialogBuilder = AlertDialog.Builder(this, R.style.ThemeOverlay_AppCompat_Dialog)
+        alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
+            .setCancelable(false)
+            .setPositiveButton("Goto Settings Page\nTo Enable GPS"
+            ) { dialog, id ->
+                val callGPSSettingIntent = Intent(
+                    android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                startActivity(callGPSSettingIntent)
+            }
+        alertDialogBuilder.setNegativeButton("Cancel",
+            object: DialogInterface.OnClickListener {
+                override fun onClick(dialog: DialogInterface, id:Int) {
+                    dialog.cancel()
+                }
+            })
+        var alert = alertDialogBuilder.create()
+        alert.show()
+    }
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            REQUEST_ACCESS_FINE_LOCATION -> {
+                // If request is cancelled, the result arrays are empty.
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    startGPS()
+                } else {
+                    helper.log("GPS Permission Permanently Denied.")
+                    showSettings()
+                }
+                return
+            }
+
+            // Add other 'when' lines to check for other
+            // permissions this app might request.
+            else -> {
+                // Ignore all other requests.
+            }
+        }
+    }
+
+    private fun showSettings(){
+        val snackbar = Snackbar.make(
+            findViewById(android.R.id.content),
+            "You have previously declined GPS permission.\n" + "You must approve this permission in \"Permissions\" in the app settings on your device.",
+            Snackbar.LENGTH_LONG
+        ).setAction(
+            "Settings"
+        ) {
+            startActivity(
+                Intent(
+                    android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.parse("package:" + BuildConfig.APPLICATION_ID)
+                )
+            )
+        }
+        val snackbarView = snackbar.view
+        val textView =
+            snackbarView.findViewById(android.support.design.R.id.snackbar_text) as TextView
+        textView.maxLines = 5  //Or as much as you need
+        snackbar.show()
+    }
+    private val locationListener: LocationListener = object : LocationListener {
+        override fun onLocationChanged(location: android.location.Location?) {
+//            helper.log("locationListener:$location")
+            makeUseofLocation(location)
+        }
+        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {helper.log("Status Changed.")}
+        override fun onProviderEnabled(provider: String) {helper.log("Location Enabled.")}
+        override fun onProviderDisabled(provider: String) {
+            helper.log("Location Disabled.")
+            showGPSDisabledAlertToUser()
+        }
+    }
+    private fun makeUseofLocation(location1: Location?) {
+        latitude = location1!!.latitude
+        longitude = location1!!.longitude
+        location = location1
+
+        gpsLocation.latitude = location1.latitude
+        gpsLocation.longitude = location1.longitude
+        gpsLocation.altitude = location1.altitude
+
+        gpsLocation.accuracy = location1.accuracy
+        gpsLocation.bearing = location1.bearing
+        gpsLocation.speed = location1.speed
+
+        gpsLocation.provider = location1.provider
+        gpsLocation.elapsedRealtimeNanos = location1.elapsedRealtimeNanos
+//        gpsLocation.extras = location1.extras
+        gpsLocation.time = location1.time
+
+
+
+//        helper.log("LocationBaseLat:${latitude}")
+//        helper.log("LocationBaseLongg:${longitude}")
+//        helper.log("LocationBase:${location.latitude}")
+//        helper.log("LocationBase:${location.longitude}")
+//        helper.log("LocationBase:${location.accuracy}")
+//        helper.log("LocationBase:${location.altitude}")
+//        helper.log("LocationBase:${location.bearing}")
+//        helper.log("LocationBase:${location.provider}")
+//        helper.log("LocationBase:${location.speed}")
+//        helper.log("GPSLocation:${GPSLocation}")
+//        helper.log("getMyLocationToString:${helper.getMyLocationToString(location1)}")
+//        helper.log("getStringToMyLocation:${helper.getStringToMyLocation(stringLoc)}")
+//        helper.log("LocationBase:${location}")
     }
 }

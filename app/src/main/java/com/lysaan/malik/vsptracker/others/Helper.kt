@@ -13,15 +13,12 @@ import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
-import com.lysaan.malik.vsptracker.activities.HistoryActivity
+import com.google.gson.Gson
 import com.lysaan.malik.vsptracker.activities.HourMeterStopActivity
 import com.lysaan.malik.vsptracker.activities.TabHistoryActivity
 import com.lysaan.malik.vsptracker.activities.excavator.EHistoryActivity
@@ -30,10 +27,7 @@ import com.lysaan.malik.vsptracker.activities.scrapper.SHomeActivity
 import com.lysaan.malik.vsptracker.activities.scrapper.SUnloadAfterActivity
 import com.lysaan.malik.vsptracker.activities.truck.THomeActivity
 import com.lysaan.malik.vsptracker.activities.truck.TUnloadAfterActivity
-import com.lysaan.malik.vsptracker.classes.Location
-import com.lysaan.malik.vsptracker.classes.Material
-import com.lysaan.malik.vsptracker.others.Data
-import com.lysaan.malik.vsptracker.others.Meter
+import com.lysaan.malik.vsptracker.classes.*
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -45,6 +39,53 @@ class Helper(var TAG: String, val context: Context) {
     private lateinit var dialog: ProgressDialog
     private lateinit var progressBar: ProgressBar
     private var sessionManager: SessionManager = SessionManager(context)
+    private val gson = Gson()
+
+    fun setUserID(userID:String){}
+    fun getUserID () = ""
+
+    fun getStringToGPSLocation(stringGPSLocation: String): GPSLocation {
+        return gson.fromJson(stringGPSLocation, GPSLocation::class.java)
+    }
+
+    fun getGPSLocationToString(gpsLocation: GPSLocation): String {
+        return gson.toJson(gpsLocation)
+    }
+
+    fun showOnMap(gpsLocation: GPSLocation, title:String){
+        val lat = gpsLocation.latitude
+        val longg = gpsLocation.longitude
+        val geoUri = "http://maps.google.com/maps?q=loc:" + lat + "," + longg + " ($title)";
+        val mapIntent = Intent(Intent.ACTION_VIEW, Uri.parse(geoUri))
+        mapIntent.setPackage("com.google.android.apps.maps")
+        context.startActivity(mapIntent)
+    }
+
+
+    // nextAction 0 = Do Loading
+    // nextAction 1 = Do Unloading
+    // nextAction 2 = Do Back Loading
+    // nextAction 3 = Do Back Unloading
+    fun setNextAction(nextAction : Int){
+        val data = getLastJourney()
+        data.nextAction = nextAction
+        setLastJourney(data)
+    }
+    fun getNextAction() = getLastJourney().nextAction
+
+    fun setToDoLayout(view: android.support.design.widget.FloatingActionButton ){
+        val width = context.resources.getDimensionPixelSize(R.dimen._100sdp)
+        val height = context.resources.getDimensionPixelSize(R.dimen._100sdp)
+        val layoutParams = FrameLayout.LayoutParams(width, height)
+        view.setLayoutParams(layoutParams)
+    }
+
+    fun setDefaultLayout(view : android.support.design.widget.FloatingActionButton){
+        val width = context.resources.getDimensionPixelSize(R.dimen._80sdp)
+        val height = context.resources.getDimensionPixelSize(R.dimen._80sdp)
+        val layoutParams = FrameLayout.LayoutParams(width, height)
+        view.setLayoutParams(layoutParams)
+    }
 
     fun getWorkMode(): String {
         if (isDailyModeStarted()) {
@@ -150,15 +191,21 @@ class Helper(var TAG: String, val context: Context) {
     }
 
     fun getTime(s: Long): String {
-        try {
+
+        if(s > 0){
+            try {
 //            val sdf = SimpleDateFormat("dd MMM yyyy HH:mm")
-            val sdf = SimpleDateFormat("HH:mm")
-            val netDate = Date(s)
-            return sdf.format(netDate)
-        } catch (e: Exception) {
-            log("getDatetime:${e}")
-            return s.toString()
+                val sdf = SimpleDateFormat("HH:mm")
+                val netDate = Date(s)
+                return sdf.format(netDate)
+            } catch (e: Exception) {
+                log("getDatetime:${e}")
+                return s.toString()
+            }
+        }else{
+            return ""
         }
+
     }
 
     fun getDate(s: String): String {
@@ -574,12 +621,12 @@ class Helper(var TAG: String, val context: Context) {
             }
             2 -> {
                 val intent = Intent(context, SHomeActivity::class.java)
-                intent.putExtra("data", data)
+//                intent.putExtra("data", data)
                 context.startActivity(intent)
             }
             3 -> {
                 val intent = Intent(context, THomeActivity::class.java)
-                intent.putExtra("data", data)
+//                intent.putExtra("data", data)
                 context.startActivity(intent)
 
             }
@@ -629,6 +676,8 @@ class Helper(var TAG: String, val context: Context) {
         val intent = Intent(activity, HourMeterStopActivity::class.java)
         activity.startActivity(intent)
     }
+
+
 
 
 }

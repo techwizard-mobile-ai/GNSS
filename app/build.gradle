@@ -11,7 +11,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 8
-        versionName "1.7.0"
+        versionName "1.8.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -36,8 +36,8 @@ dependencies {
     implementation 'com.intuit.sdp:sdp-android:1.0.6'
 
     //Slider Image on Home Screen
-    implementation 'com.nineoldandroids:library:2.4.0'
-    implementation 'com.daimajia.slider:library:1.1.5@aar'
+//    implementation 'com.nineoldandroids:library:2.4.0'
+//    implementation 'com.daimajia.slider:library:1.1.5@aar'
 
     //Google Firebase
     implementation 'com.google.firebase:firebase-core:16.0.9'
@@ -45,7 +45,7 @@ dependencies {
 //    implementation 'com.google.firebase:firebase-storage:17.0.0'
 //    implementation 'com.google.firebase:firebase-database:17.0.0'
 //    implementation 'com.google.firebase:firebase-messaging:18.0.0'
-    implementation 'com.squareup.picasso:picasso:2.3.2'
+//    implementation 'com.squareup.picasso:picasso:2.3.2'
 
     //this library has bugs
 //    implementation 'com.squareup.picasso:picasso:2.71828'

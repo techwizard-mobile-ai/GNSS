@@ -12,7 +12,8 @@ import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.fragments.excavator.*
 import com.lysaan.malik.vsptracker.fragments.excavator.ELoadingHistoryFragment.Companion.newInstance
-import com.lysaan.malik.vsptracker.others.Data
+import com.lysaan.malik.vsptracker.classes.Data
+import com.lysaan.malik.vsptracker.fragments.common.DelayHistoryFragment
 import kotlinx.android.synthetic.main.activity_ehistory.*
 
 class EHistoryActivity : BaseActivity(), View.OnClickListener,
@@ -104,6 +105,7 @@ class EHistoryActivity : BaseActivity(), View.OnClickListener,
                 openFragment(delayHistoryFragment, DELAY_HISTORY)
                 return@OnNavigationItemSelectedListener  true
             }
+            R.id.navf_finish -> {finish()}
         }
         false
     }

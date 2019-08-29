@@ -61,6 +61,20 @@
             </LinearLayout>
 
             <LinearLayout
+                    android:id="@+id/lhr_gps_loading_layout"
+                    style="@style/load_history_row_item"
+                    >
+                <TextView
+                        style="@style/load_history_text"
+                        android:text="Loading GPS"
+                        />
+                <TextView
+                        android:id="@+id/lhr_gps_loading"
+                        style="@style/load_history_desc"
+                        android:text=":  Location 1"
+                        />
+            </LinearLayout>
+            <LinearLayout
                     android:id="@+id/lhr_loaded_material_layout"
                     style="@style/load_history_row_item">
 
@@ -74,6 +88,20 @@
                         android:text=":  Material" />
             </LinearLayout>
 
+            <LinearLayout
+                    android:id="@+id/lhr_gps_unloading_layout"
+                    style="@style/load_history_row_item"
+                    >
+                <TextView
+                        style="@style/load_history_text"
+                        android:text="Loading GPS"
+                        />
+                <TextView
+                        android:id="@+id/lhr_gps_unloading"
+                        style="@style/load_history_desc"
+                        android:text=":  Location 1"
+                        />
+            </LinearLayout>
             <LinearLayout
                     android:id="@+id/lhr_loading_location_layout"
                     style="@style/load_history_row_item">

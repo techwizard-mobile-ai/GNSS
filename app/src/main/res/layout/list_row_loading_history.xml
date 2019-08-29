@@ -24,17 +24,45 @@
             android:gravity="center_horizontal"
             >
             <LinearLayout
-                    android:id="@+id/lhr_record_number_layout"
+                    android:id="@+id/lhr_trip_number_layout"
                     style="@style/load_history_row_item"
                 >
                 <TextView
                     style="@style/load_history_text"
-                    android:text="Load Number"
+                    android:text="Trip Number"
                     />
                 <TextView
-                    android:id="@+id/lhr_record_number"
+                    android:id="@+id/lhr_trip_number"
                     style="@style/load_history_desc"
                     android:text=":  1"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                    android:id="@+id/lhr_trip_type_layout"
+                    style="@style/load_history_row_item"
+                >
+                <TextView
+                    style="@style/load_history_text"
+                    android:text="Trip Type"
+                    />
+                <TextView
+                    android:id="@+id/lhr_trip_type"
+                    style="@style/load_history_desc"
+                    android:text=":  Back Load"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                    android:id="@+id/lhr_trip0_layout"
+                    style="@style/load_history_row_item"
+                >
+                <TextView
+                    style="@style/load_history_text"
+                    android:text="Load Trip Number"
+                    />
+                <TextView
+                    android:id="@+id/lhr_trip0_id"
+                    style="@style/load_history_desc"
+                    android:text=":  Back Load"
                     />
             </LinearLayout>
             <LinearLayout
@@ -49,21 +77,6 @@
                     android:id="@+id/lhr_loading_machine"
                     style="@style/load_history_desc"
                     android:text=":  Excavator 1"
-                    />
-            </LinearLayout>
-            <LinearLayout
-                    android:id="@+id/lhr_loaded_machine_layout"
-                    android:visibility="gone"
-                    style="@style/load_history_row_item"
-                >
-                <TextView
-                    style="@style/load_history_text"
-                    android:text="Loaded Machine"
-                    />
-                <TextView
-                    android:id="@+id/lhr_loaded_machine"
-                    style="@style/load_history_desc"
-                    android:text=":  Truck"
                     />
             </LinearLayout>
             <LinearLayout
@@ -95,15 +108,57 @@
                     />
             </LinearLayout>
             <LinearLayout
+                    android:id="@+id/lhr_gps_loading_layout"
+                style="@style/load_history_row_item"
+                >
+                <TextView
+                    style="@style/load_history_text"
+                    android:text="Loading GPS"
+                    />
+                <TextView
+                    android:id="@+id/lhr_gps_loading"
+                    style="@style/load_history_desc"
+                    android:text=":  Location 1"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                    android:id="@+id/lhr_gps_unloading_layout"
+                style="@style/load_history_row_item"
+                >
+                <TextView
+                    style="@style/load_history_text"
+                    android:text="Unloading GPS"
+                    />
+                <TextView
+                    android:id="@+id/lhr_gps_unloading"
+                    style="@style/load_history_desc"
+                    android:text=":  Location 1"
+                    />
+            </LinearLayout>
+            <LinearLayout
                     android:id="@+id/lhr_loading_weight_layout"
                 style="@style/load_history_row_item"
                 >
                 <TextView
                     style="@style/load_history_text"
-                    android:text="Weight"
+                    android:text="Weight (Tonnes)"
                     />
                 <TextView
                     android:id="@+id/lhr_loading_weight"
+                    style="@style/load_history_desc"
+                    android:text=":  Weight1"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                    android:id="@+id/lhr_task_layout"
+                style="@style/load_history_row_item"
+                >
+                <TextView
+                    style="@style/load_history_text"
+                    android:text="Task"
+                    />
+                <TextView
+                    android:id="@+id/lhr_task"
                     style="@style/load_history_desc"
                     android:text=":  Weight1"
                     />
@@ -114,10 +169,24 @@
                 >
                 <TextView
                     style="@style/load_history_text"
-                    android:text="Loading Time"
+                    android:text="Trip Time"
                     />
                 <TextView
                     android:id="@+id/lhr_time"
+                    style="@style/load_history_desc"
+                    android:text=":  Morning 7am - 12am"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                    android:id="@+id/lhr_duration_layout"
+                style="@style/load_history_row_item"
+                >
+                <TextView
+                    style="@style/load_history_text"
+                    android:text="Trip Duration"
+                    />
+                <TextView
+                    android:id="@+id/lhr_duration"
                     style="@style/load_history_desc"
                     android:text=":  Morning 7am - 12am"
                     />
@@ -136,81 +205,6 @@
                     android:text=":  Morning 7am - 12am"
                     />
             </LinearLayout>
-            <!--<LinearLayout
-                style="@style/load_history_row_item"
-                >
-                <TextView
-                    style="@style/load_history_text"
-                    android:text="Status"
-                    />
-                <TextView
-                    android:id="@+id/pcd_row_status"
-                    style="@style/load_history_desc"
-                    android:text=":  Pending"
-                    />
-            </LinearLayout>
-            <LinearLayout
-                style="@style/load_history_row_item"
-                >
-                <TextView
-                    style="@style/load_history_text"
-                    android:text="Price"
-                    />
-                <TextView
-                    android:id="@+id/pcd_row_price"
-                    style="@style/load_history_desc"
-                    android:text=":  $59.99"
-                    />
-            </LinearLayout>
-            <LinearLayout
-                style="@style/job_history_row_item"
-                >
-                <TextView
-                    style="@style/job_history_text"
-                    android:text="Rating"
-                    />
-                <RelativeLayout
-                    style="@style/job_history_desc"
-                    >
-                    <TextView
-                        android:id="@+id/rating_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=": "
-                        android:textColor="@color/black"
-                        />
-                    <RatingBar
-                        android:id="@+id/pcd_row_order_rating"
-                        android:layout_toRightOf="@id/rating_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:theme="@style/RatingBar"
-                        android:rating="4.5"
-                        android:layout_marginTop="@dimen/_1sdp"
-                        style="@style/Base.Widget.AppCompat.RatingBar.Small"
-                        />
-                </RelativeLayout>
-
-            </LinearLayout>
-            <LinearLayout
-                style="@style/load_history_row_item"
-                android:gravity="start"
-                android:visibility="visible"
-                >
-                <Button
-                    android:id="@+id/pcd_row_details"
-                    android:text="DETAILS"
-                    android:layout_width="wrap_content"
-                    android:padding="@dimen/_1sdp"
-                    android:textSize="@dimen/_8sdp"
-                    android:paddingStart="@dimen/_10sdp"
-                    android:paddingEnd="@dimen/_10sdp"
-                    android:textColor="@color/white"
-                    android:background="@drawable/rounded_details_button"
-                    android:layout_height="@dimen/_20sdp"
-                    />
-            </LinearLayout>-->
-
 
         </LinearLayout>
 

@@ -7,10 +7,9 @@ import android.view.View
 import android.widget.FrameLayout
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.others.Data
+import com.lysaan.malik.vsptracker.classes.Data
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_hour_meter_start.*
-import kotlinx.android.synthetic.main.activity_hour_meter_stop.*
 
 class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
     private val TAG = this::class.java.simpleName

@@ -10,9 +10,8 @@ import android.widget.FrameLayout
 import android.widget.GridView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.activities.excavator.ELoadActivity
 import com.lysaan.malik.vsptracker.adapters.CustomGrid
-import com.lysaan.malik.vsptracker.others.Data
+import com.lysaan.malik.vsptracker.classes.Data
 import kotlinx.android.synthetic.main.activity_location1.*
 
 class Location1Activity : BaseActivity(), View.OnClickListener {
@@ -57,60 +56,92 @@ class Location1Activity : BaseActivity(), View.OnClickListener {
                 intent.putExtra("data", data)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
+            }else if(data.isForBackLoadResult){
+                val intent = intent
+                data.backLoadingLocation = locations.get(position).name
+                intent.putExtra("data", data)
+                setResult(Activity.RESULT_OK, intent)
+                finish()
+            }else if (data.isForBackUnloadResult){
+                val intent = intent
+                data.backUnloadingLocation = locations.get(position).name
+                intent.putExtra("data", data)
+                setResult(Activity.RESULT_OK, intent)
+                finish()
             }else{
                 //    type = 1 excavator
                 //    type = 2 scrapper
                 //    type = 3 truck
                 when(helper.getMachineType()){
                     1 -> {
-
                         val intent = Intent(this, Material1Activity::class.java)
                         data.loadingLocation = locations.get(position).name
                         intent.putExtra("data", data)
                         startActivity(intent)
 
                     }
-                    2 , 3 -> {
-                        if(data.isUnload){
+//                    2 -> {
+//                        when(data.nextAction){
+//                            0 -> {
+//                                data.loadingLocation = locations.get(position).name
+//                                helper.setLastJourney(data)
+//
+//
+//                                val intent = Intent(this, RLoadActivity::class.java)
+////                                intent.putExtra("data", data)
+//                                startActivity(intent)
+//                            }
+//                            1 -> {
+//                                data.unloadingLocation = locations.get(position).name
+//                                data.unloadingMaterial = data.loadingMaterial
+//                                helper.setLastJourney(data)
+////                                helper.toast("Journey Saved.")
+//
+//                                val intent = Intent(this, RUnloadActivity::class.java)
+////                                intent.putExtra("data", data)
+//                                startActivity(intent)
+//                            }
+//                        }
+//                    }
+                    2, 3 -> {
+                        when (data.nextAction){
+                            0 -> {
+                                data.loadingLocation = locations.get(position).name
+                                data.unloadingMaterial = data.loadingMaterial
+                                helper.setLastJourney(data)
 
-                            val intent = Intent(this, RUnloadActivity::class.java)
-                            data.unloadingLocation = locations.get(position).name
-                            data.unloadingMaterial = helper.getLastJourney().loadingMaterial
-                            helper.setLastJourney(data)
-                            helper.toast("Journey Saved.")
+                                val intent = Intent(this, RLoadActivity::class.java)
+//                                intent.putExtra("data", data)
+                                startActivity(intent)
+                            }
+                            1 -> {
+                                data.unloadingLocation = locations.get(position).name
+                                helper.setLastJourney(data)
 
-                            intent.putExtra("data", data)
-                            startActivity(intent)
-                        }else {
-                            val intent = Intent(this, Weight1Activity::class.java)
-                            data.loadingLocation = locations.get(position).name
-                            intent.putExtra("data", data)
-                            startActivity(intent)
+                                val intent = Intent(this, RUnloadActivity::class.java)
+//                                intent.putExtra("data", data)
+                                startActivity(intent)
+                            }
+                            2 -> {
+                                data.backLoadingLocation = locations.get(position).name
+                                data.backUnloadingMaterial = data.backLoadingMaterial
+                                helper.setLastJourney(data)
+
+                                val intent = Intent(this, RLoadActivity::class.java)
+//                                intent.putExtra("data", data)
+                                startActivity(intent)
+                            }
+                            3 -> {
+                                data.backUnloadingLocation = locations.get(position).name
+                                data.backUnloadingMaterial = data.backLoadingMaterial
+                                helper.setLastJourney(data)
+
+                                val intent = Intent(this, RUnloadActivity::class.java)
+//                                intent.putExtra("data", data)
+                                startActivity(intent)
+                            }
                         }
                     }
-                   /* 3 -> {
-                        if(data.isUnload){
-
-                            val intent = Intent(this, RUnloadActivity::class.java)
-                            data.unloadingLocation = locations.get(position).name
-
-                            val data1 = helper.getLastJourney()
-                            data1.unloadingTask = data.unloadingTask
-                            data1.unloadingMaterial = data.loadingMaterial
-                            data1.unloadingLocation = data.loadingLocation
-
-                            helper.setLastJourney(data1)
-
-                            intent.putExtra("data", data)
-                            startActivity(intent)
-
-                        }else {
-                            val intent = Intent(this, Weight1Activity::class.java)
-                            data.loadingLocation = locations.get(position).name
-                            intent.putExtra("data", data)
-                            startActivity(intent)
-                        }
-                    }*/
                 }
             }
 

@@ -12,29 +12,92 @@
             android:layout_centerHorizontal="true"
             android:text="Select Action"
     />
+
     <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_centerInParent="true"
             android:gravity="center_vertical"
+            android:paddingBottom="@dimen/_30sdp"
+            android:layout_height="wrap_content"
             style="@style/default_linearlayout">
 
-            <Button
-                    android:id="@+id/shome_unload"
-                    style="@style/back_button"
-                    android:text="Unload"
-                    android:layout_width="0dp"
-                    android:layout_weight=".3"
-            />
-            <Button
-                    android:id="@+id/shome_load"
-                    android:layout_width="0dp"
-                    android:layout_weight="0.3"
-                    style="@style/next_button"
-                    android:layout_marginEnd="0dp"
-                    android:text="Load"
-            />
+        <FrameLayout
+                android:id="@+id/thome_load"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
 
+            <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/thome_load_button"
+                    android:layout_width="@dimen/_70sdp"
+                    android:layout_height="@dimen/_70sdp"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:src="@android:color/transparent" />
+
+            <TextView
+                    android:id="@+id/thome_load_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/load"
+                    android:gravity="center"
+                    android:elevation="16dp"
+                    android:textColor="@android:color/white"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+        </FrameLayout>
+
+
+        <FrameLayout
+                android:id="@+id/thome_unload"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_40sdp"
+                android:layout_gravity="center">
+
+            <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/thome_unload_button"
+                    android:layout_width="@dimen/_70sdp"
+                    android:layout_height="@dimen/_70sdp"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:src="@android:color/transparent" />
+
+            <TextView
+                    android:id="@+id/thome_unload_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/unload"
+                    android:gravity="center"
+                    android:elevation="16dp"
+                    android:textColor="@android:color/white"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+        </FrameLayout>
     </LinearLayout>
+<!--    <LinearLayout-->
+<!--            android:orientation="horizontal"-->
+<!--            android:layout_centerInParent="true"-->
+<!--            android:gravity="center_vertical"-->
+<!--            style="@style/default_linearlayout">-->
+
+<!--            <Button-->
+<!--                    android:id="@+id/shome_unload"-->
+<!--                    style="@style/back_button"-->
+<!--                    android:text="Unload"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_weight=".3"-->
+<!--            />-->
+<!--            <Button-->
+<!--                    android:id="@+id/shome_load"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_weight="0.3"-->
+<!--                    style="@style/next_button"-->
+<!--                    android:layout_marginEnd="0dp"-->
+<!--                    android:text="Load"-->
+<!--            />-->
+
+<!--    </LinearLayout>-->
 
     <Button
             android:layout_alignParentBottom="true"

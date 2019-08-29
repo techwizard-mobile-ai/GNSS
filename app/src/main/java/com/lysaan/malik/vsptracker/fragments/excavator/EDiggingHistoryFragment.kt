@@ -15,7 +15,7 @@ import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.activities.excavator.EHistoryActivity
 import com.lysaan.malik.vsptracker.adapters.ETHistoryAdapter
 import com.lysaan.malik.vsptracker.database.DatabaseAdapter
-import com.lysaan.malik.vsptracker.others.EWork
+import com.lysaan.malik.vsptracker.classes.EWork
 import kotlinx.android.synthetic.main.fragment_edigging_history.view.*
 
 

@@ -13,28 +13,41 @@
     />
     <RelativeLayout style="@style/default_linearlayout">
         <LinearLayout
-                android:layout_centerInParent="true"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/default_linearlayout">
+                android:layout_centerInParent="true"
+                android:orientation="vertical">
+            <LinearLayout
+                    android:layout_centerInParent="true"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="@dimen/_20sdp"
+                    android:layout_height="wrap_content"
+                    style="@style/default_linearlayout">
 
+                <Button
+                        android:id="@+id/tul_after_new"
+                        style="@style/next_button"
+                        android:text="@string/new_journey"
+                        android:layout_width="0dp"
+                        android:layout_margin="@dimen/_1sdp"
+                        android:layout_weight=".3"
+                        />
+                <Button
+                        android:id="@+id/tul_after_repeat"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.3"
+                        style="@style/next_button"
+                        android:layout_marginEnd="0dp"
+                        android:text="@string/repeat_journey"
+                        />
+            </LinearLayout>
             <Button
-                    android:id="@+id/tul_after_new"
-                    style="@style/back_button"
-                    android:text="New Journey"
-                    android:background="@color/colorPrimary"
-                    android:layout_width="0dp"
-                    android:layout_weight=".3"
-            />
-            <Button
-                    android:id="@+id/tul_after_repeat"
-                    android:layout_width="0dp"
-                    android:layout_weight="0.3"
-                    style="@style/next_button"
-                    android:layout_marginEnd="0dp"
-                    android:text="Repeat Journey"
-            />
+                    android:id="@+id/tul_back_load"
+                    android:layout_gravity="center_horizontal"
+                    style="@style/back_button_single"
+                    android:text="@string/back_load"
+                    />
         </LinearLayout>
 
 

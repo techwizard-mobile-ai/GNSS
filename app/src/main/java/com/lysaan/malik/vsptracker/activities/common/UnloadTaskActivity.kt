@@ -9,7 +9,7 @@ import android.widget.FrameLayout
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.Helper
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.others.Data
+import com.lysaan.malik.vsptracker.classes.Data
 import kotlinx.android.synthetic.main.activity_unload_task.*
 
 class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
@@ -56,9 +56,19 @@ class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
                     intent.putExtra("data", data)
                     setResult(Activity.RESULT_OK, intent)
                     finish()
+                }else if(data.isForBackUnloadResult){
+                    val intent = intent
+                    data.backUnloadingTask = "Fill"
+                    intent.putExtra("data", data)
+                    setResult(Activity.RESULT_OK, intent)
+                    finish()
                 }else {
+                    when(data.nextAction){
+                        1 ->{data.unloadingTask = "Fill"}
+                        3 ->{data.backUnloadingTask = "Fill"}
+                    }
                     val intent = Intent(this, Location1Activity::class.java)
-                    data.unloadingTask = "Fill"
+
                     intent.putExtra("data", data)
                     startActivity(intent)
                 }
@@ -72,7 +82,17 @@ class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
                     intent.putExtra("data", data)
                     setResult(Activity.RESULT_OK, intent)
                     finish()
+                }else if(data.isForBackUnloadResult){
+                    val intent = intent
+                    data.backUnloadingTask = "Off Site"
+                    intent.putExtra("data", data)
+                    setResult(Activity.RESULT_OK, intent)
+                    finish()
                 }else{
+                    when(data.nextAction){
+                        1 ->{data.unloadingTask = "Off Site"}
+                        3 ->{data.backUnloadingTask = "Off Site"}
+                    }
                     val intent = Intent(this, Location1Activity::class.java)
                     data.unloadingTask = "Off Site"
                     intent.putExtra("data", data)
@@ -89,7 +109,17 @@ class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
                     intent.putExtra("data", data)
                     setResult(Activity.RESULT_OK, intent)
                     finish()
+                }else if(data.isForBackUnloadResult){
+                    val intent = intent
+                    data.backUnloadingTask = "Respread"
+                    intent.putExtra("data", data)
+                    setResult(Activity.RESULT_OK, intent)
+                    finish()
                 }else{
+                    when(data.nextAction){
+                        1 ->{data.unloadingTask = "Respread"}
+                        3 ->{data.backUnloadingTask = "Respread"}
+                    }
                     val intent = Intent(this, Location1Activity::class.java)
                     data.unloadingTask = "Respread"
                     intent.putExtra("data", data)
@@ -106,7 +136,17 @@ class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
                     intent.putExtra("data", data)
                     setResult(Activity.RESULT_OK, intent)
                     finish()
+                }else if(data.isForBackUnloadResult){
+                    val intent = intent
+                    data.backUnloadingTask = "Stockpile"
+                    intent.putExtra("data", data)
+                    setResult(Activity.RESULT_OK, intent)
+                    finish()
                 }else{
+                    when(data.nextAction){
+                        1 ->{data.unloadingTask = "Stockpile"}
+                        3 ->{data.backUnloadingTask = "Stockpile"}
+                    }
                     val intent = Intent(this, Location1Activity::class.java)
                     data.unloadingTask = "Stockpile"
                     intent.putExtra("data", data)

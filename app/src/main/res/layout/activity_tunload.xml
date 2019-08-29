@@ -6,7 +6,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activities.truck.TUnloadActivity">
+        tools:context=".activities.notused.TUnloadActivity">
 
     <TextView style="@style/activity_title"
               android:text="Unload Truck"
@@ -48,7 +48,7 @@
                     android:layout_weight=".3"
             />
             <Button
-                    android:id="@+id/tul_return_load"
+                    android:id="@+id/tul_return_load1"
                     android:layout_width="0dp"
                     android:layout_weight="0.3"
                     style="@style/next_button"

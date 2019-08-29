@@ -21,7 +21,7 @@
         <TextView
                 android:id="@+id/ehome_loading"
                 style="@style/ehome_tv"
-                android:text="Loading"
+                android:text="Production Digging"
                 />
         <TextView
                 android:id="@+id/ehome_trenching"

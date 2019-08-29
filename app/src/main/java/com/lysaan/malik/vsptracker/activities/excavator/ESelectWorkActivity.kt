@@ -8,7 +8,7 @@ import android.widget.FrameLayout
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 
-import com.lysaan.malik.vsptracker.others.Data
+import com.lysaan.malik.vsptracker.classes.Data
 import kotlinx.android.synthetic.main.activity_eselect_work.*
 
 class ESelectWorkActivity : BaseActivity(), View.OnClickListener {

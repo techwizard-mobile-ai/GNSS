@@ -8,9 +8,9 @@ import android.widget.FrameLayout
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.Helper
 import com.lysaan.malik.vsptracker.R
+import com.lysaan.malik.vsptracker.activities.common.Location1Activity
 import com.lysaan.malik.vsptracker.activities.common.Material1Activity
-import com.lysaan.malik.vsptracker.activities.common.UnloadTaskActivity
-import com.lysaan.malik.vsptracker.others.Data
+import com.lysaan.malik.vsptracker.classes.Data
 import kotlinx.android.synthetic.main.activity_shome.*
 
 class SHomeActivity : BaseActivity(), View.OnClickListener {
@@ -27,31 +27,41 @@ class SHomeActivity : BaseActivity(), View.OnClickListener {
 
         helper = Helper(TAG, this)
 
-        var bundle :Bundle ?=intent.extras
-        if(bundle != null){
-            data = bundle!!.getSerializable("data") as Data
-            helper.log("data:$data")
+//        var bundle :Bundle ?=intent.extras
+//        if(bundle != null){
+//            data = bundle!!.getSerializable("data") as Data
+//            helper.log("data:$data")
+//        }
+
+        data = helper.getLastJourney()
+        helper.log("data:$data")
+
+        when(helper.getNextAction()){
+            0 ,2 -> {helper.setToDoLayout(thome_load_button)}
+            1 ,3 -> {helper.setToDoLayout(thome_unload_button)}
         }
 
         shome_logout.setOnClickListener(this)
-        shome_load.setOnClickListener(this)
-        shome_unload.setOnClickListener(this)
+
+        thome_load.setOnClickListener(this)
+        thome_unload.setOnClickListener(this)
+
+//        shome_load.setOnClickListener(this)
+//        shome_unload.setOnClickListener(this)
 
     }
 
     override fun onClick(view: View?) {
         when(view!!.id){
-            R.id.shome_load -> {
+            R.id.thome_load -> {
                 val intent = Intent(this, Material1Activity::class.java)
-                if(data == null){
-                    data = Data()
-                }
+
                 data.isUnload = false
                 intent.putExtra("data", data)
                 startActivity(intent)
             }
-            R.id.shome_unload -> {
-                val intent = Intent(this, UnloadTaskActivity::class.java)
+            R.id.thome_unload -> {
+                val intent = Intent(this, Location1Activity::class.java)
                 if(data == null){
                     data = Data()
                 }

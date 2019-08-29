@@ -5,8 +5,8 @@ import android.content.Context
 import android.content.SharedPreferences.Editor
 import android.util.Log
 import com.google.gson.Gson
-import com.lysaan.malik.vsptracker.others.Data
-import com.lysaan.malik.vsptracker.others.Meter
+import com.lysaan.malik.vsptracker.classes.Data
+import com.lysaan.malik.vsptracker.classes.Meter
 
 class SessionManager(internal var _context: Context) {
 
@@ -58,7 +58,7 @@ class SessionManager(internal var _context: Context) {
         editor.commit();
     }
 
-    fun getMeter () : Meter{
+    fun getMeter () : Meter {
         val gson = Gson()
         val json = pref.getString(KEY_METER, "")
         val obj = gson.fromJson<Meter>(json, Meter::class.java)

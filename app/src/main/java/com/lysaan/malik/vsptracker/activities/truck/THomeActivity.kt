@@ -10,11 +10,10 @@ import com.lysaan.malik.vsptracker.Helper
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.activities.common.LMachine1Activity
 import com.lysaan.malik.vsptracker.activities.common.UnloadTaskActivity
-import com.lysaan.malik.vsptracker.others.Data
 import kotlinx.android.synthetic.main.activity_thome.*
 
-class THomeActivity : BaseActivity(), View.OnClickListener {
 
+class THomeActivity : BaseActivity(), View.OnClickListener {
     private val TAG = this::class.java.simpleName
 
 
@@ -28,10 +27,18 @@ class THomeActivity : BaseActivity(), View.OnClickListener {
 
         helper = Helper(TAG, this)
 
-        var bundle :Bundle ?=intent.extras
-        if(bundle != null){
-            data = bundle!!.getSerializable("data") as Data
-            helper.log("data:$data")
+//        var bundle :Bundle ?=intent.extras
+//        if(bundle != null){
+//            data = bundle!!.getSerializable("data") as Data
+//            helper.log("data:$data")
+//        }
+
+        data = helper.getLastJourney()
+        helper.log("data:$data")
+
+        when(helper.getNextAction()){
+            0 ,2 -> {helper.setToDoLayout(thome_load_button)}
+            1 ,3 -> {helper.setToDoLayout(thome_unload_button)}
         }
 
         thome_logout.setOnClickListener(this)
@@ -39,22 +46,38 @@ class THomeActivity : BaseActivity(), View.OnClickListener {
         thome_unload.setOnClickListener(this)
     }
 
+//    override fun onResume() {
+//        super.onResume()
+//        startGPS()
+//    }
+//
+//    override fun onPause() {
+//        super.onPause()
+//        stopGPS()
+//    }
+
     override fun onClick(view: View?) {
         when(view!!.id){
             R.id.thome_load -> {
                 val intent = Intent(this, LMachine1Activity::class.java)
-                data.isUnload = false
                 intent.putExtra("data", data)
                 startActivity(intent)
             }
             R.id.thome_unload -> {
                 val intent = Intent(this, UnloadTaskActivity::class.java)
-                data.isUnload = true
                 intent.putExtra("data", data)
                 startActivity(intent)
             }
-            R.id.thome_logout ->{ helper.logout(this)}
+            R.id.thome_logout ->{
+
+//                helper.log("LocationLat:${latitude}")
+//                helper.log("LocationLongg:${longitude}")
+//                helper.log("Loads:${db.getTrips()}")
+
+                helper.logout(this)
+            }
         }
 
     }
+
 }

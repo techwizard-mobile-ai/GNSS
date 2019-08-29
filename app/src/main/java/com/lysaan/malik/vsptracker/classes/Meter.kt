@@ -1,4 +1,4 @@
-package com.lysaan.malik.vsptracker.others
+package com.lysaan.malik.vsptracker.classes
 
 import java.io.Serializable
 

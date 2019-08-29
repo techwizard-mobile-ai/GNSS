@@ -15,7 +15,7 @@ import com.lysaan.malik.vsptracker.activities.HourMeterStopActivity
 import com.lysaan.malik.vsptracker.activities.common.Location1Activity
 import com.lysaan.malik.vsptracker.activities.common.Material1Activity
 import com.lysaan.malik.vsptracker.adapters.ELoadingAdapter
-import com.lysaan.malik.vsptracker.others.Data
+import com.lysaan.malik.vsptracker.classes.Data
 import kotlinx.android.synthetic.main.activity_eload.*
 
 class ELoadActivity : BaseActivity(), View.OnClickListener {
@@ -35,13 +35,14 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
 
         helper = Helper(TAG, this)
 
-        var bundle :Bundle ?=intent.extras
-        if(bundle != null){
-            data = bundle!!.getSerializable("data") as Data
-            helper.log("data:$data")
-        }
-        helper.setLastJourney(data)
+//        var bundle :Bundle ?=intent.extras
+//        if(bundle != null){
+//            data = bundle!!.getSerializable("data") as Data
+//            helper.log("data:$data")
+//        }
+//        helper.setLastJourney(data)
 
+        data = helper.getLastJourney()
         eload_material.text = data.loadingMaterial
         eload_location.text = data.loadingLocation
 
@@ -53,7 +54,7 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
         eload_location.setOnClickListener(this)
 
 
-        val loadHistory = db.getLoadHistroy()
+        val loadHistory = db.getELoadHistroy()
         if(loadHistory.size > 0){
             elh_rv.visibility = View.VISIBLE
             val aa = ELoadingAdapter(this@ELoadActivity ,loadHistory )
@@ -66,17 +67,29 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
 
     }
 
+
+    override fun onResume() {
+        super.onResume()
+        startGPS()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        stopGPS()
+    }
+
     override fun onClick(view: View?) {
         when(view!!.id){
             R.id.load_truck_load -> {
                 data.loadingMachine = helper.getMachineNumber()
                 data.loadedMachine = "Load"
 
-                val insertID = db.insertLoad(data)
+                data.loadingGPSLocation = gpsLocation
+                val insertID = db.insertELoad(data)
                 if(insertID > 0){
                     helper.toast("Loading Successful.\nLoaded Truck Number # $insertID")
 
-                    val loadHistory = db.getLoadHistroy()
+                    val loadHistory = db.getELoadHistroy()
                     if(loadHistory.size > 0){
                         elh_rv.visibility = View.VISIBLE
                         val aa = ELoadingAdapter(this@ELoadActivity ,loadHistory )

@@ -5,6 +5,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:keepScreenOn="true"
         tools:context=".BaseActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -41,14 +42,29 @@
             android:layout_marginTop="?attr/actionBarSize"
             android:layout_height="match_parent">
 
-        <TextView
-                android:id="@+id/base_machine_status"
-                android:text="Machine is Stopped."
-                android:textColor="@color/red"
-                android:gravity="center_horizontal"
-                android:layout_margin="@dimen/_5sdp"
+        <LinearLayout
+                android:id="@+id/base_machine_status_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:orientation="horizontal"
+                android:gravity="center_horizontal"
+                android:layout_gravity="center_horizontal"
+                android:layout_height="wrap_content">
+            <ImageView
+                    android:id="@+id/base_machine_status_icon"
+                    android:layout_width="@dimen/_15sdp"
+                    android:layout_height="@dimen/_15sdp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/_30sdp"
+                    />
+            <TextView
+                    android:id="@+id/base_machine_status"
+                    android:text="Machine is Stopped."
+                    android:textColor="@color/red"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+
         <TextView
                 android:id="@+id/base_daily_mode"
                 android:textColor="@color/red"

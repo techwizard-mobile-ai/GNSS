@@ -8,7 +8,7 @@ import android.widget.FrameLayout
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.activities.common.Location1Activity
-import com.lysaan.malik.vsptracker.others.Data
+import com.lysaan.malik.vsptracker.classes.Data
 import kotlinx.android.synthetic.main.activity_ehome.*
 
 class EHomeActivity : BaseActivity(), View.OnClickListener {
@@ -35,6 +35,18 @@ class EHomeActivity : BaseActivity(), View.OnClickListener {
         ehome_trenching.setOnClickListener(this)
         ehome_digging.setOnClickListener(this)
     }
+
+
+    override fun onResume() {
+        super.onResume()
+        startGPS()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        stopGPS()
+    }
+
 
     override fun onClick(view: View?) {
         when (view!!.id) {

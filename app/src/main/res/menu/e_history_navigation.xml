@@ -21,4 +21,9 @@
             android:icon="@drawable/ic_delay1"
             android:title="@string/delay"/>
 
+    <item
+            android:id="@+id/navf_finish"
+            android:icon="@drawable/ic_action_cancel_presentation"
+            android:title="@string/finish"/>
+
 </menu>

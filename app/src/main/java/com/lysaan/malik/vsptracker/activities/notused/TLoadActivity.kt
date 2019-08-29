@@ -1,4 +1,4 @@
-package com.lysaan.malik.vsptracker.activities.truck
+package com.lysaan.malik.vsptracker.activities.notused
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +10,7 @@ import android.widget.FrameLayout
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.Helper
 import com.lysaan.malik.vsptracker.R
+import com.lysaan.malik.vsptracker.activities.truck.THomeActivity
 import com.lysaan.malik.vsptracker.adapters.SelectLocationAdapter
 import com.lysaan.malik.vsptracker.adapters.SelectStateAdapter
 import com.lysaan.malik.vsptracker.classes.Location

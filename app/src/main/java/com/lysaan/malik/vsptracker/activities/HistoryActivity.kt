@@ -8,8 +8,8 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.adapters.LoadingHistoryAdapter
-import com.lysaan.malik.vsptracker.others.Data
+import com.lysaan.malik.vsptracker.adapters.ELoadingHistoryAdapter
+import com.lysaan.malik.vsptracker.classes.Data
 import kotlinx.android.synthetic.main.activity_history.*
 
 class HistoryActivity : BaseActivity(), View.OnClickListener {
@@ -41,9 +41,9 @@ class HistoryActivity : BaseActivity(), View.OnClickListener {
         }
 
 
-        helper.log("Loads:${db.getLoadHistroy()}")
+        helper.log("Loads:${db.getELoadHistroy()}")
 
-        val mAdapter = LoadingHistoryAdapter(this@HistoryActivity,db.getLoadHistroy())
+        val mAdapter = ELoadingHistoryAdapter(this@HistoryActivity,db.getELoadHistroy())
         lh_rv.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
         lh_rv!!.setAdapter(mAdapter)
 

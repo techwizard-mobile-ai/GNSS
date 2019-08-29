@@ -1,6 +1,5 @@
 package com.lysaan.malik.vsptracker.activities.truck
 
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.SystemClock
@@ -9,10 +8,9 @@ import android.view.View
 import android.widget.FrameLayout
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.activities.common.Material1Activity
 
-import com.lysaan.malik.vsptracker.others.Data
-import com.lysaan.malik.vsptracker.others.EWork
+import com.lysaan.malik.vsptracker.classes.Data
+import com.lysaan.malik.vsptracker.classes.EWork
 import kotlinx.android.synthetic.main.activity_twait.*
 
 class TWaitActivity : BaseActivity(), View.OnClickListener {
@@ -20,6 +18,7 @@ class TWaitActivity : BaseActivity(), View.OnClickListener {
     private val TAG = this::class.java.simpleName
     private var isWaiting :Boolean = false
     private var waitStartTime : Long = 0
+    private lateinit var eWork :EWork
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +29,7 @@ class TWaitActivity : BaseActivity(), View.OnClickListener {
 
         helper.setTag(TAG)
 
+        eWork = EWork()
         var bundle :Bundle ?=intent.extras
         if(bundle != null){
             data = bundle!!.getSerializable("data") as Data
@@ -51,6 +51,17 @@ class TWaitActivity : BaseActivity(), View.OnClickListener {
     }
 
 
+    override fun onResume() {
+        super.onResume()
+        startGPS()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        stopGPS()
+    }
+
+
     override fun onClick(view: View?) {
         when(view!!.id){
 
@@ -62,9 +73,10 @@ class TWaitActivity : BaseActivity(), View.OnClickListener {
                     day_works_action_text.text = "Start"
                     isWaiting = false
                     day_works_chronometer.stop()
-                    val eWork = EWork()
-                    eWork.startTime = waitStartTime
-                    val insertID = db.insertTWait(eWork)
+
+                    eWork.unloadingGPSLocation= gpsLocation
+
+                    val insertID = db.insertWait(eWork)
                     if(insertID > 0){
                         helper.toast("Wait Saved Successfully.")
                     }else{
@@ -83,8 +95,9 @@ class TWaitActivity : BaseActivity(), View.OnClickListener {
                     day_works_action_text.text = "Stop"
                     isWaiting = true
                     waitStartTime = System.currentTimeMillis()
+                    eWork.startTime = waitStartTime
+                    eWork.loadingGPSLocation = gpsLocation
 
-                    helper.log("TWaits:${db.getTWaits()}")
                     helper.toast("Wait Started.")
 
                 }

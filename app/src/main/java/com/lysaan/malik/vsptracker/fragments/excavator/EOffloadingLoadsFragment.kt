@@ -15,7 +15,7 @@ import com.lysaan.malik.vsptracker.Helper
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.adapters.EOffLoadingAdapter
 import com.lysaan.malik.vsptracker.database.DatabaseAdapter
-import com.lysaan.malik.vsptracker.others.EWork
+import com.lysaan.malik.vsptracker.classes.EWork
 import kotlinx.android.synthetic.main.fragment_eoffloading_loads.*
 import kotlinx.android.synthetic.main.fragment_eoffloading_loads.view.*
 

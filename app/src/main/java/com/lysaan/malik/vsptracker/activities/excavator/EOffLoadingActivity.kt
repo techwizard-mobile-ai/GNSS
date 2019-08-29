@@ -12,8 +12,8 @@ import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.activities.HourMeterStopActivity
 import com.lysaan.malik.vsptracker.adapters.EOffLoadingAdapter
 
-import com.lysaan.malik.vsptracker.others.Data
-import com.lysaan.malik.vsptracker.others.EWork
+import com.lysaan.malik.vsptracker.classes.Data
+import com.lysaan.malik.vsptracker.classes.EWork
 import kotlinx.android.synthetic.main.activity_eoff_loading.*
 
 class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
@@ -62,6 +62,16 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        startGPS()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        stopGPS()
+    }
+
     override fun onClick(view: View?) {
         when(view!!.id){
 
@@ -71,6 +81,7 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                     val eWork = EWork()
                     eWork.ID = eWorkID
                     eWork.startTime = startTime
+                    eWork.unloadingGPSLocation = gpsLocation
 
                     val updatedID = db.updateEWork(eWork)
                     eWorkID = updatedID
@@ -105,6 +116,7 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                     eWork.totalTime = System.currentTimeMillis() - startTime
                     eWork.workType = data.eWorkType
                     eWork.workActionType = 2
+                    eWork.loadingGPSLocation = gpsLocation
 
                     val insertID = db.insertEWork(eWork)
                     eWorkID = insertID.toInt()
@@ -121,6 +133,7 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                     }else{
                         val eWork = EWork()
                         eWork.eWorkID = eWorkID
+                        eWork.loadingGPSLocation = gpsLocation
                         val insertedID = db.insertEWorkOffLoad(eWork)
                         if(insertedID > 0){
                             helper.toast("Load Saved Successfully.")
