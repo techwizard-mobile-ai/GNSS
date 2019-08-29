@@ -21,8 +21,8 @@ object Utils {
         sTheme = theme
 
         var dataNew = Data()
-        var bundle : Bundle?=activity.intent.extras
-        if(bundle != null){
+        var bundle: Bundle? = activity.intent.extras
+        if (bundle != null) {
             dataNew = bundle!!.getSerializable("data") as Data
             helper.log("data:$dataNew")
         }
@@ -30,7 +30,7 @@ object Utils {
         activity.finish()
 
         val intent = Intent(activity, activity.javaClass)
-            intent.putExtra("data",dataNew)
+        intent.putExtra("data", dataNew)
         activity.startActivity(intent)
         activity.overridePendingTransition(
             android.R.anim.fade_in,
@@ -43,9 +43,9 @@ object Utils {
 
         helper = Helper(TAG1, activity)
 
-        if(helper.isNightMode()){
+        if (helper.isNightMode()) {
             activity.setTheme(R.style.AppTheme_NightMode)
-        }else{
+        } else {
             activity.setTheme(R.style.AppTheme_NoActionBar)
         }
 

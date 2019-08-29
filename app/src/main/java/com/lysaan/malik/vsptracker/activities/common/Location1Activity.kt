@@ -28,8 +28,8 @@ class Location1Activity : BaseActivity(), View.OnClickListener {
 
         helper.setTag(TAG)
 
-        var bundle :Bundle ?=intent.extras
-        if(bundle != null){
+        var bundle: Bundle? = intent.extras
+        if (bundle != null) {
             data = bundle!!.getSerializable("data") as Data
             helper.log("data:$data")
         }
@@ -44,35 +44,35 @@ class Location1Activity : BaseActivity(), View.OnClickListener {
         gv.setOnItemClickListener(AdapterView.OnItemClickListener { parent, view, position, id ->
             helper.toast("Selected Location: " + locations.get(position).name)
 
-            if(data.isForLoadResult){
+            if (data.isForLoadResult) {
                 val intent = intent
                 data.loadingLocation = locations.get(position).name
                 intent.putExtra("data", data)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
-            }else if (data.isForUnloadResult){
+            } else if (data.isForUnloadResult) {
                 val intent = intent
                 data.unloadingLocation = locations.get(position).name
                 intent.putExtra("data", data)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
-            }else if(data.isForBackLoadResult){
+            } else if (data.isForBackLoadResult) {
                 val intent = intent
                 data.backLoadingLocation = locations.get(position).name
                 intent.putExtra("data", data)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
-            }else if (data.isForBackUnloadResult){
+            } else if (data.isForBackUnloadResult) {
                 val intent = intent
                 data.backUnloadingLocation = locations.get(position).name
                 intent.putExtra("data", data)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
-            }else{
+            } else {
                 //    type = 1 excavator
                 //    type = 2 scrapper
                 //    type = 3 truck
-                when(helper.getMachineType()){
+                when (helper.getMachineType()) {
                     1 -> {
                         val intent = Intent(this, Material1Activity::class.java)
                         data.loadingLocation = locations.get(position).name
@@ -104,7 +104,7 @@ class Location1Activity : BaseActivity(), View.OnClickListener {
 //                        }
 //                    }
                     2, 3 -> {
-                        when (data.nextAction){
+                        when (data.nextAction) {
                             0 -> {
                                 data.loadingLocation = locations.get(position).name
                                 data.unloadingMaterial = data.loadingMaterial
@@ -151,8 +151,10 @@ class Location1Activity : BaseActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
-        when(view!!.id){
-            R.id.elocation1_back -> { finish() }
+        when (view!!.id) {
+            R.id.elocation1_back -> {
+                finish()
+            }
         }
     }
 }

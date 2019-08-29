@@ -24,8 +24,8 @@ class ESelectWorkActivity : BaseActivity(), View.OnClickListener {
 
         helper.setTag(TAG)
 
-        var bundle :Bundle ?=intent.extras
-        if(bundle != null){
+        var bundle: Bundle? = intent.extras
+        if (bundle != null) {
             data = bundle!!.getSerializable("data") as Data
             helper.log("data:$data")
         }
@@ -36,7 +36,7 @@ class ESelectWorkActivity : BaseActivity(), View.OnClickListener {
 
 
     override fun onClick(view: View?) {
-        when(view!!.id){
+        when (view!!.id) {
             R.id.eswork_sidecasting -> {
                 val intent = Intent(this, ESideCastingActivity::class.java)
                 data.eWorkActionType = 1

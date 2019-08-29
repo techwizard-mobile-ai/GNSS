@@ -25,8 +25,8 @@ class EHomeActivity : BaseActivity(), View.OnClickListener {
 
         helper.setTag(TAG)
 
-        var bundle :Bundle ?=intent.extras
-        if(bundle != null){
+        var bundle: Bundle? = intent.extras
+        if (bundle != null) {
             data = bundle!!.getSerializable("data") as Data
             helper.log("data:$data")
         }
@@ -51,13 +51,13 @@ class EHomeActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         when (view!!.id) {
 
-            R.id.ehome_loading ->{
+            R.id.ehome_loading -> {
                 val intent = Intent(this, Location1Activity::class.java)
                 intent.putExtra("data", data)
                 startActivity(intent)
             }
 
-            R.id.ehome_trenching ->{
+            R.id.ehome_trenching -> {
                 val intent = Intent(this, ESelectWorkActivity::class.java)
                 val data1 = helper.getLastJourney()
                 data1.eWorkType = 1
@@ -68,7 +68,7 @@ class EHomeActivity : BaseActivity(), View.OnClickListener {
                 startActivity(intent)
             }
 
-            R.id.ehome_digging ->{
+            R.id.ehome_digging -> {
                 val intent = Intent(this, ESelectWorkActivity::class.java)
                 val data1 = helper.getLastJourney()
                 data1.eWorkType = 1
@@ -79,8 +79,9 @@ class EHomeActivity : BaseActivity(), View.OnClickListener {
                 startActivity(intent)
             }
 
-            R.id.ehome_logout ->{
-                helper.logout(this)
+            R.id.ehome_logout -> {
+                helper.log("MachineStatus:${db.getMachineStatus()}")
+//                helper.logout(this)
             }
         }
     }

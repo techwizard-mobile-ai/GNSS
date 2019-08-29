@@ -26,8 +26,8 @@ class Weight1Activity : BaseActivity(), View.OnClickListener {
 
         helper = Helper(TAG, this)
 
-        var bundle :Bundle ?=intent.extras
-        if(bundle != null){
+        var bundle: Bundle? = intent.extras
+        if (bundle != null) {
             data = bundle!!.getSerializable("data") as Data
             helper.log("data:$data")
         }
@@ -37,44 +37,44 @@ class Weight1Activity : BaseActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
-        when(view!!.id){
+        when (view!!.id) {
             R.id.w1_next -> {
 
-                if(data.isForLoadResult){
+                if (data.isForLoadResult) {
                     val intent = intent
                     val sload_weight = sload_weight.text.toString()
-                    if(!sload_weight.isNullOrBlank())
+                    if (!sload_weight.isNullOrBlank())
                         data.unloadingWeight = sload_weight.toDouble()
                     intent.putExtra("data", data)
                     setResult(Activity.RESULT_OK, intent)
                     finish()
-                }else if (data.isForUnloadResult){
+                } else if (data.isForUnloadResult) {
                     val intent = intent
                     val sload_weight = sload_weight.text.toString()
-                    if(!sload_weight.isNullOrBlank())
+                    if (!sload_weight.isNullOrBlank())
                         data.unloadingWeight = sload_weight.toDouble()
                     intent.putExtra("data", data)
                     setResult(Activity.RESULT_OK, intent)
                     finish()
-                }else if(data.isForBackLoadResult){
+                } else if (data.isForBackLoadResult) {
                     val intent = intent
                     val sload_weight = sload_weight.text.toString()
-                    if(!sload_weight.isNullOrBlank())
+                    if (!sload_weight.isNullOrBlank())
                         data.backUnloadedWeight = sload_weight.toDouble()
                     intent.putExtra("data", data)
                     setResult(Activity.RESULT_OK, intent)
                     finish()
-                }else if (data.isForBackUnloadResult){
+                } else if (data.isForBackUnloadResult) {
                     val intent = intent
                     val sload_weight = sload_weight.text.toString()
-                    if(!sload_weight.isNullOrBlank())
+                    if (!sload_weight.isNullOrBlank())
                         data.backUnloadedWeight = sload_weight.toDouble()
                     intent.putExtra("data", data)
                     setResult(Activity.RESULT_OK, intent)
                     finish()
-                }else if(data.isForBackLoad){
+                } else if (data.isForBackLoad) {
                     val sload_weight = sload_weight.text.toString()
-                    if(!sload_weight.isNullOrBlank())
+                    if (!sload_weight.isNullOrBlank())
                         data.backUnloadedWeight = sload_weight.toDouble()
                     helper.log("$data")
 
@@ -88,12 +88,12 @@ class Weight1Activity : BaseActivity(), View.OnClickListener {
                     val intent = Intent(this, RLoadActivity::class.java)
                     intent.putExtra("data", data)
                     startActivity(intent)
-                }else{
+                } else {
 
                     val sload_weight = sload_weight.text.toString()
-                    if(!sload_weight.isNullOrBlank())
+                    if (!sload_weight.isNullOrBlank())
                         data.unloadingWeight = sload_weight.toDouble()
-                        helper.log("$data")
+                    helper.log("$data")
 
                     val data1 = helper.getLastJourney()
                     data1.loadingMachine = data.loadingMachine

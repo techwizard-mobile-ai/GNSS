@@ -27,32 +27,39 @@ class HistoryActivity : BaseActivity(), View.OnClickListener {
 
         helper.setTag(TAG)
 
-        var bundle :Bundle ?=intent.extras
-        if(bundle != null){
+        var bundle: Bundle? = intent.extras
+        if (bundle != null) {
             data = bundle.getSerializable("data") as Data
             helper.log("data:$data")
         }
 
-        when(helper.getMachineType()){
-            1 -> {lh_title.text = "Excavator Loading History"}
-            2 -> {lh_title.text = "Scrapper Loading History"}
-            3 -> {lh_title.text = "Truck Loading History"}
-            else -> {lh_title.text = "Machine Loading History"}
+        when (helper.getMachineType()) {
+            1 -> {
+                lh_title.text = "Excavator Loading History"
+            }
+            2 -> {
+                lh_title.text = "Scrapper Loading History"
+            }
+            3 -> {
+                lh_title.text = "Truck Loading History"
+            }
+            else -> {
+                lh_title.text = "Machine Loading History"
+            }
         }
 
 
         helper.log("Loads:${db.getELoadHistroy()}")
 
-        val mAdapter = ELoadingHistoryAdapter(this@HistoryActivity,db.getELoadHistroy())
+        val mAdapter = ELoadingHistoryAdapter(this@HistoryActivity, db.getELoadHistroy())
         lh_rv.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
         lh_rv!!.setAdapter(mAdapter)
-
 
 
     }
 
     override fun onClick(view: View?) {
-        when(view!!.id){
+        when (view!!.id) {
 
         }
     }

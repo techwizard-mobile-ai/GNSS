@@ -37,8 +37,8 @@ class TLoadActivity : BaseActivity(), View.OnClickListener {
 
         helper = Helper(TAG, this)
 
-        var bundle :Bundle ?=intent.extras
-        if(bundle != null){
+        var bundle: Bundle? = intent.extras
+        if (bundle != null) {
             isRepeatJourney = bundle!!.getBoolean("repeat")
             helper.log("isRepeat:$isRepeatJourney")
         }
@@ -78,22 +78,22 @@ class TLoadActivity : BaseActivity(), View.OnClickListener {
 
 
     override fun onClick(view: View?) {
-        when(view!!.id){
+        when (view!!.id) {
             R.id.tload_next -> {
                 val materialWeight = tload_weight.text.toString()
 
-                if(selectedMachine.id == 0){
+                if (selectedMachine.id == 0) {
                     helper.toast("Please Select Machine")
-                }else if(selectedMaterial.id == 0){
+                } else if (selectedMaterial.id == 0) {
                     helper.toast("Please Select Material")
-                }else if (selectedLocation.id == 0){
+                } else if (selectedLocation.id == 0) {
                     helper.toast("Please Select Location")
                 }
 //                else if (materialWeight.isNullOrBlank()){
 //                    helper.toast("Please Enter Material Weight")
 //                }
                 else {
-                    val intent = Intent (this, THomeActivity::class.java)
+                    val intent = Intent(this, THomeActivity::class.java)
                     startActivity(intent)
                     finishAffinity()
                 }
@@ -102,16 +102,15 @@ class TLoadActivity : BaseActivity(), View.OnClickListener {
     }
 
 
-
     private fun selectMachine() {
         var materials = helper.getMachines()
         val selectMaterialAdapter = SelectStateAdapter(this@TLoadActivity, materials)
 
         tload_machine_spinner!!.setAdapter(selectMaterialAdapter)
 
-        if(isRepeatJourney)
-        { tload_machine_spinner.setSelection(1)}
-        else{
+        if (isRepeatJourney) {
+            tload_machine_spinner.setSelection(1)
+        } else {
             tload_machine_spinner.setSelection(0, false)
         }
 
@@ -145,67 +144,70 @@ class TLoadActivity : BaseActivity(), View.OnClickListener {
 
         tload_material_spinner!!.setAdapter(selectMaterialAdapter)
 
-        if(isRepeatJourney)
-        { tload_material_spinner.setSelection(1)}
-        else{
+        if (isRepeatJourney) {
+            tload_material_spinner.setSelection(1)
+        } else {
             tload_material_spinner.setSelection(0, false)
         }
 
         tload_material_spinner.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
-        tload_material_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        tload_material_spinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
 
-            override fun onItemSelected(
-                arg0: AdapterView<*>, arg1: View,
-                position: Int, arg3: Long
-            ) {
+                override fun onItemSelected(
+                    arg0: AdapterView<*>, arg1: View,
+                    position: Int, arg3: Long
+                ) {
 
-                selectedMaterial = materials.get(position)
-                if (materials.get(position).id != 0) {
-                    tload_material_spinner.setBackground(resources.getDrawable(R.drawable.spinner_border))
-                } else {
-                    tload_material_spinner.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
+                    selectedMaterial = materials.get(position)
+                    if (materials.get(position).id != 0) {
+                        tload_material_spinner.setBackground(resources.getDrawable(R.drawable.spinner_border))
+                    } else {
+                        tload_material_spinner.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
+                    }
+                    Log.e(TAG, materials.get(position).toString())
                 }
-                Log.e(TAG, materials.get(position).toString())
-            }
 
-            override fun onNothingSelected(arg0: AdapterView<*>) {
+                override fun onNothingSelected(arg0: AdapterView<*>) {
 
+                }
             }
-        }
     }
+
     private fun selectLocation() {
         var locations = helper.getLocations()
         val locationAdapter = SelectLocationAdapter(this@TLoadActivity, locations)
         tload_location_spinner!!.setAdapter(locationAdapter)
 
-        if(isRepeatJourney){
+        if (isRepeatJourney) {
             helper.log("inSelectLocation")
             tload_location_spinner.setSelection(1)
-        }else{
+        } else {
             tload_location_spinner.setSelection(0, false)
         }
 
         tload_location_spinner.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
 
-        tload_location_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        tload_location_spinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
 
-            override fun onItemSelected(
-                arg0: AdapterView<*>, arg1: View,
-                position: Int, arg3: Long
-            ) {
+                override fun onItemSelected(
+                    arg0: AdapterView<*>, arg1: View,
+                    position: Int, arg3: Long
+                ) {
 
-                selectedLocation = locations.get(position)
-                if (locations.get(position).id != 0) {
-                    tload_location_spinner.setBackground(resources.getDrawable(R.drawable.spinner_border))
-                } else {
-                    tload_location_spinner.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
+                    selectedLocation = locations.get(position)
+                    if (locations.get(position).id != 0) {
+                        tload_location_spinner.setBackground(resources.getDrawable(R.drawable.spinner_border))
+                    } else {
+                        tload_location_spinner.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
+                    }
+                    Log.e(TAG, locations.get(position).toString())
                 }
-                Log.e(TAG, locations.get(position).toString())
-            }
 
-            override fun onNothingSelected(arg0: AdapterView<*>) {
+                override fun onNothingSelected(arg0: AdapterView<*>) {
 
+                }
             }
-        }
     }
 }

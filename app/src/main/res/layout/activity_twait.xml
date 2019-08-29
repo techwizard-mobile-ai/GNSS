@@ -1,56 +1,54 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:orientation="vertical"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
+        android:orientation="vertical"
         tools:context=".activities.truck.TWaitActivity">
 
     <TextView
             android:id="@+id/day_work_title"
             style="@style/activity_title"
-            android:text="Wait For Load"
             android:layout_centerHorizontal="true"
-            />
+            android:text="@string/activity_twait_day_work_title_text" />
 
     <Chronometer
             android:id="@+id/day_works_chronometer"
-            android:textColor="@color/colorPrimary"
-            android:textSize="@dimen/_20sdp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/day_work_title"
             android:layout_above="@id/day_works_action"
-            android:textStyle="bold"
+            android:layout_below="@id/day_work_title"
             android:layout_centerHorizontal="true"
-            android:text="Chronometer" />
+            android:text="@string/activity_twait_day_works_chronometer_text"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/_20sdp"
+            android:textStyle="bold" />
 
     <FrameLayout
             android:id="@+id/day_works_action"
-            android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:layout_gravity="center">
 
         <android.support.design.widget.FloatingActionButton
                 android:id="@+id/day_works_button"
                 android:layout_width="@dimen/_120sdp"
                 android:layout_height="@dimen/_120sdp"
-                app:backgroundTint="@color/colorPrimary"
-                android:src="@android:color/transparent" />
+                android:src="@android:color/transparent"
+                app:backgroundTint="@color/colorPrimary" />
 
         <TextView
                 android:id="@+id/day_works_action_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Start"
-                android:gravity="center"
                 android:elevation="16dp"
-                android:textColor="@android:color/white"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:gravity="center"
+                android:text="@string/activity_twait_day_works_action_text_text"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@android:color/white" />
     </FrameLayout>
 </RelativeLayout>

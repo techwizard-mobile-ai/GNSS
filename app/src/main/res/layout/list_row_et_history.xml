@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/eth_row"
@@ -6,7 +6,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_5sdp">
 
-    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    <android.support.v7.widget.CardView
             style="?attr/cardStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -26,24 +26,24 @@
 
                 <TextView
                         style="@style/load_history_text"
-                        android:text="Record Number" />
+                        android:text="@string/record_number" />
 
                 <TextView
                         android:id="@+id/eth_record_number"
                         style="@style/load_history_desc"
-                        android:text=":  Trenching" />
+                        android:text="@string/list_row_et_history_eth_record_number_text" />
             </LinearLayout>
 
             <LinearLayout style="@style/load_history_row_item">
 
                 <TextView
                         style="@style/load_history_text"
-                        android:text="Action" />
+                        android:text="@string/action" />
 
                 <TextView
                         android:id="@+id/eth_action"
                         style="@style/load_history_desc"
-                        android:text=":  Trenching" />
+                        android:text="@string/list_row_et_history_eth_action_text" />
             </LinearLayout>
 
             <LinearLayout
@@ -52,68 +52,68 @@
 
                 <TextView
                         style="@style/load_history_text"
-                        android:text="Start Time" />
+                        android:text="@string/start_time" />
 
                 <TextView
                         android:id="@+id/eth_start_time"
                         style="@style/load_history_desc"
-                        android:text=":  Excavator 1" />
+                        android:text="@string/list_row_et_history_eth_start_time_text" />
             </LinearLayout>
 
             <LinearLayout
                     android:id="@+id/lhr_gps_loading_layout"
-                    style="@style/load_history_row_item"
-                    >
+                    style="@style/load_history_row_item">
+
                 <TextView
                         style="@style/load_history_text"
-                        android:text="Loading GPS"
-                        />
+                        android:text="@string/start_gps_location" />
+
                 <TextView
                         android:id="@+id/lhr_gps_loading"
                         style="@style/load_history_desc"
-                        android:text=":  Location 1"
-                        />
+                        android:text="@string/list_row_et_history_lhr_gps_loading_text" />
             </LinearLayout>
+
             <LinearLayout
                     android:id="@+id/lhr_loaded_material_layout"
                     style="@style/load_history_row_item">
 
                 <TextView
                         style="@style/load_history_text"
-                        android:text="End Time" />
+                        android:text="@string/end_time" />
 
                 <TextView
                         android:id="@+id/eth_end_time"
                         style="@style/load_history_desc"
-                        android:text=":  Material" />
+                        android:text="@string/list_row_et_history_eth_end_time_text" />
             </LinearLayout>
 
             <LinearLayout
                     android:id="@+id/lhr_gps_unloading_layout"
-                    style="@style/load_history_row_item"
-                    >
+                    style="@style/load_history_row_item">
+
                 <TextView
                         style="@style/load_history_text"
-                        android:text="Loading GPS"
-                        />
+                        android:text="@string/stop_gps_location" />
+
                 <TextView
                         android:id="@+id/lhr_gps_unloading"
                         style="@style/load_history_desc"
-                        android:text=":  Location 1"
-                        />
+                        android:text="@string/list_row_et_history_lhr_gps_unloading_text" />
             </LinearLayout>
+
             <LinearLayout
                     android:id="@+id/lhr_loading_location_layout"
                     style="@style/load_history_row_item">
 
                 <TextView
                         style="@style/load_history_text"
-                        android:text="Duration" />
+                        android:text="@string/duration" />
 
                 <TextView
                         android:id="@+id/eth_duration"
                         style="@style/load_history_desc"
-                        android:text=":  Location 1" />
+                        android:text="@string/list_row_et_history_eth_duration_text" />
             </LinearLayout>
 
             <LinearLayout
@@ -122,12 +122,12 @@
 
                 <TextView
                         style="@style/load_history_text"
-                        android:text="Total Loads" />
+                        android:text="@string/total_loads" />
 
                 <TextView
                         android:id="@+id/eth_totalloads"
                         style="@style/load_history_desc"
-                        android:text=":  Location 1" />
+                        android:text="@string/list_row_et_history_eth_totalloads_text" />
             </LinearLayout>
 
             <LinearLayout
@@ -136,12 +136,12 @@
 
                 <TextView
                         style="@style/load_history_text"
-                        android:text="Date" />
+                        android:text="@string/date" />
 
                 <TextView
                         android:id="@+id/eth_date"
                         style="@style/load_history_desc"
-                        android:text=":  Weight1" />
+                        android:text="@string/list_row_et_history_eth_date_text" />
             </LinearLayout>
 
             <LinearLayout
@@ -150,12 +150,12 @@
 
                 <TextView
                         style="@style/load_history_text"
-                        android:text="Mode" />
+                        android:text="@string/mode" />
 
                 <TextView
                         android:id="@+id/eth_mode"
                         style="@style/load_history_desc"
-                        android:text=":  Morning 7am - 12am" />
+                        android:text="@string/list_row_et_history_eth_mode_text" />
             </LinearLayout>
         </LinearLayout>
 

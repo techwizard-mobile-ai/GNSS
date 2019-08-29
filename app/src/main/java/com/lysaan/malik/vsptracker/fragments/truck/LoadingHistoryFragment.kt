@@ -26,13 +26,13 @@ class LoadingHistoryFragment : Fragment() {
     private lateinit var helper: Helper
     private var root: View? = null
 
-    private lateinit var db : DatabaseAdapter
+    private lateinit var db: DatabaseAdapter
     private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            helper = Helper(TAG,myContext)
+            helper = Helper(TAG, myContext)
             db = DatabaseAdapter(myContext)
             loadingHistory = db.getTrips()
         }
@@ -49,7 +49,7 @@ class LoadingHistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val mAdapter = LoadingHistoryAdapter(myContext,loadingHistory)
+        val mAdapter = LoadingHistoryAdapter(myContext, loadingHistory)
         flh_rv.layoutManager = LinearLayoutManager(myContext, LinearLayout.VERTICAL, false)
         flh_rv!!.setAdapter(mAdapter)
     }
@@ -78,9 +78,9 @@ class LoadingHistoryFragment : Fragment() {
 
     companion object {
 
-        private lateinit var myContext : Activity
+        private lateinit var myContext: Activity
         @JvmStatic
-        fun newInstance( activity : Activity) =
+        fun newInstance(activity: Activity) =
             LoadingHistoryFragment().apply {
                 arguments = Bundle().apply {
                     myContext = activity

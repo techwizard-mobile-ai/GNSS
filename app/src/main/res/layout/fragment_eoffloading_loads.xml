@@ -1,27 +1,28 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context=".fragments.excavator.EOffloadingLoadsFragment">
-    
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".fragments.excavator.EOffloadingLoadsFragment">
+
     <LinearLayout
-            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_marginStart="@dimen/_10sdp"
             android:layout_marginEnd="@dimen/_10sdp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:orientation="vertical">
+
         <TextView
                 android:id="@+id/offloading_loads_title"
-                style="@style/activity_title"
-        />
+                style="@style/activity_title" />
+
         <android.support.v7.widget.RecyclerView
                 android:id="@+id/eoff_fragment_rv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginBottom="@dimen/_10sdp"
-                android:layout_width="match_parent"
-                android:background="@drawable/eoffloding_border"
-                android:layout_height="wrap_content"/>
+                android:background="@drawable/eoffloding_border" />
     </LinearLayout>
 
 </FrameLayout>

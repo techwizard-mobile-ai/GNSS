@@ -11,11 +11,10 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.lysaan.malik.vsptracker.Helper
 import com.lysaan.malik.vsptracker.R
-
 import com.lysaan.malik.vsptracker.activities.excavator.EHistoryActivity
 import com.lysaan.malik.vsptracker.adapters.ETHistoryAdapter
-import com.lysaan.malik.vsptracker.database.DatabaseAdapter
 import com.lysaan.malik.vsptracker.classes.EWork
+import com.lysaan.malik.vsptracker.database.DatabaseAdapter
 import kotlinx.android.synthetic.main.fragment_edigging_history.view.*
 
 
@@ -25,15 +24,16 @@ class EDiggingHistoryFragment : Fragment() {
     private val TAG = this::class.java.simpleName
     private lateinit var helper: Helper
     private var root: View? = null
-    private lateinit var diggingHistory : MutableList<EWork>
-    private lateinit var db : DatabaseAdapter
+    private lateinit var diggingHistory: MutableList<EWork>
+    private lateinit var db: DatabaseAdapter
 
     private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            helper = Helper(TAG,
+            helper = Helper(
+                TAG,
                 myContext
             )
             db = DatabaseAdapter(myContext)
@@ -58,7 +58,8 @@ class EDiggingHistoryFragment : Fragment() {
         val workType = 1
         val mAdapter = ETHistoryAdapter(
             myContext, diggingHistory,
-            FRAGMENT_TAG, workType)
+            FRAGMENT_TAG, workType
+        )
         root!!.edh_rv.layoutManager = LinearLayoutManager(myContext, LinearLayout.VERTICAL, false)
         root!!.edh_rv!!.setAdapter(mAdapter)
     }
@@ -89,7 +90,7 @@ class EDiggingHistoryFragment : Fragment() {
 
     companion object {
 
-        private lateinit var myContext : EHistoryActivity
+        private lateinit var myContext: EHistoryActivity
         private lateinit var FRAGMENT_TAG: String
 
         @JvmStatic

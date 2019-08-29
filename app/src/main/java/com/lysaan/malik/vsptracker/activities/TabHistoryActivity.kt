@@ -22,7 +22,7 @@ class TabHistoryActivity : BaseActivity(), View.OnClickListener,
     override fun onFragmentInteraction(uri: Uri) {}
 
     private val LOADING_HISTORY: String = "LOADING_HISTORY"
-    private val DELAY_HISTORY : String = "DELAY_HISTORY"
+    private val DELAY_HISTORY: String = "DELAY_HISTORY"
     private val TAG = this::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,8 +35,8 @@ class TabHistoryActivity : BaseActivity(), View.OnClickListener,
 
         helper.setTag(TAG)
 
-        var bundle :Bundle ?=intent.extras
-        if(bundle != null){
+        var bundle: Bundle? = intent.extras
+        if (bundle != null) {
             data = bundle!!.getSerializable("data") as Data
             helper.log("data:$data")
         }
@@ -46,22 +46,22 @@ class TabHistoryActivity : BaseActivity(), View.OnClickListener,
         bottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
         val menuFragment = bundle?.getString("menuFragment")
-        if(menuFragment !=null){
+        if (menuFragment != null) {
             helper.log("menuFragment:${menuFragment.toString()}")
-            if (menuFragment.equals("delayHistoryFragment")){
+            if (menuFragment.equals("delayHistoryFragment")) {
                 val delayFragment = DelayHistoryFragment.newInstance(this, DELAY_HISTORY)
                 openFragment(delayFragment, DELAY_HISTORY)
-            }else{
+            } else {
                 val homeFragment = LoadingHistoryFragment.newInstance(this)
-                openFragment(homeFragment,LOADING_HISTORY)
+                openFragment(homeFragment, LOADING_HISTORY)
             }
-        }else{
+        } else {
             val homeFragment = LoadingHistoryFragment.newInstance(this)
-            openFragment(homeFragment,LOADING_HISTORY)
+            openFragment(homeFragment, LOADING_HISTORY)
         }
 
         val eLoadingHistoryFragment = LoadingHistoryFragment.newInstance(this)
-        openFragment(eLoadingHistoryFragment,LOADING_HISTORY)
+        openFragment(eLoadingHistoryFragment, LOADING_HISTORY)
     }
 
     private fun openFragment(fragment: Fragment, FRAGMENT_TAG: String?) {
@@ -70,47 +70,55 @@ class TabHistoryActivity : BaseActivity(), View.OnClickListener,
         transaction.addToBackStack(FRAGMENT_TAG)
         transaction.commit()
     }
-    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        when (item.itemId) {
-            R.id.navf_loading -> {
-                val loadingHistoryFragment =
-                    LoadingHistoryFragment.newInstance(this)
-                openFragment(loadingHistoryFragment,LOADING_HISTORY)
-                return@OnNavigationItemSelectedListener true
-            }
 
-            R.id.navf_delay ->{
-                val delayHistoryFragment = DelayHistoryFragment.newInstance(this, DELAY_HISTORY)
-                openFragment(delayHistoryFragment, DELAY_HISTORY)
-                return@OnNavigationItemSelectedListener  true
+    private val mOnNavigationItemSelectedListener =
+        BottomNavigationView.OnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navf_loading -> {
+                    val loadingHistoryFragment =
+                        LoadingHistoryFragment.newInstance(this)
+                    openFragment(loadingHistoryFragment, LOADING_HISTORY)
+                    return@OnNavigationItemSelectedListener true
+                }
+
+                R.id.navf_delay -> {
+                    val delayHistoryFragment = DelayHistoryFragment.newInstance(this, DELAY_HISTORY)
+                    openFragment(delayHistoryFragment, DELAY_HISTORY)
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.navf_finish -> {
+                    finish()
+                }
             }
-            R.id.navf_finish ->{ finish()}
+            false
         }
-        false
-    }
+
     override fun onClick(view: View?) {
-        when(view!!.id){
+        when (view!!.id) {
         }
     }
+
     fun setNavItem(currentFragmentTag: String?) {
-        when(currentFragmentTag){
+        when (currentFragmentTag) {
             LOADING_HISTORY -> navigationView.selectedItemId = R.id.navf_loading
-            DELAY_HISTORY -> navigationView.selectedItemId = R.id.nav_delay }
+            DELAY_HISTORY -> navigationView.selectedItemId = R.id.nav_delay
+        }
     }
+
     override fun onBackPressed() {
 
         val count = supportFragmentManager.backStackEntryCount
         helper.log("count--$count")
-        if(count < 2 ){
+        if (count < 2) {
             finish()
-        }else{
+        } else {
             supportFragmentManager.popBackStack()
             val currentFragmentTag = supportFragmentManager.getBackStackEntryAt(count - 2).name
 
-            if(supportFragmentManager.getBackStackEntryAt(count -2).id != navigationView.selectedItemId){
+            if (supportFragmentManager.getBackStackEntryAt(count - 2).id != navigationView.selectedItemId) {
                 setNavItem(currentFragmentTag)
                 supportFragmentManager.popBackStack()
-            }else{
+            } else {
                 supportFragmentManager.popBackStack()
             }
         }

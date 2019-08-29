@@ -23,6 +23,8 @@ buildscript {
         // Add dependency
         classpath 'io.fabric.tools:gradle:1.29.0'  // Crashlytics plugin
         // in the individual module build.gradle files
+//        classpath 'de.ito.gradle.plugin:android-string-extractor:0.1.0'
+
     }
 }
 

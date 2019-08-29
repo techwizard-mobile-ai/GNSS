@@ -12,7 +12,7 @@ class ELoad : Serializable {
     constructor() {
     }
 
-    constructor(loadMachine: String , time: String) {
+    constructor(loadMachine: String, time: String) {
         this.loadMachine = loadMachine
         this.time = time
     }

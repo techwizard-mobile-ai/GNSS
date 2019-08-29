@@ -12,9 +12,9 @@ import kotlinx.android.synthetic.main.activity_finish.*
 
 class FinishActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
-        when(view!!.id){
+        when (view!!.id) {
             R.id.finish_next -> {
-                val intent = Intent (this, LoginActivity::class.java)
+                val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
                 finishAffinity()
             }

@@ -9,7 +9,6 @@ import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.Helper
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.activities.HourMeterStopActivity
-import com.lysaan.malik.vsptracker.activities.common.LMachine1Activity
 import com.lysaan.malik.vsptracker.activities.common.Material1Activity
 import com.lysaan.malik.vsptracker.activities.common.RLoadActivity
 import com.lysaan.malik.vsptracker.classes.Data
@@ -28,8 +27,8 @@ class SUnloadAfterActivity : BaseActivity(), View.OnClickListener {
 
         helper = Helper(TAG, this)
 
-        var bundle :Bundle ?=intent.extras
-        if(bundle != null){
+        var bundle: Bundle? = intent.extras
+        if (bundle != null) {
             data = bundle!!.getSerializable("data") as Data
             helper.log("data:$data")
         }
@@ -41,7 +40,7 @@ class SUnloadAfterActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
-        when(view!!.id){
+        when (view!!.id) {
             R.id.sul_after_new -> {
 
 //                val intent = Intent(this, Material1Activity::class.java)
@@ -49,7 +48,7 @@ class SUnloadAfterActivity : BaseActivity(), View.OnClickListener {
 //                intent.putExtra("data", myData)
 //                startActivity(intent)
 
-                val intent = Intent (this, Material1Activity::class.java)
+                val intent = Intent(this, Material1Activity::class.java)
                 val data = Data()
                 helper.setLastJourney(data)
                 intent.putExtra("data", data)
@@ -70,12 +69,12 @@ class SUnloadAfterActivity : BaseActivity(), View.OnClickListener {
                 data.repeatJourney = 1
                 data.nextAction = 0
                 helper.setLastJourney(data)
-                val intent = Intent (this, RLoadActivity::class.java)
+                val intent = Intent(this, RLoadActivity::class.java)
                 startActivity(intent)
 
             }
             R.id.sul_after_finish -> {
-                val intent = Intent (this, HourMeterStopActivity::class.java)
+                val intent = Intent(this, HourMeterStopActivity::class.java)
                 startActivity(intent)
             }
         }

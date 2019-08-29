@@ -1,62 +1,60 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         tools:context=".activities.notused.MachineStatusActivity">
 
 
-    <TextView style="@style/activity_title"
-              android:text="Machine Status"
-    />
+    <TextView
+            style="@style/activity_title"
+            android:text="Machine Status" />
+
     <LinearLayout style="@style/default_linearlayout">
 
         <LinearLayout
                 android:id="@+id/machine_start_layout"
-                android:orientation="vertical"
-                android:visibility="gone"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
             <TextView
                     style="@style/home_tv"
-                    android:text="Machine Stopped Reason"
-            />
+                    android:text="Machine Stopped Reason" />
+
             <TextView
                     android:id="@+id/mstatus_stopped_reason"
                     style="@style/tv_background"
-                    android:text="Machine Stopped Reason"
-            />
+                    android:text="@string/activity_machine_status_mstatus_stopped_reason_text" />
 
             <Button
                     android:id="@+id/mstatus_start"
                     style="@style/next_button"
                     android:layout_marginTop="@dimen/_50sdp"
-                    android:text="Start Machine"
-            />
+                    android:text="@string/activity_machine_status_mstatus_start_text" />
         </LinearLayout>
+
         <LinearLayout
                 android:id="@+id/machine_stop_layout"
-                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
             <TextView
                     style="@style/home_tv"
-                    android:text="Machine Stop Reason"
-            />
+                    android:text="Machine Stop Reason" />
+
             <android.support.v7.widget.AppCompatSpinner
                     android:id="@+id/mstop_reason_spinner"
-                    style="@style/home_spinner"
-            />
+                    style="@style/home_spinner" />
 
             <Button
                     android:id="@+id/mstatus_stop"
                     style="@style/next_button"
                     android:layout_marginTop="@dimen/_50sdp"
-                    android:text="Stop Machine"
-            />
+                    android:text="@string/activity_machine_status_mstatus_stop_text" />
 
         </LinearLayout>
 

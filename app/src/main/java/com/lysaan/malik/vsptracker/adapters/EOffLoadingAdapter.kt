@@ -18,9 +18,13 @@ class EOffLoadingAdapter(
 
     private val TAG = this::class.java.simpleName
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EOffLoadingAdapter.ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): EOffLoadingAdapter.ViewHolder {
 
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.list_row_eoffloading, parent, false)
+        val v = LayoutInflater.from(parent.context)
+            .inflate(R.layout.list_row_eoffloading, parent, false)
         return ViewHolder(v)
     }
 
@@ -28,8 +32,8 @@ class EOffLoadingAdapter(
 
         val myData = dataList.get(position)
 
-        holder.itemView.elhr_number.setText("Load # "+(dataList.size - position))
-        holder.itemView.elhr_time.setText(":  "+myData.time +" Hrs")
+        holder.itemView.elhr_number.setText("Load # " + (dataList.size - position))
+        holder.itemView.elhr_time.setText(":  " + myData.time + " Hrs")
     }
 
 

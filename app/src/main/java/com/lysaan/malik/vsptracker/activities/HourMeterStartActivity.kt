@@ -37,10 +37,10 @@ class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
-        when(view!!.id){
-            R.id.ms_minus ->{
+        when (view!!.id) {
+            R.id.ms_minus -> {
                 val value = ms_reading.text.toString().toFloat()
-                if(value >0){
+                if (value > 0) {
                     val newValue = value - 0.1
                     ms_reading.setText(helper.getRoundedDecimal(newValue).toString())
                 }
@@ -54,12 +54,12 @@ class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
 
             R.id.ms_continue -> {
 
-                if(!helper.getMeterTimeForStart().equals(ms_reading.text.toString(), true)){
+                if (!helper.getMeterTimeForStart().equals(ms_reading.text.toString(), true)) {
                     val meter = helper.getMeter()
                     meter.isMachineTimeCustom = true
                     helper.setMeter(meter)
                     helper.log("Custom Time : True, Original reading:${helper.getMeterTimeForStart()}, New Reading: ${ms_reading.text}")
-                }else{
+                } else {
                     val meter = helper.getMeter()
                     meter.isMachineTimeCustom = false
                     helper.setMeter(meter)

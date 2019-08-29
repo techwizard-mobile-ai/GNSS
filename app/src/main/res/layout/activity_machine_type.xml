@@ -1,60 +1,54 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/machine_type_main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:id="@+id/machine_type_main_layout"
         tools:context=".activities.MachineTypeActivity">
 
     <LinearLayout
-            android:layout_marginTop="@dimen/_10sdp"
-            style="@style/default_linearlayout">
+            style="@style/default_linearlayout"
+            android:layout_marginTop="@dimen/_10sdp">
 
 
         <TextView
                 style="@style/activity_title"
-                android:text="Select Machine"
-        />
+                android:text="Select Machine" />
 
         <TextView
                 style="@style/home_tv"
-                android:text="@string/machine_type"
-        />
+                android:text="@string/machine_type" />
+
         <android.support.v7.widget.AppCompatSpinner
                 android:id="@+id/machine_type"
-                style="@style/home_spinner"
-        />
+                style="@style/home_spinner" />
 
         <TextView
                 style="@style/home_tv"
-                android:text="Machine Location"
-        />
+                android:text="Machine Location" />
+
         <android.support.v7.widget.AppCompatSpinner
                 android:id="@+id/machine_location"
-                style="@style/home_spinner"
-        />
+                style="@style/home_spinner" />
+
         <TextView
-                android:text="@string/machine_number"
                 style="@style/home_tv"
-        />
+                android:text="@string/machine_number" />
+
         <EditText
                 android:id="@+id/machine_number"
-                android:layout_marginStart="0dp"
-                android:layout_marginEnd="0dp"
-                android:textColor="@color/black"
                 style="@style/et_background"
+                android:layout_marginStart="0dp"
                 android:layout_marginTop="@dimen/_1sdp"
+                android:layout_marginEnd="0dp"
                 android:hint="@string/machine_number"
-        />
+                android:textColor="@color/black" />
 
         <Button
                 android:id="@+id/machine_save"
                 style="@style/next_button"
                 android:layout_marginTop="@dimen/_50sdp"
-                android:text="@string/save"
-        />
+                android:text="@string/save" />
     </LinearLayout>
 </LinearLayout>

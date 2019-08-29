@@ -30,16 +30,26 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 //        helper.imageLoad(resources.getDrawable(R.drawable.welcome))
 
 
-        when(helper.getMachineType()){
-            1 -> {Glide.with(this).load(resources.getDrawable(R.drawable.excavator)).into(signin_image)}
-            2 -> {Glide.with(this).load(resources.getDrawable(R.drawable.scraper)).into(signin_image)}
-            3 -> {Glide.with(this).load(resources.getDrawable(R.drawable.truck)).into(signin_image)}
-            else -> {Glide.with(this).load(resources.getDrawable(R.drawable.welcomenew)).into(signin_image)}
+        when (helper.getMachineType()) {
+            1 -> {
+                Glide.with(this).load(resources.getDrawable(R.drawable.excavator))
+                    .into(signin_image)
+            }
+            2 -> {
+                Glide.with(this).load(resources.getDrawable(R.drawable.scraper)).into(signin_image)
+            }
+            3 -> {
+                Glide.with(this).load(resources.getDrawable(R.drawable.truck)).into(signin_image)
+            }
+            else -> {
+                Glide.with(this).load(resources.getDrawable(R.drawable.welcomenew))
+                    .into(signin_image)
+            }
         }
 
 //        keyboard.showKeyBoard(signin_email)
 
-        if(helper.getMachineNumber().isNullOrBlank()){
+        if (helper.getMachineNumber().isNullOrBlank()) {
             helper.log("No machine Number is entered.")
             val intent = Intent(this, MachineTypeActivity::class.java)
             startActivity(intent)
@@ -57,8 +67,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
-        when(view!!.id){
-            R.id.signin_signin ->{
+        when (view!!.id) {
+            R.id.signin_signin -> {
 
                 var email = signin_email.text.toString()
                 var pass = signin_pass.text.toString()
@@ -79,7 +89,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun signIn(email :String, pass:String){
+    private fun signIn(email: String, pass: String) {
 
         helper.showProgressBar()
 

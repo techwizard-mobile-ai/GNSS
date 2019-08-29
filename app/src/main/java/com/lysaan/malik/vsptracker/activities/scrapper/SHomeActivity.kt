@@ -36,9 +36,13 @@ class SHomeActivity : BaseActivity(), View.OnClickListener {
         data = helper.getLastJourney()
         helper.log("data:$data")
 
-        when(helper.getNextAction()){
-            0 ,2 -> {helper.setToDoLayout(thome_load_button)}
-            1 ,3 -> {helper.setToDoLayout(thome_unload_button)}
+        when (helper.getNextAction()) {
+            0, 2 -> {
+                helper.setToDoLayout(thome_load_button)
+            }
+            1, 3 -> {
+                helper.setToDoLayout(thome_unload_button)
+            }
         }
 
         shome_logout.setOnClickListener(this)
@@ -52,7 +56,7 @@ class SHomeActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
-        when(view!!.id){
+        when (view!!.id) {
             R.id.thome_load -> {
                 val intent = Intent(this, Material1Activity::class.java)
 
@@ -62,14 +66,16 @@ class SHomeActivity : BaseActivity(), View.OnClickListener {
             }
             R.id.thome_unload -> {
                 val intent = Intent(this, Location1Activity::class.java)
-                if(data == null){
+                if (data == null) {
                     data = Data()
                 }
                 data.isUnload = true
                 intent.putExtra("data", data)
                 startActivity(intent)
             }
-            R.id.shome_logout ->{ helper.logout(this)}
+            R.id.shome_logout -> {
+                helper.logout(this)
+            }
         }
 
     }

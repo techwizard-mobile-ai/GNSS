@@ -34,12 +34,12 @@ class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
 //            helper.log("data:$data")
 //        }
 
-        if(helper.getIsMachineStopped()){
+        if (helper.getIsMachineStopped()) {
             machine_status_title.text = "Machine Stopped Reason"
             machine_start_layout.visibility = View.VISIBLE
             machine_status_rv.visibility = View.GONE
             machine_stopped_reason.text = helper.getMachineStoppedReason()
-        }else{
+        } else {
             machine_status_title.text = "Select Machine Stop Reason"
             machine_start_layout.visibility = View.GONE
             machine_status_rv.visibility = View.VISIBLE
@@ -51,6 +51,7 @@ class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
         val mAdapter = MachineStatusAdapter(this, stoppedReasons)
         machine_status_rv.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
         machine_status_rv.setAdapter(mAdapter)
+
 
 //        val gv = findViewById(R.id.machinestatus_gridview) as GridView
 //        val stoppedReasons = helper.getMachineStopReasons()
@@ -69,14 +70,33 @@ class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        startGPS()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        stopGPS()
+    }
 
     override fun onClick(view: View?) {
-        when(view!!.id){
+        when (view!!.id) {
             R.id.machine_status_start -> {
-                helper.toast("Machine Started Successfully")
-                helper.setIsMachineStopped(false , "")
-                helper.startMachine()
-                helper.startHomeActivityByType(Data())
+
+                val machineData = Data()
+                machineData.recordID = helper.getMeter().stopRecordID
+                machineData.unloadingGPSLocation = gpsLocation
+                val updateID = db.updateMachineStatus(machineData)
+                if(updateID > 0){
+                    helper.toast("Machine Started Successfully")
+                    helper.setIsMachineStopped(false, "")
+                    helper.startMachine()
+                    helper.startHomeActivityByType(Data())
+                }else{
+                    helper.toast("Machine Not Started. Due to App Deleted Cache.")
+                }
+
             }
         }
     }

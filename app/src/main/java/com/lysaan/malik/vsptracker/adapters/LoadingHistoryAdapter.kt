@@ -18,13 +18,17 @@ class LoadingHistoryAdapter(
 .ViewHolder>() {
 
     private val TAG = this::class.java.simpleName
-    private lateinit var helper : Helper
+    private lateinit var helper: Helper
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LoadingHistoryAdapter.ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): LoadingHistoryAdapter.ViewHolder {
 
 
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.list_row_loading_history, parent, false)
+        val v = LayoutInflater.from(parent.context)
+            .inflate(R.layout.list_row_loading_history, parent, false)
         helper = Helper(TAG, context)
         return ViewHolder(v)
     }
@@ -37,7 +41,7 @@ class LoadingHistoryAdapter(
         holder.itemView.lhr_trip_type_layout.visibility = View.GONE
 
 
-        when(myData.tripType){
+        when (myData.tripType) {
             0 -> {
                 holder.itemView.lhr_trip_number.setText(":  ${myData.recordID}")
 //                holder.itemView.lhr_trip_type.text = ": Load Trip"
@@ -51,33 +55,43 @@ class LoadingHistoryAdapter(
             }
         }
 
-        when(myData.loadedMachineType){
-            2 ->{
+        when (myData.loadedMachineType) {
+            2 -> {
                 holder.itemView.lhr_loading_machine_layout.visibility = View.GONE
                 holder.itemView.lhr_task_layout.visibility = View.GONE
             }
-            3-> {
+            3 -> {
                 holder.itemView.lhr_loading_machine_layout.visibility = View.VISIBLE
                 holder.itemView.lhr_task_layout.visibility = View.VISIBLE
             }
         }
-        holder.itemView.lhr_loading_machine.setText(":  "+myData.loadingMachine)
+        holder.itemView.lhr_loading_machine.setText(":  " + myData.loadingMachine)
 
         holder.itemView.lhr_loaded_material.setText(":  ${myData.loadingMaterial} / ${myData.unloadingMaterial}")
         holder.itemView.lhr_loading_location.setText(":  ${myData.loadingLocation} / ${myData.unloadingLocation}")
-        holder.itemView.lhr_loading_weight.setText(":  "+myData.unloadingWeight)
-        holder.itemView.lhr_task.setText(":  "+myData.unloadingTask)
+        holder.itemView.lhr_loading_weight.setText(":  " + myData.unloadingWeight)
+        holder.itemView.lhr_task.setText(":  " + myData.unloadingTask)
 
-        holder.itemView.lhr_time.setText(": ${helper.getTime(myData.startTime)} / ${helper.getTime(myData.stopTime)} Hrs")
+        holder.itemView.lhr_time.setText(
+            ": ${helper.getTime(myData.startTime)} / ${helper.getTime(
+                myData.stopTime
+            )} Hrs"
+        )
 
         holder.itemView.lhr_duration.setText(": ${helper.getFormatedTime(myData.totalTime)} Hrs")
         holder.itemView.lhr_workmode.text = ": ${myData.workMode}"
 
-        holder.itemView.lhr_gps_loading.text = ": ${helper.getRoundedDecimal(myData.loadingGPSLocation.latitude)} / ${helper.getRoundedDecimal(myData.loadingGPSLocation.longitude)} "
-        holder.itemView.lhr_gps_unloading.text = ": ${helper.getRoundedDecimal(myData.unloadingGPSLocation.latitude)} / ${helper.getRoundedDecimal(myData.unloadingGPSLocation.longitude)} "
+        holder.itemView.lhr_gps_loading.text =
+            ": ${helper.getRoundedDecimal(myData.loadingGPSLocation.latitude)} / ${helper.getRoundedDecimal(
+                myData.loadingGPSLocation.longitude
+            )} "
+        holder.itemView.lhr_gps_unloading.text =
+            ": ${helper.getRoundedDecimal(myData.unloadingGPSLocation.latitude)} / ${helper.getRoundedDecimal(
+                myData.unloadingGPSLocation.longitude
+            )} "
 
         holder.itemView.lhr_gps_loading_layout.setOnClickListener {
-            helper.showOnMap(myData.loadingGPSLocation,myData.loadingLocation)
+            helper.showOnMap(myData.loadingGPSLocation, myData.loadingLocation)
         }
         holder.itemView.lhr_gps_unloading_layout.setOnClickListener {
             helper.showOnMap(myData.unloadingGPSLocation, myData.unloadingLocation)
@@ -85,7 +99,6 @@ class LoadingHistoryAdapter(
 
 
     }
-
 
 
     override fun getItemCount(): Int {

@@ -9,26 +9,28 @@
         <item name="fontFamily">@font/avenirnextltpro_mediumit</item>
         <item name="cardStyle">@style/CardView.Light</item>
     </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="fontFamily">@font/avenirnextltpro_mediumit</item>
         <item name="cardStyle">@style/CardView.Light</item>
     </style>
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-<style name="AppTheme.NightMode" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <item name="windowActionBar">false</item>
-    <item name="windowNoTitle">true</item>
-    <item name="fontFamily">@font/avenirnextltpro_mediumit</item>
-    <item name="itemIconTint">@color/white</item>
-    <item name="itemTextColor">@color/white</item>
-    <item name="cardStyle">@style/CardView.Dark</item>
-</style>
+    <style name="AppTheme.NightMode" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="fontFamily">@font/avenirnextltpro_mediumit</item>
+        <item name="itemIconTint">@color/white</item>
+        <item name="itemTextColor">@color/white</item>
+        <item name="cardStyle">@style/CardView.Dark</item>
+    </style>
 
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
     <style name="avenirnext_fontstyle" parent="@android:style/TextAppearance.Small">
@@ -69,8 +71,6 @@
     </style>
 
 
-
-
     <style name="signin_btn" parent="avenirnext_fontstyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -106,6 +106,7 @@
         <item name="android:layout_marginStart">@dimen/_10sdp</item>
         <item name="android:layout_marginBottom">@dimen/_2sdp</item>
     </style>
+
     <style name="spinner_border_bottom" parent="avenirnext_fontstyle">
         <item name="android:layout_marginTop">@dimen/_3sdp</item>
         <item name="android:layout_width">match_parent</item>

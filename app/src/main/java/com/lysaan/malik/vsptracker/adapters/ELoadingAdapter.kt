@@ -20,7 +20,8 @@ class ELoadingAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ELoadingAdapter.ViewHolder {
 
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.list_row_eloading, parent, false)
+        val v =
+            LayoutInflater.from(parent.context).inflate(R.layout.list_row_eloading, parent, false)
         return ViewHolder(v)
     }
 
@@ -28,9 +29,9 @@ class ELoadingAdapter(
 
         val myData = dataList.get(position)
 
-        holder.itemView.elhr_number.setText("Load # "+(dataList.size - position))
+        holder.itemView.elhr_number.setText("Load # " + (dataList.size - position))
         holder.itemView.elhr_material.setText(myData.loadingMaterial)
-        holder.itemView.elhr_time.setText(myData.time +" Hrs")
+        holder.itemView.elhr_time.setText(myData.time + " Hrs")
     }
 
 

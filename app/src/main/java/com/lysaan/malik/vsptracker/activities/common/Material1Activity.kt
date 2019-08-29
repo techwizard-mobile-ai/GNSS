@@ -13,8 +13,8 @@ import com.lysaan.malik.vsptracker.Helper
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.activities.excavator.ELoadActivity
 import com.lysaan.malik.vsptracker.adapters.CustomGrid
-import com.lysaan.malik.vsptracker.classes.Material
 import com.lysaan.malik.vsptracker.classes.Data
+import com.lysaan.malik.vsptracker.classes.Material
 import kotlinx.android.synthetic.main.activity_material1.*
 import java.util.*
 
@@ -105,7 +105,7 @@ class Material1Activity : BaseActivity(), View.OnClickListener {
 //                    }
                     2, 3 -> {
 
-                        when(data.nextAction){
+                        when (data.nextAction) {
                             0 -> {
                                 val intent = Intent(this, Location1Activity::class.java)
                                 data.loadingMaterial = materials.get(position).name

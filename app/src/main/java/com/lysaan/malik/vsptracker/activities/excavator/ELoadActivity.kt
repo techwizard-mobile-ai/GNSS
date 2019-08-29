@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.activity_eload.*
 class ELoadActivity : BaseActivity(), View.OnClickListener {
 
     private val TAG = this::class.java.simpleName
-//    private lateinit var data: Data
+    //    private lateinit var data: Data
     private val REQUEST_MATERIAL = 2
     private val REQUEST_LOCATION = 3
 
@@ -55,13 +55,13 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
 
 
         val loadHistory = db.getELoadHistroy()
-        if(loadHistory.size > 0){
+        if (loadHistory.size > 0) {
             elh_rv.visibility = View.VISIBLE
-            val aa = ELoadingAdapter(this@ELoadActivity ,loadHistory )
+            val aa = ELoadingAdapter(this@ELoadActivity, loadHistory)
             val layoutManager1 = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
             elh_rv.layoutManager = layoutManager1
             elh_rv!!.setAdapter(aa)
-        }else{
+        } else {
             elh_rv.visibility = View.INVISIBLE
         }
 
@@ -79,33 +79,35 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
-        when(view!!.id){
+        when (view!!.id) {
             R.id.load_truck_load -> {
                 data.loadingMachine = helper.getMachineNumber()
                 data.loadedMachine = "Load"
 
                 data.loadingGPSLocation = gpsLocation
                 val insertID = db.insertELoad(data)
-                if(insertID > 0){
+                if (insertID > 0) {
                     helper.toast("Loading Successful.\nLoaded Truck Number # $insertID")
 
                     val loadHistory = db.getELoadHistroy()
-                    if(loadHistory.size > 0){
+                    if (loadHistory.size > 0) {
                         elh_rv.visibility = View.VISIBLE
-                        val aa = ELoadingAdapter(this@ELoadActivity ,loadHistory )
+                        val aa = ELoadingAdapter(this@ELoadActivity, loadHistory)
                         val layoutManager1 = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
                         elh_rv.layoutManager = layoutManager1
                         elh_rv!!.setAdapter(aa)
-                    }else{
+                    } else {
                         elh_rv.visibility = View.INVISIBLE
                     }
 
-                }else{
+                } else {
                     helper.toast("Error while Saving Record.")
                 }
 
             }
-            R.id.eload_back -> {helper.startHomeActivityByType(Data())}
+            R.id.eload_back -> {
+                helper.startHomeActivityByType(Data())
+            }
             R.id.eload_finish -> {
                 val intent = Intent(this, HourMeterStopActivity::class.java)
                 startActivity(intent)
@@ -115,14 +117,14 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
 //                val data1 = helper.getLastJourney()
                 data.isForLoadResult = true
                 intent.putExtra("data", data)
-                startActivityForResult(intent,REQUEST_MATERIAL)
+                startActivityForResult(intent, REQUEST_MATERIAL)
             }
             R.id.eload_location -> {
                 val intent = Intent(this, Location1Activity::class.java)
 //                val data1 = helper.getLastJourney()
                 data.isForLoadResult = true
                 intent.putExtra("data", data)
-                startActivityForResult(intent,REQUEST_LOCATION)
+                startActivityForResult(intent, REQUEST_LOCATION)
             }
         }
     }
@@ -132,8 +134,8 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, intent)
 
         if (resultCode == Activity.RESULT_OK) {
-            var bundle :Bundle ?=intent!!.extras
-            if(bundle != null){
+            var bundle: Bundle? = intent!!.extras
+            if (bundle != null) {
                 data = bundle!!.getSerializable("data") as Data
                 helper.log("data:$data")
 
@@ -147,7 +149,7 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
 
             }
 
-        }else{
+        } else {
             helper.toast("Request can not be completed.")
         }
     }

@@ -1,12 +1,11 @@
 package com.lysaan.malik.vsptracker.classes
 
-import android.os.Bundle
 import java.io.Serializable
 
 class GPSLocation : Serializable {
 
     var time: Long = 0L
-//    var extras: Bundle = Bundle.EMPTY
+    //    var extras: Bundle = Bundle.EMPTY
     var elapsedRealtimeNanos: Long = 0L
     var provider: String = ""
     var speed: Float = 0f

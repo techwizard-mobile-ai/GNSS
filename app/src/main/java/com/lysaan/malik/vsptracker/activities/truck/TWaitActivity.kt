@@ -16,9 +16,9 @@ import kotlinx.android.synthetic.main.activity_twait.*
 class TWaitActivity : BaseActivity(), View.OnClickListener {
 
     private val TAG = this::class.java.simpleName
-    private var isWaiting :Boolean = false
-    private var waitStartTime : Long = 0
-    private lateinit var eWork :EWork
+    private var isWaiting: Boolean = false
+    private var waitStartTime: Long = 0
+    private lateinit var eWork: EWork
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,8 +30,8 @@ class TWaitActivity : BaseActivity(), View.OnClickListener {
         helper.setTag(TAG)
 
         eWork = EWork()
-        var bundle :Bundle ?=intent.extras
-        if(bundle != null){
+        var bundle: Bundle? = intent.extras
+        if (bundle != null) {
             data = bundle!!.getSerializable("data") as Data
             helper.log("data:$data")
         }
@@ -46,6 +46,7 @@ class TWaitActivity : BaseActivity(), View.OnClickListener {
         waitStartTime = System.currentTimeMillis()
         helper.toast("Wait Started.")
 
+        startGPS()
 
         day_works_action.setOnClickListener(this)
     }
@@ -53,7 +54,7 @@ class TWaitActivity : BaseActivity(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-        startGPS()
+
     }
 
     override fun onPause() {
@@ -63,39 +64,51 @@ class TWaitActivity : BaseActivity(), View.OnClickListener {
 
 
     override fun onClick(view: View?) {
-        when(view!!.id){
+        when (view!!.id) {
 
-            R.id.day_works_action ->{
+            R.id.day_works_action -> {
 
-                if(isWaiting){
+                if (isWaiting) {
                     day_work_title.text = "Wait For Load"
-                    day_works_button.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.colorPrimary)))
+                    day_works_button.setBackgroundTintList(
+                        ColorStateList.valueOf(
+                            resources.getColor(
+                                R.color.colorPrimary
+                            )
+                        )
+                    )
                     day_works_action_text.text = "Start"
                     isWaiting = false
                     day_works_chronometer.stop()
-
-                    eWork.unloadingGPSLocation= gpsLocation
+                    eWork.startTime = waitStartTime
+                    eWork.unloadingGPSLocation = gpsLocation
 
                     val insertID = db.insertWait(eWork)
-                    if(insertID > 0){
+                    if (insertID > 0) {
                         helper.toast("Wait Saved Successfully.")
-                    }else{
+                    } else {
                         helper.toast("Error while Saving Wait.")
                     }
                     helper.toast("Wait Stopped.")
                     finish()
 
-                }else{
+                } else {
 
                     day_works_chronometer.setBase(SystemClock.elapsedRealtime())
                     day_works_chronometer.start()
 
                     day_work_title.text = "Waiting For Load Started"
-                    day_works_button.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.black)))
+                    day_works_button.setBackgroundTintList(
+                        ColorStateList.valueOf(
+                            resources.getColor(
+                                R.color.black
+                            )
+                        )
+                    )
                     day_works_action_text.text = "Stop"
                     isWaiting = true
                     waitStartTime = System.currentTimeMillis()
-                    eWork.startTime = waitStartTime
+
                     eWork.loadingGPSLocation = gpsLocation
 
                     helper.toast("Wait Started.")

@@ -36,9 +36,13 @@ class THomeActivity : BaseActivity(), View.OnClickListener {
         data = helper.getLastJourney()
         helper.log("data:$data")
 
-        when(helper.getNextAction()){
-            0 ,2 -> {helper.setToDoLayout(thome_load_button)}
-            1 ,3 -> {helper.setToDoLayout(thome_unload_button)}
+        when (helper.getNextAction()) {
+            0, 2 -> {
+                helper.setToDoLayout(thome_load_button)
+            }
+            1, 3 -> {
+                helper.setToDoLayout(thome_unload_button)
+            }
         }
 
         thome_logout.setOnClickListener(this)
@@ -57,7 +61,7 @@ class THomeActivity : BaseActivity(), View.OnClickListener {
 //    }
 
     override fun onClick(view: View?) {
-        when(view!!.id){
+        when (view!!.id) {
             R.id.thome_load -> {
                 val intent = Intent(this, LMachine1Activity::class.java)
                 intent.putExtra("data", data)
@@ -68,7 +72,7 @@ class THomeActivity : BaseActivity(), View.OnClickListener {
                 intent.putExtra("data", data)
                 startActivity(intent)
             }
-            R.id.thome_logout ->{
+            R.id.thome_logout -> {
 
 //                helper.log("LocationLat:${latitude}")
 //                helper.log("LocationLongg:${longitude}")

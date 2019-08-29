@@ -28,11 +28,11 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
 
         helper.setTag(TAG)
 
-        if(helper.getIsMachineStopped()){
+        if (helper.getIsMachineStopped()) {
             machine_start_layout.visibility = View.VISIBLE
             mstatus_stopped_reason.text = helper.getMachineStoppedReason()
             machine_stop_layout.visibility = View.GONE
-        }else{
+        } else {
             machine_stop_layout.visibility = View.VISIBLE
             machine_start_layout.visibility = View.GONE
         }
@@ -42,20 +42,20 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
-        when(view!!.id){
-            R.id.mstatus_stop ->{
-                if(selectedStopReason.id == 0){
+        when (view!!.id) {
+            R.id.mstatus_stop -> {
+                if (selectedStopReason.id == 0) {
                     helper.toast("Please Select Machine Stop Reason.")
-                }else {
-                    helper.setIsMachineStopped(true , selectedStopReason.name)
-                    helper.stopMachine()
+                } else {
+                    helper.setIsMachineStopped(true, selectedStopReason.name)
+//                    helper.stopMachine(insertID)
                     helper.startHomeActivityByType(data)
                 }
             }
-            R.id.mstatus_start ->{
-                    helper.setIsMachineStopped(false , "")
+            R.id.mstatus_start -> {
+                helper.setIsMachineStopped(false, "")
 
-                    helper.startHomeActivityByType(data)
+                helper.startHomeActivityByType(data)
 
             }
         }

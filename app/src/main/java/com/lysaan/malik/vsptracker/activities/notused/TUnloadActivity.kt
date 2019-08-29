@@ -15,8 +15,8 @@ import com.lysaan.malik.vsptracker.adapters.SelectLocationAdapter
 import com.lysaan.malik.vsptracker.classes.Location
 import kotlinx.android.synthetic.main.activity_tunload.*
 
-class TUnloadActivity: BaseActivity(), View.OnClickListener {
-    
+class TUnloadActivity : BaseActivity(), View.OnClickListener {
+
     private var selectedLocation = Location(0, "Select Location")
 
     private val TAG = this::class.java.simpleName
@@ -38,12 +38,12 @@ class TUnloadActivity: BaseActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
-        when(view!!.id){
-            R.id.tul_unload ->{
-                if(selectedLocation.id == 0){
+        when (view!!.id) {
+            R.id.tul_unload -> {
+                if (selectedLocation.id == 0) {
                     helper.toast("Please Select Location")
-                }else {
-                    val intent = Intent (this, TUnloadAfterActivity::class.java)
+                } else {
+                    val intent = Intent(this, TUnloadAfterActivity::class.java)
                     startActivity(intent)
                 }
             }
@@ -56,25 +56,26 @@ class TUnloadActivity: BaseActivity(), View.OnClickListener {
         tunload_location_spinner!!.setAdapter(locationAdapter)
         tunload_location_spinner.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
         tunload_location_spinner.setSelection(0, false)
-        tunload_location_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        tunload_location_spinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
 
-            override fun onItemSelected(
-                arg0: AdapterView<*>, arg1: View,
-                position: Int, arg3: Long
-            ) {
+                override fun onItemSelected(
+                    arg0: AdapterView<*>, arg1: View,
+                    position: Int, arg3: Long
+                ) {
 
-                selectedLocation = locations.get(position)
-                if (locations.get(position).id != 0) {
-                    tunload_location_spinner.setBackground(resources.getDrawable(R.drawable.spinner_border))
-                } else {
-                    tunload_location_spinner.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
+                    selectedLocation = locations.get(position)
+                    if (locations.get(position).id != 0) {
+                        tunload_location_spinner.setBackground(resources.getDrawable(R.drawable.spinner_border))
+                    } else {
+                        tunload_location_spinner.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
+                    }
+                    Log.e(TAG, locations.get(position).toString())
                 }
-                Log.e(TAG, locations.get(position).toString())
-            }
 
-            override fun onNothingSelected(arg0: AdapterView<*>) {
+                override fun onNothingSelected(arg0: AdapterView<*>) {
 
+                }
             }
-        }
     }
 }

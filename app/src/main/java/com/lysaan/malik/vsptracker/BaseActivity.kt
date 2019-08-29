@@ -33,10 +33,10 @@ import com.lysaan.malik.vsptracker.activities.MachineTypeActivity
 import com.lysaan.malik.vsptracker.activities.common.MachineStatus1Activity
 import com.lysaan.malik.vsptracker.activities.truck.TWaitActivity
 import com.lysaan.malik.vsptracker.adapters.BaseNavigationAdapter
-import com.lysaan.malik.vsptracker.classes.Material
-import com.lysaan.malik.vsptracker.database.DatabaseAdapter
 import com.lysaan.malik.vsptracker.classes.Data
 import com.lysaan.malik.vsptracker.classes.GPSLocation
+import com.lysaan.malik.vsptracker.classes.Material
+import com.lysaan.malik.vsptracker.database.DatabaseAdapter
 import com.lysaan.malik.vsptracker.others.Utils
 import kotlinx.android.synthetic.main.app_bar_base.*
 
@@ -44,14 +44,14 @@ import kotlinx.android.synthetic.main.app_bar_base.*
 open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var location: Location
-    lateinit var gpsLocation :GPSLocation
+    lateinit var gpsLocation: GPSLocation
     val TAG1 = "BaseActivity"
     protected lateinit var helper: Helper
-    protected lateinit var db : DatabaseAdapter
-    protected lateinit var data : Data
-    private var locationManager : LocationManager? = null
-    var latitude : Double = 0.0
-    var longitude : Double = 0.0
+    protected lateinit var db: DatabaseAdapter
+    protected lateinit var data: Data
+    private var locationManager: LocationManager? = null
+    var latitude: Double = 0.0
+    var longitude: Double = 0.0
 
     private val REQUEST_ACCESS_FINE_LOCATION = 1
 
@@ -72,13 +72,17 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.base_nav_view)
         val toggle = ActionBarDrawerToggle(
-            this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+            this,
+            drawerLayout,
+            toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
         )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         navView.setNavigationItemSelectedListener(this)
 
-        when(helper.getMachineType()){
+        when (helper.getMachineType()) {
             1 -> {
                 toolbar_title.text = "VSP Tracker - Excavator"
             }
@@ -105,50 +109,56 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
         helper.hideKeybaordOnClick(base_content_frame)
 
         val navItems = ArrayList<Material>()
-        navItems.add(Material(1,"Loading Machine"))
-        navItems.add(Material(2,"Loaded Material"))
-        navItems.add(Material(3,"Loading Location"))
-        navItems.add(Material(4,"Loaded Material Weigh"))
+        navItems.add(Material(1, "Loading Machine"))
+        navItems.add(Material(2, "Loaded Material"))
+        navItems.add(Material(3, "Loading Location"))
+        navItems.add(Material(4, "Loaded Material Weigh"))
 
-        val aa = BaseNavigationAdapter(this@BaseActivity,navItems)
+        val aa = BaseNavigationAdapter(this@BaseActivity, navItems)
         base_navigation_rv.layoutManager = LinearLayoutManager(this, LinearLayout.HORIZONTAL, false)
         base_navigation_rv!!.setAdapter(aa)
     }
 
     override fun onResume() {
         super.onResume()
-        if(helper.getIsMachineStopped()){
+        if (helper.getIsMachineStopped()) {
             base_machine_status_layout.visibility = View.VISIBLE
 
-            when(helper.getMachineStoppedReason()){
-                "Weather" ->{
-                    Glide.with(this).load(resources.getDrawable(R.drawable.ic_action_beach_access)).into(base_machine_status_icon)
+            when (helper.getMachineStoppedReason()) {
+                "Weather" -> {
+                    Glide.with(this).load(resources.getDrawable(R.drawable.ic_action_beach_access))
+                        .into(base_machine_status_icon)
                 }
-                "Other 1" ->{
-                    Glide.with(this).load(resources.getDrawable(R.drawable.ic_action_restaurant)).into(base_machine_status_icon)
+                "Other 1" -> {
+                    Glide.with(this).load(resources.getDrawable(R.drawable.ic_action_restaurant))
+                        .into(base_machine_status_icon)
                 }
-                else ->{
-                    Glide.with(this).load(resources.getDrawable(R.drawable.ic_action_report)).into(base_machine_status_icon)
+                else -> {
+                    Glide.with(this).load(resources.getDrawable(R.drawable.ic_action_report))
+                        .into(base_machine_status_icon)
                 }
             }
 
 
-            val text = "<font color=#FF382A>Machine is Stopped. </font><font color=#106d14><u>Click here to Start Machine</u>.</font>"
+            val text =
+                "<font color=#FF382A>Machine is Stopped. </font><font color=#106d14><u>Click here to Start Machine</u>.</font>"
             base_machine_status.setText(Html.fromHtml(text))
             helper.log("Is Machine Stopped: ${helper.getIsMachineStopped()}")
             helper.log("Machine Stopped Reason: ${helper.getMachineStoppedReason()}")
-        }else{
+        } else {
             base_machine_status_layout.visibility = View.GONE
         }
 
-        if(helper.isDailyModeStarted()){
-            val text = "<font color=#FF382A>Day Works is ON. </font><font color=#106d14><u>Switch Standard Mode</u>.</font>"
+        if (helper.isDailyModeStarted()) {
+            val text =
+                "<font color=#FF382A>Day Works is ON. </font><font color=#106d14><u>Switch Standard Mode</u>.</font>"
             base_daily_mode.setText(Html.fromHtml(text))
             base_daily_mode.visibility = View.VISIBLE
-        }else{
+        } else {
             base_daily_mode.visibility = View.GONE
         }
     }
+
     override fun onBackPressed() {
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -157,51 +167,53 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             super.onBackPressed()
         }
     }
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_home -> {
                 val data = Data()
                 helper.startHomeActivityByType(data)
             }
-            R.id.nav_day_works-> {
+            R.id.nav_day_works -> {
 
-                val intent = Intent (this, DayWorksActivity::class.java)
+                val intent = Intent(this, DayWorksActivity::class.java)
                 startActivity(intent)
             }
-            R.id.nav_logout-> {
+            R.id.nav_logout -> {
                 helper.logout(this)
             }
             R.id.nav_stop_machine -> {
 
-                val intent = Intent (this, MachineStatus1Activity::class.java)
+                val intent = Intent(this, MachineStatus1Activity::class.java)
                 startActivity(intent)
             }
             R.id.nav_night_mode -> {
 
-                helper.log("theme:"+applicationContext.theme)
-                helper.log("theme1:"+theme)
-                if(helper.isNightMode()){
+                helper.log("theme:" + applicationContext.theme)
+                helper.log("theme1:" + theme)
+                if (helper.isNightMode()) {
                     Utils.changeToTheme(this@BaseActivity, 0);
                     helper.setNightMode(false)
-                }else {
+                } else {
                     Utils.changeToTheme(this@BaseActivity, 1);
                     helper.setNightMode(true)
                 }
             }
             R.id.nav_change_machine -> {
-                val intent = Intent (this, MachineTypeActivity::class.java)
+                val intent = Intent(this, MachineTypeActivity::class.java)
                 startActivity(intent)
             }
 
             R.id.nav_load_history -> {
                 helper.startHistoryByType()
             }
-            R.id.nav_email-> {
+            R.id.nav_email -> {
                 doEmail()
             }
 
-            R.id.nav_delay ->{
-                val intent = Intent (this, TWaitActivity::class.java)
+            R.id.nav_delay -> {
+                startGPS()
+                val intent = Intent(this, TWaitActivity::class.java)
                 startActivity(intent)
             }
         }
@@ -228,7 +240,10 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             data = Uri.parse("mailto:") // only email apps should handle this
             putExtra(Intent.EXTRA_EMAIL, addressees)
             putExtra(Intent.EXTRA_SUBJECT, "Error Reporting About Android App")
-            putExtra(Intent.EXTRA_TEXT, "Hi, I like to notify you about an error I faced while using App. Device Details: $details")
+            putExtra(
+                Intent.EXTRA_TEXT,
+                "Hi, I like to notify you about an error I faced while using App. Device Details: $details"
+            )
             intent.setType("message/rfc822")
         }
         if (intent.resolveActivity(packageManager) != null) {
@@ -237,44 +252,58 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
     }
 
 
-    fun stopGPS(){
+    fun stopGPS() {
         locationManager?.removeUpdates(locationListener)
     }
-    fun startGPS(){
+
+    fun startGPS() {
 
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?;
         try {
             helper.log("Permission Granted.")
-            locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0f, locationListener);
+            locationManager?.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                1000,
+                0f,
+                locationListener
+            );
 
-        } catch(ex: SecurityException) {
+        } catch (ex: SecurityException) {
             helper.log("No Location Available:${ex.message}")
             requestPermission()
         }
 
     }
 
-    fun requestPermission(){
+    fun requestPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED) {
+            != PackageManager.PERMISSION_GRANTED
+        ) {
             // Permission is not granted
 
             // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            ) {
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
 
-                ActivityCompat.requestPermissions(this,
+                ActivityCompat.requestPermissions(
+                    this,
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    REQUEST_ACCESS_FINE_LOCATION)
+                    REQUEST_ACCESS_FINE_LOCATION
+                )
 
             } else {
                 // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(this,
+                ActivityCompat.requestPermissions(
+                    this,
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    REQUEST_ACCESS_FINE_LOCATION)
+                    REQUEST_ACCESS_FINE_LOCATION
+                )
 
             }
 
@@ -295,26 +324,34 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             }
         }
     }
+
     private fun showGPSDisabledAlertToUser() {
         val alertDialogBuilder = AlertDialog.Builder(this, R.style.ThemeOverlay_AppCompat_Dialog)
         alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
             .setCancelable(false)
-            .setPositiveButton("Goto Settings Page\nTo Enable GPS"
+            .setPositiveButton(
+                "Goto Settings Page\nTo Enable GPS"
             ) { dialog, id ->
                 val callGPSSettingIntent = Intent(
-                    android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                    android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
+                )
                 startActivity(callGPSSettingIntent)
             }
         alertDialogBuilder.setNegativeButton("Cancel",
-            object: DialogInterface.OnClickListener {
-                override fun onClick(dialog: DialogInterface, id:Int) {
+            object : DialogInterface.OnClickListener {
+                override fun onClick(dialog: DialogInterface, id: Int) {
                     dialog.cancel()
                 }
             })
         var alert = alertDialogBuilder.create()
         alert.show()
     }
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         when (requestCode) {
             REQUEST_ACCESS_FINE_LOCATION -> {
                 // If request is cancelled, the result arrays are empty.
@@ -335,7 +372,7 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
         }
     }
 
-    private fun showSettings(){
+    private fun showSettings() {
         val snackbar = Snackbar.make(
             findViewById(android.R.id.content),
             "You have previously declined GPS permission.\n" + "You must approve this permission in \"Permissions\" in the app settings on your device.",
@@ -356,18 +393,27 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
         textView.maxLines = 5  //Or as much as you need
         snackbar.show()
     }
+
     private val locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: android.location.Location?) {
 //            helper.log("locationListener:$location")
             makeUseofLocation(location)
         }
-        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {helper.log("Status Changed.")}
-        override fun onProviderEnabled(provider: String) {helper.log("Location Enabled.")}
+
+        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
+            helper.log("Status Changed.")
+        }
+
+        override fun onProviderEnabled(provider: String) {
+            helper.log("Location Enabled.")
+        }
+
         override fun onProviderDisabled(provider: String) {
             helper.log("Location Disabled.")
             showGPSDisabledAlertToUser()
         }
     }
+
     private fun makeUseofLocation(location1: Location?) {
         latitude = location1!!.latitude
         longitude = location1!!.longitude
@@ -385,7 +431,6 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
         gpsLocation.elapsedRealtimeNanos = location1.elapsedRealtimeNanos
 //        gpsLocation.extras = location1.extras
         gpsLocation.time = location1.time
-
 
 
 //        helper.log("LocationBaseLat:${latitude}")

@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.activity_rload.*
 class RLoadActivity : BaseActivity(), View.OnClickListener {
 
     private val TAG = this::class.java.simpleName
-    private val REQUEST_MACHINE= 1
+    private val REQUEST_MACHINE = 1
     private val REQUEST_MATERIAL = 2
     private val REQUEST_LOCATION = 3
     private val REQUEST_WEIGHT = 4
@@ -43,35 +43,42 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
 //        }else{
 //            trload_load.text = "LOAD"
 //        }
-        when(data.nextAction){
-            0 -> {trload_load.text = "LOAD"}
-            1 -> {}
-            2 -> {trload_load.text = "Back LOAD"}
-            3 -> {}
+        when (data.nextAction) {
+            0 -> {
+                trload_load.text = "LOAD"
+            }
+            1 -> {
+            }
+            2 -> {
+                trload_load.text = "Back LOAD"
+            }
+            3 -> {
+            }
         }
 
         trload_weight.visibility = View.GONE
 
-        if(helper.getMachineType() == 2){
+        if (helper.getMachineType() == 2) {
             trload_machine.visibility = View.GONE
 //            trload_weight.visibility = View.GONE
 
             trload_material.text = data.loadingMaterial
             trload_location.text = data.loadingLocation
 //            trload_weight.text = "Tonnes  (" +lastJourney.unloadingWeight +")"
-        }else{
+        } else {
 
             trload_machine.visibility = View.VISIBLE
 //            trload_weight.visibility = View.VISIBLE
 
-            when(data.nextAction){
+            when (data.nextAction) {
                 0 -> {
                     trload_machine.text = data.loadingMachine
                     trload_material.text = data.loadingMaterial
                     trload_location.text = data.loadingLocation
 //                    trload_weight.text = "Tonnes (" +data.unloadingWeight +")"
                 }
-                1 -> {}
+                1 -> {
+                }
                 2 -> {
 
                     trload_machine.text = data.backLoadingMachine
@@ -79,7 +86,8 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
                     trload_location.text = data.backLoadingLocation
 //                    trload_weight.text = "Tonnes (" +data.backUnloadedWeight +")"
                 }
-                3 -> {}
+                3 -> {
+                }
             }
 //            if(lastJourney.isForBackLoad){
 //                trload_machine.text = lastJourney.backLoadingMachine
@@ -117,7 +125,7 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
-        when(view!!.id){
+        when (view!!.id) {
             R.id.trload_load -> {
 
 //                val insertID = db.insertELoad(helper.getLastJourney())
@@ -125,81 +133,83 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
 //                    helper.toast("Loading Successful.\nLoaded Number # $insertID")
 
                 data.loadingGPSLocation = gpsLocation
-                    when(data.repeatJourney){
-                        0 -> {
-                            var insertID :Long = 0L
-                            when(data.nextAction){
-                                0 ->{
-                                    data.nextAction = 1
-                                    insertID = db.insertTrip(data)
-                                }
-                                2 ->{
-                                    data.tripType = 1
-                                    data.trip0ID = data.recordID.toInt()
-                                    insertID = db.insertTrip(data)
-                                    data.nextAction = 3
-                                }
+                when (data.repeatJourney) {
+                    0 -> {
+                        var insertID: Long = 0L
+                        when (data.nextAction) {
+                            0 -> {
+                                data.nextAction = 1
+                                insertID = db.insertTrip(data)
                             }
-
-                            if(insertID > 0){
-                                helper.toast("Load Saved Successfully.")
-                                data.recordID = insertID
-                                helper.setLastJourney(data)
-                                helper.startHomeActivityByType(data)
-                            }else{
-                             helper.toast("Error while Saving Load.")
+                            2 -> {
+                                data.tripType = 1
+                                data.trip0ID = data.recordID.toInt()
+                                insertID = db.insertTrip(data)
+                                data.nextAction = 3
                             }
-
                         }
-                        1 -> {
-                            when(data.nextAction){
-                                0 ->{data.nextAction = 1}
-                            }
-                            val intent = Intent(this, RUnloadActivity::class.java)
-                            val insertID = db.insertTrip(data)
-                            if(insertID > 0){
-                                helper.toast("Load Saved Successfully.")
-                                data.recordID = insertID
-                                helper.setLastJourney(data)
-                                startActivity(intent)
-                                finish()
-                            }else{
-                                helper.toast("Error while Saving Load.")
-                            }
 
+                        if (insertID > 0) {
+                            helper.toast("Load Saved Successfully.")
+                            data.recordID = insertID
+                            helper.setLastJourney(data)
+                            helper.startHomeActivityByType(data)
+                        } else {
+                            helper.toast("Error while Saving Load.")
                         }
-                        2 -> {
-                            when(data.nextAction){
-                                0 ->{
-                                    data.tripType = 0
-                                    data.trip0ID = 0
-                                    data.recordID = db.insertTrip(data)
 
-                                    data.nextAction = 1
-                                }
-                                2 ->{
-                                    data.tripType = 1
-                                    data.trip0ID = data.recordID.toInt()
-                                    data.recordID = db.insertTrip(data)
-
-                                    data.nextAction = 3
-                                }
+                    }
+                    1 -> {
+                        when (data.nextAction) {
+                            0 -> {
+                                data.nextAction = 1
                             }
+                        }
+                        val intent = Intent(this, RUnloadActivity::class.java)
+                        val insertID = db.insertTrip(data)
+                        if (insertID > 0) {
+                            helper.toast("Load Saved Successfully.")
+                            data.recordID = insertID
+                            helper.setLastJourney(data)
+                            startActivity(intent)
+                            finish()
+                        } else {
+                            helper.toast("Error while Saving Load.")
+                        }
+
+                    }
+                    2 -> {
+                        when (data.nextAction) {
+                            0 -> {
+                                data.tripType = 0
+                                data.trip0ID = 0
+                                data.recordID = db.insertTrip(data)
+
+                                data.nextAction = 1
+                            }
+                            2 -> {
+                                data.tripType = 1
+                                data.trip0ID = data.recordID.toInt()
+                                data.recordID = db.insertTrip(data)
+
+                                data.nextAction = 3
+                            }
+                        }
 
 
 //                            data.recordID = insertID
-                            if(data.recordID > 0){
-                                helper.toast("Load Saved Successfully.")
-                                helper.setLastJourney(data)
-                                val intent = Intent(this, RUnloadActivity::class.java)
-                                startActivity(intent)
-                                finish()
-                            }else{
-                                helper.toast("Error while Saving Load.")
-                            }
-
+                        if (data.recordID > 0) {
+                            helper.toast("Load Saved Successfully.")
+                            helper.setLastJourney(data)
+                            val intent = Intent(this, RUnloadActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        } else {
+                            helper.toast("Error while Saving Load.")
                         }
+
                     }
+                }
 //                    if(data.isRepeatJourney){
 //                        val intent = Intent(this, RUnloadActivity::class.java)
 //                        intent.putExtra("data", data)
@@ -218,28 +228,28 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
                 val data1 = helper.getLastJourney()
                 data1.isForLoadResult = true
                 intent.putExtra("data", data1)
-                startActivityForResult(intent,REQUEST_MACHINE)
+                startActivityForResult(intent, REQUEST_MACHINE)
             }
             R.id.trload_material -> {
                 val intent = Intent(this, Material1Activity::class.java)
                 val data1 = helper.getLastJourney()
                 data1.isForLoadResult = true
                 intent.putExtra("data", data1)
-                startActivityForResult(intent,REQUEST_MATERIAL)
+                startActivityForResult(intent, REQUEST_MATERIAL)
             }
             R.id.trload_location -> {
                 val intent = Intent(this, Location1Activity::class.java)
                 val data1 = helper.getLastJourney()
                 data1.isForLoadResult = true
                 intent.putExtra("data", data1)
-                startActivityForResult(intent,REQUEST_LOCATION)
+                startActivityForResult(intent, REQUEST_LOCATION)
             }
             R.id.trload_weight -> {
                 val intent = Intent(this, Weight1Activity::class.java)
                 val data1 = helper.getLastJourney()
                 data1.isForLoadResult = true
                 intent.putExtra("data", data1)
-                startActivityForResult(intent,REQUEST_WEIGHT)
+                startActivityForResult(intent, REQUEST_WEIGHT)
             }
 
             R.id.rload_home -> {
@@ -262,36 +272,36 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, intent)
 
         if (resultCode == Activity.RESULT_OK) {
-            var bundle :Bundle ?=intent!!.extras
-            if(bundle != null){
+            var bundle: Bundle? = intent!!.extras
+            if (bundle != null) {
                 data = bundle!!.getSerializable("data") as Data
                 helper.log("data:$data")
 
-                if(helper.getMachineType() == 2){
+                if (helper.getMachineType() == 2) {
                     trload_machine.visibility = View.GONE
                     trload_material.text = data.loadingMaterial
                     trload_location.text = data.loadingLocation
-                    trload_weight.text = "Tonnes (" +data.unloadingWeight +")"
-                }else{
+                    trload_weight.text = "Tonnes (" + data.unloadingWeight + ")"
+                } else {
 
                     trload_machine.visibility = View.VISIBLE
-                    when(data.nextAction){
-                        0 ->{
+                    when (data.nextAction) {
+                        0 -> {
                             trload_machine.text = data.loadingMachine
                             trload_material.text = data.loadingMaterial
                             trload_location.text = data.loadingLocation
 //                            trload_weight.text = "Tonnes (" +data.unloadingWeight +")"
                         }
-                        1 ->{
+                        1 -> {
 
                         }
-                        2 ->{
+                        2 -> {
                             trload_machine.text = data.backLoadingMachine
                             trload_material.text = data.backLoadingMaterial
                             trload_location.text = data.backLoadingLocation
 //                            trload_weight.text = "Tonnes (" +data.backUnloadedWeight +")"
                         }
-                        3 ->{
+                        3 -> {
 
                         }
                     }
@@ -318,7 +328,7 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
 
             }
 
-        }else{
+        } else {
             helper.toast("Request can not be completed.")
         }
     }

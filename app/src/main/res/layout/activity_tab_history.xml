@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -11,38 +11,37 @@
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="?android:attr/actionBarSize"
             android:layout_above="@id/tab_histor_finish_layout"
+            android:layout_marginBottom="?android:attr/actionBarSize"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <LinearLayout
             android:id="@+id/tab_histor_finish_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="@dimen/_10sdp"
             android:layout_marginEnd="@dimen/_10sdp"
+            android:layout_marginBottom="?android:attr/actionBarSize"
             android:orientation="horizontal"
             android:paddingBottom="@dimen/_10sdp"
-            android:layout_marginBottom="?android:attr/actionBarSize"
-            >
+            android:visibility="gone">
+
         <Button
                 android:id="@+id/rload_home"
                 style="@style/back_button"
-                android:background="@color/colorPrimary"
                 android:layout_width="0dp"
-                android:text="@string/finish"
                 android:layout_weight=".3"
-                />
+                android:background="@color/colorPrimary"
+                android:text="@string/finish" />
+
         <Button
                 android:id="@+id/rload_finish"
-                android:layout_width="0dp"
-                android:layout_weight="0.3"
                 style="@style/next_button"
+                android:layout_width="0dp"
                 android:layout_marginEnd="0dp"
-                android:text="@string/end_work"
-                />
+                android:layout_weight="0.3"
+                android:text="@string/end_work" />
     </LinearLayout>
 
     <android.support.design.widget.BottomNavigationView
@@ -59,5 +58,5 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:menu="@menu/history_navigation"/>
+            app:menu="@menu/history_navigation" />
 </RelativeLayout>

@@ -41,8 +41,8 @@ class Helper(var TAG: String, val context: Context) {
     private var sessionManager: SessionManager = SessionManager(context)
     private val gson = Gson()
 
-    fun setUserID(userID:String){}
-    fun getUserID () = ""
+    fun setUserID(userID: String) {}
+    fun getUserID() = ""
 
     fun getStringToGPSLocation(stringGPSLocation: String): GPSLocation {
         return gson.fromJson(stringGPSLocation, GPSLocation::class.java)
@@ -52,7 +52,7 @@ class Helper(var TAG: String, val context: Context) {
         return gson.toJson(gpsLocation)
     }
 
-    fun showOnMap(gpsLocation: GPSLocation, title:String){
+    fun showOnMap(gpsLocation: GPSLocation, title: String) {
         val lat = gpsLocation.latitude
         val longg = gpsLocation.longitude
         val geoUri = "http://maps.google.com/maps?q=loc:" + lat + "," + longg + " ($title)";
@@ -66,21 +66,22 @@ class Helper(var TAG: String, val context: Context) {
     // nextAction 1 = Do Unloading
     // nextAction 2 = Do Back Loading
     // nextAction 3 = Do Back Unloading
-    fun setNextAction(nextAction : Int){
+    fun setNextAction(nextAction: Int) {
         val data = getLastJourney()
         data.nextAction = nextAction
         setLastJourney(data)
     }
+
     fun getNextAction() = getLastJourney().nextAction
 
-    fun setToDoLayout(view: android.support.design.widget.FloatingActionButton ){
+    fun setToDoLayout(view: android.support.design.widget.FloatingActionButton) {
         val width = context.resources.getDimensionPixelSize(R.dimen._100sdp)
         val height = context.resources.getDimensionPixelSize(R.dimen._100sdp)
         val layoutParams = FrameLayout.LayoutParams(width, height)
         view.setLayoutParams(layoutParams)
     }
 
-    fun setDefaultLayout(view : android.support.design.widget.FloatingActionButton){
+    fun setDefaultLayout(view: android.support.design.widget.FloatingActionButton) {
         val width = context.resources.getDimensionPixelSize(R.dimen._80sdp)
         val height = context.resources.getDimensionPixelSize(R.dimen._80sdp)
         val layoutParams = FrameLayout.LayoutParams(width, height)
@@ -89,7 +90,7 @@ class Helper(var TAG: String, val context: Context) {
 
     fun getWorkMode(): String {
         if (isDailyModeStarted()) {
-                return "Day Works"
+            return "Day Works"
         } else {
             return "Standard Mode"
         }
@@ -192,7 +193,7 @@ class Helper(var TAG: String, val context: Context) {
 
     fun getTime(s: Long): String {
 
-        if(s > 0){
+        if (s > 0) {
             try {
 //            val sdf = SimpleDateFormat("dd MMM yyyy HH:mm")
                 val sdf = SimpleDateFormat("HH:mm")
@@ -202,7 +203,7 @@ class Helper(var TAG: String, val context: Context) {
                 log("getDatetime:${e}")
                 return s.toString()
             }
-        }else{
+        } else {
             return ""
         }
 
@@ -289,13 +290,14 @@ class Helper(var TAG: String, val context: Context) {
 
     }
 
-    fun stopMachine() {
+    fun stopMachine(insertID: Long) {
         val meter = sessionManager.getMeter()
 
         if (!meter.isMachineStopped) {
             val meterONTime = getMachineTotalTime() + getMachineStartTime()
             meter.machineTotalTime = meterONTime
             meter.isMachineStopped = true
+            meter.stopRecordID = insertID
             sessionManager.setMeter(meter)
 //            toast("Machine is Stopped.\n Machine Total Time : $meterONTime (mins)")
             toast("Machine is Stopped.")
@@ -309,6 +311,7 @@ class Helper(var TAG: String, val context: Context) {
         val meter = sessionManager.getMeter()
         meter.machineStartTime = currentTime
         meter.isMachineStopped = false
+        meter.stopRecordID = 0
         sessionManager.setMeter(meter)
 //        sessionManager.setMeterStartTime(currentTime)
 
@@ -601,7 +604,7 @@ class Helper(var TAG: String, val context: Context) {
                 context.startActivity(intent)
             }
             2, 3 -> {
-//                val intent = Intent(context, HistoryActivity::class.java)
+//                val intent = Intent(myContext, HistoryActivity::class.java)
                 val intent = Intent(context, TabHistoryActivity::class.java)
                 context.startActivity(intent)
             }
@@ -614,7 +617,7 @@ class Helper(var TAG: String, val context: Context) {
     fun startHomeActivityByType(data: Data) {
         when (getMachineType()) {
             1 -> {
-//                val intent = Intent(context, Material1Activity::class.java)
+//                val intent = Intent(myContext, Material1Activity::class.java)
                 val intent = Intent(context, EHomeActivity::class.java)
                 intent.putExtra("data", data)
                 context.startActivity(intent)
@@ -676,8 +679,6 @@ class Helper(var TAG: String, val context: Context) {
         val intent = Intent(activity, HourMeterStopActivity::class.java)
         activity.startActivity(intent)
     }
-
-
 
 
 }

@@ -10,8 +10,8 @@ android {
         applicationId "com.lysaan.malik.vsptracker"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 8
-        versionName "1.8.0"
+        versionCode 10
+        versionName "1.10.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -62,3 +62,4 @@ dependencies {
 }
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'io.fabric'
+//apply plugin: 'android-string-extractor'

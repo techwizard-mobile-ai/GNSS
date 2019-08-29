@@ -35,12 +35,12 @@ class SUnloadActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
-        when(view!!.id){
-            R.id.sunload_next ->{
-                if(selectedLocation.id == 0){
+        when (view!!.id) {
+            R.id.sunload_next -> {
+                if (selectedLocation.id == 0) {
                     helper.toast("Please Select Location")
-                }else {
-                    val intent = Intent (this, SUnloadAfterActivity::class.java)
+                } else {
+                    val intent = Intent(this, SUnloadAfterActivity::class.java)
                     startActivity(intent)
                 }
             }
@@ -54,25 +54,26 @@ class SUnloadActivity : BaseActivity(), View.OnClickListener {
         sunload_location_spinner!!.setAdapter(locationAdapter)
         sunload_location_spinner.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
         sunload_location_spinner.setSelection(0, false)
-        sunload_location_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        sunload_location_spinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
 
-            override fun onItemSelected(
-                arg0: AdapterView<*>, arg1: View,
-                position: Int, arg3: Long
-            ) {
+                override fun onItemSelected(
+                    arg0: AdapterView<*>, arg1: View,
+                    position: Int, arg3: Long
+                ) {
 
-                selectedLocation = locations.get(position)
-                if (locations.get(position).id != 0) {
-                    sunload_location_spinner.setBackground(resources.getDrawable(R.drawable.spinner_border))
-                } else {
-                    sunload_location_spinner.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
+                    selectedLocation = locations.get(position)
+                    if (locations.get(position).id != 0) {
+                        sunload_location_spinner.setBackground(resources.getDrawable(R.drawable.spinner_border))
+                    } else {
+                        sunload_location_spinner.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
+                    }
+                    Log.e(TAG, locations.get(position).toString())
                 }
-                Log.e(TAG, locations.get(position).toString())
-            }
 
-            override fun onNothingSelected(arg0: AdapterView<*>) {
+                override fun onNothingSelected(arg0: AdapterView<*>) {
 
+                }
             }
-        }
     }
 }

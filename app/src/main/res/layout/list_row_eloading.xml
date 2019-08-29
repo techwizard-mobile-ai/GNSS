@@ -1,43 +1,39 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:card_view="http://schemas.android.com/apk/res-auto"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:orientation="vertical"
->
-<LinearLayout
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginStart="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_3sdp"
-        android:layout_marginBottom="@dimen/_3sdp"
->
-    <TextView
-            android:id="@+id/elhr_number"
-            style="@style/eload_text"
-            android:layout_weight=".3"
-            android:text="Load Number "
-    />
-    <TextView
-            android:id="@+id/elhr_material"
-            style="@style/eload_text"
-            android:text=":  1"
-            android:layout_weight=".3"
-    />
-    <TextView
-            android:id="@+id/elhr_time"
-            android:layout_weight=".3"
-            style="@style/eload_text"
-            android:text=":  1"
-    />
-</LinearLayout>
+        android:orientation="vertical">
 
-<View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/light_gray"
-/>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:layout_marginBottom="@dimen/_3sdp"
+            android:orientation="horizontal">
+
+        <TextView
+                android:id="@+id/elhr_number"
+                style="@style/eload_text"
+                android:layout_weight=".3"
+                android:text="@string/list_row_eloading_elhr_number_text" />
+
+        <TextView
+                android:id="@+id/elhr_material"
+                style="@style/eload_text"
+                android:layout_weight=".3"
+                android:text="@string/list_row_eloading_elhr_material_text" />
+
+        <TextView
+                android:id="@+id/elhr_time"
+                style="@style/eload_text"
+                android:layout_weight=".3"
+                android:text="@string/list_row_eloading_elhr_time_text" />
+    </LinearLayout>
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/light_gray" />
 
 </LinearLayout>

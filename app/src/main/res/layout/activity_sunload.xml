@@ -1,44 +1,41 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         tools:context=".activities.scrapper.SUnloadActivity">
 
-    <TextView style="@style/activity_title"
-              android:text="Unload Scrapper"
-    />
+    <TextView
+            style="@style/activity_title"
+            android:text="Unload Scrapper" />
+
     <LinearLayout style="@style/default_linearlayout">
+
         <TextView
                 style="@style/home_tv"
-                android:text="Material Type"
-        />
+                android:text="Material Type" />
+
         <TextView
                 android:id="@+id/sunload_material"
                 style="@style/tv_background"
                 android:layout_marginStart="0dp"
                 android:layout_marginEnd="0dp"
-                android:text="Material 1"
-        />
+                android:text="@string/activity_sunload_sunload_material_text" />
 
         <TextView
                 style="@style/home_tv"
-                android:text="Location"
-        />
+                android:text="Location" />
+
         <android.support.v7.widget.AppCompatSpinner
                 android:id="@+id/sunload_location_spinner"
-                style="@style/home_spinner"
-        />
+                style="@style/home_spinner" />
 
 
         <Button
                 android:id="@+id/sunload_next"
                 style="@style/next_button"
                 android:layout_marginTop="@dimen/_50sdp"
-                android:text="@string/unload"
-        />
+                android:text="@string/unload" />
     </LinearLayout>
 </LinearLayout>

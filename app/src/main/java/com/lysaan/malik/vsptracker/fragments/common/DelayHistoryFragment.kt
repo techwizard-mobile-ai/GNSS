@@ -11,11 +11,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.lysaan.malik.vsptracker.Helper
-
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.adapters.DelayHistoryAdapter
-import com.lysaan.malik.vsptracker.database.DatabaseAdapter
 import com.lysaan.malik.vsptracker.classes.EWork
+import com.lysaan.malik.vsptracker.database.DatabaseAdapter
 import kotlinx.android.synthetic.main.fragment_delay_history.view.*
 
 
@@ -31,7 +30,8 @@ class DelayHistoryFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            helper = Helper(TAG,
+            helper = Helper(
+                TAG,
                 myContext
             )
             db = DatabaseAdapter(myContext)

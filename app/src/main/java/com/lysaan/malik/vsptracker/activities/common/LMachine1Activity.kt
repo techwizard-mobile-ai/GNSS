@@ -28,18 +28,26 @@ class LMachine1Activity : BaseActivity(), View.OnClickListener {
 
         helper.setTag(TAG)
 
-        var bundle :Bundle ?=intent.extras
-        if(bundle != null){
+        var bundle: Bundle? = intent.extras
+        if (bundle != null) {
             data = bundle!!.getSerializable("data") as Data
             helper.log("data:$data")
         }
 //        data = helper.getLastJourney()
 
-        when(data.nextAction){
-            0 -> {lm_title.text = "Select Loading Machine"}
-            1 -> {lm_title.text = "Select Unloading Machine"}
-            2 -> {lm_title.text = "Select Back Loading Machine"}
-            3 -> {lm_title.text = "Select Back Unloading Machine"}
+        when (data.nextAction) {
+            0 -> {
+                lm_title.text = "Select Loading Machine"
+            }
+            1 -> {
+                lm_title.text = "Select Unloading Machine"
+            }
+            2 -> {
+                lm_title.text = "Select Back Loading Machine"
+            }
+            3 -> {
+                lm_title.text = "Select Back Unloading Machine"
+            }
         }
 //        if(data.isForBackLoad){
 //            lm_title.text = "Select Back Loading Machine"
@@ -60,32 +68,32 @@ class LMachine1Activity : BaseActivity(), View.OnClickListener {
         gv.setOnItemClickListener(AdapterView.OnItemClickListener { parent, view, position, id ->
             helper.toast("Selected Machine: " + machines.get(position).name)
 
-            if(data.isForLoadResult){
+            if (data.isForLoadResult) {
                 val intent = intent
                 data.loadingMachine = machines.get(position).name
                 intent.putExtra("data", data)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
-            }else if (data.isForUnloadResult){
+            } else if (data.isForUnloadResult) {
                 val intent = intent
                 data.unloadingMachine = machines.get(position).name
                 intent.putExtra("data", data)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
-            }else if(data.isForBackLoadResult){
+            } else if (data.isForBackLoadResult) {
                 val intent = intent
                 data.backLoadingMachine = machines.get(position).name
                 intent.putExtra("data", data)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
-            }else if (data.isForBackUnloadResult){
+            } else if (data.isForBackUnloadResult) {
                 val intent = intent
                 data.backUnloadingMachine = machines.get(position).name
                 intent.putExtra("data", data)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
-            }else {
-                when(data.nextAction){
+            } else {
+                when (data.nextAction) {
                     0 -> {
                         val intent = Intent(this, Material1Activity::class.java)
                         data.loadingMachine = machines.get(position).name
@@ -139,7 +147,7 @@ class LMachine1Activity : BaseActivity(), View.OnClickListener {
 
 
     override fun onClick(view: View?) {
-        when(view!!.id){
+        when (view!!.id) {
 //            R.id.ehome_next -> {
 //                val intent = Intent(this@Material1Activity, ELoadActivity::class.java)
 //                startActivity(intent)

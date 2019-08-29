@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -25,22 +25,22 @@
         <TextView
                 android:id="@+id/trul_task"
                 style="@style/load_tv"
-                android:text="1. Task" />
+                android:text="@string/activity_runload_trul_task_text" />
 
         <TextView
                 android:id="@+id/trul_material"
                 style="@style/load_tv"
-                android:text="2. Material" />
+                android:text="@string/activity_runload_trul_material_text" />
 
         <TextView
                 android:id="@+id/trul_location"
                 style="@style/load_tv"
-                android:text="3. Location" />
+                android:text="@string/activity_runload_trul_location_text" />
 
         <TextView
                 android:id="@+id/trul_weight"
                 style="@style/load_tv"
-                android:text="4. Weight(461)" />
+                android:text="@string/activity_runload_trul_weight_text" />
 
 
     </LinearLayout>
@@ -79,5 +79,3 @@
                 android:text="@string/end_work" />
     </LinearLayout>
 </RelativeLayout>
-
-

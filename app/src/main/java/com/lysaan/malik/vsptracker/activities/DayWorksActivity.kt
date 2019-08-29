@@ -27,13 +27,13 @@ class DayWorksActivity : BaseActivity(), View.OnClickListener {
 
         helper.setTag(TAG)
 
-        var bundle :Bundle ?=intent.extras
-        if(bundle != null){
+        var bundle: Bundle? = intent.extras
+        if (bundle != null) {
             data = bundle!!.getSerializable("data") as Data
             helper.log("data:$data")
         }
 
-        if(helper.isDailyModeStarted()){
+        if (helper.isDailyModeStarted()) {
             day_work_title.text = "Stop Day Works Mode"
             day_works_button.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.black)))
             day_works_action_text.text = "Stop"
@@ -44,7 +44,7 @@ class DayWorksActivity : BaseActivity(), View.OnClickListener {
 
             day_works_chronometer.setBase(SystemClock.elapsedRealtime() - totalTime)
             day_works_chronometer.start()
-        }else{
+        } else {
             day_work_title.text = "Start Day Works Mode"
             day_works_button.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.colorPrimary)))
             day_works_action_text.text = "Start"
@@ -58,12 +58,18 @@ class DayWorksActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
-        when(view!!.id){
-            R.id.day_works_action ->{
+        when (view!!.id) {
+            R.id.day_works_action -> {
 
-                if(helper.isDailyModeStarted()){
+                if (helper.isDailyModeStarted()) {
                     day_work_title.text = "Start Day Works Mode"
-                    day_works_button.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.colorPrimary)))
+                    day_works_button.setBackgroundTintList(
+                        ColorStateList.valueOf(
+                            resources.getColor(
+                                R.color.colorPrimary
+                            )
+                        )
+                    )
                     day_works_action_text.text = "Start"
                     isDailyModeStart = false
                     day_works_chronometer.stop()
@@ -72,13 +78,19 @@ class DayWorksActivity : BaseActivity(), View.OnClickListener {
                     helper.startHomeActivityByType(Data())
 //                    helper.restartActivity(intent, this)
 
-                }else{
+                } else {
 
                     day_works_chronometer.setBase(SystemClock.elapsedRealtime() - helper.getMeter().dailyModeTotalTime)
                     day_works_chronometer.start()
 
                     day_work_title.text = "Stop Day Works Mode"
-                    day_works_button.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.black)))
+                    day_works_button.setBackgroundTintList(
+                        ColorStateList.valueOf(
+                            resources.getColor(
+                                R.color.black
+                            )
+                        )
+                    )
                     day_works_action_text.text = "Stop"
                     isDailyModeStart = true
                     helper.startDailyMode()

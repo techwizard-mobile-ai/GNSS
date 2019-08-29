@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         package="com.lysaan.malik.vsptracker">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-<!--    android:appComponentFactory="whateverString"-->
-<!--    tools:replace="android:appComponentFactory"-->
+    <!--    android:appComponentFactory="whateverString"-->
+    <!--    tools:replace="android:appComponentFactory"-->
     <application
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
@@ -16,8 +15,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:screenOrientation="landscape"
             android:supportsRtl="true"
-            android:theme="@style/AppTheme.NoActionBar"
-            >
+            android:theme="@style/AppTheme.NoActionBar">
         <activity android:name=".activities.TabHistoryActivity"></activity>
         <activity android:name=".activities.truck.TWaitActivity" />
         <activity android:name=".activities.DayWorksActivity" />

@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.activity_runload.*
 
 class RUnloadActivity : BaseActivity(), View.OnClickListener {
     private val TAG = this::class.java.simpleName
-    private val REQUEST_MACHINE= 1
+    private val REQUEST_MACHINE = 1
     private val REQUEST_MATERIAL = 2
     private val REQUEST_LOCATION = 3
     private val REQUEST_WEIGHT = 4
@@ -39,27 +39,27 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
         data = helper.getLastJourney()
         helper.log("data:$data")
 
-        if(helper.getMachineType() == 2){
+        if (helper.getMachineType() == 2) {
             trul_task.visibility = View.GONE
 //            trul_weight.visibility = View.GONE
-        }else{
+        } else {
             trul_task.visibility = View.VISIBLE
             trul_weight.visibility = View.VISIBLE
         }
 
-        when(data.nextAction){
-            3 ->{
+        when (data.nextAction) {
+            3 -> {
                 trul_task.text = data.backUnloadingTask
                 trul_material.text = data.backUnloadingMaterial
                 trul_location.text = data.backUnloadingLocation
-                trul_weight.text = "Tonnes ("+data.backUnloadedWeight +")"
+                trul_weight.text = "Tonnes (" + data.backUnloadedWeight + ")"
                 trunload_unload.text = "Back Unload"
             }
-            1 ->{
+            1 -> {
                 trul_task.text = data.unloadingTask
                 trul_material.text = data.unloadingMaterial
                 trul_location.text = data.unloadingLocation
-                trul_weight.text = "Tonnes ("+data.unloadingWeight +")"
+                trul_weight.text = "Tonnes (" + data.unloadingWeight + ")"
                 trunload_unload.text = "Unload"
             }
         }
@@ -87,7 +87,7 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
-        when(view!!.id){
+        when (view!!.id) {
 
 
             R.id.runload_home -> {
@@ -110,11 +110,15 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                 data.unloadingGPSLocation = gpsLocation
 
 
-                when(data.repeatJourney){
+                when (data.repeatJourney) {
                     0 -> {
-                        when(data.nextAction){
-                            1 ->{data.nextAction = 0}
-                            2 ->{data.nextAction = 3}
+                        when (data.nextAction) {
+                            1 -> {
+                                data.nextAction = 0
+                            }
+                            2 -> {
+                                data.nextAction = 3
+                            }
 
                         }
 
@@ -124,8 +128,10 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                         helper.startLoadAfterActivityByType(data)
                     }
                     1 -> {
-                        when(data.nextAction){
-                            1 ->{data.nextAction = 0}
+                        when (data.nextAction) {
+                            1 -> {
+                                data.nextAction = 0
+                            }
                         }
                         val intent = Intent(this, RLoadActivity::class.java)
 //                        intent.putExtra("data", data)
@@ -135,9 +141,13 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                         finish()
                     }
                     2 -> {
-                        when(data.nextAction){
-                            1 ->{data.nextAction = 2}
-                            3 ->{data.nextAction = 0}
+                        when (data.nextAction) {
+                            1 -> {
+                                data.nextAction = 2
+                            }
+                            3 -> {
+                                data.nextAction = 0
+                            }
                         }
                         db.updateTrip(data)
                         helper.setLastJourney(data)
@@ -159,30 +169,30 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
             R.id.trul_task -> {
                 val intent = Intent(this, UnloadTaskActivity::class.java)
                 val data1 = helper.getLastJourney()
-                data1.isForUnloadResult= true
+                data1.isForUnloadResult = true
                 intent.putExtra("data", data1)
-                startActivityForResult(intent,REQUEST_MATERIAL)
+                startActivityForResult(intent, REQUEST_MATERIAL)
             }
             R.id.trul_material -> {
                 val intent = Intent(this, Material1Activity::class.java)
                 val data1 = helper.getLastJourney()
-                data1.isForUnloadResult= true
+                data1.isForUnloadResult = true
                 intent.putExtra("data", data1)
-                startActivityForResult(intent,REQUEST_MATERIAL)
+                startActivityForResult(intent, REQUEST_MATERIAL)
             }
             R.id.trul_location -> {
                 val intent = Intent(this, Location1Activity::class.java)
                 val data1 = helper.getLastJourney()
-                data1.isForUnloadResult= true
+                data1.isForUnloadResult = true
                 intent.putExtra("data", data1)
-                startActivityForResult(intent,REQUEST_LOCATION)
+                startActivityForResult(intent, REQUEST_LOCATION)
             }
             R.id.trul_weight -> {
                 val intent = Intent(this, Weight1Activity::class.java)
                 val data1 = helper.getLastJourney()
-                data1.isForUnloadResult= true
+                data1.isForUnloadResult = true
                 intent.putExtra("data", data1)
-                startActivityForResult(intent,REQUEST_WEIGHT)
+                startActivityForResult(intent, REQUEST_WEIGHT)
             }
         }
     }
@@ -191,8 +201,8 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, intent)
 
         if (resultCode == Activity.RESULT_OK) {
-            var bundle :Bundle ?=intent!!.extras
-            if(bundle != null){
+            var bundle: Bundle? = intent!!.extras
+            if (bundle != null) {
                 data = bundle!!.getSerializable("data") as Data
                 helper.log("data:$data")
 
@@ -205,7 +215,7 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                 helper.setLastJourney(data)
 
             }
-        }else{
+        } else {
             helper.toast("Request can not be completed.")
         }
 

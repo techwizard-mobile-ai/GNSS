@@ -22,9 +22,11 @@ class LoadUnloadActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
-        when(view!!.id){
-            R.id.lu_load -> {}
-            R.id.lu_unload -> {}
+        when (view!!.id) {
+            R.id.lu_load -> {
+            }
+            R.id.lu_unload -> {
+            }
         }
     }
 }

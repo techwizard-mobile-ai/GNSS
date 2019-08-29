@@ -11,11 +11,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.lysaan.malik.vsptracker.Helper
-
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.adapters.ELoadingHistoryAdapter
-import com.lysaan.malik.vsptracker.database.DatabaseAdapter
 import com.lysaan.malik.vsptracker.classes.Data
+import com.lysaan.malik.vsptracker.database.DatabaseAdapter
 import kotlinx.android.synthetic.main.fragment_eloading_history.*
 
 
@@ -27,7 +26,7 @@ class ELoadingHistoryFragment : Fragment() {
     private lateinit var helper: Helper
     private var root: View? = null
 
-    private lateinit var db :DatabaseAdapter
+    private lateinit var db: DatabaseAdapter
 
 
     private var listener: OnFragmentInteractionListener? = null
@@ -35,7 +34,8 @@ class ELoadingHistoryFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            helper = Helper(TAG,
+            helper = Helper(
+                TAG,
                 myContext
             )
             db = DatabaseAdapter(myContext)
@@ -55,7 +55,7 @@ class ELoadingHistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val mAdapter = ELoadingHistoryAdapter(myContext,loadingHistory)
+        val mAdapter = ELoadingHistoryAdapter(myContext, loadingHistory)
         elh_rv.layoutManager = LinearLayoutManager(myContext, LinearLayout.VERTICAL, false)
         elh_rv!!.setAdapter(mAdapter)
     }
@@ -85,7 +85,7 @@ class ELoadingHistoryFragment : Fragment() {
 
     companion object {
 
-        private lateinit var myContext : Activity
+        private lateinit var myContext: Activity
         @JvmStatic
         fun newInstance(
             eHistoryActivity: Activity

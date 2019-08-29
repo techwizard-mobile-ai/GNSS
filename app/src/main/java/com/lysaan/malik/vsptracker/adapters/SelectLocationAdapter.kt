@@ -1,4 +1,5 @@
 package com.lysaan.malik.vsptracker.adapters
+
 import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,9 +8,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.classes.Location
-import com.lysaan.malik.vsptracker.classes.Material
 import kotlinx.android.synthetic.main.list_row_select_location.view.*
-import kotlinx.android.synthetic.main.list_row_select_material.view.*
 
 class SelectLocationAdapter(context: Activity, internal var locationList: List<Location>) :
     BaseAdapter() {

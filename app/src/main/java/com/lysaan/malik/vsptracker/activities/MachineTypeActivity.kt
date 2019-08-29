@@ -1,8 +1,8 @@
 package com.lysaan.malik.vsptracker.activities
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
@@ -52,17 +52,17 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
-        when(view!!.id){
+        when (view!!.id) {
             R.id.machine_save -> {
 
                 val machineNumber = machine_number.text.toString()
-                if(selectedMachineType.id == 0){
+                if (selectedMachineType.id == 0) {
                     helper.toast("Please Select Machine Type")
-                }else if ( machineNumber.isNullOrBlank()){
+                } else if (machineNumber.isNullOrBlank()) {
                     helper.toast("Please enter a valid Machine Number")
-                }else if ( selectedMachineLocation.id == 0){
+                } else if (selectedMachineLocation.id == 0) {
                     helper.toast("Please Select Machine Location")
-                }else {
+                } else {
                     helper.setMachineType(selectedMachineType.id)
                     helper.setMachineNumber(machineNumber)
 
@@ -75,7 +75,6 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
-
 
 
     private fun selectMachineType() {
@@ -98,6 +97,7 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
                 }
                 Log.e(TAG, machineTypes.get(position).toString())
             }
+
             override fun onNothingSelected(arg0: AdapterView<*>) {
 
             }
@@ -124,6 +124,7 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
                 }
                 Log.e(TAG, machineTypes.get(position).toString())
             }
+
             override fun onNothingSelected(arg0: AdapterView<*>) {
 
             }

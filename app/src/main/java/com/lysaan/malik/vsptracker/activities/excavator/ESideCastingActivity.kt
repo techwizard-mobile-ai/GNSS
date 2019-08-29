@@ -82,7 +82,6 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
                 if (isWorking) {
 
 
-
                     eWork.workType = data.eWorkType
                     eWork.workActionType = 1
 

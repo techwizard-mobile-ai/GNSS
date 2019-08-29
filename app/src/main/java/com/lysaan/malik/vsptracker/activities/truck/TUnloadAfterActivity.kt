@@ -37,9 +37,13 @@ class TUnloadAfterActivity : BaseActivity(), View.OnClickListener {
 
         helper.log("data:$data")
 
-        when(data.nextAction){
-            3 -> {tul_back_load.visibility = View.GONE}
-            else ->{tul_back_load.visibility = View.VISIBLE}
+        when (data.nextAction) {
+            3 -> {
+                tul_back_load.visibility = View.GONE
+            }
+            else -> {
+                tul_back_load.visibility = View.VISIBLE
+            }
         }
         tul_after_new.setOnClickListener(this)
         tul_after_repeat.setOnClickListener(this)
@@ -48,9 +52,9 @@ class TUnloadAfterActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
-        when(view!!.id){
-            R.id.tul_back_load ->{
-                val intent = Intent (this, LMachine1Activity::class.java)
+        when (view!!.id) {
+            R.id.tul_back_load -> {
+                val intent = Intent(this, LMachine1Activity::class.java)
                 helper.setNextAction(2)
                 data = helper.getLastJourney()
 //                data.isForBackLoad = true
@@ -59,18 +63,18 @@ class TUnloadAfterActivity : BaseActivity(), View.OnClickListener {
                 startActivity(intent)
             }
             R.id.tul_after_new -> {
-                val intent = Intent (this, LMachine1Activity::class.java)
+                val intent = Intent(this, LMachine1Activity::class.java)
                 val data = Data()
                 helper.setLastJourney(data)
                 intent.putExtra("data", data)
                 startActivity(intent)
             }
             R.id.tul_after_repeat -> {
-                when(data.nextAction){
-                    0 ->{
+                when (data.nextAction) {
+                    0 -> {
                         data.repeatJourney = 1
                     }
-                    3 ->{
+                    3 -> {
                         data.repeatJourney = 2
                     }
                 }
@@ -79,11 +83,11 @@ class TUnloadAfterActivity : BaseActivity(), View.OnClickListener {
                 data.nextAction = 0
                 helper.setLastJourney(data)
 //                intent.putExtra("data", data)
-                val intent = Intent (this, RLoadActivity::class.java)
+                val intent = Intent(this, RLoadActivity::class.java)
                 startActivity(intent)
             }
             R.id.tul_after_finish -> {
-                val intent = Intent (this, HourMeterStopActivity::class.java)
+                val intent = Intent(this, HourMeterStopActivity::class.java)
                 startActivity(intent)
             }
         }
