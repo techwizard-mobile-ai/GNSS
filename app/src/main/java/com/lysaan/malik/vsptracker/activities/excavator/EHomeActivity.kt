@@ -80,8 +80,8 @@ class EHomeActivity : BaseActivity(), View.OnClickListener {
             }
 
             R.id.ehome_logout -> {
-                helper.log("MachineStatus:${db.getMachineStatus()}")
-//                helper.logout(this)
+//                helper.log("MachineStatus:${db.getMachineStatus()}")
+                helper.logout(this)
             }
         }
     }
