@@ -104,9 +104,7 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                             2 -> {
                                 data.nextAction = 3
                             }
-
                         }
-
 
                         db.updateTrip(data)
                         helper.setLastJourney(data)

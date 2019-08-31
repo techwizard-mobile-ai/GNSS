@@ -104,16 +104,6 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
 
 
         helper.hideKeybaordOnClick(base_content_frame)
-//          TODO Delete this navigation as it is changed
-//        val navItems = ArrayList<Material>()
-//        navItems.add(Material(1, "Loading Machine"))
-//        navItems.add(Material(2, "Loaded Material"))
-//        navItems.add(Material(3, "Loading Location"))
-//        navItems.add(Material(4, "Loaded Material Weigh"))
-//
-//        val aa = BaseNavigationAdapter(this@BaseActivity, navItems)
-//        base_navigation_rv.layoutManager = LinearLayoutManager(this, LinearLayout.HORIZONTAL, false)
-//        base_navigation_rv!!.setAdapter(aa)
 
         val bottomNavigation: BottomNavigationView = findViewById(R.id.base_navigationView)
         bottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
@@ -162,6 +152,7 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             base_machine_status.setText(Html.fromHtml(text))
             helper.log("Is Machine Stopped: ${helper.getIsMachineStopped()}")
             helper.log("Machine Stopped Reason: ${helper.getMachineStoppedReason()}")
+
         } else {
             base_machine_status_layout.visibility = View.GONE
         }
@@ -293,7 +284,6 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
     fun stopGPS() {
         locationManager?.removeUpdates(locationListener)
     }
-
     fun startGPS() {
 
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?;
@@ -312,7 +302,6 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
         }
 
     }
-
     fun requestPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
@@ -362,7 +351,6 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             }
         }
     }
-
     private fun showGPSDisabledAlertToUser() {
         val alertDialogBuilder = AlertDialog.Builder(this, R.style.ThemeOverlay_AppCompat_Dialog)
         alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
@@ -431,7 +419,6 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
         textView.maxLines = 5  //Or as much as you need
         snackbar.show()
     }
-
     private val locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: android.location.Location?) {
             makeUseofLocation(location)
@@ -450,7 +437,6 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             showGPSDisabledAlertToUser()
         }
     }
-
     private fun makeUseofLocation(location1: Location?) {
         latitude = location1!!.latitude
         longitude = location1!!.longitude
