@@ -1,53 +1,56 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/sload_main_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".activities.scrapper.SLoadActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sload_main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.notused.SLoadActivity">
 
     <TextView
-            style="@style/activity_title"
-            android:text="Load Scrapper" />
-
+        style="@style/activity_title"
+        android:text="Load Scrapper" />
     <LinearLayout style="@style/default_linearlayout">
 
+
+
+
+
+
         <TextView
-                style="@style/home_tv"
-                android:text="Material Type" />
+            style="@style/home_tv"
+            android:text="@string/material_type" />
 
         <android.support.v7.widget.AppCompatSpinner
-                android:id="@+id/sload_material_spinner"
-                style="@style/home_spinner" />
+            android:id="@+id/sload_material_spinner"
+            style="@style/home_spinner" />
 
         <TextView
-                style="@style/home_tv"
-                android:text="Location" />
+            style="@style/home_tv"
+            android:text="@string/location" />
 
         <android.support.v7.widget.AppCompatSpinner
-                android:id="@+id/sload_location_spinner"
-                style="@style/home_spinner" />
+            android:id="@+id/sload_location_spinner"
+            style="@style/home_spinner" />
 
         <TextView
-                style="@style/home_tv"
-                android:text="Weight" />
-
+            style="@style/home_tv"
+            android:text="@string/weight" />
         <EditText
-                android:id="@+id/sload_weight"
-                style="@style/et_background"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="@dimen/_1sdp"
-                android:layout_marginEnd="0dp"
-                android:hint="@string/activity_sload_sload_weight_hint"
-                android:inputType="number"
-                android:textColor="@color/black" />
-
+            android:id="@+id/sload_weight"
+            style="@style/et_background"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="@dimen/_1sdp"
+            android:layout_marginEnd="0dp"
+            android:hint="@string/activity_sload_sload_weight_hint"
+            android:inputType="number"
+            android:textColor="@color/black" />
         <Button
-                android:id="@+id/sload_next"
-                style="@style/next_button"
-                android:layout_marginTop="@dimen/_50sdp"
-                android:text="@string/load" />
+            android:id="@+id/sload_next"
+            style="@style/next_button"
+            android:layout_marginTop="@dimen/_50sdp"
+            android:text="@string/load" />
 
     </LinearLayout>
+
 </LinearLayout>

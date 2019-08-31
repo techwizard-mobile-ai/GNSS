@@ -31,8 +31,8 @@ class DelayHistoryFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             helper = Helper(
-                TAG,
-                myContext
+                    TAG,
+                    myContext
             )
             db = DatabaseAdapter(myContext)
             diggingHistory = db.getEWorks(1)
@@ -41,8 +41,8 @@ class DelayHistoryFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         root = inflater.inflate(R.layout.fragment_delay_history, container, false)
         return root
@@ -88,14 +88,14 @@ class DelayHistoryFragment : Fragment() {
 
         @JvmStatic
         fun newInstance(
-            eHistoryActivity: Activity,
-            FRAGMENT_TG: String
+                eHistoryActivity: Activity,
+                FRAGMENT_TG: String
         ) =
-            DelayHistoryFragment().apply {
-                arguments = Bundle().apply {
-                    myContext = eHistoryActivity
-                    FRAGMENT_TAG = FRAGMENT_TG
+                DelayHistoryFragment().apply {
+                    arguments = Bundle().apply {
+                        myContext = eHistoryActivity
+                        FRAGMENT_TAG = FRAGMENT_TG
+                    }
                 }
-            }
     }
 }

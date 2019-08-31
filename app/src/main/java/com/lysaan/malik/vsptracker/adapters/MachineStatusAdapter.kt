@@ -15,21 +15,21 @@ import kotlinx.android.synthetic.main.list_row_machine_status.view.*
 
 
 class MachineStatusAdapter(
-    val myContext: Activity,
-    val dataList: MutableList<Material>
+        val myContext: Activity,
+        val dataList: MutableList<Material>
 ) : RecyclerView.Adapter<MachineStatusAdapter
 .ViewHolder>() {
 
     private val TAG = this::class.java.simpleName
     private lateinit var helper: Helper
-    private lateinit var db : DatabaseAdapter
+    private lateinit var db: DatabaseAdapter
 
     override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
+            parent: ViewGroup,
+            viewType: Int
     ): MachineStatusAdapter.ViewHolder {
         val v = LayoutInflater.from(parent.context)
-            .inflate(R.layout.list_row_machine_status, parent, false)
+                .inflate(R.layout.list_row_machine_status, parent, false)
         helper = Helper(TAG, myContext)
         db = DatabaseAdapter(myContext)
         return ViewHolder(v)
@@ -46,24 +46,21 @@ class MachineStatusAdapter(
 
             val data = Data()
             data.machineStoppedReason = material.name
-            data.loadingGPSLocation  = (myContext as MachineStatus1Activity).gpsLocation
-
-
+            data.loadingGPSLocation = (myContext as MachineStatus1Activity).gpsLocation
 
 
             val insertID = db.insertMachineStatus(data)
 
-            if(insertID > 0) {
+            if (insertID > 0) {
                 helper.toast("Record Saved in Database Successfully.")
                 helper.setIsMachineStopped(true, material.name)
                 helper.stopMachine(insertID)
 
                 helper.startHomeActivityByType(Data())
 
-            }else{
+            } else {
                 helper.toast("Machine Not Stopped. Please try again.")
             }
-
 
 
         }

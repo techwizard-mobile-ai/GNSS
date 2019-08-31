@@ -28,6 +28,7 @@ import com.lysaan.malik.vsptracker.activities.scrapper.SUnloadAfterActivity
 import com.lysaan.malik.vsptracker.activities.truck.THomeActivity
 import com.lysaan.malik.vsptracker.activities.truck.TUnloadAfterActivity
 import com.lysaan.malik.vsptracker.classes.*
+import com.lysaan.malik.vsptracker.database.DatabaseAdapter
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -96,6 +97,19 @@ class Helper(var TAG: String, val context: Context) {
         }
     }
 
+    fun stopDelay(gpsLocation: GPSLocation) {
+            val meter = getMeter()
+            log("MeterStopBefore:$meter")
+            meter.isDelayStarted = false
+            meter.delayStopTime = System.currentTimeMillis()
+
+            meter.delayTotalTime = meter.delayStopTime - meter.delayStartTime
+            meter.delayStopGPSLocation = gpsLocation
+            log("MeterStopAfter:$meter")
+            setMeter(meter)
+//            toast("Delay Stopped.\nStart Time: ${getTime(getMeter().dailyModeStartTime)}Hrs.\nTotal Time: ${getFormatedTime(meter.delayTotalTime)}")
+    }
+
     fun stopDailyMode() {
         val currentTime = System.currentTimeMillis()
         if (isDailyModeStarted()) {
@@ -107,17 +121,28 @@ class Helper(var TAG: String, val context: Context) {
             meter.dailyModeTotalTime = totalTime
             log("MeterStopAfter:$meter")
             setMeter(meter)
-            toast(
-                "Day Works Stopped." +
-                        "\nStart Time: ${getTime(getMeter().dailyModeStartTime)}." +
-                        "\nTotal Time: ${getMinutesFromMillisec(totalTime)}"
-            )
+            toast("Day Works Stopped.\nStart Time: ${getTime(getMeter().dailyModeStartTime)}.\nTotal Time: ${getMinutesFromMillisec(totalTime)}")
         } else {
 //            toast("Day Works Already Stopped." +
 //                    "\nTotal Time: ${getMinutesFromMillisec(getMeter().dailyModeTotalTime)}")
         }
     }
 
+    fun startDelay(gpsLocation: GPSLocation) {
+        val currentTime = System.currentTimeMillis()
+        if(!isDelayStarted()){
+            val meter = getMeter()
+            log("MeterStartBefore:$meter")
+            meter.isDelayStarted = true
+            meter.delayStartTime = currentTime
+            meter.delayStartGPSLocation = gpsLocation
+            toast("Delay Started.")
+            log("MeterStartAfter:$meter")
+            setMeter(meter)
+        }else{
+            toast("Delay is already Started.")
+        }
+    }
     fun startDailyMode() {
 
         val currentTime = System.currentTimeMillis()
@@ -134,29 +159,30 @@ class Helper(var TAG: String, val context: Context) {
             val startTime = meter.dailyModeStartTime
             val totalTime = (currentTime - startTime) + meter.dailyModeTotalTime
             toast(
-                "Day Works Already Started." +
-                        "\nStart Time: ${getTime(getMeter().dailyModeStartTime)}." +
-                        "\nTotal Time: ${getMinutesFromMillisec(totalTime)}"
+                    "Day Works Already Started." +
+                            "\nStart Time: ${getTime(getMeter().dailyModeStartTime)}." +
+                            "\nTotal Time: ${getMinutesFromMillisec(totalTime)}"
             )
         }
 
     }
 
+    fun isDelayStarted() = sessionManager.getMeter().isDelayStarted
     fun isDailyModeStarted() = sessionManager.getMeter().isDailyModeStarted
 
     fun showStopMessage(startTime: Long) {
         toast(
-            "Please Stop Work First.\n" +
-                    "Work Duration : ${getTotalTimeVSP(startTime)} (VSP Meter).\n" +
-                    "Work Duration : ${getTotalTimeMintues(startTime)} (Minutes)"
+                "Please Stop Work First.\n" +
+                        "Work Duration : ${getTotalTimeVSP(startTime)} (VSP Meter).\n" +
+                        "Work Duration : ${getTotalTimeMintues(startTime)} (Minutes)"
         )
     }
 
     fun getFormatedTime(millis: Long): String {
         val hms = String.format(
-            "%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
-            TimeUnit.MILLISECONDS.toMinutes(millis) % TimeUnit.HOURS.toMinutes(1),
-            TimeUnit.MILLISECONDS.toSeconds(millis) % TimeUnit.MINUTES.toSeconds(1)
+                "%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
+                TimeUnit.MILLISECONDS.toMinutes(millis) % TimeUnit.HOURS.toMinutes(1),
+                TimeUnit.MILLISECONDS.toSeconds(millis) % TimeUnit.MINUTES.toSeconds(1)
         )
 
         return hms
@@ -297,7 +323,7 @@ class Helper(var TAG: String, val context: Context) {
             val meterONTime = getMachineTotalTime() + getMachineStartTime()
             meter.machineTotalTime = meterONTime
             meter.isMachineStopped = true
-            meter.stopRecordID = insertID
+            meter.machineDbID = insertID
             sessionManager.setMeter(meter)
 //            toast("Machine is Stopped.\n Machine Total Time : $meterONTime (mins)")
             toast("Machine is Stopped.")
@@ -311,7 +337,7 @@ class Helper(var TAG: String, val context: Context) {
         val meter = sessionManager.getMeter()
         meter.machineStartTime = currentTime
         meter.isMachineStopped = false
-        meter.stopRecordID = 0
+        meter.machineDbID = 0
         sessionManager.setMeter(meter)
 //        sessionManager.setMeterStartTime(currentTime)
 
@@ -440,7 +466,7 @@ class Helper(var TAG: String, val context: Context) {
 
     fun isNetworkAvailable(): Boolean? {
         val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetworkInfo = connectivityManager.activeNetworkInfo
         return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting
     }
@@ -463,10 +489,10 @@ class Helper(var TAG: String, val context: Context) {
 
     fun hideKeyboard(view: View) {
         val inputManager =
-            context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputManager.hideSoftInputFromWindow(
-            view.getWindowToken(),
-            InputMethodManager.HIDE_NOT_ALWAYS
+                view.getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS
         );
     }
 
@@ -476,31 +502,31 @@ class Helper(var TAG: String, val context: Context) {
         if (!url.isNullOrBlank()) {
 
             Glide.with(myContext)
-                .load(url)
-                .listener(object : RequestListener<Drawable> {
-                    override fun onLoadFailed(
-                        e: GlideException?,
-                        model: Any?,
-                        target: com.bumptech.glide.request.target.Target<Drawable>?,
-                        isFirstResource: Boolean
-                    ): Boolean {
+                    .load(url)
+                    .listener(object : RequestListener<Drawable> {
+                        override fun onLoadFailed(
+                                e: GlideException?,
+                                model: Any?,
+                                target: com.bumptech.glide.request.target.Target<Drawable>?,
+                                isFirstResource: Boolean
+                        ): Boolean {
 //                                helper.hideDialog()
-                        return false
-                    }
+                            return false
+                        }
 
-                    override fun onResourceReady(
-                        resource: Drawable?,
-                        model: Any?,
-                        target: com.bumptech.glide.request.target.Target<Drawable>?,
-                        dataSource: DataSource?,
-                        isFirstResource: Boolean
-                    ): Boolean {
+                        override fun onResourceReady(
+                                resource: Drawable?,
+                                model: Any?,
+                                target: com.bumptech.glide.request.target.Target<Drawable>?,
+                                dataSource: DataSource?,
+                                isFirstResource: Boolean
+                        ): Boolean {
 //                                helper.hideDialog()
-                        return false
-                    }
+                            return false
+                        }
 
-                })
-                .into(imageView)
+                    })
+                    .into(imageView)
         } else {
 //                    helper.hideDialog()
             log("else$url")
@@ -542,7 +568,7 @@ class Helper(var TAG: String, val context: Context) {
     fun showDialog() {
         try {
             dialog = ProgressDialog.show(
-                context, "", "Loading. Please wait...", true
+                    context, "", "Loading. Please wait...", true
             )
         } catch (exception: Exception) {
             log("showDialogException:$exception")
@@ -659,8 +685,8 @@ class Helper(var TAG: String, val context: Context) {
     }
 
     fun restartActivity(
-        intent: Intent,
-        activity: Activity
+            intent: Intent,
+            activity: Activity
     ) {
         var bundle: Bundle? = intent.extras
         var data = Data()

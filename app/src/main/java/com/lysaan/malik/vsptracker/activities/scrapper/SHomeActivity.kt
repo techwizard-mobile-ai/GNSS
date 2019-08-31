@@ -27,12 +27,6 @@ class SHomeActivity : BaseActivity(), View.OnClickListener {
 
         helper = Helper(TAG, this)
 
-//        var bundle :Bundle ?=intent.extras
-//        if(bundle != null){
-//            data = bundle!!.getSerializable("data") as Data
-//            helper.log("data:$data")
-//        }
-
         data = helper.getLastJourney()
         helper.log("data:$data")
 
@@ -46,12 +40,9 @@ class SHomeActivity : BaseActivity(), View.OnClickListener {
         }
 
         shome_logout.setOnClickListener(this)
-
         thome_load.setOnClickListener(this)
         thome_unload.setOnClickListener(this)
 
-//        shome_load.setOnClickListener(this)
-//        shome_unload.setOnClickListener(this)
 
     }
 
@@ -59,8 +50,8 @@ class SHomeActivity : BaseActivity(), View.OnClickListener {
         when (view!!.id) {
             R.id.thome_load -> {
                 val intent = Intent(this, Material1Activity::class.java)
-
-                data.isUnload = false
+//                    TODO Delete it
+//                data.isUnload = false
                 intent.putExtra("data", data)
                 startActivity(intent)
             }
@@ -69,7 +60,8 @@ class SHomeActivity : BaseActivity(), View.OnClickListener {
                 if (data == null) {
                     data = Data()
                 }
-                data.isUnload = true
+//                TODO Delete it
+//                data.isUnload = true
                 intent.putExtra("data", data)
                 startActivity(intent)
             }

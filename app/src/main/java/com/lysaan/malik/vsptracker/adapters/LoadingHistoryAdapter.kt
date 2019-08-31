@@ -12,8 +12,8 @@ import kotlinx.android.synthetic.main.list_row_loading_history.view.*
 
 
 class LoadingHistoryAdapter(
-    val context: Activity,
-    val dataList: MutableList<Data>
+        val context: Activity,
+        val dataList: MutableList<Data>
 ) : RecyclerView.Adapter<LoadingHistoryAdapter
 .ViewHolder>() {
 
@@ -22,13 +22,13 @@ class LoadingHistoryAdapter(
 
 
     override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
+            parent: ViewGroup,
+            viewType: Int
     ): LoadingHistoryAdapter.ViewHolder {
 
 
         val v = LayoutInflater.from(parent.context)
-            .inflate(R.layout.list_row_loading_history, parent, false)
+                .inflate(R.layout.list_row_loading_history, parent, false)
         helper = Helper(TAG, context)
         return ViewHolder(v)
     }
@@ -73,22 +73,22 @@ class LoadingHistoryAdapter(
         holder.itemView.lhr_task.setText(":  " + myData.unloadingTask)
 
         holder.itemView.lhr_time.setText(
-            ": ${helper.getTime(myData.startTime)} / ${helper.getTime(
-                myData.stopTime
-            )} Hrs"
+                ": ${helper.getTime(myData.startTime)} / ${helper.getTime(
+                        myData.stopTime
+                )} Hrs"
         )
 
         holder.itemView.lhr_duration.setText(": ${helper.getFormatedTime(myData.totalTime)} Hrs")
         holder.itemView.lhr_workmode.text = ": ${myData.workMode}"
 
         holder.itemView.lhr_gps_loading.text =
-            ": ${helper.getRoundedDecimal(myData.loadingGPSLocation.latitude)} / ${helper.getRoundedDecimal(
-                myData.loadingGPSLocation.longitude
-            )} "
+                ": ${helper.getRoundedDecimal(myData.loadingGPSLocation.latitude)} / ${helper.getRoundedDecimal(
+                        myData.loadingGPSLocation.longitude
+                )} "
         holder.itemView.lhr_gps_unloading.text =
-            ": ${helper.getRoundedDecimal(myData.unloadingGPSLocation.latitude)} / ${helper.getRoundedDecimal(
-                myData.unloadingGPSLocation.longitude
-            )} "
+                ": ${helper.getRoundedDecimal(myData.unloadingGPSLocation.latitude)} / ${helper.getRoundedDecimal(
+                        myData.unloadingGPSLocation.longitude
+                )} "
 
         holder.itemView.lhr_gps_loading_layout.setOnClickListener {
             helper.showOnMap(myData.loadingGPSLocation, myData.loadingLocation)

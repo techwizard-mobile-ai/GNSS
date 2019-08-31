@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".activities.notused.EHomeOldActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.notused.EHomeOldActivity">
 
     <LinearLayout style="@style/default_linearlayout">
 
-        <TextView
-                style="@style/home_tv"
-                android:text="Material Type" />
-
-        <android.support.v7.widget.AppCompatSpinner
-                android:id="@+id/ehome_material_spinner"
-                style="@style/home_spinner" />
-
-        <TextView
-                style="@style/home_tv"
-                android:text="Location" />
-
-        <android.support.v7.widget.AppCompatSpinner
-                android:id="@+id/ehome_location_spinner"
-                style="@style/home_spinner" />
-
-        <TextView
-                style="@style/signin_btn"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:text="@string/login"
-                android:visibility="gone" />
-
         <Button
-                android:id="@+id/ehome_next"
-                style="@style/next_button"
-                android:layout_marginTop="@dimen/_50sdp"
-                android:text="@string/continuetext" />
+            android:id="@+id/ehome_next"
+            style="@style/next_button"
+            android:layout_marginTop="@dimen/_50sdp"
+            android:text="@string/continuetext" />
+
+        <TextView
+            style="@style/home_tv"
+            android:text="Location" />
+
+        <TextView
+            style="@style/signin_btn"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:text="@string/login"
+            android:visibility="gone" />
+
+        <TextView
+            style="@style/home_tv"
+            android:text="Material Type" />
+
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/ehome_material_spinner"
+            style="@style/home_spinner" />
+
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/ehome_location_spinner"
+            style="@style/home_spinner" />
 
     </LinearLayout>
 

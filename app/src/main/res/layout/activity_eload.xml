@@ -1,65 +1,80 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/_10sdp"
-        android:layout_marginEnd="@dimen/_10sdp"
-        tools:context=".activities.excavator.ELoadActivity">
-
-    <LinearLayout
-            android:id="@+id/el_top"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="@dimen/_30sdp"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-
-        <TextView
-                android:id="@+id/eload_location"
-                style="@style/load_tv"
-                android:text="@string/activity_eload_eload_location_text" />
-
-        <TextView
-                android:id="@+id/eload_material"
-                style="@style/load_tv"
-                android:text="@string/activity_eload_eload_material_text" />
-    </LinearLayout>
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginStart="@dimen/_10sdp"
+    android:layout_marginEnd="@dimen/_10sdp"
+    tools:context=".activities.excavator.ELoadActivity">
 
     <FrameLayout
-            android:id="@+id/load_truck_load"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_gravity="center">
-
-        <android.support.design.widget.FloatingActionButton
-                android:layout_width="@dimen/_100sdp"
-                android:layout_height="@dimen/_100sdp"
-                android:backgroundTint="@color/colorPrimary"
-                android:src="@android:color/transparent" />
+        android:id="@+id/load_truck_load"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center">
 
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:elevation="16dp"
-                android:gravity="center"
-                android:text="@string/load"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@android:color/white" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:elevation="16dp"
+            android:gravity="center"
+            android:text="@string/load"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/white" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_100sdp"
+            android:backgroundTint="@color/colorPrimary"
+            android:src="@android:color/transparent" />
     </FrameLayout>
 
-    <android.support.v7.widget.RecyclerView
-            android:id="@+id/elh_rv"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_100sdp"
-            android:layout_above="@id/eload_bottom"
-            android:layout_below="@id/load_truck_load"
-            android:layout_marginTop="@dimen/_14sdp"
-            android:layout_marginBottom="@dimen/_10sdp"
-            android:background="@drawable/eoffloding_border" />
+    <LinearLayout
+        android:id="@+id/el_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/eload_location"
+            style="@style/load_tv"
+            android:text="@string/activity_eload_eload_location_text" />
+
+        <TextView
+            android:id="@+id/eload_material"
+            style="@style/load_tv"
+            android:text="@string/activity_eload_eload_material_text" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/eload_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/eload_back"
+            style="@style/back_button"
+            android:layout_width="0dp"
+            android:layout_weight=".3"
+            android:background="@color/colorPrimary"
+            android:text="@string/finish" />
+
+        <Button
+            android:id="@+id/eload_finish"
+            style="@style/next_button"
+            android:layout_width="0dp"
+            android:layout_marginEnd="0dp"
+            android:layout_weight="0.3"
+            android:text="@string/end_work" />
+    </LinearLayout>
     <!--
         <LinearLayout
                 android:id="@+id/eload_bottom"
@@ -87,28 +102,13 @@
             />
         </LinearLayout>-->
 
-    <LinearLayout
-            android:id="@+id/eload_bottom"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/_10sdp"
-            android:orientation="horizontal">
-
-        <Button
-                android:id="@+id/eload_back"
-                style="@style/back_button"
-                android:layout_width="0dp"
-                android:layout_weight=".3"
-                android:background="@color/colorPrimary"
-                android:text="@string/finish" />
-
-        <Button
-                android:id="@+id/eload_finish"
-                style="@style/next_button"
-                android:layout_width="0dp"
-                android:layout_marginEnd="0dp"
-                android:layout_weight="0.3"
-                android:text="@string/end_work" />
-    </LinearLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/elh_rv"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_100sdp"
+        android:layout_above="@id/eload_bottom"
+        android:layout_below="@id/load_truck_load"
+        android:layout_marginTop="@dimen/_14sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:background="@drawable/eoffloding_border" />
 </RelativeLayout>

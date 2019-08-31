@@ -1,116 +1,114 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        tools:context=".activities.excavator.EOffLoadingActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".activities.excavator.EOffLoadingActivity">
 
     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/_10sdp"
-            android:layout_marginEnd="@dimen/_10sdp"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
         <TextView
-                android:id="@+id/ework_title"
-                style="@style/activity_title"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="@dimen/_10sdp"
-                android:text="@string/loading" />
-
+            android:id="@+id/ework_title"
+            style="@style/activity_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:text="@string/loading" />
         <Chronometer
-                android:id="@+id/chronometer1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/activity_eoff_loading_chronometer1_text"
-                android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/_20sdp"
-                android:textStyle="bold" />
+            android:id="@+id/chronometer1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/activity_eoff_loading_chronometer1_text"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/_20sdp"
+            android:textStyle="bold" />
 
         <FrameLayout
-                android:id="@+id/ework_offload_action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/ework_offload_load"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/_10sdp">
-
-            <android.support.design.widget.FloatingActionButton
-                    android:layout_width="@dimen/_80sdp"
-                    android:layout_height="@dimen/_80sdp"
-                    android:backgroundTint="@color/colorPrimary"
-                    android:src="@android:color/transparent" />
+            android:id="@+id/ework_offload_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/ework_offload_load"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/_10sdp">
 
             <TextView
-                    android:id="@+id/ework_action_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:elevation="@dimen/_14sdp"
-                    android:gravity="center"
-                    android:text="@string/start"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="@android:color/white" />
-        </FrameLayout>
-
-        <FrameLayout
-                android:id="@+id/ework_offload_load"
+                android:id="@+id/ework_action_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="@dimen/_20sdp">
+                android:elevation="@dimen/_14sdp"
+                android:gravity="center"
+                android:text="@string/start"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@android:color/white" />
 
             <android.support.design.widget.FloatingActionButton
-                    android:layout_width="@dimen/_80sdp"
-                    android:layout_height="@dimen/_80sdp"
-                    android:backgroundTint="@color/colorPrimary"
-                    android:src="@android:color/transparent" />
+                android:layout_width="@dimen/_80sdp"
+                android:layout_height="@dimen/_80sdp"
+                android:backgroundTint="@color/colorPrimary"
+                android:src="@android:color/transparent" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/ework_offload_load"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/_20sdp">
 
             <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:elevation="@dimen/_14sdp"
-                    android:gravity="center"
-                    android:text="@string/load"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="@android:color/white" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:elevation="@dimen/_14sdp"
+                android:gravity="center"
+                android:text="@string/load"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@android:color/white" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="@dimen/_80sdp"
+                android:layout_height="@dimen/_80sdp"
+                android:backgroundTint="@color/colorPrimary"
+                android:src="@android:color/transparent" />
         </FrameLayout>
 
         <android.support.v7.widget.RecyclerView
-                android:id="@+id/eoff_rv"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_100sdp"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:layout_marginBottom="@dimen/_10sdp"
-                android:background="@drawable/eoffloding_border"
-                android:visibility="invisible" />
-
+            android:id="@+id/eoff_rv"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_100sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:background="@drawable/eoffloding_border"
+            android:visibility="invisible" />
         <LinearLayout
-                android:id="@+id/eoff_bottom"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/_10sdp"
-                android:orientation="horizontal">
+            android:id="@+id/eoff_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:orientation="horizontal">
 
             <Button
-                    android:id="@+id/ework_offload_home"
-                    style="@style/back_button"
-                    android:layout_width="0dp"
-                    android:layout_weight=".3"
-                    android:background="@color/colorPrimary"
-                    android:text="@string/finish" />
+                android:id="@+id/ework_offload_home"
+                style="@style/back_button"
+                android:layout_width="0dp"
+                android:layout_weight=".3"
+                android:background="@color/colorPrimary"
+                android:text="@string/finish" />
 
             <Button
-                    android:id="@+id/ework_offload_finish"
-                    style="@style/next_button"
-                    android:layout_width="0dp"
-                    android:layout_marginEnd="0dp"
-                    android:layout_weight="0.3"
-                    android:text="@string/end_work" />
+                android:id="@+id/ework_offload_finish"
+                style="@style/next_button"
+                android:layout_width="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_weight="0.3"
+                android:text="@string/end_work" />
         </LinearLayout>
+
     </LinearLayout>
 </ScrollView>

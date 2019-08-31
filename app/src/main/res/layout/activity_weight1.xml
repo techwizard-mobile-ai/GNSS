@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".activities.common.Weight1Activity">
-
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.common.Weight1Activity">
     <TextView
-            style="@style/activity_title"
-            android:text="Material Weight (Tonnes)" />
+        style="@style/activity_title"
+        android:text="@string/material_weight_tonnes" />
+
 
     <EditText
-            android:id="@+id/sload_weight"
-            style="@style/et_background"
-            android:layout_marginStart="@dimen/_10sdp"
-            android:layout_marginTop="@dimen/_1sdp"
-            android:layout_marginEnd="@dimen/_10sdp"
-            android:hint="@string/activity_weight1_sload_weight_hint"
-            android:inputType="numberDecimal"
-            android:textColor="@color/black" />
+        android:id="@+id/sload_weight"
+        style="@style/et_background"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_1sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:hint="@string/activity_weight1_sload_weight_hint"
+        android:inputType="numberDecimal"
+        android:textColor="@color/black" />
 
     <Button
-            android:id="@+id/w1_next"
-            style="@style/next_button"
-            android:layout_marginTop="@dimen/_50sdp"
-            android:text="@string/next" />
+        android:id="@+id/w1_next"
+        style="@style/next_button"
+        android:layout_marginTop="@dimen/_50sdp"
+        android:text="@string/next" />
 
 </LinearLayout>

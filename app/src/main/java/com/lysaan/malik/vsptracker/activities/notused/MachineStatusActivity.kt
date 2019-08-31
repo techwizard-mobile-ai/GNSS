@@ -54,7 +54,6 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
             }
             R.id.mstatus_start -> {
                 helper.setIsMachineStopped(false, "")
-
                 helper.startHomeActivityByType(data)
 
             }
@@ -70,8 +69,8 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
         mstop_reason_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
             override fun onItemSelected(
-                arg0: AdapterView<*>, arg1: View,
-                position: Int, arg3: Long
+                    arg0: AdapterView<*>, arg1: View,
+                    position: Int, arg3: Long
             ) {
 
                 selectedStopReason = materials.get(position)

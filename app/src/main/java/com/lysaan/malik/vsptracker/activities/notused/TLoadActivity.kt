@@ -118,8 +118,8 @@ class TLoadActivity : BaseActivity(), View.OnClickListener {
         tload_machine_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
             override fun onItemSelected(
-                arg0: AdapterView<*>, arg1: View,
-                position: Int, arg3: Long
+                    arg0: AdapterView<*>, arg1: View,
+                    position: Int, arg3: Long
             ) {
 
                 selectedMachine = materials.get(position)
@@ -152,26 +152,26 @@ class TLoadActivity : BaseActivity(), View.OnClickListener {
 
         tload_material_spinner.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
         tload_material_spinner.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
+                object : AdapterView.OnItemSelectedListener {
 
-                override fun onItemSelected(
-                    arg0: AdapterView<*>, arg1: View,
-                    position: Int, arg3: Long
-                ) {
+                    override fun onItemSelected(
+                            arg0: AdapterView<*>, arg1: View,
+                            position: Int, arg3: Long
+                    ) {
 
-                    selectedMaterial = materials.get(position)
-                    if (materials.get(position).id != 0) {
-                        tload_material_spinner.setBackground(resources.getDrawable(R.drawable.spinner_border))
-                    } else {
-                        tload_material_spinner.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
+                        selectedMaterial = materials.get(position)
+                        if (materials.get(position).id != 0) {
+                            tload_material_spinner.setBackground(resources.getDrawable(R.drawable.spinner_border))
+                        } else {
+                            tload_material_spinner.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
+                        }
+                        Log.e(TAG, materials.get(position).toString())
                     }
-                    Log.e(TAG, materials.get(position).toString())
-                }
 
-                override fun onNothingSelected(arg0: AdapterView<*>) {
+                    override fun onNothingSelected(arg0: AdapterView<*>) {
 
+                    }
                 }
-            }
     }
 
     private fun selectLocation() {
@@ -189,25 +189,25 @@ class TLoadActivity : BaseActivity(), View.OnClickListener {
         tload_location_spinner.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
 
         tload_location_spinner.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
+                object : AdapterView.OnItemSelectedListener {
 
-                override fun onItemSelected(
-                    arg0: AdapterView<*>, arg1: View,
-                    position: Int, arg3: Long
-                ) {
+                    override fun onItemSelected(
+                            arg0: AdapterView<*>, arg1: View,
+                            position: Int, arg3: Long
+                    ) {
 
-                    selectedLocation = locations.get(position)
-                    if (locations.get(position).id != 0) {
-                        tload_location_spinner.setBackground(resources.getDrawable(R.drawable.spinner_border))
-                    } else {
-                        tload_location_spinner.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
+                        selectedLocation = locations.get(position)
+                        if (locations.get(position).id != 0) {
+                            tload_location_spinner.setBackground(resources.getDrawable(R.drawable.spinner_border))
+                        } else {
+                            tload_location_spinner.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
+                        }
+                        Log.e(TAG, locations.get(position).toString())
                     }
-                    Log.e(TAG, locations.get(position).toString())
-                }
 
-                override fun onNothingSelected(arg0: AdapterView<*>) {
+                    override fun onNothingSelected(arg0: AdapterView<*>) {
 
+                    }
                 }
-            }
     }
 }

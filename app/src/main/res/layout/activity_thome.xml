@@ -1,49 +1,48 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".activities.truck.THomeActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.truck.THomeActivity">
 
-    <TextView
-            style="@style/activity_title"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:text="Select Action" />
+    <Button
+        android:id="@+id/thome_logout"
+        style="@style/next_button_single"
+        android:layout_alignParentBottom="true" />
 
     <LinearLayout
-            style="@style/default_linearlayout"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center_vertical"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/_30sdp">
+        style="@style/default_linearlayout"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/_30sdp">
 
         <FrameLayout
-                android:id="@+id/thome_load"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_gravity="center">
-
-            <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/thome_load_button"
-                    android:layout_width="@dimen/_70sdp"
-                    android:layout_height="@dimen/_70sdp"
-                    android:backgroundTint="@color/colorPrimary"
-                    android:src="@android:color/transparent" />
+            android:id="@+id/thome_load"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center">
 
             <TextView
-                    android:id="@+id/thome_load_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:elevation="16dp"
-                    android:gravity="center"
-                    android:text="@string/load"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="@android:color/white" />
+                android:id="@+id/thome_load_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:elevation="16dp"
+                android:gravity="center"
+                android:text="@string/load"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@android:color/white" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/thome_load_button"
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="@dimen/_70sdp"
+                android:backgroundTint="@color/colorPrimary"
+                android:src="@android:color/transparent" />
         </FrameLayout>
 
 
@@ -54,30 +53,30 @@
         <!--                />-->
 
         <FrameLayout
-                android:id="@+id/thome_unload"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/_40sdp">
-
-            <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/thome_unload_button"
-                    android:layout_width="@dimen/_70sdp"
-                    android:layout_height="@dimen/_70sdp"
-                    android:backgroundTint="@color/colorPrimary"
-                    android:src="@android:color/transparent" />
+            android:id="@+id/thome_unload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/_40sdp">
 
             <TextView
-                    android:id="@+id/thome_unload_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:elevation="16dp"
-                    android:gravity="center"
-                    android:text="@string/unload"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="@android:color/white" />
+                android:id="@+id/thome_unload_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:elevation="16dp"
+                android:gravity="center"
+                android:text="@string/unload"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@android:color/white" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/thome_unload_button"
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="@dimen/_70sdp"
+                android:backgroundTint="@color/colorPrimary"
+                android:src="@android:color/transparent" />
         </FrameLayout>
 
         <!--        <Button-->
@@ -89,8 +88,9 @@
 
     </LinearLayout>
 
-    <Button
-            android:id="@+id/thome_logout"
-            style="@style/next_button_single"
-            android:layout_alignParentBottom="true" />
+    <TextView
+        style="@style/activity_title"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="Select Action" />
 </RelativeLayout>

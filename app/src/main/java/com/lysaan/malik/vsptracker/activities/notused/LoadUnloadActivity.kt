@@ -1,4 +1,4 @@
-package com.lysaan.malik.vsptracker.activities.excavator
+package com.lysaan.malik.vsptracker.activities.notused
 
 import android.os.Bundle
 import android.support.design.widget.NavigationView

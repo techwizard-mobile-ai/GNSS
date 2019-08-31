@@ -35,8 +35,8 @@ class EOffloadingLoadsFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             helper = Helper(
-                TAG,
-                myContext
+                    TAG,
+                    myContext
             )
             db = DatabaseAdapter(myContext)
             helper.log("eWork:$eWork ")
@@ -44,8 +44,8 @@ class EOffloadingLoadsFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         root = inflater.inflate(R.layout.fragment_eoffloading_loads, container, false)
         return root
@@ -62,12 +62,12 @@ class EOffloadingLoadsFragment : Fragment() {
         }
 
         val mAdapter = EOffLoadingAdapter(
-            myContext, db.getEWorksOffLoads(
+                myContext, db.getEWorksOffLoads(
                 eWork.ID
-            )
+        )
         )
         root!!.eoff_fragment_rv.layoutManager =
-            LinearLayoutManager(myContext, LinearLayout.VERTICAL, false)
+                LinearLayoutManager(myContext, LinearLayout.VERTICAL, false)
         root!!.eoff_fragment_rv!!.setAdapter(mAdapter)
     }
 
@@ -102,12 +102,12 @@ class EOffloadingLoadsFragment : Fragment() {
 
         @JvmStatic
         fun newInstance(mContext: Activity, fragmentTag: String, eWork1: EWork) =
-            EOffloadingLoadsFragment().apply {
-                arguments = Bundle().apply {
-                    myContext = mContext
-                    FRAGMENT_TAG = fragmentTag
-                    eWork = eWork1
+                EOffloadingLoadsFragment().apply {
+                    arguments = Bundle().apply {
+                        myContext = mContext
+                        FRAGMENT_TAG = fragmentTag
+                        eWork = eWork1
+                    }
                 }
-            }
     }
 }

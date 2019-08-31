@@ -33,8 +33,8 @@ class EDiggingHistoryFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             helper = Helper(
-                TAG,
-                myContext
+                    TAG,
+                    myContext
             )
             db = DatabaseAdapter(myContext)
             diggingHistory = db.getEWorks(1)
@@ -43,8 +43,8 @@ class EDiggingHistoryFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
 
         root = inflater.inflate(R.layout.fragment_edigging_history, container, false)
@@ -57,8 +57,8 @@ class EDiggingHistoryFragment : Fragment() {
 
         val workType = 1
         val mAdapter = ETHistoryAdapter(
-            myContext, diggingHistory,
-            FRAGMENT_TAG, workType
+                myContext, diggingHistory,
+                FRAGMENT_TAG, workType
         )
         root!!.edh_rv.layoutManager = LinearLayoutManager(myContext, LinearLayout.VERTICAL, false)
         root!!.edh_rv!!.setAdapter(mAdapter)
@@ -95,14 +95,14 @@ class EDiggingHistoryFragment : Fragment() {
 
         @JvmStatic
         fun newInstance(
-            eHistoryActivity: EHistoryActivity,
-            FRAGMENT_TG: String
+                eHistoryActivity: EHistoryActivity,
+                FRAGMENT_TG: String
         ) =
-            EDiggingHistoryFragment().apply {
-                arguments = Bundle().apply {
-                    myContext = eHistoryActivity
-                    FRAGMENT_TAG = FRAGMENT_TG
+                EDiggingHistoryFragment().apply {
+                    arguments = Bundle().apply {
+                        myContext = eHistoryActivity
+                        FRAGMENT_TAG = FRAGMENT_TG
+                    }
                 }
-            }
     }
 }

@@ -11,7 +11,7 @@ import com.lysaan.malik.vsptracker.classes.Material
 import kotlinx.android.synthetic.main.list_row_select_material.view.*
 
 class SelectStateAdapter(context: Activity, internal var materialList: List<Material>) :
-    BaseAdapter() {
+        BaseAdapter() {
 
     internal var context: Context
     internal var flater: LayoutInflater

@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".activities.common.LMachine1Activity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.common.LMachine1Activity">
 
     <TextView
-            android:id="@+id/lm_title"
-            style="@style/activity_title"
-            android:text="@string/activity_lmachine1_lm_title_text" />
+        android:id="@+id/lm_title"
+        style="@style/activity_title"
+        android:text="@string/activity_lmachine1_lm_title_text" />
 
     <GridView
-            android:id="@+id/tlm_gridview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="@dimen/_5sdp"
-            android:columnWidth="@dimen/_120sdp"
-            android:gravity="center"
-            android:horizontalSpacing="0dp"
-            android:numColumns="auto_fit"
-            android:stretchMode="columnWidth"
-            android:verticalSpacing="0dp" />
+        android:id="@+id/tlm_gridview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/_5sdp"
+        android:columnWidth="@dimen/_120sdp"
+        android:gravity="center"
+        android:horizontalSpacing="0dp"
+        android:numColumns="auto_fit"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="0dp" />
+
+
 
     <!--<GridView-->
     <!--android:id="@+id/gridview"-->

@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".activities.scrapper.SUnloadAfterActivity">
-
-    <TextView
-            style="@style/activity_title"
-            android:text="Select Action" />
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.scrapper.SUnloadAfterActivity">
 
     <RelativeLayout style="@style/default_linearlayout">
 
-        <LinearLayout
-                style="@style/default_linearlayout"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-            <Button
-                    android:id="@+id/sul_after_new"
-                    style="@style/back_button"
-                    android:layout_width="0dp"
-                    android:layout_weight=".3"
-                    android:background="@color/colorPrimary"
-                    android:text="@string/activity_sunload_after_sul_after_new_text" />
-
-            <Button
-                    android:id="@+id/sul_after_repeat"
-                    style="@style/next_button"
-                    android:layout_width="0dp"
-                    android:layout_marginEnd="0dp"
-                    android:layout_weight="0.3"
-                    android:text="@string/activity_sunload_after_sul_after_repeat_text" />
-        </LinearLayout>
-
-
         <Button
-                android:id="@+id/sul_after_finish"
+            android:id="@+id/sul_after_finish"
+            style="@style/next_button"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/_30sdp"
+            android:text="@string/end_work" />
+
+
+        <LinearLayout
+            style="@style/default_linearlayout"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/sul_after_new"
+                style="@style/back_button"
+                android:layout_width="0dp"
+                android:layout_weight=".3"
+                android:background="@color/colorPrimary"
+                android:text="@string/activity_sunload_after_sul_after_new_text" />
+
+            <Button
+                android:id="@+id/sul_after_repeat"
                 style="@style/next_button"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="@dimen/_30sdp"
-                android:text="@string/end_work" />
+                android:layout_width="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_weight="0.3"
+                android:text="@string/activity_sunload_after_sul_after_repeat_text" />
+        </LinearLayout>
     </RelativeLayout>
+
+    <TextView
+        style="@style/activity_title"
+        android:text="Select Action" />
 </LinearLayout>

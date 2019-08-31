@@ -1,61 +1,65 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".activities.truck.TUnloadAfterActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.truck.TUnloadAfterActivity">
 
     <TextView
-            style="@style/activity_title"
-            android:text="Select Action" />
+        style="@style/activity_title"
+        android:text="Select Action" />
 
     <RelativeLayout style="@style/default_linearlayout">
 
+        <Button
+            android:id="@+id/tul_after_finish"
+            style="@style/next_button"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/_30sdp"
+            android:text="@string/end_work" />
+
+
         <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
+
 
             <LinearLayout
-                    style="@style/default_linearlayout"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginBottom="@dimen/_20sdp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                style="@style/default_linearlayout"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="@dimen/_20sdp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <Button
-                        android:id="@+id/tul_after_new"
-                        style="@style/next_button"
-                        android:layout_width="0dp"
-                        android:layout_margin="@dimen/_1sdp"
-                        android:layout_weight=".3"
-                        android:text="@string/new_journey" />
+                    android:id="@+id/tul_after_new"
+                    style="@style/next_button"
+                    android:layout_width="0dp"
+                    android:layout_margin="@dimen/_1sdp"
+                    android:layout_weight=".3"
+                    android:text="@string/new_journey" />
 
                 <Button
-                        android:id="@+id/tul_after_repeat"
-                        style="@style/next_button"
-                        android:layout_width="0dp"
-                        android:layout_marginEnd="0dp"
-                        android:layout_weight="0.3"
-                        android:text="@string/repeat_journey" />
+                    android:id="@+id/tul_after_repeat"
+                    style="@style/next_button"
+                    android:layout_width="0dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_weight="0.3"
+                    android:text="@string/repeat_journey" />
             </LinearLayout>
-
             <Button
-                    android:id="@+id/tul_back_load"
-                    style="@style/back_button_single"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/back_load" />
+                android:id="@+id/tul_back_load"
+                style="@style/back_button_single"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/back_load" />
+
+
         </LinearLayout>
-
-
-        <Button
-                android:id="@+id/tul_after_finish"
-                style="@style/next_button"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="@dimen/_30sdp"
-                android:text="@string/end_work" />
     </RelativeLayout>
+
+
 </LinearLayout>

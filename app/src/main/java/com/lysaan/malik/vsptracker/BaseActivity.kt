@@ -20,22 +20,19 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 import android.text.Html
 import android.view.MenuItem
 import android.view.View
-import android.widget.LinearLayout
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.lysaan.malik.vsptracker.activities.DayWorksActivity
+import com.lysaan.malik.vsptracker.activities.DelayActivity
 import com.lysaan.malik.vsptracker.activities.MachineTypeActivity
 import com.lysaan.malik.vsptracker.activities.common.MachineStatus1Activity
-import com.lysaan.malik.vsptracker.activities.truck.TWaitActivity
-import com.lysaan.malik.vsptracker.adapters.BaseNavigationAdapter
 import com.lysaan.malik.vsptracker.classes.Data
+import com.lysaan.malik.vsptracker.classes.EWork
 import com.lysaan.malik.vsptracker.classes.GPSLocation
-import com.lysaan.malik.vsptracker.classes.Material
 import com.lysaan.malik.vsptracker.database.DatabaseAdapter
 import com.lysaan.malik.vsptracker.others.Utils
 import kotlinx.android.synthetic.main.app_bar_base.*
@@ -58,8 +55,7 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Utils.onActivityCreateSetTheme(this);
-//        setTheme(R.style.AppTheme_AppBarOverlay)
+        Utils.onActivityCreateSetTheme(this)
 
         setContentView(R.layout.activity_base)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -72,11 +68,11 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.base_nav_view)
         val toggle = ActionBarDrawerToggle(
-            this,
-            drawerLayout,
-            toolbar,
-            R.string.navigation_drawer_open,
-            R.string.navigation_drawer_close
+                this,
+                drawerLayout,
+                toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close
         )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
@@ -107,16 +103,16 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
 
 
         helper.hideKeybaordOnClick(base_content_frame)
-
-        val navItems = ArrayList<Material>()
-        navItems.add(Material(1, "Loading Machine"))
-        navItems.add(Material(2, "Loaded Material"))
-        navItems.add(Material(3, "Loading Location"))
-        navItems.add(Material(4, "Loaded Material Weigh"))
-
-        val aa = BaseNavigationAdapter(this@BaseActivity, navItems)
-        base_navigation_rv.layoutManager = LinearLayoutManager(this, LinearLayout.HORIZONTAL, false)
-        base_navigation_rv!!.setAdapter(aa)
+//          TODO Delete this navigation as it is changed
+//        val navItems = ArrayList<Material>()
+//        navItems.add(Material(1, "Loading Machine"))
+//        navItems.add(Material(2, "Loaded Material"))
+//        navItems.add(Material(3, "Loading Location"))
+//        navItems.add(Material(4, "Loaded Material Weigh"))
+//
+//        val aa = BaseNavigationAdapter(this@BaseActivity, navItems)
+//        base_navigation_rv.layoutManager = LinearLayoutManager(this, LinearLayout.HORIZONTAL, false)
+//        base_navigation_rv!!.setAdapter(aa)
     }
 
     override fun onResume() {
@@ -127,21 +123,21 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             when (helper.getMachineStoppedReason()) {
                 "Weather" -> {
                     Glide.with(this).load(resources.getDrawable(R.drawable.ic_action_beach_access))
-                        .into(base_machine_status_icon)
+                            .into(base_machine_status_icon)
                 }
                 "Other 1" -> {
                     Glide.with(this).load(resources.getDrawable(R.drawable.ic_action_restaurant))
-                        .into(base_machine_status_icon)
+                            .into(base_machine_status_icon)
                 }
                 else -> {
                     Glide.with(this).load(resources.getDrawable(R.drawable.ic_action_report))
-                        .into(base_machine_status_icon)
+                            .into(base_machine_status_icon)
                 }
             }
 
 
             val text =
-                "<font color=#FF382A>Machine is Stopped. </font><font color=#106d14><u>Click here to Start Machine</u>.</font>"
+                    "<font color=#FF382A>Machine is Stopped. </font><font color=#106d14><u>Click here to Start Machine</u>.</font>"
             base_machine_status.setText(Html.fromHtml(text))
             helper.log("Is Machine Stopped: ${helper.getIsMachineStopped()}")
             helper.log("Machine Stopped Reason: ${helper.getMachineStoppedReason()}")
@@ -151,7 +147,7 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
 
         if (helper.isDailyModeStarted()) {
             val text =
-                "<font color=#FF382A>Day Works is ON. </font><font color=#106d14><u>Switch Standard Mode</u>.</font>"
+                    "<font color=#FF382A>Day Works is ON. </font><font color=#106d14><u>Switch Standard Mode</u>.</font>"
             base_daily_mode.setText(Html.fromHtml(text))
             base_daily_mode.visibility = View.VISIBLE
         } else {
@@ -212,8 +208,7 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             }
 
             R.id.nav_delay -> {
-                startGPS()
-                val intent = Intent(this, TWaitActivity::class.java)
+                val intent = Intent(this, DelayActivity::class.java)
                 startActivity(intent)
             }
         }
@@ -222,6 +217,28 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
         return true
     }
 
+    fun stopDelay(): Long {
+        val gpslocation = gpsLocation
+
+        helper.stopDelay(gpslocation)
+
+        val meter = helper.getMeter()
+        val eWork = EWork()
+        eWork.startTime = meter.delayStartTime
+        eWork.stopTime = meter.delayStopTime
+        eWork.totalTime = meter.delayTotalTime
+        eWork.loadingGPSLocation = meter.delayStartGPSLocation
+        eWork.unloadingGPSLocation = meter.delayStopGPSLocation
+
+
+        val insertID = db.insertDelay(eWork)
+        if(insertID > 0){
+            helper.log("Delay Stopped.\nStart Time: ${helper.getTime(meter.dailyModeStartTime)}Hrs.\nTotal Time: ${helper.getFormatedTime(meter.delayTotalTime)}")
+        }else{
+            helper.log("Delay Not Stopped.")
+        }
+        return insertID
+    }
     fun doEmail() {
 
         var versionCode = BuildConfig.VERSION_CODE
@@ -232,7 +249,7 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
         val andoridOS = Build.VERSION.SDK_INT.toString()
 
         val details =
-            "App_version:$versionCode--Device:$device--Build:$build--Manufacturer:$manufacturer--Model:$model--AndroidOS:$andoridOS"
+                "App_version:$versionCode--Device:$device--Build:$build--Manufacturer:$manufacturer--Model:$model--AndroidOS:$andoridOS"
 
         val email = "errors@vsptracker.com"
         val addressees: Array<String> = arrayOf(email)
@@ -241,8 +258,8 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             putExtra(Intent.EXTRA_EMAIL, addressees)
             putExtra(Intent.EXTRA_SUBJECT, "Error Reporting About Android App")
             putExtra(
-                Intent.EXTRA_TEXT,
-                "Hi, I like to notify you about an error I faced while using App. Device Details: $details"
+                    Intent.EXTRA_TEXT,
+                    "Hi, I like to notify you about an error I faced while using App. Device Details: $details"
             )
             intent.setType("message/rfc822")
         }
@@ -262,10 +279,10 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
         try {
             helper.log("Permission Granted.")
             locationManager?.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER,
-                1000,
-                0f,
-                locationListener
+                    LocationManager.GPS_PROVIDER,
+                    1000,
+                    0f,
+                    locationListener
             );
 
         } catch (ex: SecurityException) {
@@ -277,32 +294,32 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
 
     fun requestPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED
+                != PackageManager.PERMISSION_GRANTED
         ) {
             // Permission is not granted
 
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(
-                    this,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                )
+                            this,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                    )
             ) {
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
 
                 ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    REQUEST_ACCESS_FINE_LOCATION
+                        this,
+                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                        REQUEST_ACCESS_FINE_LOCATION
                 )
 
             } else {
                 // No explanation needed, we can request the permission.
                 ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    REQUEST_ACCESS_FINE_LOCATION
+                        this,
+                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                        REQUEST_ACCESS_FINE_LOCATION
                 )
 
             }
@@ -314,10 +331,10 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             if (locationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 //                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListener);
                 locationManager!!.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER,
-                    1000,
-                    0f,
-                    locationListener
+                        LocationManager.GPS_PROVIDER,
+                        1000,
+                        0f,
+                        locationListener
                 )
             } else {
                 showGPSDisabledAlertToUser()
@@ -328,29 +345,29 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
     private fun showGPSDisabledAlertToUser() {
         val alertDialogBuilder = AlertDialog.Builder(this, R.style.ThemeOverlay_AppCompat_Dialog)
         alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
-            .setCancelable(false)
-            .setPositiveButton(
-                "Goto Settings Page\nTo Enable GPS"
-            ) { dialog, id ->
-                val callGPSSettingIntent = Intent(
-                    android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
-                )
-                startActivity(callGPSSettingIntent)
-            }
-        alertDialogBuilder.setNegativeButton("Cancel",
-            object : DialogInterface.OnClickListener {
-                override fun onClick(dialog: DialogInterface, id: Int) {
-                    dialog.cancel()
+                .setCancelable(false)
+                .setPositiveButton(
+                        "Goto Settings Page\nTo Enable GPS"
+                ) { dialog, id ->
+                    val callGPSSettingIntent = Intent(
+                            android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
+                    )
+                    startActivity(callGPSSettingIntent)
                 }
-            })
+        alertDialogBuilder.setNegativeButton("Cancel",
+                object : DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface, id: Int) {
+                        dialog.cancel()
+                    }
+                })
         var alert = alertDialogBuilder.create()
         alert.show()
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
+            requestCode: Int,
+            permissions: Array<String>,
+            grantResults: IntArray
     ) {
         when (requestCode) {
             REQUEST_ACCESS_FINE_LOCATION -> {
@@ -374,29 +391,28 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
 
     private fun showSettings() {
         val snackbar = Snackbar.make(
-            findViewById(android.R.id.content),
-            "You have previously declined GPS permission.\n" + "You must approve this permission in \"Permissions\" in the app settings on your device.",
-            Snackbar.LENGTH_LONG
+                findViewById(android.R.id.content),
+                "You have previously declined GPS permission.\n" + "You must approve this permission in \"Permissions\" in the app settings on your device.",
+                Snackbar.LENGTH_LONG
         ).setAction(
-            "Settings"
+                "Settings"
         ) {
             startActivity(
-                Intent(
-                    android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                    Uri.parse("package:" + BuildConfig.APPLICATION_ID)
-                )
+                    Intent(
+                            android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                            Uri.parse("package:" + BuildConfig.APPLICATION_ID)
+                    )
             )
         }
         val snackbarView = snackbar.view
         val textView =
-            snackbarView.findViewById(android.support.design.R.id.snackbar_text) as TextView
+                snackbarView.findViewById(android.support.design.R.id.snackbar_text) as TextView
         textView.maxLines = 5  //Or as much as you need
         snackbar.show()
     }
 
     private val locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: android.location.Location?) {
-//            helper.log("locationListener:$location")
             makeUseofLocation(location)
         }
 
@@ -432,19 +448,5 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
 //        gpsLocation.extras = location1.extras
         gpsLocation.time = location1.time
 
-
-//        helper.log("LocationBaseLat:${latitude}")
-//        helper.log("LocationBaseLongg:${longitude}")
-//        helper.log("LocationBase:${location.latitude}")
-//        helper.log("LocationBase:${location.longitude}")
-//        helper.log("LocationBase:${location.accuracy}")
-//        helper.log("LocationBase:${location.altitude}")
-//        helper.log("LocationBase:${location.bearing}")
-//        helper.log("LocationBase:${location.provider}")
-//        helper.log("LocationBase:${location.speed}")
-//        helper.log("GPSLocation:${GPSLocation}")
-//        helper.log("getMyLocationToString:${helper.getMyLocationToString(location1)}")
-//        helper.log("getStringToMyLocation:${helper.getStringToMyLocation(stringLoc)}")
-//        helper.log("LocationBase:${location}")
     }
 }

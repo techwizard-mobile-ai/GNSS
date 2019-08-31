@@ -80,29 +80,6 @@ class Location1Activity : BaseActivity(), View.OnClickListener {
                         startActivity(intent)
 
                     }
-//                    2 -> {
-//                        when(data.nextAction){
-//                            0 -> {
-//                                data.loadingLocation = locations.get(position).name
-//                                helper.setLastJourney(data)
-//
-//
-//                                val intent = Intent(this, RLoadActivity::class.java)
-////                                intent.putExtra("data", data)
-//                                startActivity(intent)
-//                            }
-//                            1 -> {
-//                                data.unloadingLocation = locations.get(position).name
-//                                data.unloadingMaterial = data.loadingMaterial
-//                                helper.setLastJourney(data)
-////                                helper.toast("Journey Saved.")
-//
-//                                val intent = Intent(this, RUnloadActivity::class.java)
-////                                intent.putExtra("data", data)
-//                                startActivity(intent)
-//                            }
-//                        }
-//                    }
                     2, 3 -> {
                         when (data.nextAction) {
                             0 -> {
@@ -111,7 +88,6 @@ class Location1Activity : BaseActivity(), View.OnClickListener {
                                 helper.setLastJourney(data)
 
                                 val intent = Intent(this, RLoadActivity::class.java)
-//                                intent.putExtra("data", data)
                                 startActivity(intent)
                             }
                             1 -> {
@@ -119,7 +95,6 @@ class Location1Activity : BaseActivity(), View.OnClickListener {
                                 helper.setLastJourney(data)
 
                                 val intent = Intent(this, RUnloadActivity::class.java)
-//                                intent.putExtra("data", data)
                                 startActivity(intent)
                             }
                             2 -> {
@@ -128,7 +103,6 @@ class Location1Activity : BaseActivity(), View.OnClickListener {
                                 helper.setLastJourney(data)
 
                                 val intent = Intent(this, RLoadActivity::class.java)
-//                                intent.putExtra("data", data)
                                 startActivity(intent)
                             }
                             3 -> {
@@ -137,7 +111,6 @@ class Location1Activity : BaseActivity(), View.OnClickListener {
                                 helper.setLastJourney(data)
 
                                 val intent = Intent(this, RUnloadActivity::class.java)
-//                                intent.putExtra("data", data)
                                 startActivity(intent)
                             }
                         }

@@ -79,9 +79,8 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         when (view!!.id) {
             R.id.ework_action -> {
+                stopDelay()
                 if (isWorking) {
-
-
                     eWork.workType = data.eWorkType
                     eWork.workActionType = 1
 
@@ -92,10 +91,10 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
 
                     if (insertID > 0) {
                         helper.toast(
-                            "$workTitle is Stopped.\n" +
-                                    "Data Saved Successfully.\n" +
-                                    "Work Duration : ${helper.getTotalTimeVSP(startTime)} (VSP Meter).\n" +
-                                    "Work Duration : ${helper.getTotalTimeMintues(startTime)} (Minutes)"
+                                "$workTitle is Stopped.\n" +
+                                        "Data Saved Successfully.\n" +
+                                        "Work Duration : ${helper.getTotalTimeVSP(startTime)} (VSP Meter).\n" +
+                                        "Work Duration : ${helper.getTotalTimeMintues(startTime)} (Minutes)"
                         )
                         ework_action_text.text = "Start"
 

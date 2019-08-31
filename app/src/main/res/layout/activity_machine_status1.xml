@@ -1,45 +1,46 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".activities.common.Location1Activity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.common.Location1Activity">
 
     <TextView
-            android:id="@+id/machine_status_title"
+        android:id="@+id/machine_status_title"
+        style="@style/activity_title"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:text="@string/activity_machine_status1_machine_status_title_text" />
+    <LinearLayout
+        android:id="@+id/machine_start_layout"
+        style="@style/default_linearlayout"
+        android:layout_below="@id/machine_status_title"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/machine_stopped_reason"
             style="@style/activity_title"
             android:layout_alignParentTop="true"
             android:layout_centerInParent="true"
-            android:text="@string/activity_machine_status1_machine_status_title_text" />
-
-    <LinearLayout
-            android:id="@+id/machine_start_layout"
-            style="@style/default_linearlayout"
-            android:layout_below="@id/machine_status_title"
-            android:visibility="gone">
-
-        <TextView
-                android:id="@+id/machine_stopped_reason"
-                style="@style/activity_title"
-                android:layout_alignParentTop="true"
-                android:layout_centerInParent="true"
-                android:text="@string/activity_machine_status1_machine_stopped_reason_text" />
-
+            android:text="@string/activity_machine_status1_machine_stopped_reason_text" />
         <Button
-                android:id="@+id/machine_status_start"
-                style="@style/next_button"
-                android:layout_marginTop="@dimen/_50sdp"
-                android:text="@string/activity_machine_status1_machine_status_start_text" />
+            android:id="@+id/machine_status_start"
+            style="@style/next_button"
+            android:layout_marginTop="@dimen/_50sdp"
+            android:text="@string/activity_machine_status1_machine_status_start_text" />
+
+
     </LinearLayout>
 
+
+
     <android.support.v7.widget.RecyclerView
-            android:id="@+id/machine_status_rv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/machine_status_title"
-            android:layout_gravity="center_horizontal"
-            android:foregroundGravity="center_horizontal" />
+        android:id="@+id/machine_status_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/machine_status_title"
+        android:layout_gravity="center_horizontal"
+        android:foregroundGravity="center_horizontal" />
     <!--
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
               android:id="@+id/machinestatus_gridview"

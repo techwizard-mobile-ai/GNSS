@@ -15,10 +15,10 @@ import kotlinx.android.synthetic.main.list_row_et_history.view.*
 
 
 class ETHistoryAdapter(
-    val context: Activity,
-    val dataList: MutableList<EWork>,
-    val FRAGMENT_TAG: String,
-    val workType: Int
+        val context: Activity,
+        val dataList: MutableList<EWork>,
+        val FRAGMENT_TAG: String,
+        val workType: Int
 ) : RecyclerView.Adapter<ETHistoryAdapter
 .ViewHolder>() {
 
@@ -28,7 +28,7 @@ class ETHistoryAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ETHistoryAdapter.ViewHolder {
         val v =
-            LayoutInflater.from(parent.context).inflate(R.layout.list_row_et_history, parent, false)
+                LayoutInflater.from(parent.context).inflate(R.layout.list_row_et_history, parent, false)
         helper = Helper(TAG, context)
         db = DatabaseAdapter(context)
         return ViewHolder(v)
@@ -46,7 +46,7 @@ class ETHistoryAdapter(
             holder.itemView.eth_action.setText(":  Loading")
             holder.itemView.eth_totalloads_layout.visibility = View.VISIBLE
             holder.itemView.eth_totalloads.text =
-                ":  " + db.getEWorksOffLoads(eWork.ID).size.toString()
+                    ":  " + db.getEWorksOffLoads(eWork.ID).size.toString()
         }
 
         holder.itemView.eth_start_time.setText(":  " + helper.getTime(eWork.startTime) + " Hrs")
@@ -57,13 +57,13 @@ class ETHistoryAdapter(
 
 
         holder.itemView.lhr_gps_loading.text =
-            ": ${helper.getRoundedDecimal(eWork.loadingGPSLocation.latitude)} / ${helper.getRoundedDecimal(
-                eWork.loadingGPSLocation.longitude
-            )} "
+                ": ${helper.getRoundedDecimal(eWork.loadingGPSLocation.latitude)} / ${helper.getRoundedDecimal(
+                        eWork.loadingGPSLocation.longitude
+                )} "
         holder.itemView.lhr_gps_unloading.text =
-            ": ${helper.getRoundedDecimal(eWork.unloadingGPSLocation.latitude)} / ${helper.getRoundedDecimal(
-                eWork.unloadingGPSLocation.longitude
-            )} "
+                ": ${helper.getRoundedDecimal(eWork.unloadingGPSLocation.latitude)} / ${helper.getRoundedDecimal(
+                        eWork.unloadingGPSLocation.longitude
+                )} "
 
         holder.itemView.lhr_gps_loading_layout.setOnClickListener {
             helper.showOnMap(eWork.loadingGPSLocation, "GPS Location")
@@ -76,7 +76,7 @@ class ETHistoryAdapter(
             if (eWork.workActionType == 2) {
                 val activity = holder.itemView.getContext() as AppCompatActivity
                 val eOffloadingLoadsFragment = EOffloadingLoadsFragment.newInstance(
-                    context, FRAGMENT_TAG, eWork
+                        context, FRAGMENT_TAG, eWork
                 )
                 val transaction = activity.supportFragmentManager.beginTransaction()
                 transaction.replace(R.id.fragment_container, eOffloadingLoadsFragment, FRAGMENT_TAG)

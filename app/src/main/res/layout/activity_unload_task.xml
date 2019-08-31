@@ -1,101 +1,90 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/_10sdp"
-        android:layout_marginEnd="@dimen/_10sdp"
-        android:orientation="vertical"
-        tools:context=".activities.common.UnloadTaskActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginStart="@dimen/_10sdp"
+    android:layout_marginEnd="@dimen/_10sdp"
+    android:orientation="vertical"
+    tools:context=".activities.common.UnloadTaskActivity">
 
     <TextView
-            style="@style/activity_title"
-            android:layout_marginBottom="@dimen/_5sdp"
-            android:text="Select Task" />
-
+        style="@style/activity_title"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:text="Select Task" />
     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight=".4"
-            android:orientation="horizontal">
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".4"
+        android:orientation="horizontal">
 
         <LinearLayout
-                android:id="@+id/ultask_stockpile"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.4"
-                android:orientation="vertical">
-
-            <TextView
-                    style="@style/ultask_tv"
-                    android:text="Stockpile" />
-
-            <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/task_stockpile" />
-        </LinearLayout>
-
-        <LinearLayout
-                android:id="@+id/ultask_fill"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10sdp"
-                android:layout_weight="0.4"
-                android:orientation="vertical">
-
-            <TextView
-                    style="@style/ultask_tv"
-                    android:text="Fill" />
-
-            <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/task_fill" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:layout_marginBottom="@dimen/_10sdp"
+            android:id="@+id/ultask_stockpile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="0.4"
-            android:orientation="horizontal">
-
-        <LinearLayout
-                android:id="@+id/ultask_respread"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.4"
-                android:orientation="vertical">
-
-            <TextView
-                    style="@style/ultask_tv"
-                    android:text="Respread" />
+            android:orientation="vertical">
 
             <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/task_respread" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/task_stockpile" />
+
         </LinearLayout>
 
         <LinearLayout
-                android:id="@+id/ultask_off_site"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10sdp"
-                android:layout_weight="0.4"
-                android:orientation="vertical">
-
-            <TextView
-                    style="@style/ultask_tv"
-                    android:text="Off Site" />
+            android:id="@+id/ultask_fill"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_weight="0.4"
+            android:orientation="vertical">
 
             <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/task_off_site" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/task_fill" />
+
         </LinearLayout>
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:layout_weight="0.4"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/ultask_respread"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.4"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/task_respread" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ultask_off_site"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_weight="0.4"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/task_off_site" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+
 </LinearLayout>

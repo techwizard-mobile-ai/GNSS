@@ -11,8 +11,8 @@ import com.lysaan.malik.vsptracker.classes.Data
 import kotlinx.android.synthetic.main.list_row_eload_history.view.*
 
 class ELoadingHistoryAdapter(
-    val context: Activity,
-    val dataList: MutableList<Data>
+        val context: Activity,
+        val dataList: MutableList<Data>
 ) : RecyclerView.Adapter<ELoadingHistoryAdapter
 .ViewHolder>() {
 
@@ -20,13 +20,13 @@ class ELoadingHistoryAdapter(
     private lateinit var helper: Helper
 
     override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
+            parent: ViewGroup,
+            viewType: Int
     ): ELoadingHistoryAdapter.ViewHolder {
 
 
         val v = LayoutInflater.from(parent.context)
-            .inflate(R.layout.list_row_eload_history, parent, false)
+                .inflate(R.layout.list_row_eload_history, parent, false)
         helper = Helper(TAG, context)
         return ViewHolder(v)
     }
@@ -86,9 +86,9 @@ class ELoadingHistoryAdapter(
         }
 
         holder.itemView.lhr_gps_loading.text =
-            ": ${helper.getRoundedDecimal(myData.loadingGPSLocation.latitude)} / ${helper.getRoundedDecimal(
-                myData.loadingGPSLocation.longitude
-            )} "
+                ": ${helper.getRoundedDecimal(myData.loadingGPSLocation.latitude)} / ${helper.getRoundedDecimal(
+                        myData.loadingGPSLocation.longitude
+                )} "
 
         holder.itemView.lhr_workmode.text = ": ${myData.workMode}"
         holder.itemView.lhr_gps_loading_layout.setOnClickListener {

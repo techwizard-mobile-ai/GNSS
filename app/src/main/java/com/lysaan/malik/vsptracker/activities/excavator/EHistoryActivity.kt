@@ -20,11 +20,11 @@ import com.lysaan.malik.vsptracker.fragments.excavator.ETrenchingHistoryFragment
 import kotlinx.android.synthetic.main.activity_ehistory.*
 
 class EHistoryActivity : BaseActivity(), View.OnClickListener,
-    ELoadingHistoryFragment.OnFragmentInteractionListener,
-    ETrenchingHistoryFragment.OnFragmentInteractionListener,
-    EDiggingHistoryFragment.OnFragmentInteractionListener,
-    EOffloadingLoadsFragment.OnFragmentInteractionListener,
-    DelayHistoryFragment.OnFragmentInteractionListener {
+        ELoadingHistoryFragment.OnFragmentInteractionListener,
+        ETrenchingHistoryFragment.OnFragmentInteractionListener,
+        EDiggingHistoryFragment.OnFragmentInteractionListener,
+        EOffloadingLoadsFragment.OnFragmentInteractionListener,
+        DelayHistoryFragment.OnFragmentInteractionListener {
 
     override fun onFragmentInteraction(uri: Uri) {}
 
@@ -86,38 +86,38 @@ class EHistoryActivity : BaseActivity(), View.OnClickListener,
     }
 
     private val mOnNavigationItemSelectedListener =
-        BottomNavigationView.OnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.navf_loading -> {
-                    val eLoadingHistoryFragment = newInstance(this@EHistoryActivity)
-                    openFragment(eLoadingHistoryFragment, E_LOADHISTORY)
-                    return@OnNavigationItemSelectedListener true
+            BottomNavigationView.OnNavigationItemSelectedListener { item ->
+                when (item.itemId) {
+                    R.id.navf_loading -> {
+                        val eLoadingHistoryFragment = newInstance(this@EHistoryActivity)
+                        openFragment(eLoadingHistoryFragment, E_LOADHISTORY)
+                        return@OnNavigationItemSelectedListener true
+                    }
+                    R.id.navf_digging -> {
+                        val eDiggingHistoryFragment = EDiggingHistoryFragment.newInstance(
+                                this@EHistoryActivity,
+                                E_DIGGINGHISTORY
+                        )
+                        openFragment(eDiggingHistoryFragment, E_DIGGINGHISTORY)
+                        return@OnNavigationItemSelectedListener true
+                    }
+                    R.id.navf_trenching -> {
+                        val eTrenchingHistoryFragment =
+                                ETrenchingHistoryFragment.newInstance(this, E_TRENCHINGHISTORY)
+                        openFragment(eTrenchingHistoryFragment, E_TRENCHINGHISTORY)
+                        return@OnNavigationItemSelectedListener true
+                    }
+                    R.id.navf_delay -> {
+                        val delayHistoryFragment = DelayHistoryFragment.newInstance(this, DELAY_HISTORY)
+                        openFragment(delayHistoryFragment, DELAY_HISTORY)
+                        return@OnNavigationItemSelectedListener true
+                    }
+                    R.id.navf_finish -> {
+                        finish()
+                    }
                 }
-                R.id.navf_digging -> {
-                    val eDiggingHistoryFragment = EDiggingHistoryFragment.newInstance(
-                        this@EHistoryActivity,
-                        E_DIGGINGHISTORY
-                    )
-                    openFragment(eDiggingHistoryFragment, E_DIGGINGHISTORY)
-                    return@OnNavigationItemSelectedListener true
-                }
-                R.id.navf_trenching -> {
-                    val eTrenchingHistoryFragment =
-                        ETrenchingHistoryFragment.newInstance(this, E_TRENCHINGHISTORY)
-                    openFragment(eTrenchingHistoryFragment, E_TRENCHINGHISTORY)
-                    return@OnNavigationItemSelectedListener true
-                }
-                R.id.navf_delay -> {
-                    val delayHistoryFragment = DelayHistoryFragment.newInstance(this, DELAY_HISTORY)
-                    openFragment(delayHistoryFragment, DELAY_HISTORY)
-                    return@OnNavigationItemSelectedListener true
-                }
-                R.id.navf_finish -> {
-                    finish()
-                }
+                false
             }
-            false
-        }
 
     override fun onClick(view: View?) {
         when (view!!.id) {

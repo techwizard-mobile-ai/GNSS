@@ -35,8 +35,8 @@ class ELoadingHistoryFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             helper = Helper(
-                TAG,
-                myContext
+                    TAG,
+                    myContext
             )
             db = DatabaseAdapter(myContext)
             loadingHistory = db.getELoadHistroy()
@@ -44,8 +44,8 @@ class ELoadingHistoryFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
 
         root = inflater.inflate(R.layout.fragment_eloading_history, container, false)
@@ -88,12 +88,12 @@ class ELoadingHistoryFragment : Fragment() {
         private lateinit var myContext: Activity
         @JvmStatic
         fun newInstance(
-            eHistoryActivity: Activity
+                eHistoryActivity: Activity
         ) =
-            ELoadingHistoryFragment().apply {
-                arguments = Bundle().apply {
-                    myContext = eHistoryActivity
+                ELoadingHistoryFragment().apply {
+                    arguments = Bundle().apply {
+                        myContext = eHistoryActivity
+                    }
                 }
-            }
     }
 }

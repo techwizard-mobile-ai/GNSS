@@ -1,41 +1,42 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".activities.scrapper.SUnloadActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.notused.SUnloadActivity">
 
     <TextView
-            style="@style/activity_title"
-            android:text="Unload Scrapper" />
+        style="@style/activity_title"
+        android:text="Unload Scrapper" />
 
     <LinearLayout style="@style/default_linearlayout">
 
         <TextView
-                style="@style/home_tv"
-                android:text="Material Type" />
+            style="@style/home_tv"
+            android:text="@string/material_type" />
+        <TextView
+            android:id="@+id/sunload_material"
+            style="@style/tv_background"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="0dp"
+            android:text="@string/activity_sunload_sunload_material_text" />
 
         <TextView
-                android:id="@+id/sunload_material"
-                style="@style/tv_background"
-                android:layout_marginStart="0dp"
-                android:layout_marginEnd="0dp"
-                android:text="@string/activity_sunload_sunload_material_text" />
-
-        <TextView
-                style="@style/home_tv"
-                android:text="Location" />
+            style="@style/home_tv"
+            android:text="@string/location" />
 
         <android.support.v7.widget.AppCompatSpinner
-                android:id="@+id/sunload_location_spinner"
-                style="@style/home_spinner" />
-
+            android:id="@+id/sunload_location_spinner"
+            style="@style/home_spinner" />
 
         <Button
-                android:id="@+id/sunload_next"
-                style="@style/next_button"
-                android:layout_marginTop="@dimen/_50sdp"
-                android:text="@string/unload" />
+            android:id="@+id/sunload_next"
+            style="@style/next_button"
+            android:layout_marginTop="@dimen/_50sdp"
+            android:text="@string/unload" />
+
     </LinearLayout>
+
+
 </LinearLayout>

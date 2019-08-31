@@ -39,8 +39,8 @@ class LoadingHistoryFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         root = inflater.inflate(R.layout.fragment_loading_history, container, false)
         return root
@@ -81,10 +81,10 @@ class LoadingHistoryFragment : Fragment() {
         private lateinit var myContext: Activity
         @JvmStatic
         fun newInstance(activity: Activity) =
-            LoadingHistoryFragment().apply {
-                arguments = Bundle().apply {
-                    myContext = activity
+                LoadingHistoryFragment().apply {
+                    arguments = Bundle().apply {
+                        myContext = activity
+                    }
                 }
-            }
     }
 }

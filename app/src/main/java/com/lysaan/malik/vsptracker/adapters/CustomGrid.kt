@@ -13,28 +13,24 @@ import com.lysaan.malik.vsptracker.classes.Material
 
 //class CustomGrid(private val mContext: Context, private val web: Array<String>, private val Imageid: IntArray) :
 class CustomGrid(private val mContext: Context, private val arrayList: ArrayList<Material>) :
-    BaseAdapter() {
+        BaseAdapter() {
 
     override fun getCount(): Int {
-        // TODO Auto-generated method stub
         return arrayList.size
     }
 
     override fun getItem(position: Int): Any? {
-        // TODO Auto-generated method stub
         return null
     }
 
     override fun getItemId(position: Int): Long {
-        // TODO Auto-generated method stub
         return 0
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        // TODO Auto-generated method stub
         var grid: View
         val inflater = mContext
-            .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
         if (convertView == null) {
 

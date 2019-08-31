@@ -12,8 +12,8 @@ import kotlinx.android.synthetic.main.list_row_delay_history.view.*
 
 
 class DelayHistoryAdapter(
-    val context: Activity,
-    val dataList: MutableList<EWork>
+        val context: Activity,
+        val dataList: MutableList<EWork>
 ) : RecyclerView.Adapter<DelayHistoryAdapter
 .ViewHolder>() {
 
@@ -21,11 +21,11 @@ class DelayHistoryAdapter(
     lateinit var helper: Helper
 
     override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
+            parent: ViewGroup,
+            viewType: Int
     ): DelayHistoryAdapter.ViewHolder {
         val v = LayoutInflater.from(parent.context)
-            .inflate(R.layout.list_row_delay_history, parent, false)
+                .inflate(R.layout.list_row_delay_history, parent, false)
         helper = Helper(TAG, context)
         return ViewHolder(v)
     }
@@ -55,13 +55,13 @@ class DelayHistoryAdapter(
         holder.itemView.eth_mode.setText(":  ${eWork.workMode}")
 
         holder.itemView.lhr_gps_loading.text =
-            ": ${helper.getRoundedDecimal(eWork.loadingGPSLocation.latitude)} / ${helper.getRoundedDecimal(
-                eWork.loadingGPSLocation.longitude
-            )} "
+                ": ${helper.getRoundedDecimal(eWork.loadingGPSLocation.latitude)} / ${helper.getRoundedDecimal(
+                        eWork.loadingGPSLocation.longitude
+                )} "
         holder.itemView.lhr_gps_unloading.text =
-            ": ${helper.getRoundedDecimal(eWork.unloadingGPSLocation.latitude)} / ${helper.getRoundedDecimal(
-                eWork.unloadingGPSLocation.longitude
-            )} "
+                ": ${helper.getRoundedDecimal(eWork.unloadingGPSLocation.latitude)} / ${helper.getRoundedDecimal(
+                        eWork.unloadingGPSLocation.longitude
+                )} "
 
         holder.itemView.lhr_gps_loading_layout.setOnClickListener {
             helper.showOnMap(eWork.loadingGPSLocation, "Delay Start Location")

@@ -1,23 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        package="com.lysaan.malik.vsptracker">
+    package="com.lysaan.malik.vsptracker">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
-    <!--    android:appComponentFactory="whateverString"-->
-    <!--    tools:replace="android:appComponentFactory"-->
     <application
-            android:allowBackup="true"
-            android:icon="@mipmap/ic_launcher"
-            android:label="@string/app_name"
-            android:roundIcon="@mipmap/ic_launcher_round"
-            android:screenOrientation="landscape"
-            android:supportsRtl="true"
-            android:theme="@style/AppTheme.NoActionBar">
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:screenOrientation="landscape"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme.NoActionBar">
         <activity android:name=".activities.TabHistoryActivity"></activity>
-        <activity android:name=".activities.truck.TWaitActivity" />
+        <activity android:name=".activities.DelayActivity" />
         <activity android:name=".activities.DayWorksActivity" />
         <activity android:name=".activities.excavator.EOffLoadingActivity" />
         <activity android:name=".activities.excavator.ESelectWorkActivity" />
@@ -59,11 +53,11 @@
         </activity>
         <activity android:name=".activities.scrapper.SUnloadAfterActivity" />
         <activity android:name=".activities.notused.MachineStatusActivity" />
-        <activity android:name=".activities.scrapper.SUnloadActivity" />
-        <activity android:name=".activities.scrapper.SLoadActivity" />
+        <activity android:name=".activities.notused.SUnloadActivity" />
+        <activity android:name=".activities.notused.SLoadActivity" />
         <activity android:name=".activities.scrapper.SHomeActivity" />
         <activity android:name=".activities.MachineTypeActivity" />
-        <activity android:name=".activities.excavator.LoadUnloadActivity" />
+        <activity android:name=".activities.notused.LoadUnloadActivity" />
         <activity android:name=".activities.notused.FinishActivity" />
         <activity android:name=".activities.excavator.ELoadActivity">
 
@@ -81,9 +75,15 @@
         </activity>
         <activity android:name=".activities.notused.EHomeOldActivity" />
         <activity
-                android:name=".BaseActivity"
-                android:label="@string/app_name"
-                android:theme="@style/AppTheme.NoActionBar" />
+            android:name=".BaseActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!--    android:appComponentFactory="whateverString"-->
+    <!--    tools:replace="android:appComponentFactory"-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 </manifest>

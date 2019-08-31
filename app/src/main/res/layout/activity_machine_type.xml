@@ -1,54 +1,56 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/machine_type_main_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        tools:context=".activities.MachineTypeActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/machine_type_main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".activities.MachineTypeActivity">
+
+
 
     <LinearLayout
-            style="@style/default_linearlayout"
-            android:layout_marginTop="@dimen/_10sdp">
-
-
-        <TextView
-                style="@style/activity_title"
-                android:text="Select Machine" />
+        style="@style/default_linearlayout"
+        android:layout_marginTop="@dimen/_10sdp">
 
         <TextView
-                style="@style/home_tv"
-                android:text="@string/machine_type" />
+            style="@style/activity_title"
+            android:text="@string/select_machine" />
+        <TextView
+            style="@style/home_tv"
+            android:text="@string/machine_type" />
 
         <android.support.v7.widget.AppCompatSpinner
-                android:id="@+id/machine_type"
-                style="@style/home_spinner" />
+            android:id="@+id/machine_type"
+            style="@style/home_spinner" />
 
         <TextView
-                style="@style/home_tv"
-                android:text="Machine Location" />
+            style="@style/home_tv"
+            android:text="@string/machine_location" />
 
         <android.support.v7.widget.AppCompatSpinner
-                android:id="@+id/machine_location"
-                style="@style/home_spinner" />
+        android:id="@+id/machine_location"
+        style="@style/home_spinner" />
+
 
         <TextView
-                style="@style/home_tv"
-                android:text="@string/machine_number" />
+            style="@style/home_tv"
+            android:text="@string/machine_number" />
 
         <EditText
-                android:id="@+id/machine_number"
-                style="@style/et_background"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="@dimen/_1sdp"
-                android:layout_marginEnd="0dp"
-                android:hint="@string/machine_number"
-                android:textColor="@color/black" />
+            android:id="@+id/machine_number"
+            style="@style/et_background"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="@dimen/_1sdp"
+            android:layout_marginEnd="0dp"
+            android:hint="@string/machine_number"
+            android:textColor="@color/black" />
+
 
         <Button
-                android:id="@+id/machine_save"
-                style="@style/next_button"
-                android:layout_marginTop="@dimen/_50sdp"
-                android:text="@string/save" />
+            android:id="@+id/machine_save"
+            style="@style/next_button"
+            android:layout_marginTop="@dimen/_50sdp"
+            android:text="@string/save" />
     </LinearLayout>
 </LinearLayout>

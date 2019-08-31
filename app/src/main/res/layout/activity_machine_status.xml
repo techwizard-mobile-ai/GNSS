@@ -1,64 +1,64 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".activities.notused.MachineStatusActivity">
-
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.notused.MachineStatusActivity">
 
     <TextView
-            style="@style/activity_title"
-            android:text="Machine Status" />
+        style="@style/activity_title"
+        android:text="Machine Status" />
 
     <LinearLayout style="@style/default_linearlayout">
 
         <LinearLayout
-                android:id="@+id/machine_start_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-            <TextView
-                    style="@style/home_tv"
-                    android:text="Machine Stopped Reason" />
-
-            <TextView
-                    android:id="@+id/mstatus_stopped_reason"
-                    style="@style/tv_background"
-                    android:text="@string/activity_machine_status_mstatus_stopped_reason_text" />
+            android:id="@+id/machine_start_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <Button
-                    android:id="@+id/mstatus_start"
-                    style="@style/next_button"
-                    android:layout_marginTop="@dimen/_50sdp"
-                    android:text="@string/activity_machine_status_mstatus_start_text" />
+                android:id="@+id/mstatus_start"
+                style="@style/next_button"
+                android:layout_marginTop="@dimen/_50sdp"
+                android:text="@string/activity_machine_status_mstatus_start_text" />
+
+            <TextView
+                android:id="@+id/mstatus_stopped_reason"
+                style="@style/tv_background"
+                android:text="@string/activity_machine_status_mstatus_stopped_reason_text" />
+
+            <TextView
+                style="@style/home_tv"
+                android:text="Machine Stopped Reason" />
         </LinearLayout>
 
         <LinearLayout
-                android:id="@+id/machine_stop_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+            android:id="@+id/machine_stop_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
 
             <TextView
-                    style="@style/home_tv"
-                    android:text="Machine Stop Reason" />
+                style="@style/home_tv"
+                android:text="Machine Stop Reason" />
 
             <android.support.v7.widget.AppCompatSpinner
-                    android:id="@+id/mstop_reason_spinner"
-                    style="@style/home_spinner" />
-
+                android:id="@+id/mstop_reason_spinner"
+                style="@style/home_spinner" />
             <Button
-                    android:id="@+id/mstatus_stop"
-                    style="@style/next_button"
-                    android:layout_marginTop="@dimen/_50sdp"
-                    android:text="@string/activity_machine_status_mstatus_stop_text" />
-
+                android:id="@+id/mstatus_stop"
+                style="@style/next_button"
+                android:layout_marginTop="@dimen/_50sdp"
+                android:text="@string/activity_machine_status_mstatus_stop_text" />
         </LinearLayout>
 
 
     </LinearLayout>
+
 
 </LinearLayout>

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    tools:context=".activities.DayWorksActivity">
+    tools:context=".activities.DelayActivity">
 
     <Chronometer
         android:id="@+id/day_works_chronometer"
@@ -15,7 +15,7 @@
         android:layout_above="@id/day_works_action"
         android:layout_below="@id/day_work_title"
         android:layout_centerHorizontal="true"
-        android:text="@string/activity_day_works_day_works_chronometer_text"
+        android:text="@string/activity_twait_day_works_chronometer_text"
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/_20sdp"
         android:textStyle="bold" />
@@ -34,7 +34,7 @@
             android:layout_gravity="center"
             android:elevation="16dp"
             android:gravity="center"
-            android:text="@string/activity_day_works_day_works_action_text_text"
+            android:text="@string/activity_twait_day_works_action_text_text"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@android:color/white" />
 
@@ -50,5 +50,5 @@
         android:id="@+id/day_work_title"
         style="@style/activity_title"
         android:layout_centerHorizontal="true"
-        android:text="@string/activity_day_works_day_work_title_text" />
+        android:text="@string/activity_twait_day_work_title_text" />
 </RelativeLayout>

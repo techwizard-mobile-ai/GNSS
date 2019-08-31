@@ -82,6 +82,7 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
         when (view!!.id) {
 
             R.id.ework_offload_action -> {
+                stopDelay()
                 if (isWorking) {
 
                     val eWork = EWork()
@@ -95,10 +96,10 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
 //
                     if (updatedID > 0) {
                         helper.toast(
-                            "$workTitle is Stopped.\n" +
-                                    "Data Saved Successfully.\n" +
-                                    "Work Duration : ${helper.getTotalTimeVSP(startTime)} (VSP Meter).\n" +
-                                    "Work Duration : ${helper.getTotalTimeMintues(startTime)} (Minutes)"
+                                "$workTitle is Stopped.\n" +
+                                        "Data Saved Successfully.\n" +
+                                        "Work Duration : ${helper.getTotalTimeVSP(startTime)} (VSP Meter).\n" +
+                                        "Work Duration : ${helper.getTotalTimeMintues(startTime)} (Minutes)"
                         )
                         ework_action_text.text = "Start"
                         chronometer1.stop()
@@ -139,9 +140,11 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                     if (eWorkID < 1) {
                         helper.toast("Please Restart Timer.")
                     } else {
+                        stopDelay()
                         val eWork = EWork()
                         eWork.eWorkID = eWorkID
                         eWork.loadingGPSLocation = gpsLocation
+                        stopDelay()
                         val insertedID = db.insertEWorkOffLoad(eWork)
                         if (insertedID > 0) {
                             helper.toast("Load Saved Successfully.")
@@ -151,7 +154,7 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                                 eoff_rv.visibility = View.VISIBLE
                                 val aa = EOffLoadingAdapter(this@EOffLoadingActivity, offLoads)
                                 val layoutManager1 =
-                                    LinearLayoutManager(this, LinearLayout.VERTICAL, false)
+                                        LinearLayoutManager(this, LinearLayout.VERTICAL, false)
                                 eoff_rv.layoutManager = layoutManager1
                                 eoff_rv!!.setAdapter(aa)
                             } else {

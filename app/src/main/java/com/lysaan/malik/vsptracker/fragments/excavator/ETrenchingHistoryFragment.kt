@@ -34,8 +34,8 @@ class ETrenchingHistoryFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             helper = Helper(
-                TAG,
-                myContext
+                    TAG,
+                    myContext
             )
             db = DatabaseAdapter(myContext)
             trenchingHistory = db.getEWorks(2)
@@ -45,8 +45,8 @@ class ETrenchingHistoryFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
 
         root = inflater.inflate(R.layout.fragment_etrenching_history, container, false)
@@ -59,8 +59,8 @@ class ETrenchingHistoryFragment : Fragment() {
 
         val workType = 2
         val mAdapter = ETHistoryAdapter(
-            myContext, trenchingHistory,
-            FRAGMENT_TAG, workType
+                myContext, trenchingHistory,
+                FRAGMENT_TAG, workType
         )
         root!!.eth_rv.layoutManager = LinearLayoutManager(myContext, LinearLayout.VERTICAL, false)
         root!!.eth_rv!!.setAdapter(mAdapter)
@@ -96,14 +96,14 @@ class ETrenchingHistoryFragment : Fragment() {
 
         @JvmStatic
         fun newInstance(
-            eHistoryActivity: EHistoryActivity,
-            FRAGMENT_TG: String
+                eHistoryActivity: EHistoryActivity,
+                FRAGMENT_TG: String
         ) =
-            ETrenchingHistoryFragment().apply {
-                arguments = Bundle().apply {
-                    myContext = eHistoryActivity
-                    FRAGMENT_TAG = FRAGMENT_TG
+                ETrenchingHistoryFragment().apply {
+                    arguments = Bundle().apply {
+                        myContext = eHistoryActivity
+                        FRAGMENT_TAG = FRAGMENT_TG
+                    }
                 }
-            }
     }
 }

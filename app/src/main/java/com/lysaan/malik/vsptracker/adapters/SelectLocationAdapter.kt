@@ -11,7 +11,7 @@ import com.lysaan.malik.vsptracker.classes.Location
 import kotlinx.android.synthetic.main.list_row_select_location.view.*
 
 class SelectLocationAdapter(context: Activity, internal var locationList: List<Location>) :
-    BaseAdapter() {
+        BaseAdapter() {
 
     internal var context: Context
     internal var flater: LayoutInflater

@@ -86,8 +86,8 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
         machine_type.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
             override fun onItemSelected(
-                arg0: AdapterView<*>, arg1: View,
-                position: Int, arg3: Long
+                    arg0: AdapterView<*>, arg1: View,
+                    position: Int, arg3: Long
             ) {
                 selectedMachineType = machineTypes.get(position)
                 if (machineTypes.get(position).id != 0) {
@@ -113,8 +113,8 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
         machine_location.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
             override fun onItemSelected(
-                arg0: AdapterView<*>, arg1: View,
-                position: Int, arg3: Long
+                    arg0: AdapterView<*>, arg1: View,
+                    position: Int, arg3: Long
             ) {
                 selectedMachineLocation = machineTypes.get(position)
                 if (machineTypes.get(position).id != 0) {

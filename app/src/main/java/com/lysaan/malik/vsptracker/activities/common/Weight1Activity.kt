@@ -72,41 +72,82 @@ class Weight1Activity : BaseActivity(), View.OnClickListener {
                     intent.putExtra("data", data)
                     setResult(Activity.RESULT_OK, intent)
                     finish()
-                } else if (data.isForBackLoad) {
-                    val sload_weight = sload_weight.text.toString()
-                    if (!sload_weight.isNullOrBlank())
-                        data.backUnloadedWeight = sload_weight.toDouble()
-                    helper.log("$data")
-
-                    val data1 = helper.getLastJourney()
-                    data1.backLoadingMachine = data.backLoadingMachine
-                    data1.backLoadingMaterial = data.backLoadingMaterial
-                    data1.backLoadingLocation = data.backLoadingLocation
-                    data1.backUnloadedWeight = data.backUnloadedWeight
-                    helper.setLastJourney(data1)
-
-                    val intent = Intent(this, RLoadActivity::class.java)
-                    intent.putExtra("data", data)
-                    startActivity(intent)
                 } else {
-
                     val sload_weight = sload_weight.text.toString()
-                    if (!sload_weight.isNullOrBlank())
-                        data.unloadingWeight = sload_weight.toDouble()
+                    if (!sload_weight.isNullOrBlank()) {
+                        data.backUnloadedWeight = sload_weight.toDouble()
+                    }
                     helper.log("$data")
 
-                    val data1 = helper.getLastJourney()
-                    data1.loadingMachine = data.loadingMachine
-                    data1.loadingMaterial = data.loadingMaterial
-                    data1.loadingLocation = data.loadingLocation
-                    data1.unloadingWeight = data.unloadingWeight
-                    helper.setLastJourney(data1)
+                    when (data.nextAction) {
+                        0 -> {
+//                            val sload_weight = sload_weight.text.toString()
+//                            if (!sload_weight.isNullOrBlank())
+//                                data.unloadingWeight = sload_weight.toDouble()
+//                            helper.log("$data")
 
-                    val intent = Intent(this, RLoadActivity::class.java)
-                    intent.putExtra("data", data)
-                    startActivity(intent)
+                            val data1 = helper.getLastJourney()
+                            data1.loadingMachine = data.loadingMachine
+                            data1.loadingMaterial = data.loadingMaterial
+                            data1.loadingLocation = data.loadingLocation
+                            data1.unloadingWeight = data.unloadingWeight
+                            helper.setLastJourney(data1)
 
+                            val intent = Intent(this, RLoadActivity::class.java)
+                            intent.putExtra("data", data)
+                            startActivity(intent)
+                        }
+                        2 -> {
+
+
+                            val data1 = helper.getLastJourney()
+                            data1.backLoadingMachine = data.backLoadingMachine
+                            data1.backLoadingMaterial = data.backLoadingMaterial
+                            data1.backLoadingLocation = data.backLoadingLocation
+                            data1.backUnloadedWeight = data.backUnloadedWeight
+                            helper.setLastJourney(data1)
+
+                            val intent = Intent(this, RLoadActivity::class.java)
+                            intent.putExtra("data", data)
+                            startActivity(intent)
+                        }
+                    }
                 }
+//                if (data.isForBackLoad) {
+//                    val sload_weight = sload_weight.text.toString()
+//                    if (!sload_weight.isNullOrBlank())
+//                        data.backUnloadedWeight = sload_weight.toDouble()
+//                    helper.log("$data")
+//
+//                    val data1 = helper.getLastJourney()
+//                    data1.backLoadingMachine = data.backLoadingMachine
+//                    data1.backLoadingMaterial = data.backLoadingMaterial
+//                    data1.backLoadingLocation = data.backLoadingLocation
+//                    data1.backUnloadedWeight = data.backUnloadedWeight
+//                    helper.setLastJourney(data1)
+//
+//                    val intent = Intent(this, RLoadActivity::class.java)
+//                    intent.putExtra("data", data)
+//                    startActivity(intent)
+//                } else {
+//
+//                    val sload_weight = sload_weight.text.toString()
+//                    if (!sload_weight.isNullOrBlank())
+//                        data.unloadingWeight = sload_weight.toDouble()
+//                    helper.log("$data")
+//
+//                    val data1 = helper.getLastJourney()
+//                    data1.loadingMachine = data.loadingMachine
+//                    data1.loadingMaterial = data.loadingMaterial
+//                    data1.loadingLocation = data.loadingLocation
+//                    data1.unloadingWeight = data.unloadingWeight
+//                    helper.setLastJourney(data1)
+//
+//                    val intent = Intent(this, RLoadActivity::class.java)
+//                    intent.putExtra("data", data)
+//                    startActivity(intent)
+//
+//                }
 
             }
         }

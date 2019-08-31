@@ -1,57 +1,60 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".activities.notused.TUnloadActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.notused.TUnloadActivity">
 
     <TextView
-            style="@style/activity_title"
-            android:text="Unload Truck" />
+        style="@style/activity_title"
+        android:text="@string/unload_truck" />
 
     <LinearLayout style="@style/default_linearlayout">
 
         <TextView
-                style="@style/home_tv"
-                android:text="Material Type" />
+            style="@style/home_tv"
+            android:text="Material Type" />
+        <TextView
+            android:id="@+id/tunload_material"
+            style="@style/tv_background"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="0dp"
+            android:text="@string/activity_tunload_tunload_material_text" />
 
         <TextView
-                android:id="@+id/tunload_material"
-                style="@style/tv_background"
-                android:layout_marginStart="0dp"
-                android:layout_marginEnd="0dp"
-                android:text="@string/activity_tunload_tunload_material_text" />
-
-        <TextView
-                style="@style/home_tv"
-                android:text="Location" />
+            style="@style/home_tv"
+            android:text="Location" />
 
         <android.support.v7.widget.AppCompatSpinner
-                android:id="@+id/tunload_location_spinner"
-                style="@style/home_spinner" />
-
+            android:id="@+id/tunload_location_spinner"
+            style="@style/home_spinner" />
         <LinearLayout
-                style="@style/default_linearlayout"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_50sdp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+        style="@style/default_linearlayout"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_50sdp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-            <Button
-                    android:id="@+id/tul_unload"
-                    style="@style/back_button"
-                    android:layout_width="0dp"
-                    android:layout_weight=".3"
-                    android:text="@string/activity_tunload_tul_unload_text" />
+        <Button
+            android:id="@+id/tul_unload"
+            style="@style/back_button"
+            android:layout_width="0dp"
+            android:layout_weight=".3"
+            android:text="@string/activity_tunload_tul_unload_text" />
 
-            <Button
-                    android:id="@+id/tul_return_load1"
-                    style="@style/next_button"
-                    android:layout_width="0dp"
-                    android:layout_marginEnd="0dp"
-                    android:layout_weight="0.3"
-                    android:text="@string/activity_tunload_tul_return_load1_text" />
-        </LinearLayout>
+        <Button
+            android:id="@+id/tul_return_load1"
+            style="@style/next_button"
+            android:layout_width="0dp"
+            android:layout_marginEnd="0dp"
+            android:layout_weight="0.3"
+            android:text="@string/activity_tunload_tul_return_load1_text" />
     </LinearLayout>
+    </LinearLayout>
+
+
+
+
+
 </LinearLayout>

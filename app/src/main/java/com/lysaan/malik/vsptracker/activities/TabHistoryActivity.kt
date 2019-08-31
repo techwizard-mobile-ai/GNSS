@@ -15,8 +15,8 @@ import com.lysaan.malik.vsptracker.fragments.truck.LoadingHistoryFragment
 import kotlinx.android.synthetic.main.activity_tab_history.*
 
 class TabHistoryActivity : BaseActivity(), View.OnClickListener,
-    LoadingHistoryFragment.OnFragmentInteractionListener,
-    DelayHistoryFragment.OnFragmentInteractionListener {
+        LoadingHistoryFragment.OnFragmentInteractionListener,
+        DelayHistoryFragment.OnFragmentInteractionListener {
 
 
     override fun onFragmentInteraction(uri: Uri) {}
@@ -72,26 +72,26 @@ class TabHistoryActivity : BaseActivity(), View.OnClickListener,
     }
 
     private val mOnNavigationItemSelectedListener =
-        BottomNavigationView.OnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.navf_loading -> {
-                    val loadingHistoryFragment =
-                        LoadingHistoryFragment.newInstance(this)
-                    openFragment(loadingHistoryFragment, LOADING_HISTORY)
-                    return@OnNavigationItemSelectedListener true
-                }
+            BottomNavigationView.OnNavigationItemSelectedListener { item ->
+                when (item.itemId) {
+                    R.id.navf_loading -> {
+                        val loadingHistoryFragment =
+                                LoadingHistoryFragment.newInstance(this)
+                        openFragment(loadingHistoryFragment, LOADING_HISTORY)
+                        return@OnNavigationItemSelectedListener true
+                    }
 
-                R.id.navf_delay -> {
-                    val delayHistoryFragment = DelayHistoryFragment.newInstance(this, DELAY_HISTORY)
-                    openFragment(delayHistoryFragment, DELAY_HISTORY)
-                    return@OnNavigationItemSelectedListener true
+                    R.id.navf_delay -> {
+                        val delayHistoryFragment = DelayHistoryFragment.newInstance(this, DELAY_HISTORY)
+                        openFragment(delayHistoryFragment, DELAY_HISTORY)
+                        return@OnNavigationItemSelectedListener true
+                    }
+                    R.id.navf_finish -> {
+                        finish()
+                    }
                 }
-                R.id.navf_finish -> {
-                    finish()
-                }
+                false
             }
-            false
-        }
 
     override fun onClick(view: View?) {
         when (view!!.id) {

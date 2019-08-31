@@ -11,8 +11,8 @@ import com.lysaan.malik.vsptracker.classes.Material
 import kotlinx.android.synthetic.main.list_row_base_navigation.view.*
 
 class BaseNavigationAdapter(
-    val context: Activity,
-    private val myMaterialList: MutableList<Material>
+        val context: Activity,
+        private val myMaterialList: MutableList<Material>
 ) : RecyclerView.Adapter<BaseNavigationAdapter
 .ViewHolder>() {
 
@@ -21,12 +21,12 @@ class BaseNavigationAdapter(
     lateinit var helper: Helper
 
     override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
+            parent: ViewGroup,
+            viewType: Int
     ): BaseNavigationAdapter.ViewHolder {
 
         val v = LayoutInflater.from(parent.context)
-            .inflate(R.layout.list_row_base_navigation, parent, false)
+                .inflate(R.layout.list_row_base_navigation, parent, false)
         helper = Helper(TAG, context)
         return ViewHolder(v)
     }

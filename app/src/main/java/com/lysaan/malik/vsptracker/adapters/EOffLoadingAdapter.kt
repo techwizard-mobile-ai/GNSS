@@ -10,8 +10,8 @@ import com.lysaan.malik.vsptracker.classes.EWork
 import kotlinx.android.synthetic.main.list_row_eloading.view.*
 
 class EOffLoadingAdapter(
-    val context: Activity,
-    val dataList: MutableList<EWork>
+        val context: Activity,
+        val dataList: MutableList<EWork>
 ) : RecyclerView.Adapter<EOffLoadingAdapter
 .ViewHolder>() {
 
@@ -19,12 +19,12 @@ class EOffLoadingAdapter(
     private val TAG = this::class.java.simpleName
 
     override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
+            parent: ViewGroup,
+            viewType: Int
     ): EOffLoadingAdapter.ViewHolder {
 
         val v = LayoutInflater.from(parent.context)
-            .inflate(R.layout.list_row_eoffloading, parent, false)
+                .inflate(R.layout.list_row_eoffloading, parent, false)
         return ViewHolder(v)
     }
 

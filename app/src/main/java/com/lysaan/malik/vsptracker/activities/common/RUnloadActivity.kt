@@ -108,7 +108,7 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
             R.id.trunload_unload -> {
 
                 data.unloadingGPSLocation = gpsLocation
-
+                stopDelay()
 
                 when (data.repeatJourney) {
                     0 -> {

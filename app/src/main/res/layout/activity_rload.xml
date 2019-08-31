@@ -1,87 +1,95 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/_10sdp"
-        android:layout_marginEnd="@dimen/_10sdp"
-        tools:context=".activities.common.RLoadActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginStart="@dimen/_10sdp"
+    android:layout_marginEnd="@dimen/_10sdp"
+    tools:context=".activities.common.RLoadActivity">
+
+
 
     <LinearLayout
-            android:id="@+id/rl_top"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+        android:id="@+id/rl_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
         <TextView
-                android:id="@+id/rload_title"
-                style="@style/activity_title"
-                android:text="@string/activity_rload_rload_title_text"
-                android:visibility="gone" />
+            android:id="@+id/rload_title"
+            style="@style/activity_title"
+            android:text="@string/activity_rload_rload_title_text"
+            android:visibility="gone" />
 
         <TextView
-                android:id="@+id/trload_machine"
-                style="@style/load_tv"
-                android:text="@string/activity_rload_trload_machine_text" />
-
-        <View style="@style/navigation_border" />
+            android:id="@+id/trload_machine"
+            style="@style/load_tv"
+            android:text="@string/activity_rload_trload_machine_text" />
 
         <TextView
-                android:id="@+id/trload_material"
-                style="@style/load_tv"
-                android:text="@string/activity_rload_trload_material_text" />
-
-        <View style="@style/navigation_border" />
+            android:id="@+id/trload_material"
+            style="@style/load_tv"
+            android:text="@string/activity_rload_trload_material_text" />
 
         <TextView
-                android:id="@+id/trload_location"
-                style="@style/load_tv"
-                android:text="@string/activity_rload_trload_location_text" />
-
-        <View style="@style/navigation_border" />
+            android:id="@+id/trload_location"
+            style="@style/load_tv"
+            android:text="@string/activity_rload_trload_location_text" />
 
         <TextView
-                android:id="@+id/trload_weight"
-                style="@style/load_tv"
-                android:text="@string/activity_rload_trload_weight_text" />
-
+            android:id="@+id/trload_weight"
+            style="@style/load_tv"
+            android:text="@string/activity_rload_trload_weight_text" />
 
     </LinearLayout>
 
-    <Button
+    <LinearLayout
+        android:layout_below="@id/rl_top"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="@dimen/_80sdp"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+        <Button
             android:id="@+id/trload_load"
             style="@style/next_button"
             android:layout_width="match_parent"
-            android:layout_below="@id/rl_top"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="@dimen/_80sdp"
             android:text="@string/activity_rload_trload_load_text" />
+
+        <Button
+            android:layout_marginTop="@dimen/_20sdp"
+            android:id="@+id/trload_delay"
+            style="@style/next_button_single"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/start_delay" />
+
+    </LinearLayout>
 
 
     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/_10sdp"
-            android:orientation="horizontal">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:orientation="horizontal">
 
         <Button
-                android:id="@+id/rload_home"
-                style="@style/back_button"
-                android:layout_width="0dp"
-                android:layout_weight=".3"
-                android:background="@color/colorPrimary"
-                android:text="@string/finish" />
+            android:id="@+id/rload_home"
+            style="@style/back_button"
+            android:layout_width="0dp"
+            android:layout_weight=".3"
+            android:background="@color/colorPrimary"
+            android:text="@string/finish" />
 
         <Button
-                android:id="@+id/rload_finish"
-                style="@style/next_button"
-                android:layout_width="0dp"
-                android:layout_marginEnd="0dp"
-                android:layout_weight="0.3"
-                android:text="@string/end_work" />
+            android:id="@+id/rload_finish"
+            style="@style/next_button"
+            android:layout_width="0dp"
+            android:layout_marginEnd="0dp"
+            android:layout_weight="0.3"
+            android:text="@string/end_work" />
     </LinearLayout>
 </RelativeLayout>

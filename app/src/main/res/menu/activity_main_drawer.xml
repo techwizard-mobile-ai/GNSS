@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        tools:showIn="navigation_view">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
         <item
-                android:id="@+id/nav_home"
-                android:icon="@drawable/ic_home"
-                android:title="@string/home" />
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home"
+            android:title="@string/home" />
         <!--        <item-->
         <!--                android:id="@+id/nav_settings"-->
         <!--                android:visible="false"-->
@@ -15,47 +15,47 @@
         <!--                android:title="@string/settings"/>-->
 
         <item
-                android:id="@+id/nav_delay"
-                android:icon="@drawable/ic_wait"
-                android:title="@string/delay" />
+            android:id="@+id/nav_delay"
+            android:icon="@drawable/ic_wait"
+            android:title="@string/delay" />
 
         <item
-                android:id="@+id/nav_stop_machine"
-                android:icon="@drawable/ic_stop_machine"
-                android:title="@string/stop_machine" />
+            android:id="@+id/nav_stop_machine"
+            android:icon="@drawable/ic_stop_machine"
+            android:title="@string/stop_machine" />
 
         <item
-                android:id="@+id/nav_day_works"
-                android:icon="@drawable/ic_action_departure_board"
-                android:title="@string/day_works" />
+            android:id="@+id/nav_day_works"
+            android:icon="@drawable/ic_action_departure_board"
+            android:title="@string/day_works" />
         <item
-                android:id="@+id/nav_night_mode"
-                android:icon="@drawable/ic_night_mode"
-                android:title="@string/night_mode" />
+            android:id="@+id/nav_night_mode"
+            android:icon="@drawable/ic_night_mode"
+            android:title="@string/night_mode" />
 
         <item
-                android:id="@+id/nav_load_history"
-                android:icon="@drawable/ic_history"
-                android:title="@string/history" />
+            android:id="@+id/nav_load_history"
+            android:icon="@drawable/ic_history"
+            android:title="@string/history" />
 
 
         <item
-                android:id="@+id/nav_change_machine"
-                android:icon="@drawable/ic_change_machine"
-                android:title="@string/change_machine" />
+            android:id="@+id/nav_change_machine"
+            android:icon="@drawable/ic_change_machine"
+            android:title="@string/change_machine" />
 
         <item
-                android:id="@+id/nav_logout"
-                android:icon="@drawable/ic_logout"
-                android:title="@string/logout" />
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_logout"
+            android:title="@string/logout" />
     </group>
 
     <item android:title="Communicate">
         <menu>
             <item
-                    android:id="@+id/nav_email"
-                    android:icon="@drawable/ic_email"
-                    android:title="@string/report_error" />
+                android:id="@+id/nav_email"
+                android:icon="@drawable/ic_email"
+                android:title="@string/report_error" />
 
         </menu>
     </item>

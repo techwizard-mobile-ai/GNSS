@@ -33,8 +33,8 @@ object Utils {
         intent.putExtra("data", dataNew)
         activity.startActivity(intent)
         activity.overridePendingTransition(
-            android.R.anim.fade_in,
-            android.R.anim.fade_out
+                android.R.anim.fade_in,
+                android.R.anim.fade_out
         )
     }
 

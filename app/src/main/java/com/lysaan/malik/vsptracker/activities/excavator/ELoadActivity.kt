@@ -81,6 +81,7 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         when (view!!.id) {
             R.id.load_truck_load -> {
+                stopDelay()
                 data.loadingMachine = helper.getMachineNumber()
                 data.loadedMachine = "Load"
 

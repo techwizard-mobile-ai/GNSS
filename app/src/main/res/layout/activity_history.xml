@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".activities.HistoryActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.HistoryActivity">
 
     <TextView
-            android:id="@+id/lh_title"
-            style="@style/activity_title"
-            android:text="@string/activity_history_lh_title_text" />
+        android:id="@+id/lh_title"
+        style="@style/activity_title"
+        android:text="@string/activity_history_lh_title_text" />
 
     <android.support.v7.widget.RecyclerView
-            android:id="@+id/lh_rv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+        android:id="@+id/lh_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>

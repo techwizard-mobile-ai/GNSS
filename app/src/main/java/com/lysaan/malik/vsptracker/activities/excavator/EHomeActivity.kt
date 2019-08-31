@@ -36,18 +36,6 @@ class EHomeActivity : BaseActivity(), View.OnClickListener {
         ehome_digging.setOnClickListener(this)
     }
 
-
-    override fun onResume() {
-        super.onResume()
-        startGPS()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        stopGPS()
-    }
-
-
     override fun onClick(view: View?) {
         when (view!!.id) {
 
@@ -59,9 +47,9 @@ class EHomeActivity : BaseActivity(), View.OnClickListener {
 
             R.id.ehome_trenching -> {
                 val intent = Intent(this, ESelectWorkActivity::class.java)
-                val data1 = helper.getLastJourney()
-                data1.eWorkType = 1
-                helper.setLastJourney(data1)
+//                val data1 = helper.getLastJourney()
+//                data1.eWorkType = 1
+//                helper.setLastJourney(data1)
 
                 data.eWorkType = 2
                 intent.putExtra("data", data)
@@ -70,9 +58,9 @@ class EHomeActivity : BaseActivity(), View.OnClickListener {
 
             R.id.ehome_digging -> {
                 val intent = Intent(this, ESelectWorkActivity::class.java)
-                val data1 = helper.getLastJourney()
-                data1.eWorkType = 1
-                helper.setLastJourney(data1)
+//                val data1 = helper.getLastJourney()
+//                data1.eWorkType = 1
+//                helper.setLastJourney(data1)
 
                 data.eWorkType = 1
                 intent.putExtra("data", data)

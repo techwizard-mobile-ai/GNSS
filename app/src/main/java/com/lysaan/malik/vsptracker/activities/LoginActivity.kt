@@ -33,7 +33,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         when (helper.getMachineType()) {
             1 -> {
                 Glide.with(this).load(resources.getDrawable(R.drawable.excavator))
-                    .into(signin_image)
+                        .into(signin_image)
             }
             2 -> {
                 Glide.with(this).load(resources.getDrawable(R.drawable.scraper)).into(signin_image)
@@ -43,7 +43,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             }
             else -> {
                 Glide.with(this).load(resources.getDrawable(R.drawable.welcomenew))
-                    .into(signin_image)
+                        .into(signin_image)
             }
         }
 

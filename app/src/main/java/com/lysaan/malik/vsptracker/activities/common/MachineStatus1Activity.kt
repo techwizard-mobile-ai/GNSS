@@ -85,15 +85,15 @@ class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
             R.id.machine_status_start -> {
 
                 val machineData = Data()
-                machineData.recordID = helper.getMeter().stopRecordID
+                machineData.recordID = helper.getMeter().machineDbID
                 machineData.unloadingGPSLocation = gpsLocation
                 val updateID = db.updateMachineStatus(machineData)
-                if(updateID > 0){
+                if (updateID > 0) {
                     helper.toast("Machine Started Successfully")
                     helper.setIsMachineStopped(false, "")
                     helper.startMachine()
                     helper.startHomeActivityByType(Data())
-                }else{
+                } else {
                     helper.toast("Machine Not Started. Due to App Deleted Cache.")
                 }
 

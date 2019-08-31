@@ -8,6 +8,7 @@
     <LinearLayout
             style="@style/default_linearlayout"
             android:layout_gravity="center_horizontal"
+            android:orientation="vertical"
             tools:context=".activities.LoginActivity">
 
         <ImageView

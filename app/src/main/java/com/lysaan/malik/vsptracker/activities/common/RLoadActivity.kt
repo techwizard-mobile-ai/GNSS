@@ -133,6 +133,7 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
 //                    helper.toast("Loading Successful.\nLoaded Number # $insertID")
 
                 data.loadingGPSLocation = gpsLocation
+                stopDelay()
                 when (data.repeatJourney) {
                     0 -> {
                         var insertID: Long = 0L

@@ -10,8 +10,8 @@ import com.lysaan.malik.vsptracker.classes.Data
 import kotlinx.android.synthetic.main.list_row_eloading.view.*
 
 class ELoadingAdapter(
-    val context: Activity,
-    val dataList: MutableList<Data>
+        val context: Activity,
+        val dataList: MutableList<Data>
 ) : RecyclerView.Adapter<ELoadingAdapter
 .ViewHolder>() {
 
@@ -21,7 +21,7 @@ class ELoadingAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ELoadingAdapter.ViewHolder {
 
         val v =
-            LayoutInflater.from(parent.context).inflate(R.layout.list_row_eloading, parent, false)
+                LayoutInflater.from(parent.context).inflate(R.layout.list_row_eloading, parent, false)
         return ViewHolder(v)
     }
 
