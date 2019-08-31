@@ -6,9 +6,6 @@
     android:layout_marginStart="@dimen/_10sdp"
     android:layout_marginEnd="@dimen/_10sdp"
     tools:context=".activities.common.RLoadActivity">
-
-
-
     <LinearLayout
         android:id="@+id/rl_top"
         android:layout_width="match_parent"
@@ -58,13 +55,6 @@
             style="@style/next_button"
             android:layout_width="match_parent"
             android:text="@string/activity_rload_trload_load_text" />
-
-        <Button
-            android:layout_marginTop="@dimen/_20sdp"
-            android:id="@+id/trload_delay"
-            style="@style/next_button_single"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/start_delay" />
 
     </LinearLayout>
 

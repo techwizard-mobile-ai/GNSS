@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+
+    android:layout_marginStart="@dimen/_10sdp"
+    android:layout_marginEnd="@dimen/_10sdp"
     tools:context=".activities.excavator.EOffLoadingActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/_10sdp"
-        android:layout_marginEnd="@dimen/_10sdp"
+        android:layout_above="@id/eoff_bottom"
         android:gravity="center_horizontal"
         android:orientation="vertical">
         <TextView
@@ -81,34 +83,35 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/eoff_rv"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_100sdp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginBottom="@dimen/_10sdp"
             android:background="@drawable/eoffloding_border"
             android:visibility="invisible" />
-        <LinearLayout
-            android:id="@+id/eoff_bottom"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/_10sdp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/ework_offload_home"
-                style="@style/back_button"
-                android:layout_width="0dp"
-                android:layout_weight=".3"
-                android:background="@color/colorPrimary"
-                android:text="@string/finish" />
-
-            <Button
-                android:id="@+id/ework_offload_finish"
-                style="@style/next_button"
-                android:layout_width="0dp"
-                android:layout_marginEnd="0dp"
-                android:layout_weight="0.3"
-                android:text="@string/end_work" />
-        </LinearLayout>
 
     </LinearLayout>
-</ScrollView>
+    <LinearLayout
+        android:id="@+id/eoff_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/ework_offload_home"
+            style="@style/back_button"
+            android:layout_width="0dp"
+            android:layout_weight=".3"
+            android:background="@color/colorPrimary"
+            android:text="@string/finish" />
+
+        <Button
+            android:id="@+id/ework_offload_finish"
+            style="@style/next_button"
+            android:layout_width="0dp"
+            android:layout_marginEnd="0dp"
+            android:layout_weight="0.3"
+            android:text="@string/end_work" />
+    </LinearLayout>
+</RelativeLayout>

@@ -180,6 +180,7 @@
     <string name="unload_truck">Unload Truck</string>
     <string name="material_weight_tonnes">Material Weight (Tonnes)</string>
     <string name="start_delay">Start Delay</string>
+    <string name="map">Map</string>
     <string-array name="theme_array">
         <item>Default-Theme</item>
         <item>Night-Mode</item>

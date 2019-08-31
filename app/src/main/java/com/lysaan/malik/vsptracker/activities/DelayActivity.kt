@@ -15,8 +15,6 @@ class DelayActivity : BaseActivity(),
     View.OnClickListener {
 
     private val TAG = this::class.java.simpleName
-    private var isWaiting: Boolean = false
-    private var waitStartTime: Long = 0
     private lateinit var eWork: EWork
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,22 +25,11 @@ class DelayActivity : BaseActivity(),
             R.layout.activity_delay,
             contentFrameLayout
         )
-        val navigationView =
-            findViewById(R.id.base_nav_view) as NavigationView
-        navigationView.menu.getItem(1).isChecked =
-            true
+        val navigationView = findViewById(R.id.base_nav_view) as NavigationView
+        navigationView.menu.getItem(1).isChecked = true
 
         helper.setTag(TAG)
-
         eWork = EWork()
-
-//        TODO Delete it
-//        var bundle: Bundle? = intent.extras
-//        if (bundle != null) {
-//            data = bundle!!.getSerializable("data") as Data
-//            helper.log("data:$data")
-//        }
-
         startGPS()
 
         val startLocation = gpsLocation
@@ -86,8 +73,6 @@ class DelayActivity : BaseActivity(),
         when (view!!.id) {
 
             R.id.day_works_action -> {
-
-//                if (isWaiting) {
                 if (helper.isDelayStarted()) {
 
                     if(stopDelay()>0){
@@ -97,21 +82,6 @@ class DelayActivity : BaseActivity(),
                         day_works_chronometer.stop()
                         finish()
                     }
-/*
-                    TODO delete it
-//                    isWaiting = false
-//                    eWork.startTime = waitStartTime
-//                    eWork.unloadingGPSLocation = gpsLocation
-//
-//                    val insertID = db.insertDelay(eWork)
-//                    if (insertID > 0) {
-//                        helper.toast("Wait Saved Successfully.")
-//                    } else {
-//                        helper.toast("Error while Saving Wait.")
-//                    }
-
-*/
-
 
                 } else {
 
@@ -121,9 +91,6 @@ class DelayActivity : BaseActivity(),
                     day_work_title.text = "Waiting For Load Started"
                     day_works_button.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.black)))
                     day_works_action_text.text = "Stop"
-//                    isWaiting = true
-//                    waitStartTime = System.currentTimeMillis()
-//                    eWork.loadingGPSLocation = gpsLocation
                     val gpslocation = gpsLocation
                     helper.startDelay(gpslocation)
 

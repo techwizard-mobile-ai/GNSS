@@ -8,14 +8,7 @@
     android:layout_marginBottom="@dimen/_10sdp"
     tools:context=".activities.common.RUnloadActivity">
 
-    <Button
-        android:id="@+id/trunload_unload"
-        style="@style/next_button"
-        android:layout_width="match_parent"
-        android:layout_below="@id/trul_top"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="@dimen/_80sdp"
-        android:text="@string/unload" />
+
 
     <LinearLayout
         android:id="@+id/trul_top"
@@ -52,6 +45,20 @@
             android:text="@string/activity_runload_trul_weight_text" />
 
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@id/trul_top"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="@dimen/_60sdp"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/trunload_unload"
+            style="@style/next_button"
+            android:layout_width="match_parent"
+            android:text="@string/unload" />
     </LinearLayout>
 
 

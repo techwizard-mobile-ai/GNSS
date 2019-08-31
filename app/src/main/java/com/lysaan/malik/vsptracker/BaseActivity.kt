@@ -11,6 +11,7 @@ import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.NavigationView
 import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
@@ -113,7 +114,27 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
 //        val aa = BaseNavigationAdapter(this@BaseActivity, navItems)
 //        base_navigation_rv.layoutManager = LinearLayoutManager(this, LinearLayout.HORIZONTAL, false)
 //        base_navigation_rv!!.setAdapter(aa)
+
+        val bottomNavigation: BottomNavigationView = findViewById(R.id.base_navigationView)
+        bottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
+
+    private val mOnNavigationItemSelectedListener =
+        BottomNavigationView.OnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navb_map -> {
+                    helper.toast("Loading")
+                }
+
+                R.id.navb_delay-> {
+                    helper.startDelay(gpsLocation)
+                }
+                R.id.navf_finish -> {
+                    finish()
+                }
+            }
+            false
+        }
 
     override fun onResume() {
         super.onResume()

@@ -28,21 +28,9 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
 
         helper.setTag(TAG)
 
-//        var bundle :Bundle ?=intent.extras
-//        if(bundle != null){
-//            data = bundle!!.getSerializable("data") as Data
-//            helper.log("data:$data")
-//        }
-//        helper.log("LastJourney:${helper.getLastJourney()}")
-
         data = helper.getLastJourney()
         helper.log("data:$data")
 
-//        if(data.isForBackLoad){
-//            trload_load.text = "Back LOAD"
-//        }else{
-//            trload_load.text = "LOAD"
-//        }
         when (data.nextAction) {
             0 -> {
                 trload_load.text = "LOAD"
@@ -58,48 +46,29 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
 
         trload_weight.visibility = View.GONE
 
-        if (helper.getMachineType() == 2) {
-            trload_machine.visibility = View.GONE
-//            trload_weight.visibility = View.GONE
+        when(helper.getMachineType()){
 
-            trload_material.text = data.loadingMaterial
-            trload_location.text = data.loadingLocation
-//            trload_weight.text = "Tonnes  (" +lastJourney.unloadingWeight +")"
-        } else {
+            2 ->{
+                trload_machine.visibility = View.GONE
+                trload_material.text = data.loadingMaterial
+                trload_location.text = data.loadingLocation
+            }
+            3 ->{
+                trload_machine.visibility = View.VISIBLE
+                when (data.nextAction) {
+                    0 -> {
+                        trload_machine.text = data.loadingMachine
+                        trload_material.text = data.loadingMaterial
+                        trload_location.text = data.loadingLocation
+                    }
+                    2 -> {
 
-            trload_machine.visibility = View.VISIBLE
-//            trload_weight.visibility = View.VISIBLE
-
-            when (data.nextAction) {
-                0 -> {
-                    trload_machine.text = data.loadingMachine
-                    trload_material.text = data.loadingMaterial
-                    trload_location.text = data.loadingLocation
-//                    trload_weight.text = "Tonnes (" +data.unloadingWeight +")"
-                }
-                1 -> {
-                }
-                2 -> {
-
-                    trload_machine.text = data.backLoadingMachine
-                    trload_material.text = data.backLoadingMaterial
-                    trload_location.text = data.backLoadingLocation
-//                    trload_weight.text = "Tonnes (" +data.backUnloadedWeight +")"
-                }
-                3 -> {
+                        trload_machine.text = data.backLoadingMachine
+                        trload_material.text = data.backLoadingMaterial
+                        trload_location.text = data.backLoadingLocation
+                    }
                 }
             }
-//            if(lastJourney.isForBackLoad){
-//                trload_machine.text = lastJourney.backLoadingMachine
-//                trload_material.text = lastJourney.backLoadingMaterial
-//                trload_location.text = lastJourney.backLoadingLocation
-//                trload_weight.text = "Tonnes (" +lastJourney.backUnloadedWeight +")"
-//            }else{
-//                trload_machine.text = lastJourney.loadingMachine
-//                trload_material.text = lastJourney.loadingMaterial
-//                trload_location.text = lastJourney.loadingLocation
-//                trload_weight.text = "Tonnes (" +lastJourney.unloadingWeight +")"
-//            }
 
         }
 
@@ -126,11 +95,8 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         when (view!!.id) {
-            R.id.trload_load -> {
 
-//                val insertID = db.insertELoad(helper.getLastJourney())
-//                if(insertID > 0){
-//                    helper.toast("Loading Successful.\nLoaded Number # $insertID")
+            R.id.trload_load -> {
 
                 data.loadingGPSLocation = gpsLocation
                 stopDelay()
@@ -197,8 +163,6 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
                             }
                         }
 
-
-//                            data.recordID = insertID
                         if (data.recordID > 0) {
                             helper.toast("Load Saved Successfully.")
                             helper.setLastJourney(data)
@@ -211,18 +175,6 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
 
                     }
                 }
-//                    if(data.isRepeatJourney){
-//                        val intent = Intent(this, RUnloadActivity::class.java)
-//                        intent.putExtra("data", data)
-//                        startActivity(intent)
-//                        finish()
-//                    }else{
-//                        helper.startHomeActivityByType(data)
-//                    }
-
-//                }else{
-//                    helper.toast("Error while Saving Record.")
-//                }
             }
             R.id.trload_machine -> {
                 val intent = Intent(this, LMachine1Activity::class.java)
@@ -254,11 +206,6 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
             }
 
             R.id.rload_home -> {
-//                when(data.nextAction){
-//                    1 ->{data.nextAction = 0}
-//                    3 ->{data.nextAction = 2}
-//                    else ->{data.nextAction = 0}
-//                }
                 data = Data()
                 helper.setLastJourney(data)
                 helper.startHomeActivityByType(data)
@@ -306,17 +253,6 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
 
                         }
                     }
-//                    if(data.isForBackLoad){
-//                        trload_machine.text = data.backLoadingMachine
-//                        trload_material.text = data.backLoadingMaterial
-//                        trload_location.text = data.backLoadingLocation
-//                        trload_weight.text = "Tonnes (" +data.backUnloadedWeight +")"
-//                    }else{
-//                        trload_machine.text = data.loadingMachine
-//                        trload_material.text = data.loadingMaterial
-//                        trload_location.text = data.loadingLocation
-//                        trload_weight.text = "Tonnes (" +data.unloadingWeight +")"
-//                    }
 
                 }
 

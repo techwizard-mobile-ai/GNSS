@@ -47,10 +47,6 @@ class EHomeActivity : BaseActivity(), View.OnClickListener {
 
             R.id.ehome_trenching -> {
                 val intent = Intent(this, ESelectWorkActivity::class.java)
-//                val data1 = helper.getLastJourney()
-//                data1.eWorkType = 1
-//                helper.setLastJourney(data1)
-
                 data.eWorkType = 2
                 intent.putExtra("data", data)
                 startActivity(intent)
@@ -58,17 +54,12 @@ class EHomeActivity : BaseActivity(), View.OnClickListener {
 
             R.id.ehome_digging -> {
                 val intent = Intent(this, ESelectWorkActivity::class.java)
-//                val data1 = helper.getLastJourney()
-//                data1.eWorkType = 1
-//                helper.setLastJourney(data1)
-
                 data.eWorkType = 1
                 intent.putExtra("data", data)
                 startActivity(intent)
             }
 
             R.id.ehome_logout -> {
-//                helper.log("MachineStatus:${db.getMachineStatus()}")
                 helper.logout(this)
             }
         }

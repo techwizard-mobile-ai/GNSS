@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navb_map"
+        android:icon="@drawable/ic_location_on_black_24dp"
+        android:title="@string/map" />
+    <item
+        android:id="@+id/navb_delay"
+        android:icon="@drawable/ic_delay1"
+        android:title="@string/delay" />
+
+</menu>

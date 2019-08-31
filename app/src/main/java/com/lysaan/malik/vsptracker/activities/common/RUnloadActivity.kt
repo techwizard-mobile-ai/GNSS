@@ -28,14 +28,6 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
 
         helper.setTag(TAG)
 
-//        var bundle :Bundle ?=intent.extras
-//        if(bundle != null){
-//            data = bundle!!.getSerializable("data") as Data
-//            helper.log("data:$data")
-//        }
-
-//        helper.log("lastJourney:${helper.getLastJourney()}")
-
         data = helper.getLastJourney()
         helper.log("data:$data")
 
@@ -64,7 +56,6 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
             }
         }
 
-
         runload_home.setOnClickListener(this)
         runload_finish.setOnClickListener(this)
 
@@ -91,11 +82,6 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
 
 
             R.id.runload_home -> {
-//                when(data.nextAction){
-//                    0 ->{data.nextAction = 1}
-//                    2 ->{data.nextAction = 3}
-//                    else ->{data.nextAction = 1}
-//                }
                 val data = Data()
                 data.nextAction = 1
                 helper.setLastJourney(data)
@@ -109,7 +95,6 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
 
                 data.unloadingGPSLocation = gpsLocation
                 stopDelay()
-
                 when (data.repeatJourney) {
                     0 -> {
                         when (data.nextAction) {
@@ -134,7 +119,6 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                             }
                         }
                         val intent = Intent(this, RLoadActivity::class.java)
-//                        intent.putExtra("data", data)
                         db.updateTrip(data)
                         helper.setLastJourney(data)
                         startActivity(intent)
@@ -156,15 +140,6 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                         finish()
                     }
                 }
-//                if(data.isRepeatJourney){
-//                    val intent = Intent(this, RLoadActivity::class.java)
-//                    intent.putExtra("data", data)
-//                    startActivity(intent)
-//                    finish()
-//                }else{
-//                    helper.startLoadAfterActivityByType(data)
-//                }
-
             }
             R.id.trul_task -> {
                 val intent = Intent(this, UnloadTaskActivity::class.java)

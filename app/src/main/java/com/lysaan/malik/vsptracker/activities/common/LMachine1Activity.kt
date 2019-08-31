@@ -49,15 +49,6 @@ class LMachine1Activity : BaseActivity(), View.OnClickListener {
                 lm_title.text = "Select Back Unloading Machine"
             }
         }
-//        if(data.isForBackLoad){
-//            lm_title.text = "Select Back Loading Machine"
-//        }else if(data.isForBackUnload){
-//            lm_title.text = "Select Back Unloading Machine"
-//        }else if(data.isUnload){
-//            lm_title.text = "Select Unloading Machine"
-//        }else{
-//            lm_title.text = "Select Loading Machine"
-//        }
 
         val gv = findViewById(R.id.tlm_gridview) as GridView
         val machines = helper.getMachines()
@@ -120,27 +111,6 @@ class LMachine1Activity : BaseActivity(), View.OnClickListener {
                     }
                 }
             }
-//                if(data.isForBackUnload){
-//                val intent = Intent(this, Location1Activity::class.java)
-//                data.backUnloadingMachine = machines.get(position).name
-//                intent.putExtra("data", data)
-//                startActivity(intent)
-//            }else if(data.isForBackLoad){
-//                val intent = Intent(this, Material1Activity::class.java)
-//                data.backLoadingMachine = machines.get(position).name
-//                intent.putExtra("data", data)
-//                startActivity(intent)
-//            }else if(data.isUnload){
-//                    val intent = Intent(this, Location1Activity::class.java)
-//                    data.unloadingMachine = machines.get(position).name
-//                    intent.putExtra("data", data)
-//                    startActivity(intent)
-//                }else{
-//                    val intent = Intent(this, Material1Activity::class.java)
-//                    data.loadingMachine = machines.get(position).name
-//                    intent.putExtra("data", data)
-//                    startActivity(intent)
-//            }
         })
 
     }
