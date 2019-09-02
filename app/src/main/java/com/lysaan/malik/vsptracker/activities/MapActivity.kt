@@ -21,8 +21,6 @@ import android.location.Location
 import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
 import com.lysaan.malik.vsptracker.R
 
 
@@ -75,7 +73,7 @@ class MapActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback{
         val navigationView = findViewById(R.id.base_nav_view) as NavigationView
         navigationView.menu.getItem(0).isChecked = true
 
-        helper.setTag(TAG)
+        myHelper.setTag(TAG)
         startGPS()
 
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
@@ -83,20 +81,20 @@ class MapActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback{
 
 
         // Construct a GeoDataClient.
-        mGeoDataClient = Places.getGeoDataClient(this, null);
+        mGeoDataClient = Places.getGeoDataClient(this, null)
 
         // Construct a PlaceDetectionClient.
-        mPlaceDetectionClient = Places.getPlaceDetectionClient(this, null);
+        mPlaceDetectionClient = Places.getPlaceDetectionClient(this, null)
 
         // Construct a FusedLocationProviderClient.
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
     }
 /*
 
     private fun stylePolygon(polygon: Polygon) {
         var type = ""
-        // Get the data object stored with the polygon.
+        // Get the myData object stored with the polygon.
         if (polygon.tag != null) {
             type = polygon.tag.toString()
         }
@@ -128,7 +126,7 @@ class MapActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback{
     }
 
     override fun onPolygonClick(polygon: Polygon?) {
-        helper.toast("Clicked.")
+        myHelper.toast("Clicked.")
         polygon!!.fillColor = resources.getColor(R.color.colorPrimary)
 
 
@@ -194,7 +192,7 @@ class MapActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback{
 
 //        val lat = gpsLocation.latitude
 //        val longg = gpsLocation.longitude
-//        helper.log("$gpsLocation")
+//        myHelper.log("$gpsLocation")
 //        val sydney = LatLng(lat, longg)
 //        googleMap!!.addMarker(
 //            MarkerOptions()

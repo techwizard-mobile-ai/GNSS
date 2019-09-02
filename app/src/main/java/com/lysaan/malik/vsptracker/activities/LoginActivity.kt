@@ -5,15 +5,16 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import com.lysaan.malik.vsptracker.Helper
+import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.R
+import com.lysaan.malik.vsptracker.activities.common.MachineStatus1Activity
 import com.lysaan.malik.vsptracker.others.Utils
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     private val TAG = this::class.java.simpleName
-    private lateinit var helper: Helper
+    private lateinit var myHelper: MyHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,14 +24,14 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.activity_login)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 
-        helper = Helper(TAG, this)
-        helper.setProgressBar(signin_pb)
+        myHelper = MyHelper(TAG, this)
+        myHelper.setProgressBar(signin_pb)
 
 
-//        helper.imageLoad(resources.getDrawable(R.drawable.welcome))
+//        myHelper.imageLoad(resources.getDrawable(R.drawable.welcome))
 
 
-        when (helper.getMachineType()) {
+        when (myHelper.getMachineType()) {
             1 -> {
                 Glide.with(this).load(resources.getDrawable(R.drawable.excavator))
                         .into(signin_image)
@@ -49,8 +50,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
 //        keyboard.showKeyBoard(signin_email)
 
-        if (helper.getMachineNumber().isNullOrBlank()) {
-            helper.log("No machine Number is entered.")
+        if (myHelper.getMachineNumber().isNullOrBlank()) {
+            myHelper.log("No machine Number is entered.")
             val intent = Intent(this, MachineTypeActivity::class.java)
             startActivity(intent)
             finishAffinity()
@@ -60,7 +61,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 //        startActivity(intent)
 
 
-        helper.hideKeybaordOnClick(login_main_layout)
+        myHelper.hideKeybaordOnClick(login_main_layout)
         signin_signin.setOnClickListener(this)
         signin_forgot_pass.setOnClickListener(this)
 
@@ -73,15 +74,15 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 var email = signin_email.text.toString()
                 var pass = signin_pass.text.toString()
 
-                helper.log("email:" + email)
-                helper.log("Pass" + pass)
+                myHelper.log("email:" + email)
+                myHelper.log("Pass" + pass)
 
                 signIn(email, pass)
 
-//                if (!helper.isValidEmail(email)) {
-//                    helper.toast("Please Provide valid Email Address.")
+//                if (!myHelper.isValidEmail(email)) {
+//                    myHelper.toast("Please Provide valid Email Address.")
 //                } else if (pass.length < 6) {
-//                    helper.toast("Password Minimum Length should be 6 Characters")
+//                    myHelper.toast("Password Minimum Length should be 6 Characters")
 //                } else {
 //                    signIn(email, pass)
 //                }
@@ -91,11 +92,16 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun signIn(email: String, pass: String) {
 
-        helper.showProgressBar()
+        myHelper.showProgressBar()
 
-        val intent = Intent(this, HourMeterStartActivity::class.java)
-        startActivity(intent)
-        helper.hideProgressBar()
-//        helper.startHomeActivityByType()
+        if(myHelper.getIsMachineStopped()){
+            val intent = Intent(this, MachineStatus1Activity::class.java)
+            startActivity(intent)
+        }else{
+            val intent = Intent(this, HourMeterStartActivity::class.java)
+            startActivity(intent)
+        }
+
+        myHelper.hideProgressBar()
     }
 }

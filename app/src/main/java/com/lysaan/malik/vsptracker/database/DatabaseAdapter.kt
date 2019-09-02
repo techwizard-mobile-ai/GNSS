@@ -4,8 +4,8 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import com.lysaan.malik.vsptracker.Helper
-import com.lysaan.malik.vsptracker.classes.Data
+import com.lysaan.malik.vsptracker.MyHelper
+import com.lysaan.malik.vsptracker.classes.MyData
 import com.lysaan.malik.vsptracker.classes.EWork
 
 const val DATABASE_NAME = "vsptracker"
@@ -61,10 +61,10 @@ const val COL_IS_SYNC = "is_sync"
 class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 3) {
 
     val TAG = "DatabaseAdapter"
-    private var helper: Helper
+    private var myHelper: MyHelper
 
     init {
-        this.helper = Helper(TAG, context)
+        this.myHelper = MyHelper(TAG, context)
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
@@ -207,98 +207,98 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
 
     }
 
-    fun insertMachineStatus(data: Data): Long {
+    fun insertMachineStatus(myData: MyData): Long {
 
 
         val currentTime = System.currentTimeMillis()
 
-        data.startTime = currentTime
+        myData.startTime = currentTime
 
         val time = System.currentTimeMillis()
-        data.time = time.toString()
-        data.date = helper.getDate(time.toString())
-        data.loadedMachineType = helper.getMachineType()
-        data.loadedMachineNumber = helper.getMachineNumber()
+        myData.time = time.toString()
+        myData.date = myHelper.getDate(time.toString())
+        myData.loadedMachineType = myHelper.getMachineType()
+        myData.loadedMachineNumber = myHelper.getMachineNumber()
 
-        helper.log("insertMachineStatus:$data")
+        myHelper.log("insertMachineStatus:$myData")
 
 
         val db = this.writableDatabase
         var cv = ContentValues()
-        cv.put(COL_MACHINE_TYPE, data.loadedMachineType)
-        cv.put(COL_MACHINE_NUMBER, data.loadedMachineNumber)
-        cv.put(COL_MACHINE_STOPPED_REASON, data.machineStoppedReason)
+        cv.put(COL_MACHINE_TYPE, myData.loadedMachineType)
+        cv.put(COL_MACHINE_NUMBER, myData.loadedMachineNumber)
+        cv.put(COL_MACHINE_STOPPED_REASON, myData.machineStoppedReason)
 
-        cv.put(COL_START_TIME, data.startTime)
-        cv.put(COL_END_TIME, data.stopTime)
-        cv.put(COL_TOTAL_TIME, data.totalTime)
+        cv.put(COL_START_TIME, myData.startTime)
+        cv.put(COL_END_TIME, myData.stopTime)
+        cv.put(COL_TOTAL_TIME, myData.totalTime)
 
-        cv.put(COL_TIME, data.time.toLong())
-        cv.put(COL_DATE, data.date)
-        cv.put(COL_WORK_MODE, helper.getWorkMode())
+        cv.put(COL_TIME, myData.time.toLong())
+        cv.put(COL_DATE, myData.date)
+        cv.put(COL_WORK_MODE, myHelper.getWorkMode())
 
 
-        cv.put(COL_LOADING_GPS_LOCATION, helper.getGPSLocationToString(data.loadingGPSLocation))
-        cv.put(COL_UNLOADING_GPS_LOCATION, helper.getGPSLocationToString(data.unloadingGPSLocation))
-        cv.put(COL_USER_ID, helper.getUserID())
-        cv.put(COL_IS_SYNC, data.isSync)
+        cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(myData.loadingGPSLocation))
+        cv.put(COL_UNLOADING_GPS_LOCATION, myHelper.getGPSLocationToString(myData.unloadingGPSLocation))
+        cv.put(COL_USER_ID, myHelper.getUserID())
+        cv.put(COL_IS_SYNC, myData.isSync)
 
 
         val insertID = db.insert(TABLE_MACHINE_STATUS, null, cv)
-        helper.log("insertID:$insertID")
+        myHelper.log("insertID:$insertID")
         return insertID
     }
 
-    fun insertTrip(data: Data): Long {
+    fun insertTrip(myData: MyData): Long {
 
 
         val currentTime = System.currentTimeMillis()
 
-        data.startTime = currentTime
-//        data.stopTime = currentTime
-//        data.totalTime = currentTime - data.startTime
+        myData.startTime = currentTime
+//        myData.stopTime = currentTime
+//        myData.totalTime = currentTime - myData.startTime
 
         val time = System.currentTimeMillis()
-        data.time = time.toString()
-        data.date = helper.getDate(time.toString())
-        data.loadedMachineType = helper.getMachineType()
-        data.loadedMachineNumber = helper.getMachineNumber()
+        myData.time = time.toString()
+        myData.date = myHelper.getDate(time.toString())
+        myData.loadedMachineType = myHelper.getMachineType()
+        myData.loadedMachineNumber = myHelper.getMachineNumber()
 
-        helper.log("insertTrip:$data")
+        myHelper.log("insertTrip:$myData")
 
         val db = this.writableDatabase
         var cv = ContentValues()
-        cv.put(COL_LOADING_MACHINE, data.loadingMachine)
-        cv.put(COL_TRIP_TYPE, data.tripType)
-        cv.put(COL_TRIP0_ID, data.trip0ID)
-        cv.put(COL_MACHINE_TYPE, data.loadedMachineType)
-        cv.put(COL_MACHINE_NUMBER, data.loadedMachineNumber)
-        cv.put(COL_LOADED_MACHINE, data.loadedMachine)
-        cv.put(COL_LOADING_MATERIAL, data.loadingMaterial)
-        cv.put(COL_LOADING_LOCATION, data.loadingLocation)
+        cv.put(COL_LOADING_MACHINE, myData.loadingMachine)
+        cv.put(COL_TRIP_TYPE, myData.tripType)
+        cv.put(COL_TRIP0_ID, myData.trip0ID)
+        cv.put(COL_MACHINE_TYPE, myData.loadedMachineType)
+        cv.put(COL_MACHINE_NUMBER, myData.loadedMachineNumber)
+        cv.put(COL_LOADED_MACHINE, myData.loadedMachine)
+        cv.put(COL_LOADING_MATERIAL, myData.loadingMaterial)
+        cv.put(COL_LOADING_LOCATION, myData.loadingLocation)
 
-        cv.put(COL_UNLOADING_TASK, data.unloadingTask)
-        cv.put(COL_UNLOADING_MATERIAL, data.unloadingMaterial)
-        cv.put(COL_UNLOADING_LOCATION, data.unloadingLocation)
-        cv.put(COL_UNLOADING_WEIGHT, data.unloadingWeight)
+        cv.put(COL_UNLOADING_TASK, myData.unloadingTask)
+        cv.put(COL_UNLOADING_MATERIAL, myData.unloadingMaterial)
+        cv.put(COL_UNLOADING_LOCATION, myData.unloadingLocation)
+        cv.put(COL_UNLOADING_WEIGHT, myData.unloadingWeight)
 
-        cv.put(COL_START_TIME, data.startTime)
-        cv.put(COL_END_TIME, data.stopTime)
-        cv.put(COL_TOTAL_TIME, data.totalTime)
+        cv.put(COL_START_TIME, myData.startTime)
+        cv.put(COL_END_TIME, myData.stopTime)
+        cv.put(COL_TOTAL_TIME, myData.totalTime)
 
-        cv.put(COL_TIME, data.time.toLong())
-        cv.put(COL_DATE, data.date)
-        cv.put(COL_WORK_MODE, helper.getWorkMode())
+        cv.put(COL_TIME, myData.time.toLong())
+        cv.put(COL_DATE, myData.date)
+        cv.put(COL_WORK_MODE, myHelper.getWorkMode())
 
 
-        cv.put(COL_LOADING_GPS_LOCATION, helper.getGPSLocationToString(data.loadingGPSLocation))
-        cv.put(COL_UNLOADING_GPS_LOCATION, helper.getGPSLocationToString(data.unloadingGPSLocation))
-        cv.put(COL_USER_ID, helper.getUserID())
-        cv.put(COL_IS_SYNC, data.isSync)
+        cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(myData.loadingGPSLocation))
+        cv.put(COL_UNLOADING_GPS_LOCATION, myHelper.getGPSLocationToString(myData.unloadingGPSLocation))
+        cv.put(COL_USER_ID, myHelper.getUserID())
+        cv.put(COL_IS_SYNC, myData.isSync)
 
 
         val insertID = db.insert(TABLE_TRIP, null, cv)
-        helper.log("insertID:$insertID")
+        myHelper.log("insertID:$insertID")
         return insertID
     }
 
@@ -309,55 +309,55 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         eWork.stopTime = time
         eWork.totalTime = eWork.stopTime - eWork.startTime
         eWork.time = time.toString()
-        eWork.date = helper.getDate(time)
+        eWork.date = myHelper.getDate(time)
 
-        helper.log("insertDelay:$eWork")
+        myHelper.log("insertDelay:$eWork")
 
         val db = this.writableDatabase
         val cv = ContentValues()
-        cv.put(COL_MACHINE_TYPE, helper.getMachineType())
-        cv.put(COL_MACHINE_NUMBER, helper.getMachineNumber())
+        cv.put(COL_MACHINE_TYPE, myHelper.getMachineType())
+        cv.put(COL_MACHINE_NUMBER, myHelper.getMachineNumber())
         cv.put(COL_START_TIME, eWork.startTime)
         cv.put(COL_END_TIME, eWork.stopTime)
         cv.put(COL_TOTAL_TIME, eWork.totalTime)
         cv.put(COL_TIME, eWork.time.toLong())
         cv.put(COL_DATE, eWork.date)
-        cv.put(COL_WORK_MODE, helper.getWorkMode())
+        cv.put(COL_WORK_MODE, myHelper.getWorkMode())
 
-        cv.put(COL_LOADING_GPS_LOCATION, helper.getGPSLocationToString(eWork.loadingGPSLocation))
-        cv.put(COL_UNLOADING_GPS_LOCATION,helper.getGPSLocationToString(eWork.unloadingGPSLocation))
-        cv.put(COL_USER_ID, helper.getUserID())
+        cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(eWork.loadingGPSLocation))
+        cv.put(COL_UNLOADING_GPS_LOCATION,myHelper.getGPSLocationToString(eWork.unloadingGPSLocation))
+        cv.put(COL_USER_ID, myHelper.getUserID())
         cv.put(COL_IS_SYNC, eWork.isSync)
 
         val insertID = db.insert(TABLE_DELAY, null, cv)
-        helper.log("insertID:$insertID")
+        myHelper.log("insertID:$insertID")
         return insertID
     }
 
     fun insertEWorkOffLoad(eWork: EWork): Long {
         val time = System.currentTimeMillis()
         eWork.time = time.toString()
-        eWork.date = helper.getDate(time)
+        eWork.date = myHelper.getDate(time)
 
-        helper.log("insertEWorkOffLoad:$eWork")
+        myHelper.log("insertEWorkOffLoad:$eWork")
 
         val db = this.writableDatabase
         val cv = ContentValues()
         cv.put(COL_EWORK_ID, eWork.eWorkID)
         cv.put(COL_TIME, eWork.time.toLong())
         cv.put(COL_DATE, eWork.date)
-        cv.put(COL_WORK_MODE, helper.getWorkMode())
+        cv.put(COL_WORK_MODE, myHelper.getWorkMode())
 
-        cv.put(COL_LOADING_GPS_LOCATION, helper.getGPSLocationToString(eWork.loadingGPSLocation))
+        cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(eWork.loadingGPSLocation))
         cv.put(
                 COL_UNLOADING_GPS_LOCATION,
-                helper.getGPSLocationToString(eWork.unloadingGPSLocation)
+                myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
         )
-        cv.put(COL_USER_ID, helper.getUserID())
+        cv.put(COL_USER_ID, myHelper.getUserID())
         cv.put(COL_IS_SYNC, eWork.isSync)
 
         val insertID = db.insert(TABLE_E_WORK_ACTION_OFFLOADING, null, cv)
-        helper.log("insertID:$insertID")
+        myHelper.log("insertID:$insertID")
         return insertID
     }
 
@@ -374,9 +374,9 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         eWork.totalTime = currentTime - eWork.startTime
 
         eWork.time = currentTime.toString()
-        eWork.date = helper.getDate(currentTime)
+        eWork.date = myHelper.getDate(currentTime)
 
-        helper.log("insertEWork:$eWork")
+        myHelper.log("insertEWork:$eWork")
 
         val db = this.writableDatabase
         val cv = ContentValues()
@@ -389,51 +389,51 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         cv.put(COL_TOTAL_TIME, eWork.totalTime)
         cv.put(COL_TIME, eWork.time.toLong())
         cv.put(COL_DATE, eWork.date)
-        cv.put(COL_WORK_MODE, helper.getWorkMode())
+        cv.put(COL_WORK_MODE, myHelper.getWorkMode())
 
 
-        cv.put(COL_LOADING_GPS_LOCATION, helper.getGPSLocationToString(eWork.loadingGPSLocation))
+        cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(eWork.loadingGPSLocation))
         cv.put(
                 COL_UNLOADING_GPS_LOCATION,
-                helper.getGPSLocationToString(eWork.unloadingGPSLocation)
+                myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
         )
-        cv.put(COL_USER_ID, helper.getUserID())
+        cv.put(COL_USER_ID, myHelper.getUserID())
         cv.put(COL_IS_SYNC, eWork.isSync)
         val insertID = db.insert(TABLE_E_WORK, null, cv)
-        helper.log("insertID:$insertID")
+        myHelper.log("insertID:$insertID")
         return insertID
 
     }
 
-    fun insertELoad(data: Data): Long {
+    fun insertELoad(myData: MyData): Long {
 
         val time = System.currentTimeMillis()
-        data.time = time.toString()
-        data.date = helper.getDate(time.toString())
-        data.loadedMachineType = helper.getMachineType()
+        myData.time = time.toString()
+        myData.date = myHelper.getDate(time.toString())
+        myData.loadedMachineType = myHelper.getMachineType()
 
-        helper.log("insertELoad:$data")
+        myHelper.log("insertELoad:$myData")
 
         val db = this.writableDatabase
         var cv = ContentValues()
-        cv.put(COL_LOADING_MACHINE, data.loadingMachine)
-        cv.put(COL_MACHINE_TYPE, data.loadedMachineType)
-        cv.put(COL_LOADED_MACHINE, data.loadedMachine)
-        cv.put(COL_LOADING_MATERIAL, data.loadingMaterial)
-        cv.put(COL_LOADING_LOCATION, data.loadingLocation)
-        cv.put(COL_UNLOADING_WEIGHT, data.unloadingWeight)
+        cv.put(COL_LOADING_MACHINE, myData.loadingMachine)
+        cv.put(COL_MACHINE_TYPE, myData.loadedMachineType)
+        cv.put(COL_LOADED_MACHINE, myData.loadedMachine)
+        cv.put(COL_LOADING_MATERIAL, myData.loadingMaterial)
+        cv.put(COL_LOADING_LOCATION, myData.loadingLocation)
+        cv.put(COL_UNLOADING_WEIGHT, myData.unloadingWeight)
 
-        cv.put(COL_TIME, data.time.toLong())
-        cv.put(COL_DATE, data.date)
-        cv.put(COL_WORK_MODE, helper.getWorkMode())
+        cv.put(COL_TIME, myData.time.toLong())
+        cv.put(COL_DATE, myData.date)
+        cv.put(COL_WORK_MODE, myHelper.getWorkMode())
 
 
-        cv.put(COL_LOADING_GPS_LOCATION, helper.getGPSLocationToString(data.loadingGPSLocation))
-        cv.put(COL_UNLOADING_GPS_LOCATION, helper.getGPSLocationToString(data.unloadingGPSLocation))
-        cv.put(COL_USER_ID, helper.getUserID())
-        cv.put(COL_IS_SYNC, data.isSync)
+        cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(myData.loadingGPSLocation))
+        cv.put(COL_UNLOADING_GPS_LOCATION, myHelper.getGPSLocationToString(myData.unloadingGPSLocation))
+        cv.put(COL_USER_ID, myHelper.getUserID())
+        cv.put(COL_IS_SYNC, myData.isSync)
         val insertID = db.insert(TABLE_E_LOAD_HISTORY, null, cv)
-        helper.log("insertID:$insertID")
+        myHelper.log("insertID:$insertID")
         return insertID
     }
 
@@ -443,7 +443,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val db = this.readableDatabase
 
         val query =
-                "Select * from $TABLE_DELAY  WHERE ${COL_MACHINE_TYPE} = ${helper.getMachineType()} ORDER BY $COL_ID DESC"
+                "Select * from $TABLE_DELAY  WHERE ${COL_MACHINE_TYPE} = ${myHelper.getMachineType()} ORDER BY $COL_ID DESC"
         val result = db.rawQuery(query, null)
 
 
@@ -458,16 +458,16 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 eWork.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
                 eWork.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
 
-                eWork.time = helper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
-                eWork.date = helper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+                eWork.time = myHelper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
+                eWork.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
                 eWork.workMode = result.getString(result.getColumnIndex(COL_WORK_MODE))
 
-                eWork.loadingGPSLocation = helper.getStringToGPSLocation(
+                eWork.loadingGPSLocation = myHelper.getStringToGPSLocation(
                         result.getString(
                                 result.getColumnIndex(COL_LOADING_GPS_LOCATION)
                         )
                 )
-                eWork.unloadingGPSLocation = helper.getStringToGPSLocation(
+                eWork.unloadingGPSLocation = myHelper.getStringToGPSLocation(
                         result.getString(
                                 result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
                         )
@@ -478,7 +478,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 list.add(eWork)
             } while (result.moveToNext())
         } else {
-            helper.log("else result:$result")
+            myHelper.log("else result:$result")
         }
 
         result.close()
@@ -502,16 +502,16 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 eWork.ID = result.getInt(result.getColumnIndex(COL_ID))
                 eWork.eWorkID = result.getInt(result.getColumnIndex(COL_EWORK_ID))
 
-                eWork.time = helper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
-                eWork.date = helper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+                eWork.time = myHelper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
+                eWork.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
                 eWork.workMode = result.getString(result.getColumnIndex(COL_WORK_MODE))
 
-                eWork.loadingGPSLocation = helper.getStringToGPSLocation(
+                eWork.loadingGPSLocation = myHelper.getStringToGPSLocation(
                         result.getString(
                                 result.getColumnIndex(COL_LOADING_GPS_LOCATION)
                         )
                 )
-                eWork.unloadingGPSLocation = helper.getStringToGPSLocation(
+                eWork.unloadingGPSLocation = myHelper.getStringToGPSLocation(
                         result.getString(
                                 result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
                         )
@@ -521,7 +521,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 list.add(eWork)
             } while (result.moveToNext())
         } else {
-            helper.log("else result:$result")
+            myHelper.log("else result:$result")
         }
 
         result.close()
@@ -552,16 +552,16 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 eWork.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
                 eWork.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
                 eWork.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
-                eWork.time = helper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
-                eWork.date = helper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+                eWork.time = myHelper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
+                eWork.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
                 eWork.workMode = result.getString(result.getColumnIndex(COL_WORK_MODE))
 
-                eWork.loadingGPSLocation = helper.getStringToGPSLocation(
+                eWork.loadingGPSLocation = myHelper.getStringToGPSLocation(
                         result.getString(
                                 result.getColumnIndex(COL_LOADING_GPS_LOCATION)
                         )
                 )
-                eWork.unloadingGPSLocation = helper.getStringToGPSLocation(
+                eWork.unloadingGPSLocation = myHelper.getStringToGPSLocation(
                         result.getString(
                                 result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
                         )
@@ -571,7 +571,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 list.add(eWork)
             } while (result.moveToNext())
         } else {
-            helper.log("else result:$result")
+            myHelper.log("else result:$result")
         }
 
         result.close()
@@ -579,18 +579,18 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return list
     }
 
-    fun getELoadHistroy(): MutableList<Data> {
+    fun getELoadHistroy(): MutableList<MyData> {
 
-        var list: MutableList<Data> = ArrayList()
+        var list: MutableList<MyData> = ArrayList()
         val db = this.readableDatabase
 
         val query =
-                "Select * from $TABLE_E_LOAD_HISTORY WHERE ${COL_MACHINE_TYPE} = ${helper.getMachineType()} ORDER BY $COL_ID DESC"
+                "Select * from $TABLE_E_LOAD_HISTORY WHERE ${COL_MACHINE_TYPE} = ${myHelper.getMachineType()} ORDER BY $COL_ID DESC"
         val result = db.rawQuery(query, null)
 
         if (result.moveToFirst()) {
             do {
-                var data = Data()
+                var data = MyData()
                 data.recordID = result.getLong(result.getColumnIndex(COL_ID))
                 data.loadedMachineType = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE))
                 data.loadedMachine = result.getString(result.getColumnIndex(COL_LOADED_MACHINE))
@@ -601,17 +601,17 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                         result.getString(result.getColumnIndex(COL_LOADING_LOCATION))
                 data.unloadingWeight =
                         result.getDouble(result.getColumnIndex(COL_UNLOADING_WEIGHT))
-                data.time = helper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
-                data.date = helper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+                data.time = myHelper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
+                data.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
                 data.workMode = result.getString(result.getColumnIndex(COL_WORK_MODE))
 
 
-                data.loadingGPSLocation = helper.getStringToGPSLocation(
+                data.loadingGPSLocation = myHelper.getStringToGPSLocation(
                         result.getString(
                                 result.getColumnIndex(COL_LOADING_GPS_LOCATION)
                         )
                 )
-                data.unloadingGPSLocation = helper.getStringToGPSLocation(
+                data.unloadingGPSLocation = myHelper.getStringToGPSLocation(
                         result.getString(
                                 result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
                         )
@@ -621,7 +621,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 list.add(data)
             } while (result.moveToNext())
         } else {
-            helper.log("else result:$result")
+            myHelper.log("else result:$result")
         }
 
         result.close()
@@ -629,20 +629,20 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return list
     }
 
-    fun getTrips(): MutableList<Data> {
+    fun getTrips(): MutableList<MyData> {
 
-        var list: MutableList<Data> = ArrayList()
+        var list: MutableList<MyData> = ArrayList()
         val db = this.readableDatabase
 
         val query =
-                "Select * from $TABLE_TRIP  WHERE ${COL_MACHINE_TYPE} = ${helper.getMachineType()} ORDER BY $COL_ID DESC"
+                "Select * from $TABLE_TRIP  WHERE ${COL_MACHINE_TYPE} = ${myHelper.getMachineType()} ORDER BY $COL_ID DESC"
         val result = db.rawQuery(query, null)
 
 
 
         if (result.moveToFirst()) {
             do {
-                var data = Data()
+                var data = MyData()
                 data.recordID = result.getLong(result.getColumnIndex(COL_ID))
                 data.tripType = result.getInt(result.getColumnIndex(COL_TRIP_TYPE))
                 data.trip0ID = result.getInt(result.getColumnIndex(COL_TRIP0_ID))
@@ -667,16 +667,16 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 data.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
                 data.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
 
-                data.time = helper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
-                data.date = helper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+                data.time = myHelper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
+                data.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
                 data.workMode = result.getString(result.getColumnIndex(COL_WORK_MODE))
 
-                data.loadingGPSLocation = helper.getStringToGPSLocation(
+                data.loadingGPSLocation = myHelper.getStringToGPSLocation(
                         result.getString(
                                 result.getColumnIndex(COL_LOADING_GPS_LOCATION)
                         )
                 )
-                data.unloadingGPSLocation = helper.getStringToGPSLocation(
+                data.unloadingGPSLocation = myHelper.getStringToGPSLocation(
                         result.getString(
                                 result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
                         )
@@ -686,7 +686,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 list.add(data)
             } while (result.moveToNext())
         } else {
-            helper.log("else result:$result")
+            myHelper.log("else result:$result")
         }
 
         result.close()
@@ -694,19 +694,19 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return list
     }
 
-    fun getMachineStatus(): MutableList<Data> {
+    fun getMachineStatus(): MutableList<MyData> {
 
-        var list: MutableList<Data> = ArrayList()
+        var list: MutableList<MyData> = ArrayList()
         val db = this.readableDatabase
 
         val query =
-                "Select * from $TABLE_MACHINE_STATUS  WHERE ${COL_MACHINE_TYPE} = ${helper.getMachineType()} ORDER BY $COL_ID DESC"
+                "Select * from $TABLE_MACHINE_STATUS  WHERE ${COL_MACHINE_TYPE} = ${myHelper.getMachineType()} ORDER BY $COL_ID DESC"
         val result = db.rawQuery(query, null)
 
 
         if (result.moveToFirst()) {
             do {
-                var data = Data()
+                var data = MyData()
                 data.recordID = result.getLong(result.getColumnIndex(COL_ID))
                 data.loadedMachineType = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE))
                 data.loadedMachineNumber = result.getString(result.getColumnIndex(COL_MACHINE_NUMBER))
@@ -717,16 +717,16 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 data.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
                 data.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
 
-                data.time = helper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
-                data.date = helper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+                data.time = myHelper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
+                data.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
                 data.workMode = result.getString(result.getColumnIndex(COL_WORK_MODE))
 
-                data.loadingGPSLocation = helper.getStringToGPSLocation(
+                data.loadingGPSLocation = myHelper.getStringToGPSLocation(
                         result.getString(
                                 result.getColumnIndex(COL_LOADING_GPS_LOCATION)
                         )
                 )
-                data.unloadingGPSLocation = helper.getStringToGPSLocation(
+                data.unloadingGPSLocation = myHelper.getStringToGPSLocation(
                         result.getString(
                                 result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
                         )
@@ -736,7 +736,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 list.add(data)
             } while (result.moveToNext())
         } else {
-            helper.log("else result:$result")
+            myHelper.log("else result:$result")
         }
 
         result.close()
@@ -754,9 +754,9 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         eWork.totalTime = currentTime - eWork.startTime
 
         eWork.time = currentTime.toString()
-        eWork.date = helper.getDate(currentTime)
+        eWork.date = myHelper.getDate(currentTime)
 
-        helper.log("updateEWork:$eWork")
+        myHelper.log("updateEWork:$eWork")
 
         val db = this.writableDatabase
         val cv = ContentValues()
@@ -766,80 +766,80 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         cv.put(COL_DATE, eWork.date)
         cv.put(
                 COL_UNLOADING_GPS_LOCATION,
-                helper.getGPSLocationToString(eWork.unloadingGPSLocation)
+                myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
         )
         cv.put(COL_IS_SYNC, eWork.isSync)
         val updatedID = db.update(TABLE_E_WORK, cv, "$COL_ID = ${eWork.ID}", null)
 
-        helper.log("updatedID :$updatedID ")
+        myHelper.log("updatedID :$updatedID ")
         return updatedID
 
     }
 
-    fun updateTrip(data: Data): Int {
+    fun updateTrip(myData: MyData): Int {
 
 
         val currentTime = System.currentTimeMillis()
 
-        data.stopTime = currentTime
-        data.totalTime = currentTime - data.startTime
+        myData.stopTime = currentTime
+        myData.totalTime = currentTime - myData.startTime
 
-        data.time = currentTime.toString()
-        data.date = helper.getDate(currentTime)
+        myData.time = currentTime.toString()
+        myData.date = myHelper.getDate(currentTime)
 
-        helper.log("updateTrip:$data")
+        myHelper.log("updateTrip:$myData")
 
         val db = this.writableDatabase
         val cv = ContentValues()
-        cv.put(COL_UNLOADING_WEIGHT, data.unloadingWeight)
-        cv.put(COL_UNLOADING_TASK, data.unloadingTask)
-        cv.put(COL_UNLOADING_MATERIAL, data.unloadingMaterial)
-        cv.put(COL_UNLOADING_LOCATION, data.unloadingLocation)
-        cv.put(COL_END_TIME, data.stopTime)
-        cv.put(COL_TOTAL_TIME, data.totalTime)
-        cv.put(COL_TIME, data.time.toLong())
-        cv.put(COL_DATE, data.date)
-        cv.put(COL_WORK_MODE, helper.getWorkMode())
+        cv.put(COL_UNLOADING_WEIGHT, myData.unloadingWeight)
+        cv.put(COL_UNLOADING_TASK, myData.unloadingTask)
+        cv.put(COL_UNLOADING_MATERIAL, myData.unloadingMaterial)
+        cv.put(COL_UNLOADING_LOCATION, myData.unloadingLocation)
+        cv.put(COL_END_TIME, myData.stopTime)
+        cv.put(COL_TOTAL_TIME, myData.totalTime)
+        cv.put(COL_TIME, myData.time.toLong())
+        cv.put(COL_DATE, myData.date)
+        cv.put(COL_WORK_MODE, myHelper.getWorkMode())
         cv.put(
                 COL_UNLOADING_GPS_LOCATION,
-                helper.getGPSLocationToString(data.unloadingGPSLocation)
+                myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
         )
-        cv.put(COL_IS_SYNC, data.isSync)
+        cv.put(COL_IS_SYNC, myData.isSync)
 
-        val updatedID = db.update(TABLE_TRIP, cv, "$COL_ID = ${data.recordID}", null)
+        val updatedID = db.update(TABLE_TRIP, cv, "$COL_ID = ${myData.recordID}", null)
 
-        helper.log("updatedID :$updatedID ")
+        myHelper.log("updatedID :$updatedID ")
         return updatedID
 
     }
 
-    fun updateMachineStatus(data: Data): Int {
+    fun updateMachineStatus(myData: MyData): Int {
 
         val currentTime = System.currentTimeMillis()
 
-        data.stopTime = currentTime
-        data.totalTime = currentTime - data.startTime
+        myData.stopTime = currentTime
+        myData.totalTime = currentTime - myData.startTime
 
-        data.time = currentTime.toString()
-        data.date = helper.getDate(currentTime)
+        myData.time = currentTime.toString()
+        myData.date = myHelper.getDate(currentTime)
 
-        helper.log("updateTrip:$data")
+        myHelper.log("updateTrip:$myData")
 
         val db = this.writableDatabase
         val cv = ContentValues()
 
-        cv.put(COL_END_TIME, data.stopTime)
-        cv.put(COL_TOTAL_TIME, data.totalTime)
-        cv.put(COL_TIME, data.time.toLong())
-        cv.put(COL_DATE, data.date)
-        cv.put(COL_WORK_MODE, helper.getWorkMode())
-        cv.put(COL_UNLOADING_GPS_LOCATION, helper.getGPSLocationToString(data.unloadingGPSLocation)
+        cv.put(COL_END_TIME, myData.stopTime)
+        cv.put(COL_TOTAL_TIME, myData.totalTime)
+        cv.put(COL_TIME, myData.time.toLong())
+        cv.put(COL_DATE, myData.date)
+        cv.put(COL_WORK_MODE, myHelper.getWorkMode())
+        cv.put(COL_UNLOADING_GPS_LOCATION, myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
         )
-        cv.put(COL_IS_SYNC, data.isSync)
+        cv.put(COL_IS_SYNC, myData.isSync)
 
-        val updatedID = db.update(TABLE_MACHINE_STATUS, cv, "$COL_ID = ${data.recordID}", null)
+        val updatedID = db.update(TABLE_MACHINE_STATUS, cv, "$COL_ID = ${myData.recordID}", null)
 
-        helper.log("updatedID :$updatedID ")
+        myHelper.log("updatedID :$updatedID ")
         return updatedID
 
     }

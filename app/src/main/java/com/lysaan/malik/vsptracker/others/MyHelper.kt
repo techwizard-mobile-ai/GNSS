@@ -27,15 +27,17 @@ import com.lysaan.malik.vsptracker.activities.scrapper.SHomeActivity
 import com.lysaan.malik.vsptracker.activities.scrapper.SUnloadAfterActivity
 import com.lysaan.malik.vsptracker.activities.truck.THomeActivity
 import com.lysaan.malik.vsptracker.activities.truck.TUnloadAfterActivity
-import com.lysaan.malik.vsptracker.classes.*
-import com.lysaan.malik.vsptracker.database.DatabaseAdapter
+import com.lysaan.malik.vsptracker.classes.GPSLocation
+import com.lysaan.malik.vsptracker.classes.Material
+import com.lysaan.malik.vsptracker.classes.Meter
+import com.lysaan.malik.vsptracker.classes.MyData
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 
-class Helper(var TAG: String, val context: Context) {
+class MyHelper(var TAG: String, val context: Context) {
 
     private lateinit var dialog: ProgressDialog
     private lateinit var progressBar: ProgressBar
@@ -49,13 +51,13 @@ class Helper(var TAG: String, val context: Context) {
         return gson.fromJson(stringGPSLocation, GPSLocation::class.java)
     }
 
-    fun getGPSLocationToString(gpsLocation: GPSLocation): String {
-        return gson.toJson(gpsLocation)
+    fun getGPSLocationToString(gpsMaterial: GPSLocation): String {
+        return gson.toJson(gpsMaterial)
     }
 
-    fun showOnMap(gpsLocation: GPSLocation, title: String) {
-        val lat = gpsLocation.latitude
-        val longg = gpsLocation.longitude
+    fun showOnMap(gpsMaterial: GPSLocation, title: String) {
+        val lat = gpsMaterial.latitude
+        val longg = gpsMaterial.longitude
         val geoUri = "http://maps.google.com/maps?q=loc:" + lat + "," + longg + " ($title)";
         val mapIntent = Intent(Intent.ACTION_VIEW, Uri.parse(geoUri))
         mapIntent.setPackage("com.google.android.apps.maps")
@@ -97,14 +99,14 @@ class Helper(var TAG: String, val context: Context) {
         }
     }
 
-    fun stopDelay(gpsLocation: GPSLocation) {
+    fun stopDelay(gpsMaterial: GPSLocation) {
             val meter = getMeter()
             log("MeterStopBefore:$meter")
             meter.isDelayStarted = false
             meter.delayStopTime = System.currentTimeMillis()
 
             meter.delayTotalTime = meter.delayStopTime - meter.delayStartTime
-            meter.delayStopGPSLocation = gpsLocation
+            meter.delayStopGPSLocation = gpsMaterial
             log("MeterStopAfter:$meter")
             setMeter(meter)
 //            toast("Delay Stopped.\nStart Time: ${getTime(getMeter().dailyModeStartTime)}Hrs.\nTotal Time: ${getFormatedTime(meter.delayTotalTime)}")
@@ -128,14 +130,14 @@ class Helper(var TAG: String, val context: Context) {
         }
     }
 
-    fun startDelay(gpsLocation: GPSLocation) {
+        fun startDelay(gpsMaterial: GPSLocation) {
         val currentTime = System.currentTimeMillis()
         if(!isDelayStarted()){
             val meter = getMeter()
             log("MeterStartBefore:$meter")
             meter.isDelayStarted = true
             meter.delayStartTime = currentTime
-            meter.delayStartGPSLocation = gpsLocation
+            meter.delayStartGPSLocation = gpsMaterial
             toast("Delay Started.")
             log("MeterStartAfter:$meter")
             setMeter(meter)
@@ -260,7 +262,7 @@ class Helper(var TAG: String, val context: Context) {
     }
 
     fun getLastJourney() = sessionManager.getLastJourney()
-    fun setLastJourney(data: Data) = sessionManager.setLastJourney(data)
+    fun setLastJourney(myData: MyData) = sessionManager.setLastJourney(myData)
 
     fun getRoundedDecimal(minutes: Double): Double {
         val number3digits: Double = Math.round(minutes * 1000.0) / 1000.0
@@ -377,7 +379,7 @@ class Helper(var TAG: String, val context: Context) {
 
     fun getMachineLocations(): ArrayList<Material> {
         val states = ArrayList<Material>()
-        states.add(Material(0, "Select Machine Location"))
+        states.add(Material(0, "Select Machine Material"))
         states.add(Material(1, "Auckland"))
         states.add(Material(2, "Drury"))
         states.add(Material(3, "Te Kauwhata"))
@@ -419,29 +421,29 @@ class Helper(var TAG: String, val context: Context) {
         return states
     }
 
-    fun getLocations1(): ArrayList<Material> {
+    fun getMaterials1(): ArrayList<Material> {
         val locations = ArrayList<Material>()
 
-        locations.add(Material(0, "Select Location"))
-        locations.add(Material(1, "Location 1"))
-        locations.add(Material(2, "Location 2"))
-        locations.add(Material(3, "Location 3"))
-        locations.add(Material(4, "Location 4"))
-        locations.add(Material(5, "Location 5"))
+        locations.add(Material(0, "Select Material"))
+        locations.add(Material(1, "Material 1"))
+        locations.add(Material(2, "Material 2"))
+        locations.add(Material(3, "Material 3"))
+        locations.add(Material(4, "Material 4"))
+        locations.add(Material(5, "Material 5"))
         locations.add(Material(6, "Other 1"))
         return locations
     }
 
-    fun getLocations(): ArrayList<Location> {
-        val locations = ArrayList<Location>()
+    fun getLocations(): ArrayList<Material> {
+        val locations = ArrayList<Material>()
 
-        locations.add(Location(0, "Select Location"))
-        locations.add(Location(1, "Location 1"))
-        locations.add(Location(2, "Location 2"))
-        locations.add(Location(3, "Location 3"))
-        locations.add(Location(4, "Location 4"))
-        locations.add(Location(5, "Location 5"))
-        locations.add(Location(6, "Other 1"))
+        locations.add(Material(0, "Select Material"))
+        locations.add(Material(1, "Material 1"))
+        locations.add(Material(2, "Material 2"))
+        locations.add(Material(3, "Material 3"))
+        locations.add(Material(4, "Material 4"))
+        locations.add(Material(5, "Material 5"))
+        locations.add(Material(6, "Other 1"))
         return locations
     }
 
@@ -510,7 +512,7 @@ class Helper(var TAG: String, val context: Context) {
                                 target: com.bumptech.glide.request.target.Target<Drawable>?,
                                 isFirstResource: Boolean
                         ): Boolean {
-//                                helper.hideDialog()
+//                                myHelper.hideDialog()
                             return false
                         }
 
@@ -521,14 +523,14 @@ class Helper(var TAG: String, val context: Context) {
                                 dataSource: DataSource?,
                                 isFirstResource: Boolean
                         ): Boolean {
-//                                helper.hideDialog()
+//                                myHelper.hideDialog()
                             return false
                         }
 
                     })
                     .into(imageView)
         } else {
-//                    helper.hideDialog()
+//                    myHelper.hideDialog()
             log("else$url")
             imageView.setImageResource(R.drawable.user_img)
         }
@@ -640,44 +642,44 @@ class Helper(var TAG: String, val context: Context) {
     //    type = 1 excavator
     //    type = 2 scrapper
     //    type = 3 truck
-    fun startHomeActivityByType(data: Data) {
+    fun startHomeActivityByType(myData: MyData) {
         when (getMachineType()) {
             1 -> {
 //                val intent = Intent(myContext, Material1Activity::class.java)
                 val intent = Intent(context, EHomeActivity::class.java)
-                intent.putExtra("data", data)
+                intent.putExtra("myData", myData)
                 context.startActivity(intent)
             }
             2 -> {
                 val intent = Intent(context, SHomeActivity::class.java)
-//                intent.putExtra("data", data)
+//                intent.putExtra("myData", myData)
                 context.startActivity(intent)
             }
             3 -> {
                 val intent = Intent(context, THomeActivity::class.java)
-//                intent.putExtra("data", data)
+//                intent.putExtra("myData", myData)
                 context.startActivity(intent)
 
             }
         }
     }
 
-    fun startLoadAfterActivityByType(data: Data) {
+    fun startLoadAfterActivityByType(myData: MyData) {
 
         when (getMachineType()) {
             1 -> {
                 val intent = Intent(context, EHomeActivity::class.java)
-                intent.putExtra("data", data)
+                intent.putExtra("myData", myData)
                 context.startActivity(intent)
             }
             2 -> {
                 val intent = Intent(context, SUnloadAfterActivity::class.java)
-                intent.putExtra("data", data)
+                intent.putExtra("myData", myData)
                 context.startActivity(intent)
             }
             3 -> {
                 val intent = Intent(context, TUnloadAfterActivity::class.java)
-                intent.putExtra("data", data)
+                intent.putExtra("myData", myData)
                 context.startActivity(intent)
 
             }
@@ -689,14 +691,14 @@ class Helper(var TAG: String, val context: Context) {
             activity: Activity
     ) {
         var bundle: Bundle? = intent.extras
-        var data = Data()
+        var data = MyData()
         if (bundle != null) {
-            data = bundle!!.getSerializable("data") as Data
-            log("data:$data")
+            data = bundle!!.getSerializable("myData") as MyData
+            log("myData:$data")
         }
         activity.finish()
         val intent = Intent(activity, activity.javaClass)
-        intent.putExtra("data", Data())
+        intent.putExtra("myData", MyData())
         activity.startActivity(intent)
 
     }

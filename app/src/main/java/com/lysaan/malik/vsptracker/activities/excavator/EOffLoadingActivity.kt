@@ -3,19 +3,17 @@ package com.lysaan.malik.vsptracker.activities.excavator
 import android.content.Intent
 import android.os.Bundle
 import android.os.SystemClock
-import com.google.android.material.navigation.NavigationView
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.navigation.NavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.activities.HourMeterStopActivity
 import com.lysaan.malik.vsptracker.adapters.EOffLoadingAdapter
-
-import com.lysaan.malik.vsptracker.classes.Data
 import com.lysaan.malik.vsptracker.classes.EWork
+import com.lysaan.malik.vsptracker.classes.MyData
 import kotlinx.android.synthetic.main.activity_eoff_loading.*
 
 class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
@@ -33,15 +31,15 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
         val navigationView = findViewById(R.id.base_nav_view) as NavigationView
         navigationView.menu.getItem(0).isChecked = true
 
-        helper.setTag(TAG)
+        myHelper.setTag(TAG)
 
         var bundle: Bundle? = intent.extras
         if (bundle != null) {
-            data = bundle!!.getSerializable("data") as Data
-            helper.log("data:$data")
+            myData = bundle!!.getSerializable("myData") as MyData
+            myHelper.log("myData:$myData")
         }
 
-        when (data.eWorkType) {
+        when (myData.eWorkType) {
             1 -> {
                 workTitle = "General Digging (Loading)"
             }
@@ -62,22 +60,13 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
     override fun onBackPressed() {
 
         if (isWorking) {
-            helper.showStopMessage(startTime)
+            myHelper.showStopMessage(startTime)
         } else {
             super.onBackPressed()
             finish()
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        startGPS()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        stopGPS()
-    }
 
     override fun onClick(view: View?) {
         when (view!!.id) {
@@ -93,28 +82,28 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
 
                     val updatedID = db.updateEWork(eWork)
                     eWorkID = updatedID
-                    helper.log("updatedID :$updatedID ")
+                    myHelper.log("updatedID :$updatedID ")
 //
                     if (updatedID > 0) {
-                        helper.toast(
+                        myHelper.toast(
                                 "$workTitle is Stopped.\n" +
-                                        "Data Saved Successfully.\n" +
-                                        "Work Duration : ${helper.getTotalTimeVSP(startTime)} (VSP Meter).\n" +
-                                        "Work Duration : ${helper.getTotalTimeMintues(startTime)} (Minutes)"
+                                        "MyData Saved Successfully.\n" +
+                                        "Work Duration : ${myHelper.getTotalTimeVSP(startTime)} (VSP Meter).\n" +
+                                        "Work Duration : ${myHelper.getTotalTimeMintues(startTime)} (Minutes)"
                         )
                         ework_action_text.text = "Start"
                         chronometer1.stop()
                         isWorking = false
                         eWorkID = 0
                     } else {
-                        helper.toast("Data Not Saved.")
+                        myHelper.toast("MyData Not Saved.")
                         isWorking = false
                     }
 
 
                 } else {
                     startTime = System.currentTimeMillis()
-                    helper.toast("$workTitle is Started.")
+                    myHelper.toast("$workTitle is Started.")
                     ework_action_text.text = "Stop"
                     chronometer1.setBase(SystemClock.elapsedRealtime())
                     chronometer1.start()
@@ -124,14 +113,14 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                     eWork.startTime = startTime
                     eWork.stopTime = System.currentTimeMillis()
                     eWork.totalTime = System.currentTimeMillis() - startTime
-                    eWork.workType = data.eWorkType
+                    eWork.workType = myData.eWorkType
                     eWork.workActionType = 2
                     eWork.loadingGPSLocation = gpsLocation
 
                     val insertID = db.insertEWork(eWork)
                     eWorkID = insertID.toInt()
-                    helper.log("insertID:$insertID")
-                    helper.log("eWorkID:$eWorkID")
+                    myHelper.log("insertID:$insertID")
+                    myHelper.log("eWorkID:$eWorkID")
                 }
 
             }
@@ -139,7 +128,7 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
             R.id.ework_offload_load -> {
                 if (isWorking) {
                     if (eWorkID < 1) {
-                        helper.toast("Please Restart Timer.")
+                        myHelper.toast("Please Restart Timer.")
                     } else {
                         stopDelay()
                         val eWork = EWork()
@@ -147,7 +136,7 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                         eWork.loadingGPSLocation = gpsLocation
                         val insertedID = db.insertEWorkOffLoad(eWork)
                         if (insertedID > 0) {
-                            helper.toast("Load Saved Successfully.")
+                            myHelper.toast("Load Saved Successfully.")
 
                             val offLoads = db.getEWorksOffLoads(eWorkID)
                             if (offLoads.size > 0) {
@@ -163,27 +152,27 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
 
 
                         } else {
-                            helper.toast("Load Not Saved. Please Try again.")
+                            myHelper.toast("Load Not Saved. Please Try again.")
 
                         }
                     }
                 } else {
-                    helper.toast("Timer is Stopped.\nPlease start Timer First.")
+                    myHelper.toast("Timer is Stopped.\nPlease start Timer First.")
                 }
             }
             R.id.ework_offload_home -> {
 
-                helper.log("Loads:${db.getEWorksOffLoads(eWorkID)}")
+                myHelper.log("Loads:${db.getEWorksOffLoads(eWorkID)}")
 
                 if (isWorking) {
-                    helper.showStopMessage(startTime)
+                    myHelper.showStopMessage(startTime)
                 } else {
-                    helper.startHomeActivityByType(data)
+                    myHelper.startHomeActivityByType(myData)
                 }
             }
             R.id.ework_offload_finish -> {
                 if (isWorking) {
-                    helper.showStopMessage(startTime)
+                    myHelper.showStopMessage(startTime)
                 } else {
                     val intent = Intent(this, HourMeterStopActivity::class.java)
                     startActivity(intent)

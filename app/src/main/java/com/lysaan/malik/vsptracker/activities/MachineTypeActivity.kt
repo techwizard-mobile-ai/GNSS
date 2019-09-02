@@ -6,7 +6,7 @@ import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
-import com.lysaan.malik.vsptracker.Helper
+import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.adapters.SelectStateAdapter
 import com.lysaan.malik.vsptracker.classes.Material
@@ -17,7 +17,7 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
     private var selectedMachineType = Material(0, "Select Machine Type")
     private var selectedMachineLocation = Material(0, "Select Machine Location")
 
-    private lateinit var helper: Helper
+    private lateinit var myHelper: MyHelper
     private val TAG = this::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,23 +27,23 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
 
 //        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
 
-        helper = Helper(TAG, this)
+        myHelper = MyHelper(TAG, this)
 
         selectMachineType()
         selectMachineLocation()
 
         machine_type_main_layout.setOnTouchListener(View.OnTouchListener { v, event ->
-            helper.hideKeyboard(machine_type_main_layout)
+            myHelper.hideKeyboard(machine_type_main_layout)
             false
         })
 
         machine_type.setOnTouchListener(View.OnTouchListener { v, event ->
-            helper.hideKeyboard(machine_type)
+            myHelper.hideKeyboard(machine_type)
             false
         })
 
         machine_location.setOnTouchListener(View.OnTouchListener { v, event ->
-            helper.hideKeyboard(machine_location)
+            myHelper.hideKeyboard(machine_location)
             false
         })
 
@@ -57,17 +57,17 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
 
                 val machineNumber = machine_number.text.toString()
                 if (selectedMachineType.id == 0) {
-                    helper.toast("Please Select Machine Type")
+                    myHelper.toast("Please Select Machine Type")
                 } else if (machineNumber.isNullOrBlank()) {
-                    helper.toast("Please enter a valid Machine Number")
+                    myHelper.toast("Please enter a valid Machine Number")
                 } else if (selectedMachineLocation.id == 0) {
-                    helper.toast("Please Select Machine Location")
+                    myHelper.toast("Please Select Machine Location")
                 } else {
-                    helper.setMachineType(selectedMachineType.id)
-                    helper.setMachineNumber(machineNumber)
+                    myHelper.setMachineType(selectedMachineType.id)
+                    myHelper.setMachineNumber(machineNumber)
 
-//                    helper.toast("Data Saved Successfully.")
-                    helper.stopDailyMode()
+//                    myHelper.toast("MyData Saved Successfully.")
+                    myHelper.stopDailyMode()
                     val intent = Intent(this, LoginActivity::class.java)
                     startActivity(intent)
                     finishAffinity()
@@ -78,7 +78,7 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
 
 
     private fun selectMachineType() {
-        var machineTypes = helper.getMachineTypes()
+        var machineTypes = myHelper.getMachineTypes()
         val selectMaterialAdapter = SelectStateAdapter(this@MachineTypeActivity, machineTypes)
         machine_type!!.setAdapter(selectMaterialAdapter)
         machine_type.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
@@ -105,7 +105,7 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun selectMachineLocation() {
-        var machineTypes = helper.getMachineLocations()
+        var machineTypes = myHelper.getMachineLocations()
         val selectMaterialAdapter = SelectStateAdapter(this@MachineTypeActivity, machineTypes)
         machine_location!!.setAdapter(selectMaterialAdapter)
         machine_location.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))

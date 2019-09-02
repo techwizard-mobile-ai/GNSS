@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import android.util.Log
 import com.google.gson.Gson
-import com.lysaan.malik.vsptracker.classes.Data
+import com.lysaan.malik.vsptracker.classes.MyData
 import com.lysaan.malik.vsptracker.classes.Meter
 
 class SessionManager(internal var _context: Context) {
@@ -41,20 +41,20 @@ class SessionManager(internal var _context: Context) {
     }
 
 
-    fun getLastJourney(): Data {
+    fun getLastJourney(): MyData {
         val gson = Gson()
         val json = pref.getString(KEY_LAST_JOURNEY, "")
-        val obj = gson.fromJson<Data>(json, Data::class.java)
+        val obj = gson.fromJson<MyData>(json, MyData::class.java)
         if (obj == null) {
-            return Data()
+            return MyData()
         } else {
             return obj
         }
     }
 
-    fun setLastJourney(data: Data) {
+    fun setLastJourney(myData: MyData) {
         val gson = Gson()
-        val json = gson.toJson(data)
+        val json = gson.toJson(myData)
         editor.putString(KEY_LAST_JOURNEY, json)
         editor.commit();
     }

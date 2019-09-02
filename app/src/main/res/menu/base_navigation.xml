@@ -4,11 +4,15 @@
 
     <item
         android:id="@+id/navb_map"
+        android:checked="false"
         android:icon="@drawable/ic_location_on_black_24dp"
-        android:title="@string/map" />
+        android:title="@string/map"
+        />
+
     <item
         android:id="@+id/navb_delay"
-        android:icon="@drawable/ic_delay_started"
-        android:title="@string/delay" />
+        android:checked="false"
+        android:icon="@drawable/ic_stopped"
+        android:title="@string/delay"  />
 
 </menu>

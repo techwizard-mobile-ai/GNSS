@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.classes.Data
+import com.lysaan.malik.vsptracker.classes.MyData
 import com.lysaan.malik.vsptracker.fragments.common.DelayHistoryFragment
 import com.lysaan.malik.vsptracker.fragments.truck.LoadingHistoryFragment
 import kotlinx.android.synthetic.main.activity_tab_history.*
@@ -33,12 +33,12 @@ class TabHistoryActivity : BaseActivity(), View.OnClickListener,
         val navigationView = findViewById(R.id.base_nav_view) as NavigationView
         navigationView.menu.getItem(5).isChecked = true
 
-        helper.setTag(TAG)
+        myHelper.setTag(TAG)
 
         var bundle: Bundle? = intent.extras
         if (bundle != null) {
-            data = bundle!!.getSerializable("data") as Data
-            helper.log("data:$data")
+            myData = bundle!!.getSerializable("myData") as MyData
+            myHelper.log("myData:$myData")
         }
 
 
@@ -47,7 +47,7 @@ class TabHistoryActivity : BaseActivity(), View.OnClickListener,
 
         val menuFragment = bundle?.getString("menuFragment")
         if (menuFragment != null) {
-            helper.log("menuFragment:${menuFragment.toString()}")
+            myHelper.log("menuFragment:${menuFragment.toString()}")
             if (menuFragment.equals("delayHistoryFragment")) {
                 val delayFragment = DelayHistoryFragment.newInstance(this, DELAY_HISTORY)
                 openFragment(delayFragment, DELAY_HISTORY)
@@ -108,7 +108,7 @@ class TabHistoryActivity : BaseActivity(), View.OnClickListener,
     override fun onBackPressed() {
 
         val count = supportFragmentManager.backStackEntryCount
-        helper.log("count--$count")
+        myHelper.log("count--$count")
         if (count < 2) {
             finish()
         } else {

@@ -5,19 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.lysaan.malik.vsptracker.Helper
+import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.classes.Data
+import com.lysaan.malik.vsptracker.classes.MyData
 import kotlinx.android.synthetic.main.list_row_eload_history.view.*
 
 class ELoadingHistoryAdapter(
         val context: Activity,
-        val dataList: MutableList<Data>
+        val myDataList: MutableList<MyData>
 ) : RecyclerView.Adapter<ELoadingHistoryAdapter
 .ViewHolder>() {
 
     private val TAG = this::class.java.simpleName
-    private lateinit var helper: Helper
+    private lateinit var myHelper: MyHelper
 
     override fun onCreateViewHolder(
             parent: ViewGroup,
@@ -27,18 +27,18 @@ class ELoadingHistoryAdapter(
 
         val v = LayoutInflater.from(parent.context)
                 .inflate(R.layout.list_row_eload_history, parent, false)
-        helper = Helper(TAG, context)
+        myHelper = MyHelper(TAG, context)
         return ViewHolder(v)
     }
 
     override fun onBindViewHolder(holder: ELoadingHistoryAdapter.ViewHolder, position: Int) {
 
-        val myData = dataList.get(position)
+        val myData = myDataList.get(position)
 
         if (myData.recordID < 1) {
             holder.itemView.lhr_record_number_layout.visibility = View.VISIBLE
-//            holder.itemView.lhr_record_number.setText(":  "+data.recordID)
-            holder.itemView.lhr_record_number.setText(":  " + (dataList.size - position))
+//            holder.itemView.lhr_record_number.setText(":  "+myData.recordID)
+            holder.itemView.lhr_record_number.setText(":  " + (myDataList.size - position))
         } else {
             holder.itemView.lhr_record_number_layout.visibility = View.GONE
         }
@@ -86,19 +86,19 @@ class ELoadingHistoryAdapter(
         }
 
         holder.itemView.lhr_gps_loading.text =
-                ": ${helper.getRoundedDecimal(myData.loadingGPSLocation.latitude)} / ${helper.getRoundedDecimal(
+                ": ${myHelper.getRoundedDecimal(myData.loadingGPSLocation.latitude)} / ${myHelper.getRoundedDecimal(
                         myData.loadingGPSLocation.longitude
                 )} "
 
         holder.itemView.lhr_workmode.text = ": ${myData.workMode}"
         holder.itemView.lhr_gps_loading_layout.setOnClickListener {
-            helper.showOnMap(myData.loadingGPSLocation, myData.loadingLocation)
+            myHelper.showOnMap(myData.loadingGPSLocation, myData.loadingLocation)
         }
     }
 
 
     override fun getItemCount(): Int {
-        return dataList.size
+        return myDataList.size
     }
 
 

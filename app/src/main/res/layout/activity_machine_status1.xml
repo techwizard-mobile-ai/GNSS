@@ -28,6 +28,11 @@
             style="@style/next_button"
             android:layout_marginTop="@dimen/_50sdp"
             android:text="@string/activity_machine_status1_machine_status_start_text" />
+        <Button
+            android:id="@+id/machine_status_logout"
+            style="@style/next_button"
+            android:layout_marginTop="@dimen/_50sdp"
+            android:text="@string/logout" />
 
 
     </LinearLayout>

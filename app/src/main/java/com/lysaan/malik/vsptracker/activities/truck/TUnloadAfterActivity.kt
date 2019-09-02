@@ -11,7 +11,7 @@ import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.activities.HourMeterStopActivity
 import com.lysaan.malik.vsptracker.activities.common.LMachine1Activity
 import com.lysaan.malik.vsptracker.activities.common.RLoadActivity
-import com.lysaan.malik.vsptracker.classes.Data
+import com.lysaan.malik.vsptracker.classes.MyData
 import kotlinx.android.synthetic.main.activity_tunload_after.*
 
 class TUnloadAfterActivity : BaseActivity(), View.OnClickListener {
@@ -26,19 +26,19 @@ class TUnloadAfterActivity : BaseActivity(), View.OnClickListener {
         val navigationView = findViewById(R.id.base_nav_view) as NavigationView
         navigationView.menu.getItem(0).isChecked = true
 
-        helper.setTag(TAG)
+        myHelper.setTag(TAG)
 
 //        var bundle :Bundle ?=intent.extras
 //        if(bundle != null){
-//            data = bundle!!.getSerializable("data") as Data
-//            helper.log("data:$data")
+//            myData = bundle!!.getSerializable("myData") as MyData
+//            myHelper.log("myData:$myData")
 //        }
 
-        data = helper.getLastJourney()
+        myData = myHelper.getLastJourney()
 
-        helper.log("data:$data")
+        myHelper.log("myData:$myData")
 
-        when (data.nextAction) {
+        when (myData.nextAction) {
             3 -> {
                 tul_back_load.visibility = View.GONE
             }
@@ -56,34 +56,34 @@ class TUnloadAfterActivity : BaseActivity(), View.OnClickListener {
         when (view!!.id) {
             R.id.tul_back_load -> {
                 val intent = Intent(this, LMachine1Activity::class.java)
-                helper.setNextAction(2)
-                data = helper.getLastJourney()
-//                data.isForBackLoad = true
-                data.nextAction = 2
-                intent.putExtra("data", data)
+                myHelper.setNextAction(2)
+                myData = myHelper.getLastJourney()
+//                myData.isForBackLoad = true
+                myData.nextAction = 2
+                intent.putExtra("myData", myData)
                 startActivity(intent)
             }
             R.id.tul_after_new -> {
                 val intent = Intent(this, LMachine1Activity::class.java)
-                val data = Data()
-                helper.setLastJourney(data)
-                intent.putExtra("data", data)
+                val data = MyData()
+                myHelper.setLastJourney(data)
+                intent.putExtra("myData", data)
                 startActivity(intent)
             }
             R.id.tul_after_repeat -> {
-                when (data.nextAction) {
+                when (myData.nextAction) {
                     0 -> {
-                        data.repeatJourney = 1
+                        myData.repeatJourney = 1
                     }
                     3 -> {
-                        data.repeatJourney = 2
+                        myData.repeatJourney = 2
                     }
                 }
-//                data.isRepeatJourney = true
-//                data.repeatJourney = 1
-                data.nextAction = 0
-                helper.setLastJourney(data)
-//                intent.putExtra("data", data)
+//                myData.isRepeatJourney = true
+//                myData.repeatJourney = 1
+                myData.nextAction = 0
+                myHelper.setLastJourney(myData)
+//                intent.putExtra("myData", myData)
                 val intent = Intent(this, RLoadActivity::class.java)
                 startActivity(intent)
             }

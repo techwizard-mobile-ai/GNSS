@@ -5,13 +5,12 @@ import com.google.android.material.navigation.NavigationView
 
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.adapters.ELoadingHistoryAdapter
-import com.lysaan.malik.vsptracker.classes.Data
+import com.lysaan.malik.vsptracker.classes.MyData
 import kotlinx.android.synthetic.main.activity_history.*
 
 class HistoryActivity : BaseActivity(), View.OnClickListener {
@@ -27,15 +26,15 @@ class HistoryActivity : BaseActivity(), View.OnClickListener {
         val navigationView = findViewById(R.id.base_nav_view) as NavigationView
         navigationView.menu.getItem(5).isChecked = true
 
-        helper.setTag(TAG)
+        myHelper.setTag(TAG)
 
         var bundle: Bundle? = intent.extras
         if (bundle != null) {
-            data = bundle.getSerializable("data") as Data
-            helper.log("data:$data")
+            myData = bundle.getSerializable("myData") as MyData
+            myHelper.log("myData:$myData")
         }
 
-        when (helper.getMachineType()) {
+        when (myHelper.getMachineType()) {
             1 -> {
                 lh_title.text = "Excavator Loading History"
             }
@@ -51,7 +50,7 @@ class HistoryActivity : BaseActivity(), View.OnClickListener {
         }
 
 
-        helper.log("Loads:${db.getELoadHistroy()}")
+        myHelper.log("Loads:${db.getELoadHistroy()}")
 
         val mAdapter = ELoadingHistoryAdapter(this@HistoryActivity, db.getELoadHistroy())
         lh_rv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)

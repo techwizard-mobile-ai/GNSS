@@ -2,7 +2,7 @@ package com.lysaan.malik.vsptracker.classes
 
 import java.io.Serializable
 
-class Data : Serializable {
+class MyData : Serializable {
 
     var recordID: Long = 0L
 
@@ -90,7 +90,7 @@ class Data : Serializable {
 
     var machineStoppedReason = ""
     override fun toString(): String {
-        return "Data(recordID=$recordID, isStartMachine=$isStartMachine, isForLoadResult=$isForLoadResult, isForUnloadResult=$isForUnloadResult, loadedMachineType=$loadedMachineType, loadedMachineNumber='$loadedMachineNumber', isForBackLoadResult=$isForBackLoadResult, isForBackUnloadResult=$isForBackUnloadResult, loadingMachine='$loadingMachine', backLoadingMachine='$backLoadingMachine', loadingMaterial='$loadingMaterial', backLoadingMaterial='$backLoadingMaterial', loadingLocation='$loadingLocation', backLoadingLocation='$backLoadingLocation', unloadingTask='$unloadingTask', backUnloadingTask='$backUnloadingTask', unloadingMachine='$unloadingMachine', backUnloadingMachine='$backUnloadingMachine', unloadingMaterial='$unloadingMaterial', backUnloadingMaterial='$backUnloadingMaterial', unloadingLocation='$unloadingLocation', backUnloadingLocation='$backUnloadingLocation', unloadingWeight=$unloadingWeight, backUnloadedWeight=$backUnloadedWeight, loadedMachine='$loadedMachine', backLoadedMachine='$backLoadedMachine', time='$time', date='$date', eWorkType=$eWorkType, eWorkActionType=$eWorkActionType, workMode='$workMode', nextAction=$nextAction, repeatJourney=$repeatJourney, startTime=$startTime, stopTime=$stopTime, totalTime=$totalTime, tripType=$tripType, trip0ID=$trip0ID, loadingGPSLocation=$loadingGPSLocation, unloadingGPSLocation=$unloadingGPSLocation, userID='$userID', isSync=$isSync, machineStoppedReason='$machineStoppedReason')"
+        return "MyData(recordID=$recordID, isStartMachine=$isStartMachine, isForLoadResult=$isForLoadResult, isForUnloadResult=$isForUnloadResult, loadedMachineType=$loadedMachineType, loadedMachineNumber='$loadedMachineNumber', isForBackLoadResult=$isForBackLoadResult, isForBackUnloadResult=$isForBackUnloadResult, loadingMachine='$loadingMachine', backLoadingMachine='$backLoadingMachine', loadingMaterial='$loadingMaterial', backLoadingMaterial='$backLoadingMaterial', loadingLocation='$loadingLocation', backLoadingLocation='$backLoadingLocation', unloadingTask='$unloadingTask', backUnloadingTask='$backUnloadingTask', unloadingMachine='$unloadingMachine', backUnloadingMachine='$backUnloadingMachine', unloadingMaterial='$unloadingMaterial', backUnloadingMaterial='$backUnloadingMaterial', unloadingLocation='$unloadingLocation', backUnloadingLocation='$backUnloadingLocation', unloadingWeight=$unloadingWeight, backUnloadedWeight=$backUnloadedWeight, loadedMachine='$loadedMachine', backLoadedMachine='$backLoadedMachine', time='$time', date='$date', eWorkType=$eWorkType, eWorkActionType=$eWorkActionType, workMode='$workMode', nextAction=$nextAction, repeatJourney=$repeatJourney, startTime=$startTime, stopTime=$stopTime, totalTime=$totalTime, tripType=$tripType, trip0ID=$trip0ID, loadingGPSLocation=$loadingGPSLocation, unloadingGPSLocation=$unloadingGPSLocation, userID='$userID', isSync=$isSync, machineStoppedReason='$machineStoppedReason')"
     }
 
 

@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.FrameLayout
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.classes.Data
+import com.lysaan.malik.vsptracker.classes.MyData
 import kotlinx.android.synthetic.main.activity_day_works.*
 
 class DayWorksActivity : BaseActivity(), View.OnClickListener {
@@ -25,20 +25,20 @@ class DayWorksActivity : BaseActivity(), View.OnClickListener {
         val navigationView = findViewById(R.id.base_nav_view) as NavigationView
         navigationView.menu.getItem(3).isChecked = true
 
-        helper.setTag(TAG)
+        myHelper.setTag(TAG)
 
         var bundle: Bundle? = intent.extras
         if (bundle != null) {
-            data = bundle!!.getSerializable("data") as Data
-            helper.log("data:$data")
+            myData = bundle!!.getSerializable("myData") as MyData
+            myHelper.log("myData:$myData")
         }
 
-        if (helper.isDailyModeStarted()) {
+        if (myHelper.isDailyModeStarted()) {
             day_work_title.text = "Stop Day Works Mode"
             day_works_button.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.black)))
             day_works_action_text.text = "Stop"
             val currentTime = System.currentTimeMillis()
-            val meter = helper.getMeter()
+            val meter = myHelper.getMeter()
             val startTime = meter.dailyModeStartTime
             val totalTime = (currentTime - startTime) + meter.dailyModeTotalTime
 
@@ -48,7 +48,7 @@ class DayWorksActivity : BaseActivity(), View.OnClickListener {
             day_work_title.text = "Start Day Works Mode"
             day_works_button.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.colorPrimary)))
             day_works_action_text.text = "Start"
-            val meter = helper.getMeter()
+            val meter = myHelper.getMeter()
             day_works_chronometer.setBase(SystemClock.elapsedRealtime() - meter.dailyModeTotalTime)
         }
 
@@ -61,20 +61,20 @@ class DayWorksActivity : BaseActivity(), View.OnClickListener {
         when (view!!.id) {
             R.id.day_works_action -> {
 
-                if (helper.isDailyModeStarted()) {
+                if (myHelper.isDailyModeStarted()) {
                     day_work_title.text = "Start Day Works Mode"
                     day_works_button.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.colorPrimary)))
                     day_works_action_text.text = "Start"
                     isDailyModeStart = false
                     day_works_chronometer.stop()
-                    helper.stopDailyMode()
+                    myHelper.stopDailyMode()
 
-                    helper.startHomeActivityByType(Data())
-//                    helper.restartActivity(intent, this)
+                    myHelper.startHomeActivityByType(MyData())
+//                    myHelper.restartActivity(intent, this)
 
                 } else {
 
-                    day_works_chronometer.setBase(SystemClock.elapsedRealtime() - helper.getMeter().dailyModeTotalTime)
+                    day_works_chronometer.setBase(SystemClock.elapsedRealtime() - myHelper.getMeter().dailyModeTotalTime)
                     day_works_chronometer.start()
 
                     day_work_title.text = "Stop Day Works Mode"
@@ -87,9 +87,9 @@ class DayWorksActivity : BaseActivity(), View.OnClickListener {
                     )
                     day_works_action_text.text = "Stop"
                     isDailyModeStart = true
-                    helper.startDailyMode()
-                    helper.startHomeActivityByType(Data())
-//                    helper.restartActivity(intent, this)
+                    myHelper.startDailyMode()
+                    myHelper.startHomeActivityByType(MyData())
+//                    myHelper.restartActivity(intent, this)
 
                 }
             }

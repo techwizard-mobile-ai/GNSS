@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,14 +10,21 @@
 
 
     <TextView
+        android:id="@+id/hm_stop_top_title"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         style="@style/activity_title"
         android:text="@string/hour_meter" />
 
     <TextView
+        android:id="@+id/hm_stop_top"
+        android:layout_below="@id/hm_stop_top_title"
         style="@style/home_tv"
         android:gravity="center"
         android:text="@string/hour_meter_finish" />
+
     <LinearLayout
+        android:layout_below="@id/hm_stop_top"
         style="@style/default_linearlayout"
         android:layout_height="wrap_content"
         android:layout_marginStart="0dp"
@@ -49,12 +56,25 @@
             android:src="@drawable/ic_add" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/sfinish_logout"
-        style="@style/next_button"
-        android:layout_marginTop="@dimen/_50sdp"
-        android:text="@string/logout" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/hm_stop_summary"
+            style="@style/next_button"
+            android:layout_marginTop="@dimen/_50sdp"
+            android:text="@string/work_summary" />
+
+        <Button
+            android:id="@+id/hm_stop_logout"
+            style="@style/next_button"
+            android:layout_marginTop="@dimen/_50sdp"
+            android:text="@string/logout" />
+    </LinearLayout>
 
 
 
-</LinearLayout>
+
+</RelativeLayout>

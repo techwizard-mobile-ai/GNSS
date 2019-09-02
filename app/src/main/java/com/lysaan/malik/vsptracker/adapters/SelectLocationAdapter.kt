@@ -7,10 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.classes.Location
+import com.lysaan.malik.vsptracker.classes.Material
 import kotlinx.android.synthetic.main.list_row_select_location.view.*
 
-class SelectLocationAdapter(context: Activity, internal var locationList: List<Location>) :
+class SelectLocationAdapter(context: Activity, internal var locationList: List<Material>) :
         BaseAdapter() {
 
     internal var context: Context

@@ -8,7 +8,7 @@ import android.widget.FrameLayout
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.activities.common.Location1Activity
-import com.lysaan.malik.vsptracker.classes.Data
+import com.lysaan.malik.vsptracker.classes.MyData
 import kotlinx.android.synthetic.main.activity_ehome.*
 
 class EHomeActivity : BaseActivity(), View.OnClickListener {
@@ -23,12 +23,12 @@ class EHomeActivity : BaseActivity(), View.OnClickListener {
         val navigationView = findViewById(R.id.base_nav_view) as NavigationView
         navigationView.menu.getItem(0).isChecked = true
 
-        helper.setTag(TAG)
+        myHelper.setTag(TAG)
 
         var bundle: Bundle? = intent.extras
         if (bundle != null) {
-            data = bundle!!.getSerializable("data") as Data
-            helper.log("data:$data")
+            myData = bundle!!.getSerializable("myData") as MyData
+            myHelper.log("myData:$myData")
         }
         ehome_logout.setOnClickListener(this)
         ehome_loading.setOnClickListener(this)
@@ -41,26 +41,26 @@ class EHomeActivity : BaseActivity(), View.OnClickListener {
 
             R.id.ehome_loading -> {
                 val intent = Intent(this, Location1Activity::class.java)
-                intent.putExtra("data", data)
+                intent.putExtra("myData", myData)
                 startActivity(intent)
             }
 
             R.id.ehome_trenching -> {
                 val intent = Intent(this, ESelectWorkActivity::class.java)
-                data.eWorkType = 2
-                intent.putExtra("data", data)
+                myData.eWorkType = 2
+                intent.putExtra("myData", myData)
                 startActivity(intent)
             }
 
             R.id.ehome_digging -> {
                 val intent = Intent(this, ESelectWorkActivity::class.java)
-                data.eWorkType = 1
-                intent.putExtra("data", data)
+                myData.eWorkType = 1
+                intent.putExtra("myData", myData)
                 startActivity(intent)
             }
 
             R.id.ehome_logout -> {
-                helper.logout(this)
+                myHelper.logout(this)
             }
         }
     }

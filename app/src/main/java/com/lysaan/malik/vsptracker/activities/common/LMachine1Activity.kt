@@ -12,7 +12,7 @@ import com.google.android.material.navigation.NavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.adapters.CustomGrid
-import com.lysaan.malik.vsptracker.classes.Data
+import com.lysaan.malik.vsptracker.classes.MyData
 import kotlinx.android.synthetic.main.activity_lmachine1.*
 
 
@@ -28,16 +28,16 @@ class LMachine1Activity : BaseActivity(), View.OnClickListener {
         val navigationView = findViewById(R.id.base_nav_view) as NavigationView
         navigationView.menu.getItem(0).isChecked = true
 
-        helper.setTag(TAG)
+        myHelper.setTag(TAG)
 
         var bundle: Bundle? = intent.extras
         if (bundle != null) {
-            data = bundle!!.getSerializable("data") as Data
-            helper.log("data:$data")
+            myData = bundle!!.getSerializable("myData") as MyData
+            myHelper.log("myData:$myData")
         }
-//        data = helper.getLastJourney()
+//        myData = myHelper.getLastJourney()
 
-        when (data.nextAction) {
+        when (myData.nextAction) {
             0 -> {
                 lm_title.text = "Select Loading Machine"
             }
@@ -53,62 +53,62 @@ class LMachine1Activity : BaseActivity(), View.OnClickListener {
         }
 
         val gv = findViewById(R.id.tlm_gridview) as GridView
-        val machines = helper.getMachines()
+        val machines = myHelper.getMachines()
         machines.removeAt(0)
         val adapter = CustomGrid(this@LMachine1Activity, machines)
 
         gv.setAdapter(adapter)
         gv.setOnItemClickListener(AdapterView.OnItemClickListener { parent, view, position, id ->
-            helper.toast("Selected Machine: " + machines.get(position).name)
+            myHelper.toast("Selected Machine: " + machines.get(position).name)
 
-            if (data.isForLoadResult) {
+            if (myData.isForLoadResult) {
                 val intent = intent
-                data.loadingMachine = machines.get(position).name
-                intent.putExtra("data", data)
+                myData.loadingMachine = machines.get(position).name
+                intent.putExtra("myData", myData)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
-            } else if (data.isForUnloadResult) {
+            } else if (myData.isForUnloadResult) {
                 val intent = intent
-                data.unloadingMachine = machines.get(position).name
-                intent.putExtra("data", data)
+                myData.unloadingMachine = machines.get(position).name
+                intent.putExtra("myData", myData)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
-            } else if (data.isForBackLoadResult) {
+            } else if (myData.isForBackLoadResult) {
                 val intent = intent
-                data.backLoadingMachine = machines.get(position).name
-                intent.putExtra("data", data)
+                myData.backLoadingMachine = machines.get(position).name
+                intent.putExtra("myData", myData)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
-            } else if (data.isForBackUnloadResult) {
+            } else if (myData.isForBackUnloadResult) {
                 val intent = intent
-                data.backUnloadingMachine = machines.get(position).name
-                intent.putExtra("data", data)
+                myData.backUnloadingMachine = machines.get(position).name
+                intent.putExtra("myData", myData)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
             } else {
-                when (data.nextAction) {
+                when (myData.nextAction) {
                     0 -> {
                         val intent = Intent(this, Material1Activity::class.java)
-                        data.loadingMachine = machines.get(position).name
-                        intent.putExtra("data", data)
+                        myData.loadingMachine = machines.get(position).name
+                        intent.putExtra("myData", myData)
                         startActivity(intent)
                     }
                     1 -> {
                         val intent = Intent(this, Location1Activity::class.java)
-                        data.unloadingMachine = machines.get(position).name
-                        intent.putExtra("data", data)
+                        myData.unloadingMachine = machines.get(position).name
+                        intent.putExtra("myData", myData)
                         startActivity(intent)
                     }
                     2 -> {
                         val intent = Intent(this, Material1Activity::class.java)
-                        data.backLoadingMachine = machines.get(position).name
-                        intent.putExtra("data", data)
+                        myData.backLoadingMachine = machines.get(position).name
+                        intent.putExtra("myData", myData)
                         startActivity(intent)
                     }
                     3 -> {
                         val intent = Intent(this, Location1Activity::class.java)
-                        data.backUnloadingMachine = machines.get(position).name
-                        intent.putExtra("data", data)
+                        myData.backUnloadingMachine = machines.get(position).name
+                        intent.putExtra("myData", myData)
                         startActivity(intent)
                     }
                 }

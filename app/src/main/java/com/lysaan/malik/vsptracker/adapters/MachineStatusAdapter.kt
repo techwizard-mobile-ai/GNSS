@@ -5,11 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.lysaan.malik.vsptracker.Helper
+import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.activities.common.MachineStatus1Activity
-import com.lysaan.malik.vsptracker.classes.Data
 import com.lysaan.malik.vsptracker.classes.Material
+import com.lysaan.malik.vsptracker.classes.MyData
 import com.lysaan.malik.vsptracker.database.DatabaseAdapter
 import kotlinx.android.synthetic.main.list_row_machine_status.view.*
 
@@ -21,7 +21,7 @@ class MachineStatusAdapter(
 .ViewHolder>() {
 
     private val TAG = this::class.java.simpleName
-    private lateinit var helper: Helper
+    private lateinit var myHelper: MyHelper
     private lateinit var db: DatabaseAdapter
 
     override fun onCreateViewHolder(
@@ -30,7 +30,7 @@ class MachineStatusAdapter(
     ): MachineStatusAdapter.ViewHolder {
         val v = LayoutInflater.from(parent.context)
                 .inflate(R.layout.list_row_machine_status, parent, false)
-        helper = Helper(TAG, myContext)
+        myHelper = MyHelper(TAG, myContext)
         db = DatabaseAdapter(myContext)
         return ViewHolder(v)
     }
@@ -41,10 +41,10 @@ class MachineStatusAdapter(
 
         holder.itemView.machine_status_rv_title.setText(material.name)
         holder.itemView.machine_status_rv_title.setOnClickListener {
-            helper.toast("Machine Stopped due to : " + material.name)
+            myHelper.toast("Machine Stopped due to : " + material.name)
 
 
-            val data = Data()
+            val data = MyData()
             data.machineStoppedReason = material.name
             data.loadingGPSLocation = (myContext as MachineStatus1Activity).gpsLocation
 
@@ -52,14 +52,16 @@ class MachineStatusAdapter(
             val insertID = db.insertMachineStatus(data)
 
             if (insertID > 0) {
-                helper.toast("Record Saved in Database Successfully.")
-                helper.setIsMachineStopped(true, material.name)
-                helper.stopMachine(insertID)
+                myHelper.toast("Record Saved in Database Successfully.")
+                myHelper.setIsMachineStopped(true, material.name)
+                myHelper.stopMachine(insertID)
 
-                helper.startHomeActivityByType(Data())
+//                myHelper.startHomeActivityByType(MyData())
+                myHelper.logout(myContext)
+                myContext.finishAffinity()
 
             } else {
-                helper.toast("Machine Not Stopped. Please try again.")
+                myHelper.toast("Machine Not Stopped. Please try again.")
             }
 
 

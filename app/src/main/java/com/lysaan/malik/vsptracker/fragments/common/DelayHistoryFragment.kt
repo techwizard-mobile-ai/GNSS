@@ -8,11 +8,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.lysaan.malik.vsptracker.Helper
+import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.adapters.DelayHistoryAdapter
 import com.lysaan.malik.vsptracker.classes.EWork
@@ -24,7 +23,7 @@ class DelayHistoryFragment : Fragment() {
     private var listener: OnFragmentInteractionListener? = null
 
     private val TAG = this::class.java.simpleName
-    private lateinit var helper: Helper
+    private lateinit var myHelper: MyHelper
     private var root: View? = null
     private lateinit var diggingHistory: MutableList<EWork>
     private lateinit var db: DatabaseAdapter
@@ -32,13 +31,13 @@ class DelayHistoryFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            helper = Helper(
+            myHelper = MyHelper(
                     TAG,
                     myContext
             )
             db = DatabaseAdapter(myContext)
             diggingHistory = db.getEWorks(1)
-            helper.log("Digging:$diggingHistory ")
+            myHelper.log("Digging:$diggingHistory ")
         }
     }
 

@@ -8,7 +8,7 @@ import android.widget.FrameLayout
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 
-import com.lysaan.malik.vsptracker.classes.Data
+import com.lysaan.malik.vsptracker.classes.MyData
 import kotlinx.android.synthetic.main.activity_eselect_work.*
 
 class ESelectWorkActivity : BaseActivity(), View.OnClickListener {
@@ -22,12 +22,12 @@ class ESelectWorkActivity : BaseActivity(), View.OnClickListener {
         val navigationView = findViewById(R.id.base_nav_view) as NavigationView
         navigationView.menu.getItem(0).isChecked = true
 
-        helper.setTag(TAG)
+        myHelper.setTag(TAG)
 
         var bundle: Bundle? = intent.extras
         if (bundle != null) {
-            data = bundle!!.getSerializable("data") as Data
-            helper.log("data:$data")
+            myData = bundle!!.getSerializable("myData") as MyData
+            myHelper.log("myData:$myData")
         }
 
         eswork_sidecasting.setOnClickListener(this)
@@ -39,14 +39,14 @@ class ESelectWorkActivity : BaseActivity(), View.OnClickListener {
         when (view!!.id) {
             R.id.eswork_sidecasting -> {
                 val intent = Intent(this, ESideCastingActivity::class.java)
-                data.eWorkActionType = 1
-                intent.putExtra("data", data)
+                myData.eWorkActionType = 1
+                intent.putExtra("myData", myData)
                 startActivity(intent)
             }
             R.id.eswork_off_loading -> {
                 val intent = Intent(this, EOffLoadingActivity::class.java)
-                data.eWorkActionType = 2
-                intent.putExtra("data", data)
+                myData.eWorkActionType = 2
+                intent.putExtra("myData", myData)
                 startActivity(intent)
             }
         }

@@ -7,15 +7,15 @@ import android.view.View
 import android.widget.FrameLayout
 import com.google.android.material.navigation.NavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
-import com.lysaan.malik.vsptracker.Helper
+import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.classes.Data
+import com.lysaan.malik.vsptracker.classes.MyData
 import kotlinx.android.synthetic.main.activity_unload_task.*
 
 class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
     private val TAG = this::class.java.simpleName
 
-//    private var data = Data()
+//    private var myData = MyData()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,12 +25,12 @@ class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
         val navigationView = findViewById(R.id.base_nav_view) as NavigationView
         navigationView.menu.getItem(0).isChecked = true
 
-        helper = Helper(TAG, this)
+        myHelper = MyHelper(TAG, this)
 
         var bundle: Bundle? = intent.extras
         if (bundle != null) {
-            data = bundle!!.getSerializable("data") as Data
-            helper.log("data:$data")
+            myData = bundle!!.getSerializable("myData") as MyData
+            myHelper.log("myData:$myData")
         }
 
         ultask_fill.setOnClickListener(this)
@@ -45,127 +45,127 @@ class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
 //    4 stockpile
     override fun onClick(view: View?) {
 
-        helper.log("Data:$data")
+        myHelper.log("MyData:$myData")
         when (view!!.id) {
             R.id.ultask_fill -> {
 
-                helper.toast("Selected Task: Fill")
-                if (data.isForUnloadResult) {
+                myHelper.toast("Selected Task: Fill")
+                if (myData.isForUnloadResult) {
                     val intent = intent
-                    data.unloadingTask = "Fill"
-                    intent.putExtra("data", data)
+                    myData.unloadingTask = "Fill"
+                    intent.putExtra("myData", myData)
                     setResult(Activity.RESULT_OK, intent)
                     finish()
-                } else if (data.isForBackUnloadResult) {
+                } else if (myData.isForBackUnloadResult) {
                     val intent = intent
-                    data.backUnloadingTask = "Fill"
-                    intent.putExtra("data", data)
+                    myData.backUnloadingTask = "Fill"
+                    intent.putExtra("myData", myData)
                     setResult(Activity.RESULT_OK, intent)
                     finish()
                 } else {
-                    when (data.nextAction) {
+                    when (myData.nextAction) {
                         1 -> {
-                            data.unloadingTask = "Fill"
+                            myData.unloadingTask = "Fill"
                         }
                         3 -> {
-                            data.backUnloadingTask = "Fill"
+                            myData.backUnloadingTask = "Fill"
                         }
                     }
                     val intent = Intent(this, Location1Activity::class.java)
 
-                    intent.putExtra("data", data)
+                    intent.putExtra("myData", myData)
                     startActivity(intent)
                 }
 
             }
             R.id.ultask_off_site -> {
-                helper.toast("Selected Task: Off Site")
-                if (data.isForUnloadResult) {
+                myHelper.toast("Selected Task: Off Site")
+                if (myData.isForUnloadResult) {
                     val intent = intent
-                    data.unloadingTask = "Off Site"
-                    intent.putExtra("data", data)
+                    myData.unloadingTask = "Off Site"
+                    intent.putExtra("myData", myData)
                     setResult(Activity.RESULT_OK, intent)
                     finish()
-                } else if (data.isForBackUnloadResult) {
+                } else if (myData.isForBackUnloadResult) {
                     val intent = intent
-                    data.backUnloadingTask = "Off Site"
-                    intent.putExtra("data", data)
+                    myData.backUnloadingTask = "Off Site"
+                    intent.putExtra("myData", myData)
                     setResult(Activity.RESULT_OK, intent)
                     finish()
                 } else {
-                    when (data.nextAction) {
+                    when (myData.nextAction) {
                         1 -> {
-                            data.unloadingTask = "Off Site"
+                            myData.unloadingTask = "Off Site"
                         }
                         3 -> {
-                            data.backUnloadingTask = "Off Site"
+                            myData.backUnloadingTask = "Off Site"
                         }
                     }
                     val intent = Intent(this, Location1Activity::class.java)
-                    data.unloadingTask = "Off Site"
-                    intent.putExtra("data", data)
+                    myData.unloadingTask = "Off Site"
+                    intent.putExtra("myData", myData)
                     startActivity(intent)
                 }
 
             }
             R.id.ultask_respread -> {
 
-                helper.toast("Selected Task: Respread")
-                if (data.isForUnloadResult) {
+                myHelper.toast("Selected Task: Respread")
+                if (myData.isForUnloadResult) {
                     val intent = intent
-                    data.unloadingTask = "Respread"
-                    intent.putExtra("data", data)
+                    myData.unloadingTask = "Respread"
+                    intent.putExtra("myData", myData)
                     setResult(Activity.RESULT_OK, intent)
                     finish()
-                } else if (data.isForBackUnloadResult) {
+                } else if (myData.isForBackUnloadResult) {
                     val intent = intent
-                    data.backUnloadingTask = "Respread"
-                    intent.putExtra("data", data)
+                    myData.backUnloadingTask = "Respread"
+                    intent.putExtra("myData", myData)
                     setResult(Activity.RESULT_OK, intent)
                     finish()
                 } else {
-                    when (data.nextAction) {
+                    when (myData.nextAction) {
                         1 -> {
-                            data.unloadingTask = "Respread"
+                            myData.unloadingTask = "Respread"
                         }
                         3 -> {
-                            data.backUnloadingTask = "Respread"
+                            myData.backUnloadingTask = "Respread"
                         }
                     }
                     val intent = Intent(this, Location1Activity::class.java)
-                    data.unloadingTask = "Respread"
-                    intent.putExtra("data", data)
+                    myData.unloadingTask = "Respread"
+                    intent.putExtra("myData", myData)
                     startActivity(intent)
                 }
 
             }
             R.id.ultask_stockpile -> {
 
-                helper.toast("Selected Task: Stockpile")
-                if (data.isForUnloadResult) {
+                myHelper.toast("Selected Task: Stockpile")
+                if (myData.isForUnloadResult) {
                     val intent = intent
-                    data.unloadingTask = "Stockpile"
-                    intent.putExtra("data", data)
+                    myData.unloadingTask = "Stockpile"
+                    intent.putExtra("myData", myData)
                     setResult(Activity.RESULT_OK, intent)
                     finish()
-                } else if (data.isForBackUnloadResult) {
+                } else if (myData.isForBackUnloadResult) {
                     val intent = intent
-                    data.backUnloadingTask = "Stockpile"
-                    intent.putExtra("data", data)
+                    myData.backUnloadingTask = "Stockpile"
+                    intent.putExtra("myData", myData)
                     setResult(Activity.RESULT_OK, intent)
                     finish()
                 } else {
-                    when (data.nextAction) {
+                    when (myData.nextAction) {
                         1 -> {
-                            data.unloadingTask = "Stockpile"
+                            myData.unloadingTask = "Stockpile"
                         }
                         3 -> {
-                            data.backUnloadingTask = "Stockpile"
+                            myData.backUnloadingTask = "Stockpile"
                         }
                     }
                     val intent = Intent(this, Location1Activity::class.java)
-                    data.unloadingTask = "Stockpile"
-                    intent.putExtra("data", data)
+                    myData.unloadingTask = "Stockpile"
+                    intent.putExtra("myData", myData)
                     startActivity(intent)
                 }
 

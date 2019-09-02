@@ -6,11 +6,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.lysaan.malik.vsptracker.Helper
+import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.activities.excavator.EHistoryActivity
 import com.lysaan.malik.vsptracker.adapters.ETHistoryAdapter
@@ -23,7 +22,7 @@ class ETrenchingHistoryFragment : Fragment() {
 
     private val TAG = this::class.java.simpleName
 
-    private lateinit var helper: Helper
+    private lateinit var myHelper: MyHelper
     private var root: View? = null
 
     private lateinit var trenchingHistory: MutableList<EWork>
@@ -34,13 +33,13 @@ class ETrenchingHistoryFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            helper = Helper(
+            myHelper = MyHelper(
                     TAG,
                     myContext
             )
             db = DatabaseAdapter(myContext)
             trenchingHistory = db.getEWorks(2)
-            helper.log("Trenching:$trenchingHistory")
+            myHelper.log("Trenching:$trenchingHistory")
 
         }
     }

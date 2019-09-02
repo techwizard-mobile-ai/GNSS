@@ -5,20 +5,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.lysaan.malik.vsptracker.Helper
+import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.classes.Data
+import com.lysaan.malik.vsptracker.classes.MyData
 import kotlinx.android.synthetic.main.list_row_loading_history.view.*
 
 
 class LoadingHistoryAdapter(
         val context: Activity,
-        val dataList: MutableList<Data>
+        val myDataList: MutableList<MyData>
 ) : RecyclerView.Adapter<LoadingHistoryAdapter
 .ViewHolder>() {
 
     private val TAG = this::class.java.simpleName
-    private lateinit var helper: Helper
+    private lateinit var myHelper: MyHelper
 
 
     override fun onCreateViewHolder(
@@ -29,13 +29,13 @@ class LoadingHistoryAdapter(
 
         val v = LayoutInflater.from(parent.context)
                 .inflate(R.layout.list_row_loading_history, parent, false)
-        helper = Helper(TAG, context)
+        myHelper = MyHelper(TAG, context)
         return ViewHolder(v)
     }
 
     override fun onBindViewHolder(holder: LoadingHistoryAdapter.ViewHolder, position: Int) {
 
-        val myData = dataList.get(position)
+        val myData = myDataList.get(position)
 
         holder.itemView.lhr_trip0_layout.visibility = View.GONE
         holder.itemView.lhr_trip_type_layout.visibility = View.GONE
@@ -73,28 +73,28 @@ class LoadingHistoryAdapter(
         holder.itemView.lhr_task.setText(":  " + myData.unloadingTask)
 
         holder.itemView.lhr_time.setText(
-                ": ${helper.getTime(myData.startTime)} / ${helper.getTime(
+                ": ${myHelper.getTime(myData.startTime)} / ${myHelper.getTime(
                         myData.stopTime
                 )} Hrs"
         )
 
-        holder.itemView.lhr_duration.setText(": ${helper.getFormatedTime(myData.totalTime)} Hrs")
+        holder.itemView.lhr_duration.setText(": ${myHelper.getFormatedTime(myData.totalTime)} Hrs")
         holder.itemView.lhr_workmode.text = ": ${myData.workMode}"
 
         holder.itemView.lhr_gps_loading.text =
-                ": ${helper.getRoundedDecimal(myData.loadingGPSLocation.latitude)} / ${helper.getRoundedDecimal(
+                ": ${myHelper.getRoundedDecimal(myData.loadingGPSLocation.latitude)} / ${myHelper.getRoundedDecimal(
                         myData.loadingGPSLocation.longitude
                 )} "
         holder.itemView.lhr_gps_unloading.text =
-                ": ${helper.getRoundedDecimal(myData.unloadingGPSLocation.latitude)} / ${helper.getRoundedDecimal(
+                ": ${myHelper.getRoundedDecimal(myData.unloadingGPSLocation.latitude)} / ${myHelper.getRoundedDecimal(
                         myData.unloadingGPSLocation.longitude
                 )} "
 
         holder.itemView.lhr_gps_loading_layout.setOnClickListener {
-            helper.showOnMap(myData.loadingGPSLocation, myData.loadingLocation)
+            myHelper.showOnMap(myData.loadingGPSLocation, myData.loadingLocation)
         }
         holder.itemView.lhr_gps_unloading_layout.setOnClickListener {
-            helper.showOnMap(myData.unloadingGPSLocation, myData.unloadingLocation)
+            myHelper.showOnMap(myData.unloadingGPSLocation, myData.unloadingLocation)
         }
 
 
@@ -102,7 +102,7 @@ class LoadingHistoryAdapter(
 
 
     override fun getItemCount(): Int {
-        return dataList.size
+        return myDataList.size
     }
 
 

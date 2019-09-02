@@ -7,12 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.classes.Data
+import com.lysaan.malik.vsptracker.classes.MyData
 import kotlinx.android.synthetic.main.list_row_eloading.view.*
 
 class ELoadingAdapter(
         val context: Activity,
-        val dataList: MutableList<Data>
+        val myDataList: MutableList<MyData>
 ) : RecyclerView.Adapter<ELoadingAdapter
 .ViewHolder>() {
 
@@ -28,16 +28,16 @@ class ELoadingAdapter(
 
     override fun onBindViewHolder(holder: ELoadingAdapter.ViewHolder, position: Int) {
 
-        val myData = dataList.get(position)
+        val myData = myDataList.get(position)
 
-        holder.itemView.elhr_number.setText("Load # " + (dataList.size - position))
+        holder.itemView.elhr_number.setText("Load # " + (myDataList.size - position))
         holder.itemView.elhr_material.setText(myData.loadingMaterial)
         holder.itemView.elhr_time.setText(myData.time + " Hrs")
     }
 
 
     override fun getItemCount(): Int {
-        return dataList.size
+        return myDataList.size
     }
 
 

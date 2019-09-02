@@ -1,11 +1,11 @@
 package com.lysaan.malik.vsptracker.classes
 
-import com.lysaan.malik.vsptracker.Helper
+import com.lysaan.malik.vsptracker.MyHelper
 import java.io.Serializable
 
 class ELoad : Serializable {
 
-    private lateinit var helper: Helper
+    private lateinit var myHelper: MyHelper
     var loadMachine: String = ""
     var time: String = ""
 

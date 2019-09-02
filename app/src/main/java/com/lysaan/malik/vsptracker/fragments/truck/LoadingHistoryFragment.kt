@@ -10,20 +10,20 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.lysaan.malik.vsptracker.Helper
+import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.adapters.LoadingHistoryAdapter
-import com.lysaan.malik.vsptracker.classes.Data
+import com.lysaan.malik.vsptracker.classes.MyData
 import com.lysaan.malik.vsptracker.database.DatabaseAdapter
 import kotlinx.android.synthetic.main.fragment_loading_history.*
 
 
 class LoadingHistoryFragment : Fragment() {
 
-    private lateinit var loadingHistory: MutableList<Data>
+    private lateinit var loadingHistory: MutableList<MyData>
     private val TAG = this::class.java.simpleName
 
-    private lateinit var helper: Helper
+    private lateinit var myHelper: MyHelper
     private var root: View? = null
 
     private lateinit var db: DatabaseAdapter
@@ -32,7 +32,7 @@ class LoadingHistoryFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            helper = Helper(TAG, myContext)
+            myHelper = MyHelper(TAG, myContext)
             db = DatabaseAdapter(myContext)
             loadingHistory = db.getTrips()
         }

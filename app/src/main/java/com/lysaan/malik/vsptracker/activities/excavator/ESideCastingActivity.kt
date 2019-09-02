@@ -9,8 +9,8 @@ import com.google.android.material.navigation.NavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.activities.HourMeterStopActivity
-import com.lysaan.malik.vsptracker.classes.Data
 import com.lysaan.malik.vsptracker.classes.EWork
+import com.lysaan.malik.vsptracker.classes.MyData
 import kotlinx.android.synthetic.main.activity_eside_casting.*
 
 class ESideCastingActivity : BaseActivity(), View.OnClickListener {
@@ -29,15 +29,15 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
         val navigationView = findViewById(R.id.base_nav_view) as NavigationView
         navigationView.menu.getItem(0).isChecked = true
 
-        helper.setTag(TAG)
+        myHelper.setTag(TAG)
 
         var bundle: Bundle? = intent.extras
         if (bundle != null) {
-            data = bundle!!.getSerializable("data") as Data
-            helper.log("data:$data")
+            myData = bundle!!.getSerializable("myData") as MyData
+            myHelper.log("myData:$myData")
         }
 
-        when (data.eWorkType) {
+        when (myData.eWorkType) {
             1 -> {
                 workTitle = "General Digging (Side Casting)"
             }
@@ -55,21 +55,10 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        startGPS()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        stopGPS()
-    }
-
-
     override fun onBackPressed() {
 
         if (isWorking) {
-            helper.showStopMessage(startTime)
+            myHelper.showStopMessage(startTime)
         } else {
             super.onBackPressed()
             finish()
@@ -81,20 +70,20 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
             R.id.ework_action -> {
                 stopDelay()
                 if (isWorking) {
-                    eWork.workType = data.eWorkType
+                    eWork.workType = myData.eWorkType
                     eWork.workActionType = 1
 
                     eWork.unloadingGPSLocation = gpsLocation
 
                     val insertID = db.insertEWork(eWork)
-                    helper.log("insertID:$insertID")
+                    myHelper.log("insertID:$insertID")
 
                     if (insertID > 0) {
-                        helper.toast(
+                        myHelper.toast(
                                 "$workTitle is Stopped.\n" +
-                                        "Data Saved Successfully.\n" +
-                                        "Work Duration : ${helper.getTotalTimeVSP(startTime)} (VSP Meter).\n" +
-                                        "Work Duration : ${helper.getTotalTimeMintues(startTime)} (Minutes)"
+                                        "MyData Saved Successfully.\n" +
+                                        "Work Duration : ${myHelper.getTotalTimeVSP(startTime)} (VSP Meter).\n" +
+                                        "Work Duration : ${myHelper.getTotalTimeMintues(startTime)} (Minutes)"
                         )
                         ework_action_text.text = "Start"
 
@@ -102,14 +91,14 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
 
                         isWorking = false
                     } else {
-                        helper.toast("Data Not Saved.")
+                        myHelper.toast("MyData Not Saved.")
                         isWorking = false
                     }
 
 
                 } else {
                     startTime = System.currentTimeMillis()
-                    helper.toast("$workTitle is Started.")
+                    myHelper.toast("$workTitle is Started.")
                     ework_action_text.text = "Stop"
                     chronometer1.setBase(SystemClock.elapsedRealtime())
                     chronometer1.start()
@@ -121,14 +110,14 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
             }
             R.id.ework_home -> {
                 if (isWorking) {
-                    helper.showStopMessage(startTime)
+                    myHelper.showStopMessage(startTime)
                 } else {
-                    helper.startHomeActivityByType(data)
+                    myHelper.startHomeActivityByType(myData)
                 }
             }
             R.id.ework_finish -> {
                 if (isWorking) {
-                    helper.showStopMessage(startTime)
+                    myHelper.showStopMessage(startTime)
                 } else {
                     val intent = Intent(this, HourMeterStopActivity::class.java)
                     startActivity(intent)

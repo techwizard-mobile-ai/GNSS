@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.lysaan.malik.vsptracker.Helper
+import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.classes.EWork
 import kotlinx.android.synthetic.main.list_row_delay_history.view.*
@@ -18,7 +18,7 @@ class DelayHistoryAdapter(
 .ViewHolder>() {
 
     private val TAG = this::class.java.simpleName
-    lateinit var helper: Helper
+    lateinit var myHelper: MyHelper
 
     override fun onCreateViewHolder(
             parent: ViewGroup,
@@ -26,7 +26,7 @@ class DelayHistoryAdapter(
     ): DelayHistoryAdapter.ViewHolder {
         val v = LayoutInflater.from(parent.context)
                 .inflate(R.layout.list_row_delay_history, parent, false)
-        helper = Helper(TAG, context)
+        myHelper = MyHelper(TAG, context)
         return ViewHolder(v)
     }
 
@@ -48,26 +48,26 @@ class DelayHistoryAdapter(
 
         holder.itemView.eth_record_number.setText(":  " + (dataList.size - position))
         holder.itemView.eth_machine_number.setText(":  " + eWork.machineNumber)
-        holder.itemView.eth_start_time.setText(":  " + helper.getTime(eWork.startTime) + " Hrs")
-        holder.itemView.eth_end_time.setText(":  " + helper.getTime(eWork.stopTime) + " Hrs")
-        holder.itemView.eth_duration.setText(":  " + helper.getFormatedTime(eWork.totalTime) + " Hrs")
-        holder.itemView.eth_date.setText(":  " + helper.getDateTime(eWork.stopTime) + " Hrs")
+        holder.itemView.eth_start_time.setText(":  " + myHelper.getTime(eWork.startTime) + " Hrs")
+        holder.itemView.eth_end_time.setText(":  " + myHelper.getTime(eWork.stopTime) + " Hrs")
+        holder.itemView.eth_duration.setText(":  " + myHelper.getFormatedTime(eWork.totalTime) + " Hrs")
+        holder.itemView.eth_date.setText(":  " + myHelper.getDateTime(eWork.stopTime) + " Hrs")
         holder.itemView.eth_mode.setText(":  ${eWork.workMode}")
 
         holder.itemView.lhr_gps_loading.text =
-                ": ${helper.getRoundedDecimal(eWork.loadingGPSLocation.latitude)} / ${helper.getRoundedDecimal(
+                ": ${myHelper.getRoundedDecimal(eWork.loadingGPSLocation.latitude)} / ${myHelper.getRoundedDecimal(
                         eWork.loadingGPSLocation.longitude
                 )} "
         holder.itemView.lhr_gps_unloading.text =
-                ": ${helper.getRoundedDecimal(eWork.unloadingGPSLocation.latitude)} / ${helper.getRoundedDecimal(
+                ": ${myHelper.getRoundedDecimal(eWork.unloadingGPSLocation.latitude)} / ${myHelper.getRoundedDecimal(
                         eWork.unloadingGPSLocation.longitude
                 )} "
 
         holder.itemView.lhr_gps_loading_layout.setOnClickListener {
-            helper.showOnMap(eWork.loadingGPSLocation, "Delay Start Location")
+            myHelper.showOnMap(eWork.loadingGPSLocation, "Delay Start Location")
         }
         holder.itemView.lhr_gps_unloading_layout.setOnClickListener {
-            helper.showOnMap(eWork.unloadingGPSLocation, "Delay Stop Location")
+            myHelper.showOnMap(eWork.unloadingGPSLocation, "Delay Stop Location")
         }
 
     }
