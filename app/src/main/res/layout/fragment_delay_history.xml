@@ -14,7 +14,8 @@
             style="@style/activity_title"
             android:text="@string/delay_history" />
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
+
             android:id="@+id/dh_rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

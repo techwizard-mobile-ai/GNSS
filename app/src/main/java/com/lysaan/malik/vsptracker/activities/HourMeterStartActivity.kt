@@ -1,30 +1,35 @@
 package com.lysaan.malik.vsptracker.activities
 
 import android.os.Bundle
-import android.support.design.widget.NavigationView
-import android.support.v4.widget.DrawerLayout
 import android.view.View
-import android.widget.FrameLayout
-import com.lysaan.malik.vsptracker.BaseActivity
+import androidx.appcompat.app.AppCompatActivity
+import com.lysaan.malik.vsptracker.Helper
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.classes.Data
-import kotlinx.android.synthetic.main.activity_base.*
+import com.lysaan.malik.vsptracker.others.Utils
 import kotlinx.android.synthetic.main.activity_hour_meter_start.*
 
-class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
-    private val TAG = this::class.java.simpleName
+class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
+    private lateinit var data: Data
+        private val TAG = this::class.java.simpleName
+    private lateinit var helper: Helper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Utils.onActivityCreateSetTheme(this)
 
-        val contentFrameLayout = findViewById(R.id.base_content_frame) as FrameLayout
-        layoutInflater.inflate(R.layout.activity_hour_meter_start, contentFrameLayout)
-        val navigationView = findViewById(R.id.base_nav_view) as NavigationView
-        navigationView.menu.getItem(0).isChecked = true
+        setContentView(R.layout.activity_hour_meter_start)
 
-        drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+//        val contentFrameLayout = findViewById(R.id.base_content_frame) as FrameLayout
+//        layoutInflater.inflate(R.layout.activity_hour_meter_start, contentFrameLayout)
+//        val navigationView = findViewById(R.id.base_nav_view) as NavigationView
+//        navigationView.menu.getItem(0).isChecked = true
+//
+//        drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
-        helper.setTag(TAG)
+
+        helper = Helper(TAG, this)
+//        helper.setTag(TAG)
         data = Data()
         helper.hideKeybaordOnClick(hour_meter_main_layout)
 

@@ -1,11 +1,11 @@
 package com.lysaan.malik.vsptracker.adapters
 
 import android.app.Activity
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.lysaan.malik.vsptracker.Helper
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.classes.EWork

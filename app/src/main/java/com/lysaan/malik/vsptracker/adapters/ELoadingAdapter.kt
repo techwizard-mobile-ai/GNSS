@@ -1,10 +1,11 @@
 package com.lysaan.malik.vsptracker.adapters
 
 import android.app.Activity
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.classes.Data
 import kotlinx.android.synthetic.main.list_row_eloading.view.*

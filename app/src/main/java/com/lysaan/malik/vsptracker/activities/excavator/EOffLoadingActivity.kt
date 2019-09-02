@@ -3,11 +3,12 @@ package com.lysaan.malik.vsptracker.activities.excavator
 import android.content.Intent
 import android.os.Bundle
 import android.os.SystemClock
-import android.support.design.widget.NavigationView
-import android.support.v7.widget.LinearLayoutManager
+import com.google.android.material.navigation.NavigationView
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.activities.HourMeterStopActivity
@@ -144,7 +145,6 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                         val eWork = EWork()
                         eWork.eWorkID = eWorkID
                         eWork.loadingGPSLocation = gpsLocation
-                        stopDelay()
                         val insertedID = db.insertEWorkOffLoad(eWork)
                         if (insertedID > 0) {
                             helper.toast("Load Saved Successfully.")
@@ -154,7 +154,7 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                                 eoff_rv.visibility = View.VISIBLE
                                 val aa = EOffLoadingAdapter(this@EOffLoadingActivity, offLoads)
                                 val layoutManager1 =
-                                        LinearLayoutManager(this, LinearLayout.VERTICAL, false)
+                                        LinearLayoutManager(this, RecyclerView.VERTICAL, false)
                                 eoff_rv.layoutManager = layoutManager1
                                 eoff_rv!!.setAdapter(aa)
                             } else {

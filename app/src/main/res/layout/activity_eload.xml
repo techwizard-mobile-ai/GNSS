@@ -24,7 +24,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@android:color/white" />
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="@dimen/_100sdp"
             android:layout_height="@dimen/_100sdp"
             android:backgroundTint="@color/colorPrimary"
@@ -102,7 +102,7 @@
             />
         </LinearLayout>-->
 
-    <android.support.v7.widget.RecyclerView
+      <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/elh_rv"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_100sdp"

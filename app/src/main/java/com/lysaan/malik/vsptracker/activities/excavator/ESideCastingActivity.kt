@@ -3,9 +3,9 @@ package com.lysaan.malik.vsptracker.activities.excavator
 import android.content.Intent
 import android.os.Bundle
 import android.os.SystemClock
-import android.support.design.widget.NavigationView
 import android.view.View
 import android.widget.FrameLayout
+import com.google.android.material.navigation.NavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.activities.HourMeterStopActivity

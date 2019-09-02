@@ -1,17 +1,28 @@
 package com.lysaan.malik.vsptracker.activities.truck
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.NavigationView
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.navigation.NavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.Helper
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.activities.common.LMachine1Activity
 import com.lysaan.malik.vsptracker.activities.common.UnloadTaskActivity
+import com.lysaan.malik.vsptracker.adapters.LoadingHistoryAdapter
+import com.lysaan.malik.vsptracker.classes.Data
+import com.lysaan.malik.vsptracker.database.DatabaseAdapter
 import kotlinx.android.synthetic.main.activity_thome.*
-
+import kotlinx.android.synthetic.main.fragment_loading_history.*
 
 class THomeActivity : BaseActivity(), View.OnClickListener {
     private val TAG = this::class.java.simpleName

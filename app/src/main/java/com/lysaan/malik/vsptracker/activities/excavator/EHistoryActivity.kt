@@ -3,20 +3,20 @@ package com.lysaan.malik.vsptracker.activities.excavator
 
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.BottomNavigationView
-import android.support.design.widget.NavigationView
-import android.support.v4.app.Fragment
 import android.view.View
 import android.widget.FrameLayout
+import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.classes.Data
 import com.lysaan.malik.vsptracker.fragments.common.DelayHistoryFragment
 import com.lysaan.malik.vsptracker.fragments.excavator.EDiggingHistoryFragment
 import com.lysaan.malik.vsptracker.fragments.excavator.ELoadingHistoryFragment
-import com.lysaan.malik.vsptracker.fragments.excavator.ELoadingHistoryFragment.Companion.newInstance
 import com.lysaan.malik.vsptracker.fragments.excavator.EOffloadingLoadsFragment
 import com.lysaan.malik.vsptracker.fragments.excavator.ETrenchingHistoryFragment
+import com.lysaan.malik.vsptracker.fragments.truck.LoadingHistoryFragment
 import kotlinx.android.synthetic.main.activity_ehistory.*
 
 class EHistoryActivity : BaseActivity(), View.OnClickListener,
@@ -70,11 +70,11 @@ class EHistoryActivity : BaseActivity(), View.OnClickListener,
             }
         } else {
 
-            val homeFragment = newInstance(this)
+            val homeFragment = ELoadingHistoryFragment.newInstance(this)
             openFragment(homeFragment, E_LOADHISTORY)
         }
 
-        val eLoadingHistoryFragment = newInstance(this)
+        val eLoadingHistoryFragment = ELoadingHistoryFragment.newInstance(this)
         openFragment(eLoadingHistoryFragment, E_LOADHISTORY)
     }
 
@@ -89,7 +89,7 @@ class EHistoryActivity : BaseActivity(), View.OnClickListener,
             BottomNavigationView.OnNavigationItemSelectedListener { item ->
                 when (item.itemId) {
                     R.id.navf_loading -> {
-                        val eLoadingHistoryFragment = newInstance(this@EHistoryActivity)
+                        val eLoadingHistoryFragment = ELoadingHistoryFragment.newInstance(this@EHistoryActivity)
                         openFragment(eLoadingHistoryFragment, E_LOADHISTORY)
                         return@OnNavigationItemSelectedListener true
                     }

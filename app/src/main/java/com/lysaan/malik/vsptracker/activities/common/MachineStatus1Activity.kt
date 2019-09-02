@@ -1,11 +1,13 @@
 package com.lysaan.malik.vsptracker.activities.common
 
+
+
 import android.os.Bundle
-import android.support.design.widget.NavigationView
-import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.LinearLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.navigation.NavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.adapters.MachineStatusAdapter
@@ -49,7 +51,7 @@ class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
         stoppedReasons.removeAt(0)
 
         val mAdapter = MachineStatusAdapter(this, stoppedReasons)
-        machine_status_rv.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
+        machine_status_rv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         machine_status_rv.setAdapter(mAdapter)
 
 

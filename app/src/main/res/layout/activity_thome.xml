@@ -37,7 +37,7 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@android:color/white" />
 
-            <android.support.design.widget.FloatingActionButton
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/thome_load_button"
                 android:layout_width="@dimen/_70sdp"
                 android:layout_height="@dimen/_70sdp"
@@ -71,7 +71,7 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@android:color/white" />
 
-            <android.support.design.widget.FloatingActionButton
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/thome_unload_button"
                 android:layout_width="@dimen/_70sdp"
                 android:layout_height="@dimen/_70sdp"

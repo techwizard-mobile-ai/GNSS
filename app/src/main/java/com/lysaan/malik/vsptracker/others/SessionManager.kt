@@ -103,7 +103,7 @@ class SessionManager(internal var _context: Context) {
         editor.commit()
     }
 
-    fun getMachineNumber() = pref.getString(KEY_MACHINE_NUMBER, "")
+    fun getMachineNumber() = pref.getString(KEY_MACHINE_NUMBER, "").toString()
 
     fun setMachineNumber(number: String) {
         editor.putString(KEY_MACHINE_NUMBER, number)
@@ -132,7 +132,7 @@ class SessionManager(internal var _context: Context) {
     }
 
     fun getPass(): String {
-        return pref.getString(KEY_PASS, "")
+        return pref.getString(KEY_PASS, "").toString()
     }
 
     fun setPass(pass: String) {
@@ -142,7 +142,7 @@ class SessionManager(internal var _context: Context) {
     }
 
     fun getEmail(): String {
-        return pref.getString(KEY_EMAIL, "")
+        return pref.getString(KEY_EMAIL, "").toString()
     }
 
     fun setEmail(email: String) {
@@ -152,7 +152,7 @@ class SessionManager(internal var _context: Context) {
     }
 
     fun getFcm(): String {
-        return pref.getString(KEY_FCM_TOKEN, "")
+        return pref.getString(KEY_FCM_TOKEN, "").toString()
     }
 
     fun setFcm(fcmToken: String) {
@@ -162,7 +162,7 @@ class SessionManager(internal var _context: Context) {
     }
 
     fun getFanUid(): String {
-        return pref.getString(KEY_UID, "")
+        return pref.getString(KEY_UID, "").toString()
     }
 
     fun setFanUid(uid: String) {

@@ -1,11 +1,13 @@
 package com.lysaan.malik.vsptracker.activities
 
 import android.os.Bundle
-import android.support.design.widget.NavigationView
-import android.support.v7.widget.LinearLayoutManager
+import com.google.android.material.navigation.NavigationView
+
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.adapters.ELoadingHistoryAdapter
@@ -52,7 +54,7 @@ class HistoryActivity : BaseActivity(), View.OnClickListener {
         helper.log("Loads:${db.getELoadHistroy()}")
 
         val mAdapter = ELoadingHistoryAdapter(this@HistoryActivity, db.getELoadHistroy())
-        lh_rv.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
+        lh_rv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         lh_rv!!.setAdapter(mAdapter)
 
 

@@ -1,13 +1,15 @@
 package com.lysaan.malik.vsptracker.activities.common
 
+
+
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.NavigationView
 import android.view.View
 import android.widget.AdapterView
 import android.widget.FrameLayout
 import android.widget.GridView
+import com.google.android.material.navigation.NavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.Helper
 import com.lysaan.malik.vsptracker.R
@@ -16,8 +18,6 @@ import com.lysaan.malik.vsptracker.adapters.CustomGrid
 import com.lysaan.malik.vsptracker.classes.Data
 import com.lysaan.malik.vsptracker.classes.Material
 import kotlinx.android.synthetic.main.activity_material1.*
-import java.util.*
-
 
 class Material1Activity : BaseActivity(), View.OnClickListener {
 

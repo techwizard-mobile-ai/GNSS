@@ -1,10 +1,10 @@
 package com.lysaan.malik.vsptracker.adapters
 
 import android.app.Activity
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.classes.EWork
 import kotlinx.android.synthetic.main.list_row_eloading.view.*
@@ -12,7 +12,8 @@ import kotlinx.android.synthetic.main.list_row_eloading.view.*
 class EOffLoadingAdapter(
         val context: Activity,
         val dataList: MutableList<EWork>
-) : RecyclerView.Adapter<EOffLoadingAdapter
+) : RecyclerView
+.Adapter<EOffLoadingAdapter
 .ViewHolder>() {
 
 

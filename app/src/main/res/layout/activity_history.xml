@@ -11,7 +11,7 @@
         style="@style/activity_title"
         android:text="@string/activity_history_lh_title_text" />
 
-    <android.support.v7.widget.RecyclerView
+      <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/lh_rv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

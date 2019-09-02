@@ -20,7 +20,7 @@
             style="@style/home_tv"
             android:text="@string/machine_type" />
 
-        <android.support.v7.widget.AppCompatSpinner
+        <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/machine_type"
             style="@style/home_spinner" />
 
@@ -28,7 +28,7 @@
             style="@style/home_tv"
             android:text="@string/machine_location" />
 
-        <android.support.v7.widget.AppCompatSpinner
+        <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/machine_location"
         style="@style/home_spinner" />
 

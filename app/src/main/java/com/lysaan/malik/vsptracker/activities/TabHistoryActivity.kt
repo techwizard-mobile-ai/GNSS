@@ -2,11 +2,11 @@ package com.lysaan.malik.vsptracker.activities
 
 import android.net.Uri
 import android.os.Bundle
-import android.support.design.widget.BottomNavigationView
-import android.support.design.widget.NavigationView
-import android.support.v4.app.Fragment
+import com.google.android.material.navigation.NavigationView
 import android.view.View
 import android.widget.FrameLayout
+import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.classes.Data

@@ -3,11 +3,13 @@ package com.lysaan.malik.vsptracker.activities.excavator
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.NavigationView
-import android.support.v7.widget.LinearLayoutManager
+import com.google.android.material.navigation.NavigationView
+
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.Helper
 import com.lysaan.malik.vsptracker.R
@@ -58,7 +60,7 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
         if (loadHistory.size > 0) {
             elh_rv.visibility = View.VISIBLE
             val aa = ELoadingAdapter(this@ELoadActivity, loadHistory)
-            val layoutManager1 = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
+            val layoutManager1 = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
             elh_rv.layoutManager = layoutManager1
             elh_rv!!.setAdapter(aa)
         } else {
@@ -82,7 +84,7 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
         when (view!!.id) {
             R.id.load_truck_load -> {
                 stopDelay()
-                data.loadingMachine = helper.getMachineNumber()
+                data.loadingMachine = helper.getMachineNumber().toString()
                 data.loadedMachine = "Load"
 
                 data.loadingGPSLocation = gpsLocation
@@ -94,7 +96,7 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
                     if (loadHistory.size > 0) {
                         elh_rv.visibility = View.VISIBLE
                         val aa = ELoadingAdapter(this@ELoadActivity, loadHistory)
-                        val layoutManager1 = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
+                        val layoutManager1 = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
                         elh_rv.layoutManager = layoutManager1
                         elh_rv!!.setAdapter(aa)
                     } else {

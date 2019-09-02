@@ -5,31 +5,35 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.support.design.widget.BottomNavigationView
-import android.support.design.widget.NavigationView
-import android.support.design.widget.Snackbar
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.support.v4.view.GravityCompat
-import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.text.Html
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import com.bumptech.glide.Glide
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
 import com.lysaan.malik.vsptracker.activities.DayWorksActivity
 import com.lysaan.malik.vsptracker.activities.DelayActivity
 import com.lysaan.malik.vsptracker.activities.MachineTypeActivity
+import com.lysaan.malik.vsptracker.activities.MapActivity
 import com.lysaan.malik.vsptracker.activities.common.MachineStatus1Activity
 import com.lysaan.malik.vsptracker.classes.Data
 import com.lysaan.malik.vsptracker.classes.EWork
@@ -41,6 +45,7 @@ import kotlinx.android.synthetic.main.app_bar_base.*
 
 open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
+    private lateinit var menu: Menu
     private lateinit var location: Location
     lateinit var gpsLocation: GPSLocation
     val TAG1 = "BaseActivity"
@@ -52,6 +57,9 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
     var longitude: Double = 0.0
 
     private val REQUEST_ACCESS_FINE_LOCATION = 1
+
+    private lateinit var bottomNavigation: BottomNavigationView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,11 +77,11 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.base_nav_view)
         val toggle = ActionBarDrawerToggle(
-                this,
-                drawerLayout,
-                toolbar,
-                R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close
+            this,
+            drawerLayout,
+            toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
         )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
@@ -105,23 +113,23 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
 
         helper.hideKeybaordOnClick(base_content_frame)
 
-        val bottomNavigation: BottomNavigationView = findViewById(R.id.base_navigationView)
+        bottomNavigation = findViewById(R.id.base_navigationView)
         bottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+
+        menu = bottomNavigation.getMenu()
+
     }
 
     private val mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navb_map -> {
-                    helper.toast("Loading")
+                    val intent = Intent(this, MapActivity::class.java)
+                    startActivity(intent)
                 }
 
-                R.id.navb_delay-> {
-                    helper.startDelay(gpsLocation)
-                }
-                R.id.navf_finish -> {
-                    finish()
-                }
+                R.id.navb_delay-> { toggleDelay() }
+                R.id.navf_finish -> { finish() }
             }
             false
         }
@@ -134,21 +142,21 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             when (helper.getMachineStoppedReason()) {
                 "Weather" -> {
                     Glide.with(this).load(resources.getDrawable(R.drawable.ic_action_beach_access))
-                            .into(base_machine_status_icon)
+                        .into(base_machine_status_icon)
                 }
                 "Other 1" -> {
                     Glide.with(this).load(resources.getDrawable(R.drawable.ic_action_restaurant))
-                            .into(base_machine_status_icon)
+                        .into(base_machine_status_icon)
                 }
                 else -> {
                     Glide.with(this).load(resources.getDrawable(R.drawable.ic_action_report))
-                            .into(base_machine_status_icon)
+                        .into(base_machine_status_icon)
                 }
             }
 
 
             val text =
-                    "<font color=#FF382A>Machine is Stopped. </font><font color=#106d14><u>Click here to Start Machine</u>.</font>"
+                "<font color=#FF382A>Machine is Stopped. </font><font color=#106d14><u>Click here to Start Machine</u>.</font>"
             base_machine_status.setText(Html.fromHtml(text))
             helper.log("Is Machine Stopped: ${helper.getIsMachineStopped()}")
             helper.log("Machine Stopped Reason: ${helper.getMachineStoppedReason()}")
@@ -159,12 +167,22 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
 
         if (helper.isDailyModeStarted()) {
             val text =
-                    "<font color=#FF382A>Day Works is ON. </font><font color=#106d14><u>Switch Standard Mode</u>.</font>"
+                "<font color=#FF382A>Day Works is ON. </font><font color=#106d14><u>Switch Standard Mode</u>.</font>"
             base_daily_mode.setText(Html.fromHtml(text))
             base_daily_mode.visibility = View.VISIBLE
         } else {
             base_daily_mode.visibility = View.GONE
         }
+
+        if(helper.isDelayStarted()){
+            menu.findItem(R.id.navb_delay).title= "Delay Started."
+            menu.findItem(R.id.navb_delay).icon = getDrawable(R.drawable.ic_delay_started)
+//            menu.findItem(R.id.navb_delay).icon = getDrawable(R.drawable.ic_action_beach_access)
+        }else{
+            menu.findItem(R.id.navb_delay).title= "Delay Stopped."
+            menu.findItem(R.id.navb_delay).icon = getDrawable(R.drawable.ic_stopped)
+        }
+
     }
 
     override fun onBackPressed() {
@@ -229,27 +247,68 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
         return true
     }
 
-    fun stopDelay(): Long {
-        val gpslocation = gpsLocation
-
-        helper.stopDelay(gpslocation)
-
-        val meter = helper.getMeter()
-        val eWork = EWork()
-        eWork.startTime = meter.delayStartTime
-        eWork.stopTime = meter.delayStopTime
-        eWork.totalTime = meter.delayTotalTime
-        eWork.loadingGPSLocation = meter.delayStartGPSLocation
-        eWork.unloadingGPSLocation = meter.delayStopGPSLocation
-
-
-        val insertID = db.insertDelay(eWork)
-        if(insertID > 0){
-            helper.log("Delay Stopped.\nStart Time: ${helper.getTime(meter.dailyModeStartTime)}Hrs.\nTotal Time: ${helper.getFormatedTime(meter.delayTotalTime)}")
+    fun toggleDelay(){
+        if(helper.isDelayStarted()){
+            stopDelay()
         }else{
-            helper.log("Delay Not Stopped.")
+            startDelay()
         }
-        return insertID
+    }
+
+
+    fun startDelay(){
+        if(!helper.isDelayStarted()){
+            helper.toast("Delay Started.")
+            startGPS()
+            helper.startDelay(gpsLocation)
+//            menu.findItem(R.id.navb_delay).icon = getDrawable(R.drawable.ic_action_beach_access)
+            menu.findItem(R.id.navb_delay).icon = getDrawable(R.drawable.ic_delay_started1)
+            menu.findItem(R.id.navb_delay).title= "Delay Started."
+
+//            menu.findItem(R.id.navb_delay).iconTintList = ColorStateList.valueOf(resources.getColor(R.color.red))
+
+        }
+    }
+
+    fun stopDelay(): Long {
+
+        if(helper.isDelayStarted()){
+            val gpslocation = gpsLocation
+            helper.stopDelay(gpslocation)
+
+            val meter = helper.getMeter()
+            val eWork = EWork()
+            eWork.startTime = meter.delayStartTime
+            eWork.stopTime = meter.delayStopTime
+            eWork.totalTime = meter.delayTotalTime
+            eWork.loadingGPSLocation = meter.delayStartGPSLocation
+            eWork.unloadingGPSLocation = meter.delayStopGPSLocation
+
+//            menu.findItem(R.id.navb_delay).icon = getDrawable(R.drawable.ic_action_restaurant)
+            var drawable = menu.findItem(R.id.navb_delay).getIcon()
+                drawable = DrawableCompat.wrap(drawable)
+
+                DrawableCompat.setTint(drawable, ContextCompat.getColor(this,R.color.red))
+                menu.findItem(R.id.navb_delay).setIcon(drawable)
+
+//            menu.findItem(R.id.navb_delay).icon = getDrawable(R.drawable.ic_alarm_on)
+//            bottomNavigation.itemIconTint
+            menu.findItem(R.id.navb_delay).title= "Delay Stopped."
+            menu.findItem(R.id.navb_delay).icon = getDrawable(R.drawable.ic_stopped)
+
+            stopGPS()
+            val insertID = db.insertDelay(eWork)
+            if(insertID > 0){
+                helper.toast("Delay Stopped.\nStart Time: ${helper.getTime(meter.dailyModeStartTime)}Hrs.\nTotal Time: ${helper.getFormatedTime(meter.delayTotalTime)}")
+            }else{
+                helper.toast("Delay Not Stopped.")
+            }
+            return insertID
+        }else{
+            return 0
+        }
+
+
     }
     fun doEmail() {
 
@@ -261,7 +320,7 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
         val andoridOS = Build.VERSION.SDK_INT.toString()
 
         val details =
-                "App_version:$versionCode--Device:$device--Build:$build--Manufacturer:$manufacturer--Model:$model--AndroidOS:$andoridOS"
+            "App_version:$versionCode--Device:$device--Build:$build--Manufacturer:$manufacturer--Model:$model--AndroidOS:$andoridOS"
 
         val email = "errors@vsptracker.com"
         val addressees: Array<String> = arrayOf(email)
@@ -270,8 +329,8 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             putExtra(Intent.EXTRA_EMAIL, addressees)
             putExtra(Intent.EXTRA_SUBJECT, "Error Reporting About Android App")
             putExtra(
-                    Intent.EXTRA_TEXT,
-                    "Hi, I like to notify you about an error I faced while using App. Device Details: $details"
+                Intent.EXTRA_TEXT,
+                "Hi, I like to notify you about an error I faced while using App. Device Details: $details"
             )
             intent.setType("message/rfc822")
         }
@@ -290,10 +349,10 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
         try {
             helper.log("Permission Granted.")
             locationManager?.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER,
-                    1000,
-                    0f,
-                    locationListener
+                LocationManager.GPS_PROVIDER,
+                1000,
+                0f,
+                locationListener
             );
 
         } catch (ex: SecurityException) {
@@ -304,32 +363,32 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
     }
     fun requestPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED
+            != PackageManager.PERMISSION_GRANTED
         ) {
             // Permission is not granted
 
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(
-                            this,
-                            Manifest.permission.ACCESS_FINE_LOCATION
-                    )
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
             ) {
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
 
                 ActivityCompat.requestPermissions(
-                        this,
-                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                        REQUEST_ACCESS_FINE_LOCATION
+                    this,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    REQUEST_ACCESS_FINE_LOCATION
                 )
 
             } else {
                 // No explanation needed, we can request the permission.
                 ActivityCompat.requestPermissions(
-                        this,
-                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                        REQUEST_ACCESS_FINE_LOCATION
+                    this,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    REQUEST_ACCESS_FINE_LOCATION
                 )
 
             }
@@ -341,10 +400,10 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             if (locationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 //                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListener);
                 locationManager!!.requestLocationUpdates(
-                        LocationManager.GPS_PROVIDER,
-                        1000,
-                        0f,
-                        locationListener
+                    LocationManager.GPS_PROVIDER,
+                    1000,
+                    0f,
+                    locationListener
                 )
             } else {
                 showGPSDisabledAlertToUser()
@@ -354,29 +413,29 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
     private fun showGPSDisabledAlertToUser() {
         val alertDialogBuilder = AlertDialog.Builder(this, R.style.ThemeOverlay_AppCompat_Dialog)
         alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
-                .setCancelable(false)
-                .setPositiveButton(
-                        "Goto Settings Page\nTo Enable GPS"
-                ) { dialog, id ->
-                    val callGPSSettingIntent = Intent(
-                            android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
-                    )
-                    startActivity(callGPSSettingIntent)
-                }
+            .setCancelable(false)
+            .setPositiveButton(
+                "Goto Settings Page\nTo Enable GPS"
+            ) { dialog, id ->
+                val callGPSSettingIntent = Intent(
+                    android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
+                )
+                startActivity(callGPSSettingIntent)
+            }
         alertDialogBuilder.setNegativeButton("Cancel",
-                object : DialogInterface.OnClickListener {
-                    override fun onClick(dialog: DialogInterface, id: Int) {
-                        dialog.cancel()
-                    }
-                })
+            object : DialogInterface.OnClickListener {
+                override fun onClick(dialog: DialogInterface, id: Int) {
+                    dialog.cancel()
+                }
+            })
         var alert = alertDialogBuilder.create()
         alert.show()
     }
 
     override fun onRequestPermissionsResult(
-            requestCode: Int,
-            permissions: Array<String>,
-            grantResults: IntArray
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
     ) {
         when (requestCode) {
             REQUEST_ACCESS_FINE_LOCATION -> {
@@ -400,22 +459,22 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
 
     private fun showSettings() {
         val snackbar = Snackbar.make(
-                findViewById(android.R.id.content),
-                "You have previously declined GPS permission.\n" + "You must approve this permission in \"Permissions\" in the app settings on your device.",
-                Snackbar.LENGTH_LONG
+            findViewById(android.R.id.content),
+            "You have previously declined GPS permission.\n" + "You must approve this permission in \"Permissions\" in the app settings on your device.",
+            Snackbar.LENGTH_LONG
         ).setAction(
-                "Settings"
+            "Settings"
         ) {
             startActivity(
-                    Intent(
-                            android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                            Uri.parse("package:" + BuildConfig.APPLICATION_ID)
-                    )
+                Intent(
+                    android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.parse("package:" + BuildConfig.APPLICATION_ID)
+                )
             )
         }
         val snackbarView = snackbar.view
         val textView =
-                snackbarView.findViewById(android.support.design.R.id.snackbar_text) as TextView
+            snackbarView.findViewById(R.id.snackbar_text) as TextView
         textView.maxLines = 5  //Or as much as you need
         snackbar.show()
     }
@@ -457,3 +516,4 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
 
     }
 }
+

@@ -75,14 +75,14 @@ class Helper(var TAG: String, val context: Context) {
 
     fun getNextAction() = getLastJourney().nextAction
 
-    fun setToDoLayout(view: android.support.design.widget.FloatingActionButton) {
+    fun setToDoLayout(view: com.google.android.material.floatingactionbutton.FloatingActionButton) {
         val width = context.resources.getDimensionPixelSize(R.dimen._100sdp)
         val height = context.resources.getDimensionPixelSize(R.dimen._100sdp)
         val layoutParams = FrameLayout.LayoutParams(width, height)
         view.setLayoutParams(layoutParams)
     }
 
-    fun setDefaultLayout(view: android.support.design.widget.FloatingActionButton) {
+    fun setDefaultLayout(view: com.google.android.material.floatingactionbutton.FloatingActionButton) {
         val width = context.resources.getDimensionPixelSize(R.dimen._80sdp)
         val height = context.resources.getDimensionPixelSize(R.dimen._80sdp)
         val layoutParams = FrameLayout.LayoutParams(width, height)

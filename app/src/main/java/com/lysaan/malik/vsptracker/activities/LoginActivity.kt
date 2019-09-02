@@ -2,8 +2,8 @@ package com.lysaan.malik.vsptracker.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.lysaan.malik.vsptracker.Helper
 import com.lysaan.malik.vsptracker.R
@@ -95,6 +95,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
         val intent = Intent(this, HourMeterStartActivity::class.java)
         startActivity(intent)
+        helper.hideProgressBar()
 //        helper.startHomeActivityByType()
     }
 }
