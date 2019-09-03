@@ -91,10 +91,26 @@ class LoadingHistoryAdapter(
                 )} "
 
         holder.itemView.lhr_gps_loading_layout.setOnClickListener {
-            myHelper.showOnMap(myData.loadingGPSLocation, myData.loadingLocation)
+            when (myData.tripType) {
+                0 -> {
+                    myHelper.showOnMap(myData.loadingGPSLocation, "Loading Location (${myData.loadingLocation})")
+                }
+                1 -> {
+                    myHelper.showOnMap(myData.loadingGPSLocation, "Back Loading Location (${myData.loadingLocation})")
+                }
+            }
+
         }
         holder.itemView.lhr_gps_unloading_layout.setOnClickListener {
-            myHelper.showOnMap(myData.unloadingGPSLocation, myData.unloadingLocation)
+            when (myData.tripType) {
+                0 -> {
+                    myHelper.showOnMap(myData.unloadingGPSLocation, "Unloading Location (${myData.unloadingLocation})")
+                }
+                1 -> {
+                    myHelper.showOnMap(myData.unloadingGPSLocation, "Back Unloading Location (${myData.unloadingLocation})")
+                }
+            }
+
         }
 
 

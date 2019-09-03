@@ -65,11 +65,75 @@ class ETHistoryAdapter(
                         eWork.unloadingGPSLocation.longitude
                 )} "
 
+        // eWorkType 2 = Trenching
+        // eWorkType 1 = General Digging
+
+        // eWorkActionType 1 = Side Casting
+        // eWorkActionType 2 = Off Loading
+
         holder.itemView.lhr_gps_loading_layout.setOnClickListener {
-            myHelper.showOnMap(eWork.loadingGPSLocation, "GPS Location")
+
+            when(eWork.workType){
+                2 -> {
+//                    Trenching
+                    when(eWork.workActionType){
+                        1 ->{
+//                            Side Casting
+                            myHelper.showOnMap(eWork.loadingGPSLocation, "Trenching Start (Side Casting)")
+                        }
+                        2 ->{
+//                            Off Loading
+                            myHelper.showOnMap(eWork.loadingGPSLocation, "Trenching Start (Off Loading)")
+                        }
+                    }
+                }
+                1 -> {
+//                    General Digging
+                    when(eWork.workActionType){
+                        1 ->{
+//                            Side Casting
+                            myHelper.showOnMap(eWork.loadingGPSLocation, "General Digging Start (Side Casting)")
+                        }
+                        2 ->{
+//                            Off Loading
+                            myHelper.showOnMap(eWork.loadingGPSLocation, "General Digging Start (Off Loading)")
+                        }
+                    }
+                }
+            }
+
+
         }
         holder.itemView.lhr_gps_unloading_layout.setOnClickListener {
-            myHelper.showOnMap(eWork.unloadingGPSLocation, "GPS Location")
+//            myHelper.showOnMap(eWork.unloadingGPSLocation, "GPS Location")
+            when(eWork.workType){
+                2 -> {
+//                    Trenching
+                    when(eWork.workActionType){
+                        1 ->{
+//                            Side Casting
+                            myHelper.showOnMap(eWork.loadingGPSLocation, "Trenching Stop (Side Casting)")
+                        }
+                        2 ->{
+//                            Off Loading
+                            myHelper.showOnMap(eWork.loadingGPSLocation, "Trenching Stop (Off Loading)")
+                        }
+                    }
+                }
+                1 -> {
+//                    General Digging
+                    when(eWork.workActionType){
+                        1 ->{
+//                            Side Casting
+                            myHelper.showOnMap(eWork.loadingGPSLocation, "General Digging Stop (Side Casting)")
+                        }
+                        2 ->{
+//                            Off Loading
+                            myHelper.showOnMap(eWork.loadingGPSLocation, "General Digging Stop (Off Loading)")
+                        }
+                    }
+                }
+            }
         }
 
         holder.itemView.eth_row.setOnClickListener {

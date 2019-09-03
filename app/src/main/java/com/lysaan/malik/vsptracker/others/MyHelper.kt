@@ -20,6 +20,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.google.gson.Gson
 import com.lysaan.malik.vsptracker.activities.HourMeterStopActivity
+import com.lysaan.malik.vsptracker.activities.Map1Activity
 import com.lysaan.malik.vsptracker.activities.TabHistoryActivity
 import com.lysaan.malik.vsptracker.activities.excavator.EHistoryActivity
 import com.lysaan.malik.vsptracker.activities.excavator.EHomeActivity
@@ -35,14 +36,22 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
-
-
 class MyHelper(var TAG: String, val context: Context) {
 
     private lateinit var dialog: ProgressDialog
     private lateinit var progressBar: ProgressBar
     private var sessionManager: SessionManager = SessionManager(context)
     private val gson = Gson()
+
+
+    fun getIsMapOpened() = sessionManager.getLastJourney().isMapOpened
+
+    fun setIsMapOpened(isMapOpened: Boolean) {
+        val lastJourney = sessionManager.getLastJourney()
+        lastJourney.isMapOpened = isMapOpened
+        sessionManager.setLastJourney(lastJourney)
+    }
+
 
     fun setUserID(userID: String) {}
     fun getUserID() = ""
@@ -55,13 +64,21 @@ class MyHelper(var TAG: String, val context: Context) {
         return gson.toJson(gpsMaterial)
     }
 
-    fun showOnMap(gpsMaterial: GPSLocation, title: String) {
-        val lat = gpsMaterial.latitude
-        val longg = gpsMaterial.longitude
-        val geoUri = "http://maps.google.com/maps?q=loc:" + lat + "," + longg + " ($title)";
-        val mapIntent = Intent(Intent.ACTION_VIEW, Uri.parse(geoUri))
-        mapIntent.setPackage("com.google.android.apps.maps")
-        context.startActivity(mapIntent)
+    fun showOnMap(gpsLocation: GPSLocation, title: String) {
+//        val lat = gpsLocation.latitude
+//        val longg = gpsLocation.longitude
+//        val geoUri = "http://maps.google.com/maps?q=loc:" + lat + "," + longg + " ($title)";
+//        val mapIntent = Intent(Intent.ACTION_VIEW, Uri.parse(geoUri))
+//        mapIntent.setPackage("com.google.android.apps.maps")
+//        context.startActivity(mapIntent)
+
+
+        setIsMapOpened(true)
+        val intent = Intent(context, Map1Activity::class.java)
+        gpsLocation.locationName = title
+        intent.putExtra("gpsLocation", gpsLocation)
+        context.startActivity(intent)
+
     }
 
 
@@ -437,12 +454,12 @@ class MyHelper(var TAG: String, val context: Context) {
     fun getLocations(): ArrayList<Material> {
         val locations = ArrayList<Material>()
 
-        locations.add(Material(0, "Select Material"))
-        locations.add(Material(1, "Material 1"))
-        locations.add(Material(2, "Material 2"))
-        locations.add(Material(3, "Material 3"))
-        locations.add(Material(4, "Material 4"))
-        locations.add(Material(5, "Material 5"))
+        locations.add(Material(0, "Select Location"))
+        locations.add(Material(1, "Location 1"))
+        locations.add(Material(2, "Location 2"))
+        locations.add(Material(3, "Location 3"))
+        locations.add(Material(4, "Location 4"))
+        locations.add(Material(5, "Location 5"))
         locations.add(Material(6, "Other 1"))
         return locations
     }
@@ -710,4 +727,6 @@ class MyHelper(var TAG: String, val context: Context) {
 
 
 }
+
+
 

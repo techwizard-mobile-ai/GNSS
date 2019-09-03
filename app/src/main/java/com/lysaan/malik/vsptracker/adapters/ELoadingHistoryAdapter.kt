@@ -92,7 +92,7 @@ class ELoadingHistoryAdapter(
 
         holder.itemView.lhr_workmode.text = ": ${myData.workMode}"
         holder.itemView.lhr_gps_loading_layout.setOnClickListener {
-            myHelper.showOnMap(myData.loadingGPSLocation, myData.loadingLocation)
+            myHelper.showOnMap(myData.loadingGPSLocation, "Excavator Loading (${myData.loadingLocation})")
         }
     }
 

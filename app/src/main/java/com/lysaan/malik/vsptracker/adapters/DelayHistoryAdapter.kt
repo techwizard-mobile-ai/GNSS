@@ -64,10 +64,10 @@ class DelayHistoryAdapter(
                 )} "
 
         holder.itemView.lhr_gps_loading_layout.setOnClickListener {
-            myHelper.showOnMap(eWork.loadingGPSLocation, "Delay Start Location")
+            myHelper.showOnMap(eWork.loadingGPSLocation, "Delay Location")
         }
         holder.itemView.lhr_gps_unloading_layout.setOnClickListener {
-            myHelper.showOnMap(eWork.unloadingGPSLocation, "Delay Stop Location")
+            myHelper.showOnMap(eWork.unloadingGPSLocation, "Delay Location")
         }
 
     }

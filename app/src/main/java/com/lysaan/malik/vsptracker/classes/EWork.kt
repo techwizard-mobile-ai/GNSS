@@ -6,7 +6,13 @@ class EWork() : Serializable {
 
     var ID = 0
     var eWorkID = 0
+
+    // eWorkType 2 = Trenching
+    // eWorkType 1 = General Digging
     var workType = 0
+
+    // eWorkActionType 1 = Side Casting
+    // eWorkActionType 2 = Off Loading
     var workActionType = 0
     var startTime = 0L
     var stopTime = 0L
@@ -21,7 +27,7 @@ class EWork() : Serializable {
     var unloadingGPSLocation = GPSLocation()
     var userID = ""
 
-    // isSync 0 = Not Uploaded to Server
+// isSync 0 = Not Uploaded to Server
 // isSync 1 = Uploaded to Server
 // isSync 2 = Uploaded to Server by Export
     var isSync: Int = 0

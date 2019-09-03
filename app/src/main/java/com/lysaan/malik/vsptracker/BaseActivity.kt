@@ -23,6 +23,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
+import androidx.core.view.get
 import androidx.drawerlayout.widget.DrawerLayout
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -111,6 +112,7 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
         bottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
         menu = bottomNavigation.getMenu()
+        menu.get(0).setCheckable(false)
     }
 
     private val mOnNavigationItemSelectedListener =
@@ -123,8 +125,13 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             myHelper.log("menuInfo:${item.menuInfo}")
             when (item.itemId) {
                 R.id.navb_map -> {
-                    val intent = Intent(this, Map1Activity::class.java)
-                    startActivity(intent)
+                    if(!myHelper.getIsMapOpened()){
+                        myHelper.setIsMapOpened(true)
+                        val intent = Intent(this, Map1Activity::class.java)
+                        startActivity(intent)
+                    }else{
+                        myHelper.toast("Map is Already Opened.")
+                    }
                 }
                 R.id.navb_delay-> { toggleDelay() }
 
@@ -175,11 +182,11 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
         }
 
         if(myHelper.isDelayStarted()){
-            menu.findItem(R.id.navb_delay).title= "Delay Started."
+            menu.findItem(R.id.navb_delay).title= "Delay Started"
             menu.findItem(R.id.navb_delay).icon = getDrawable(R.drawable.ic_started)
             menu.findItem(R.id.navb_delay).setChecked(true)
         }else{
-            menu.findItem(R.id.navb_delay).title= "Delay Stopped."
+            menu.findItem(R.id.navb_delay).title= "Delay Stopped"
             menu.findItem(R.id.navb_delay).icon = getDrawable(R.drawable.ic_stopped)
             menu.findItem(R.id.navb_map).setChecked(true)
         }
@@ -200,19 +207,23 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             R.id.nav_home -> {
                 val data = MyData()
                 myHelper.startHomeActivityByType(data)
+                finishFromChild(Map1Activity())
             }
             R.id.nav_day_works -> {
 
                 val intent = Intent(this, DayWorksActivity::class.java)
                 startActivity(intent)
+                finishFromChild(Map1Activity())
             }
             R.id.nav_logout -> {
                 myHelper.logout(this)
+                finishFromChild(Map1Activity())
             }
             R.id.nav_stop_machine -> {
 
                 val intent = Intent(this, MachineStatus1Activity::class.java)
                 startActivity(intent)
+                finishFromChild(Map1Activity())
             }
             R.id.nav_night_mode -> {
 
@@ -229,18 +240,22 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             R.id.nav_change_machine -> {
                 val intent = Intent(this, MachineTypeActivity::class.java)
                 startActivity(intent)
+                finishFromChild(Map1Activity())
             }
 
             R.id.nav_load_history -> {
                 myHelper.startHistoryByType()
+                finishFromChild(Map1Activity())
             }
             R.id.nav_email -> {
                 doEmail()
+                finishFromChild(Map1Activity())
             }
 
             R.id.nav_delay -> {
                 val intent = Intent(this, DelayActivity::class.java)
                 startActivity(intent)
+                finishFromChild(Map1Activity())
             }
         }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
@@ -265,7 +280,7 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             myHelper.toast("Delay Started.")
             myHelper.startDelay(gpsLocation)
             menu.findItem(R.id.navb_delay).icon = getDrawable(R.drawable.ic_started)
-            menu.findItem(R.id.navb_delay).title= "Delay Started."
+            menu.findItem(R.id.navb_delay).title= "Delay Started"
             menu.findItem(R.id.navb_delay).setChecked(true)
 
         }
@@ -286,8 +301,9 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             eWork.unloadingGPSLocation = meter.delayStopGPSLocation
 
             menu.findItem(R.id.navb_delay).icon = getDrawable(R.drawable.ic_stopped)
-            menu.findItem(R.id.navb_delay).title= "Delay Stopped."
+            menu.findItem(R.id.navb_delay).title= "Delay Stopped"
             menu.findItem(R.id.navb_map).setChecked(true)
+
 
             val insertID = db.insertDelay(eWork)
             if(insertID > 0){

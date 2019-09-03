@@ -5,16 +5,7 @@ import java.io.Serializable
 class MyData : Serializable {
 
     var recordID: Long = 0L
-
-// TODO to be deleted; replaced by nextAction
-//    var isUnload: Boolean = false
-//    var isForBackLoad: Boolean = false
-//    var isForBackUnload: Boolean = false
-
     var isStartMachine: Boolean = false
-
-    // TODO to be deleted; replaced by repeatJourney
-//    var isRepeatJourney: Boolean = false
 
     var isForLoadResult: Boolean = false
     var isForUnloadResult: Boolean = false
@@ -74,7 +65,7 @@ class MyData : Serializable {
     var stopTime = 0L
     var totalTime = 0L
 
-    //    tripType 0 = Simple Trip
+//    tripType 0 = Simple Trip
 //    tripType 1 = Trip for Back Load
     var tripType: Int = 0
     var trip0ID: Int = 0
@@ -83,14 +74,16 @@ class MyData : Serializable {
     var unloadingGPSLocation = GPSLocation()
     var userID = ""
 
-    // isSync 0 = Not Uploaded to Server
+// isSync 0 = Not Uploaded to Server
 // isSync 1 = Uploaded to Server
 // isSync 2 = Uploaded to Server by Export
     var isSync: Int = 0
 
     var machineStoppedReason = ""
+
+    var isMapOpened: Boolean = false
     override fun toString(): String {
-        return "MyData(recordID=$recordID, isStartMachine=$isStartMachine, isForLoadResult=$isForLoadResult, isForUnloadResult=$isForUnloadResult, loadedMachineType=$loadedMachineType, loadedMachineNumber='$loadedMachineNumber', isForBackLoadResult=$isForBackLoadResult, isForBackUnloadResult=$isForBackUnloadResult, loadingMachine='$loadingMachine', backLoadingMachine='$backLoadingMachine', loadingMaterial='$loadingMaterial', backLoadingMaterial='$backLoadingMaterial', loadingLocation='$loadingLocation', backLoadingLocation='$backLoadingLocation', unloadingTask='$unloadingTask', backUnloadingTask='$backUnloadingTask', unloadingMachine='$unloadingMachine', backUnloadingMachine='$backUnloadingMachine', unloadingMaterial='$unloadingMaterial', backUnloadingMaterial='$backUnloadingMaterial', unloadingLocation='$unloadingLocation', backUnloadingLocation='$backUnloadingLocation', unloadingWeight=$unloadingWeight, backUnloadedWeight=$backUnloadedWeight, loadedMachine='$loadedMachine', backLoadedMachine='$backLoadedMachine', time='$time', date='$date', eWorkType=$eWorkType, eWorkActionType=$eWorkActionType, workMode='$workMode', nextAction=$nextAction, repeatJourney=$repeatJourney, startTime=$startTime, stopTime=$stopTime, totalTime=$totalTime, tripType=$tripType, trip0ID=$trip0ID, loadingGPSLocation=$loadingGPSLocation, unloadingGPSLocation=$unloadingGPSLocation, userID='$userID', isSync=$isSync, machineStoppedReason='$machineStoppedReason')"
+        return "MyData(recordID=$recordID, isStartMachine=$isStartMachine, isForLoadResult=$isForLoadResult, isForUnloadResult=$isForUnloadResult, loadedMachineType=$loadedMachineType, loadedMachineNumber='$loadedMachineNumber', isForBackLoadResult=$isForBackLoadResult, isForBackUnloadResult=$isForBackUnloadResult, loadingMachine='$loadingMachine', backLoadingMachine='$backLoadingMachine', loadingMaterial='$loadingMaterial', backLoadingMaterial='$backLoadingMaterial', loadingLocation='$loadingLocation', backLoadingLocation='$backLoadingLocation', unloadingTask='$unloadingTask', backUnloadingTask='$backUnloadingTask', unloadingMachine='$unloadingMachine', backUnloadingMachine='$backUnloadingMachine', unloadingMaterial='$unloadingMaterial', backUnloadingMaterial='$backUnloadingMaterial', unloadingLocation='$unloadingLocation', backUnloadingLocation='$backUnloadingLocation', unloadingWeight=$unloadingWeight, backUnloadedWeight=$backUnloadedWeight, loadedMachine='$loadedMachine', backLoadedMachine='$backLoadedMachine', time='$time', date='$date', eWorkType=$eWorkType, eWorkActionType=$eWorkActionType, workMode='$workMode', nextAction=$nextAction, repeatJourney=$repeatJourney, startTime=$startTime, stopTime=$stopTime, totalTime=$totalTime, tripType=$tripType, trip0ID=$trip0ID, loadingGPSLocation=$loadingGPSLocation, unloadingGPSLocation=$unloadingGPSLocation, userID='$userID', isSync=$isSync, machineStoppedReason='$machineStoppedReason', isMapOpened=$isMapOpened)"
     }
 
 
