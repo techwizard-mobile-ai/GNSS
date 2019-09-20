@@ -1,5 +1,6 @@
 package com.lysaan.malik.vsptracker.fragments.excavator
 
+import android.app.Activity
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
@@ -11,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.activities.excavator.EHistoryActivity
 import com.lysaan.malik.vsptracker.adapters.ETHistoryAdapter
 import com.lysaan.malik.vsptracker.classes.EWork
 import com.lysaan.malik.vsptracker.database.DatabaseAdapter
@@ -91,13 +91,13 @@ class ETrenchingHistoryFragment : Fragment() {
     }
 
     companion object {
-        private lateinit var myContext: EHistoryActivity
+        private lateinit var myContext: Activity
         private lateinit var FRAGMENT_TAG: String
 
         @JvmStatic
         fun newInstance(
-                eHistoryActivity: EHistoryActivity,
-                FRAGMENT_TG: String
+            eHistoryActivity: Activity,
+            FRAGMENT_TG: String
         ) =
                 ETrenchingHistoryFragment().apply {
                     arguments = Bundle().apply {

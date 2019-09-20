@@ -40,7 +40,11 @@ class ETHistoryAdapter(
 
         holder.itemView.eth_record_number.setText(":  " + (dataList.size - position))
         if (eWork.workActionType == 1) {
-            holder.itemView.eth_action.setText(":  Side Casting")
+            when(eWork.workType){
+                3 -> {holder.itemView.eth_action.setText(":  Trimming")}
+                else -> {holder.itemView.eth_action.setText(":  Side Casting")}
+            }
+//            holder.itemView.eth_action.setText(":  Side Casting")
             holder.itemView.eth_totalloads_layout.visibility = View.GONE
         } else {
             holder.itemView.eth_action.setText(":  Loading")
@@ -74,6 +78,9 @@ class ETHistoryAdapter(
         holder.itemView.lhr_gps_loading_layout.setOnClickListener {
 
             when(eWork.workType){
+                3 -> {
+                    myHelper.showOnMap(eWork.loadingGPSLocation, "Scraper Trimming Start")
+                }
                 2 -> {
 //                    Trenching
                     when(eWork.workActionType){
@@ -107,6 +114,9 @@ class ETHistoryAdapter(
         holder.itemView.lhr_gps_unloading_layout.setOnClickListener {
 //            myHelper.showOnMap(eWork.unloadingGPSLocation, "GPS Location")
             when(eWork.workType){
+                3 -> {
+                    myHelper.showOnMap(eWork.loadingGPSLocation, "Scraper Trimming Start")
+                }
                 2 -> {
 //                    Trenching
                     when(eWork.workActionType){

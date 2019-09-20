@@ -5,18 +5,20 @@
     android:layout_height="match_parent"
     tools:context=".activities.scrapper.SHomeActivity">
 
-    <Button
-        android:id="@+id/shome_logout"
-        style="@style/next_button_single"
-        android:layout_alignParentBottom="true" />
+    <TextView
+        android:id="@+id/shome_title"
+        style="@style/activity_title"
+        android:layout_centerHorizontal="true"
+        android:text="Select Action" />
+
 
     <LinearLayout
         style="@style/default_linearlayout"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/_30sdp">
+        android:layout_below="@id/shome_title">
 
         <FrameLayout
             android:id="@+id/thome_load"
@@ -44,8 +46,6 @@
                 android:backgroundTint="@color/colorPrimary"
                 android:src="@android:color/transparent" />
         </FrameLayout>
-
-
         <FrameLayout
             android:id="@+id/thome_unload"
             android:layout_width="wrap_content"
@@ -72,6 +72,15 @@
                 android:backgroundTint="@color/colorPrimary"
                 android:src="@android:color/transparent" />
         </FrameLayout>
+
+        <Button
+            android:id="@+id/shome_trimming"
+            android:layout_marginTop="@dimen/_30sdp"
+            android:layout_gravity="center_horizontal"
+            style="@style/next_button_single"
+            android:text="@string/trimming"
+            />
+
     </LinearLayout>
     <!--    <LinearLayout-->
     <!--            android:orientation="horizontal"-->
@@ -96,9 +105,10 @@
     <!--            />-->
 
     <!--    </LinearLayout>-->
+    <Button
+        android:id="@+id/shome_logout"
+        style="@style/next_button_single"
+        android:layout_marginBottom="@dimen/_20sdp"
+        android:layout_alignParentBottom="true" />
 
-    <TextView
-        style="@style/activity_title"
-        android:layout_centerHorizontal="true"
-        android:text="Select Action" />
 </RelativeLayout>

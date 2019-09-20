@@ -15,7 +15,15 @@
         android:screenOrientation="landscape"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".activities.Map1Activity"></activity>
+        <activity android:name=".activities.OperatorLoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activities.scrapper.SHistoryActivity" />
+        <activity android:name=".activities.excavator.ETOffLoadingActivity" />
+        <activity android:name=".activities.Map1Activity" />
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -84,11 +92,11 @@
             <!-- </intent-filter> -->
         </activity>
         <activity android:name=".activities.LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity> <!-- <activity android:name=".activities.notused.EHomeOldActivity" /> -->
         <activity
             android:name=".BaseActivity"

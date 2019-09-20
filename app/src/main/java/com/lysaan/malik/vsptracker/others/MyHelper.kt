@@ -19,19 +19,30 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.lysaan.malik.vsptracker.activities.HourMeterStopActivity
+import com.lysaan.malik.vsptracker.activities.LoginActivity
 import com.lysaan.malik.vsptracker.activities.Map1Activity
 import com.lysaan.malik.vsptracker.activities.TabHistoryActivity
 import com.lysaan.malik.vsptracker.activities.excavator.EHistoryActivity
 import com.lysaan.malik.vsptracker.activities.excavator.EHomeActivity
+import com.lysaan.malik.vsptracker.activities.scrapper.SHistoryActivity
 import com.lysaan.malik.vsptracker.activities.scrapper.SHomeActivity
 import com.lysaan.malik.vsptracker.activities.scrapper.SUnloadAfterActivity
 import com.lysaan.malik.vsptracker.activities.truck.THomeActivity
 import com.lysaan.malik.vsptracker.activities.truck.TUnloadAfterActivity
+import com.lysaan.malik.vsptracker.apis.RetrofitAPI
+import com.lysaan.malik.vsptracker.apis.login.LoginAPI
+import com.lysaan.malik.vsptracker.apis.login.LoginResponse
 import com.lysaan.malik.vsptracker.classes.GPSLocation
 import com.lysaan.malik.vsptracker.classes.Material
 import com.lysaan.malik.vsptracker.classes.Meter
 import com.lysaan.malik.vsptracker.classes.MyData
+import okhttp3.*
+import org.json.JSONObject
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -42,7 +53,88 @@ class MyHelper(var TAG: String, val context: Context) {
     private lateinit var progressBar: ProgressBar
     private var sessionManager: SessionManager = SessionManager(context)
     private val gson = Gson()
+    internal lateinit var retrofit: Retrofit
+    internal lateinit var retrofitAPI: RetrofitAPI
 
+
+    fun getOperatorAPI() = sessionManager.getOperatorAPI()
+    fun setOperatorAPI(loginAPI: LoginAPI){sessionManager.setOperatorAPI(loginAPI)}
+
+    fun getLoginAPI() = sessionManager.getLoginAPI()
+    fun setLoginAPI(loginAPI: LoginAPI){sessionManager.setLoginAPI(loginAPI)}
+
+    fun refreshToken(){
+        val client = OkHttpClient()
+        val formBody = FormBody.Builder()
+            .add("email", getLoginAPI().email)
+            .add("password", getLoginAPI().pass)
+            .build()
+        val request = Request.Builder()
+            .url("https://vsptracker.app/api/v1/org/users/login")
+            .post(formBody)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onResponse(call: Call, response: Response) {
+                val respontString = response.body()!!.string()
+                val responeJObject = JSONObject(respontString)
+                val success =responeJObject.getBoolean("success")
+                if(success){
+                    val gson = GsonBuilder().create()
+                    var loginAPI = gson.fromJson(responeJObject.getString("data"),LoginAPI::class.java)
+                    loginAPI.pass = getLoginAPI().pass
+                    log("body:$responeJObject")
+                    log("Success:$success")
+                    log("LoginAPI:$loginAPI")
+                    setLoginAPI(loginAPI)
+                }else{
+                    val intent = Intent(context, LoginActivity::class.java)
+                    context.startActivity(intent)
+                }
+
+
+            }
+
+            override fun onFailure(call: Call, e: IOException) {
+                log("Failed to execute request ${e.printStackTrace()}")
+            }
+        })
+    }
+
+    fun refreshToken1(){
+
+        this.retrofit = Retrofit.Builder()
+            .baseUrl(RetrofitAPI.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        this.retrofitAPI = retrofit.create(RetrofitAPI::class.java)
+
+        val call = this.retrofitAPI.getLogin(getLoginAPI().email,"user@123")
+        call.enqueue(object : retrofit2.Callback<LoginResponse> {
+
+            override fun onResponse(call: retrofit2.Call<LoginResponse>, response: retrofit2.Response<LoginResponse>) {
+                log("RetrofitResponse:$response")
+//                val loginResponse = response.body()
+//                if(loginResponse!!.success){
+//                    log("SendReponse:${loginResponse.data}.")
+//                    setLoginAPI(loginResponse.data)
+//                    val intent = Intent(context, context.javaClass)
+//                    intent.putExtra("myData", MyData())
+//                    context.startActivity(intent)
+//                    toast("Please Try Again.")
+//                }else{
+//                    toast(loginResponse.message)
+//                    val intent = Intent(context, LoginActivity::class.java)
+//                    context.startActivity(intent)
+//                }
+//                myHelper.setLoginAPI(loginResponse.data)
+            }
+
+            override fun onFailure(call: retrofit2.Call<LoginResponse>, t: Throwable) {
+                log("API Failure:" + t)
+            }
+        })
+    }
 
     fun getIsMapOpened() = sessionManager.getLastJourney().isMapOpened
 
@@ -155,11 +247,11 @@ class MyHelper(var TAG: String, val context: Context) {
             meter.isDelayStarted = true
             meter.delayStartTime = currentTime
             meter.delayStartGPSLocation = gpsMaterial
-            toast("Delay Started.")
+            toast("Waiting Started.")
             log("MeterStartAfter:$meter")
             setMeter(meter)
         }else{
-            toast("Delay is already Started.")
+            toast("Waiting is already Started.")
         }
     }
     fun startDailyMode() {
@@ -293,6 +385,8 @@ class MyHelper(var TAG: String, val context: Context) {
         return newMinutes
     }
 
+
+
     fun getMeter() = sessionManager.getMeter()
     fun setMeter(meter: Meter) {
         sessionManager.setMeter(meter)
@@ -337,18 +431,15 @@ class MyHelper(var TAG: String, val context: Context) {
 
     fun stopMachine(insertID: Long) {
         val meter = sessionManager.getMeter()
-
-        if (!meter.isMachineStopped) {
             val meterONTime = getMachineTotalTime() + getMachineStartTime()
             meter.machineTotalTime = meterONTime
             meter.isMachineStopped = true
             meter.machineDbID = insertID
             sessionManager.setMeter(meter)
+            stopDailyMode()
 //            toast("Machine is Stopped.\n Machine Total Time : $meterONTime (mins)")
             toast("Machine is Stopped.")
-        } else {
-            toast("Machine is Already Stopped.")
-        }
+
     }
 
     fun startMachine() {
@@ -396,7 +487,7 @@ class MyHelper(var TAG: String, val context: Context) {
 
     fun getMachineLocations(): ArrayList<Material> {
         val states = ArrayList<Material>()
-        states.add(Material(0, "Select Machine Material"))
+        states.add(Material(0, "Select Machine Location"))
         states.add(Material(1, "Auckland"))
         states.add(Material(2, "Drury"))
         states.add(Material(3, "Te Kauwhata"))
@@ -407,12 +498,12 @@ class MyHelper(var TAG: String, val context: Context) {
         val states = ArrayList<Material>()
         states.add(Material(0, "Select Machine Type"))
         states.add(Material(1, "Excavator"))
-        states.add(Material(2, "Scrapper"))
+        states.add(Material(2, "Scraper"))
         states.add(Material(3, "Truck"))
         return states
     }
 
-    fun getScrapperMaterials(): ArrayList<Material> {
+    fun getScraperMaterials(): ArrayList<Material> {
         val states = ArrayList<Material>()
 
         states.add(Material(0, "Select Material"))
@@ -452,6 +543,7 @@ class MyHelper(var TAG: String, val context: Context) {
     }
 
     fun getLocations(): ArrayList<Material> {
+
         val locations = ArrayList<Material>()
 
         locations.add(Material(0, "Select Location"))
@@ -648,7 +740,11 @@ class MyHelper(var TAG: String, val context: Context) {
                 val intent = Intent(context, EHistoryActivity::class.java)
                 context.startActivity(intent)
             }
-            2, 3 -> {
+            2->{
+                val intent = Intent(context, SHistoryActivity::class.java)
+                context.startActivity(intent)
+            }
+            3 -> {
 //                val intent = Intent(myContext, HistoryActivity::class.java)
                 val intent = Intent(context, TabHistoryActivity::class.java)
                 context.startActivity(intent)

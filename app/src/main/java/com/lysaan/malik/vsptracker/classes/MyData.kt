@@ -42,6 +42,7 @@ class MyData : Serializable {
 
 //    eWorkType 1 = General Digging
 //    eWorkType 2 = Trenching
+//    eWorkType 3 = Scraper Trimming
     var eWorkType: Int = 0
 
 //    eWorkActionType 1 = Side Casting
@@ -83,7 +84,7 @@ class MyData : Serializable {
 
     var isMapOpened: Boolean = false
     override fun toString(): String {
-        return "MyData(recordID=$recordID, isStartMachine=$isStartMachine, isForLoadResult=$isForLoadResult, isForUnloadResult=$isForUnloadResult, loadedMachineType=$loadedMachineType, loadedMachineNumber='$loadedMachineNumber', isForBackLoadResult=$isForBackLoadResult, isForBackUnloadResult=$isForBackUnloadResult, loadingMachine='$loadingMachine', backLoadingMachine='$backLoadingMachine', loadingMaterial='$loadingMaterial', backLoadingMaterial='$backLoadingMaterial', loadingLocation='$loadingLocation', backLoadingLocation='$backLoadingLocation', unloadingTask='$unloadingTask', backUnloadingTask='$backUnloadingTask', unloadingMachine='$unloadingMachine', backUnloadingMachine='$backUnloadingMachine', unloadingMaterial='$unloadingMaterial', backUnloadingMaterial='$backUnloadingMaterial', unloadingLocation='$unloadingLocation', backUnloadingLocation='$backUnloadingLocation', unloadingWeight=$unloadingWeight, backUnloadedWeight=$backUnloadedWeight, loadedMachine='$loadedMachine', backLoadedMachine='$backLoadedMachine', time='$time', date='$date', eWorkType=$eWorkType, eWorkActionType=$eWorkActionType, workMode='$workMode', nextAction=$nextAction, repeatJourney=$repeatJourney, startTime=$startTime, stopTime=$stopTime, totalTime=$totalTime, tripType=$tripType, trip0ID=$trip0ID, loadingGPSLocation=$loadingGPSLocation, unloadingGPSLocation=$unloadingGPSLocation, userID='$userID', isSync=$isSync, machineStoppedReason='$machineStoppedReason', isMapOpened=$isMapOpened)"
+        return "MyData(loadingMachine='$loadingMachine', backLoadingMachine='$backLoadingMachine', loadingMaterial='$loadingMaterial', backLoadingMaterial='$backLoadingMaterial', loadingLocation='$loadingLocation', backLoadingLocation='$backLoadingLocation', unloadingTask='$unloadingTask', backUnloadingTask='$backUnloadingTask', unloadingMachine='$unloadingMachine', backUnloadingMachine='$backUnloadingMachine', unloadingMaterial='$unloadingMaterial', backUnloadingMaterial='$backUnloadingMaterial', unloadingLocation='$unloadingLocation', backUnloadingLocation='$backUnloadingLocation',  workMode='$workMode', nextAction=$nextAction, repeatJourney=$repeatJourney)"
     }
 
 

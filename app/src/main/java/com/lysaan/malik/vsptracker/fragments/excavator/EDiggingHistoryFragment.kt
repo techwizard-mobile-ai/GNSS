@@ -1,5 +1,6 @@
 package com.lysaan.malik.vsptracker.fragments.excavator
 
+import android.app.Activity
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
@@ -11,10 +12,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.activities.excavator.EHistoryActivity
 import com.lysaan.malik.vsptracker.adapters.ETHistoryAdapter
 import com.lysaan.malik.vsptracker.classes.EWork
 import com.lysaan.malik.vsptracker.database.DatabaseAdapter
+import kotlinx.android.synthetic.main.fragment_edigging_history.*
 import kotlinx.android.synthetic.main.fragment_edigging_history.view.*
 
 
@@ -37,7 +38,7 @@ class EDiggingHistoryFragment : Fragment() {
                     myContext
             )
             db = DatabaseAdapter(myContext)
-            diggingHistory = db.getEWorks(1)
+            diggingHistory = db.getEWorks(workType)
             myHelper.log("Digging:$diggingHistory ")
         }
     }
@@ -55,7 +56,10 @@ class EDiggingHistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val workType = 1
+        when(workType){
+            1 -> e_digging_f_title.text = "General Digging History"
+            3 -> e_digging_f_title.text = "Scraper Trimming"
+        }
         val mAdapter = ETHistoryAdapter(
                 myContext, diggingHistory,
                 FRAGMENT_TAG, workType
@@ -90,18 +94,21 @@ class EDiggingHistoryFragment : Fragment() {
 
     companion object {
 
-        private lateinit var myContext: EHistoryActivity
+        private lateinit var myContext: Activity
         private lateinit var FRAGMENT_TAG: String
+        private var workType = 0
 
         @JvmStatic
         fun newInstance(
-                eHistoryActivity: EHistoryActivity,
-                FRAGMENT_TG: String
+            eHistoryActivity: Activity,
+            FRAGMENT_TG: String,
+            workType1: Int
         ) =
                 EDiggingHistoryFragment().apply {
                     arguments = Bundle().apply {
                         myContext = eHistoryActivity
                         FRAGMENT_TAG = FRAGMENT_TG
+                        workType = workType1
                     }
                 }
     }

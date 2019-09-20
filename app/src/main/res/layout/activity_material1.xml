@@ -6,18 +6,19 @@
     android:paddingBottom="@dimen/_10sdp"
     tools:context=".activities.common.Material1Activity">
 
-    <Button
-        android:id="@+id/ematerial1_back"
-        style="@style/back_button_single"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true" />
 
+    <TextView
+        android:id="@+id/material_title"
+        style="@style/activity_title"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:text="@string/activity_material1_ematerial1_title_text" />
     <GridView
         android:id="@+id/em_gridview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/ematerial1_back"
-        android:layout_below="@id/ematerial1_title"
+        android:layout_below="@id/material_title"
         android:layout_margin="@dimen/_5sdp"
         android:columnWidth="@dimen/_120sdp"
         android:gravity="center"
@@ -26,10 +27,9 @@
         android:stretchMode="columnWidth"
         android:verticalSpacing="0dp" />
 
-    <TextView
-        android:id="@+id/ematerial1_title"
-        style="@style/activity_title"
-        android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"
-        android:text="@string/activity_material1_ematerial1_title_text" />
+    <Button
+        android:id="@+id/ematerial1_back"
+        style="@style/back_button_single"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true" />
 </RelativeLayout>

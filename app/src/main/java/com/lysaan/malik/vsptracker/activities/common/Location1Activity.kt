@@ -35,9 +35,23 @@ class Location1Activity : BaseActivity(), View.OnClickListener {
             myHelper.log("myData:$myData")
         }
 
+        // nextAction 0 = Do Loading
+        // nextAction 1 = Do Unloading
+        // nextAction 2 = Do Back Loading
+        // nextAction 3 = Do Back Unloading
+
+        when(myData.nextAction){
+            0-> location_title.text = "Select Loading Location"
+            1-> location_title.text = "Select Unloading Location"
+            2-> location_title.text = "Select Back Loading Location"
+            3-> location_title.text = "Select Back Unloading Location"
+        }
+
+
         val gv = findViewById(R.id.l_gridview) as GridView
-        val locations = myHelper.getLocations()
-        locations.removeAt(0)
+//        val locations = myHelper.getLocations()
+        val locations = db.getLocations()
+//        locations.removeAt(0)
         val adapter = CustomGrid(this@Location1Activity, locations)
 
 

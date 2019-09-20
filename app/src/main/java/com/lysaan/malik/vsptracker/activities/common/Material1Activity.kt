@@ -1,7 +1,6 @@
 package com.lysaan.malik.vsptracker.activities.common
 
 
-
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -15,8 +14,8 @@ import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.activities.excavator.ELoadActivity
 import com.lysaan.malik.vsptracker.adapters.CustomGrid
-import com.lysaan.malik.vsptracker.classes.MyData
 import com.lysaan.malik.vsptracker.classes.Material
+import com.lysaan.malik.vsptracker.classes.MyData
 import kotlinx.android.synthetic.main.activity_material1.*
 
 class Material1Activity : BaseActivity(), View.OnClickListener {
@@ -41,16 +40,28 @@ class Material1Activity : BaseActivity(), View.OnClickListener {
             myHelper.log("myData:$myData")
         }
 
+        // nextAction 0 = Do Loading
+        // nextAction 1 = Do Unloading
+        // nextAction 2 = Do Back Loading
+        // nextAction 3 = Do Back Unloading
+
+        when(myData.nextAction){
+            0-> material_title.text = "Select Loading Material"
+            1-> material_title.text = "Select Unloading Material"
+            2-> material_title.text = "Select Back Loading Material"
+            3-> material_title.text = "Select Back Unloading Material"
+        }
         val gv = findViewById(R.id.em_gridview) as GridView
 
         lateinit var materials: ArrayList<Material>
         if (myHelper.getMachineType() == 2) {
-            materials = myHelper.getScrapperMaterials()
+            materials = myHelper.getScraperMaterials()
         } else {
             materials = myHelper.getMaterials()
         }
         materials.removeAt(0)
-        val adapter = CustomGrid(this@Material1Activity, materials)
+//        val adapter = CustomGrid(this@Material1Activity, materials)
+        val adapter = CustomGrid(this@Material1Activity, db.getMaterials())
 
         gv.setAdapter(adapter)
         gv.setOnItemClickListener(AdapterView.OnItemClickListener { parent, view, position, id ->

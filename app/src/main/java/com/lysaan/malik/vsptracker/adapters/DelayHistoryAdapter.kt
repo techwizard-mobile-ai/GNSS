@@ -39,7 +39,7 @@ class DelayHistoryAdapter(
                 holder.itemView.eth_machine_type.setText(":  Excavator")
             }
             2 -> {
-                holder.itemView.eth_machine_type.setText(":  Scrapper")
+                holder.itemView.eth_machine_type.setText(":  Scraper")
             }
             3 -> {
                 holder.itemView.eth_machine_type.setText(":  Truck")

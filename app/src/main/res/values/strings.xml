@@ -45,7 +45,7 @@
     <string name="end_work">END WORK</string>
     <string name="next">NEXT</string>
     <string name="history">History</string>
-    <string name="delay">Delay</string>
+    <string name="delay">Waiting</string>
     <string name="back_load">Back Load</string>
     <string name="repeat_journey">Repeat Journey</string>
     <string name="new_journey">New Journey</string>
@@ -182,6 +182,8 @@
     <string name="start_delay">Start Delay</string>
     <string name="map">Map</string>
     <string name="work_summary">Work Summary</string>
+    <string name="select_material">Select Material</string>
+    <string name="trimming">Trimming</string>
     <string-array name="theme_array">
         <item>Default-Theme</item>
         <item>Night-Mode</item>

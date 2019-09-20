@@ -53,8 +53,8 @@ class MachineStatusAdapter(
 
             if (insertID > 0) {
                 myHelper.toast("Record Saved in Database Successfully.")
-                myHelper.setIsMachineStopped(true, material.name)
                 myHelper.stopMachine(insertID)
+                myHelper.setIsMachineStopped(true, material.name)
 
 //                myHelper.startHomeActivityByType(MyData())
                 myHelper.logout(myContext)

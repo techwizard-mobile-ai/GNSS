@@ -5,8 +5,9 @@ import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
 import android.util.Log
 import com.google.gson.Gson
-import com.lysaan.malik.vsptracker.classes.MyData
+import com.lysaan.malik.vsptracker.apis.login.LoginAPI
 import com.lysaan.malik.vsptracker.classes.Meter
+import com.lysaan.malik.vsptracker.classes.MyData
 
 class SessionManager(internal var _context: Context) {
 
@@ -32,6 +33,9 @@ class SessionManager(internal var _context: Context) {
 
     private val KEY_LAST_JOURNEY = "last_journey"
     private val KEY_METER = "meter"
+
+    private val KEY_LOGINAPI = "login_api"
+    private val KEY_OPERATORAPI = "operator_api"
 
     private val TAG = SessionManager::class.java.simpleName
 
@@ -59,6 +63,27 @@ class SessionManager(internal var _context: Context) {
         editor.commit();
     }
 
+    fun getOperatorAPI(): LoginAPI{
+        val gson = Gson()
+        val json = pref.getString(KEY_OPERATORAPI, "")
+        val obj = gson.fromJson<LoginAPI>(json, LoginAPI::class.java)
+        if (obj == null) {
+            return LoginAPI()
+        } else {
+            return obj
+        }
+    }
+
+    fun getLoginAPI(): LoginAPI{
+        val gson = Gson()
+        val json = pref.getString(KEY_LOGINAPI, "")
+        val obj = gson.fromJson<LoginAPI>(json, LoginAPI::class.java)
+        if (obj == null) {
+            return LoginAPI()
+        } else {
+            return obj
+        }
+    }
     fun getMeter(): Meter {
         val gson = Gson()
         val json = pref.getString(KEY_METER, "")
@@ -70,6 +95,19 @@ class SessionManager(internal var _context: Context) {
         }
     }
 
+    fun setOperatorAPI(loginAPI: LoginAPI){
+        val gson = Gson()
+        val json = gson.toJson(loginAPI);
+        editor.putString(KEY_OPERATORAPI, json);
+        editor.commit();
+    }
+
+    fun setLoginAPI(loginAPI: LoginAPI){
+        val gson = Gson()
+        val json = gson.toJson(loginAPI);
+        editor.putString(KEY_LOGINAPI, json);
+        editor.commit();
+    }
     fun setMeter(meter: Meter) {
         val gson = Gson()
         val json = gson.toJson(meter);

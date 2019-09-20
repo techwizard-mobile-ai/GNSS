@@ -1,5 +1,4 @@
-package com.lysaan.malik.vsptracker.activities.excavator
-
+package com.lysaan.malik.vsptracker.activities.scrapper
 
 import android.net.Uri
 import android.os.Bundle
@@ -13,21 +12,19 @@ import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.classes.MyData
 import com.lysaan.malik.vsptracker.fragments.common.DelayHistoryFragment
 import com.lysaan.malik.vsptracker.fragments.excavator.EDiggingHistoryFragment
-import com.lysaan.malik.vsptracker.fragments.excavator.ELoadingHistoryFragment
 import com.lysaan.malik.vsptracker.fragments.excavator.EOffloadingLoadsFragment
-import com.lysaan.malik.vsptracker.fragments.excavator.ETrenchingHistoryFragment
-import kotlinx.android.synthetic.main.activity_ehistory.*
+import com.lysaan.malik.vsptracker.fragments.truck.LoadingHistoryFragment
+import kotlinx.android.synthetic.main.activity_shistory.*
 
-class EHistoryActivity : BaseActivity(), View.OnClickListener,
-        ELoadingHistoryFragment.OnFragmentInteractionListener,
-        ETrenchingHistoryFragment.OnFragmentInteractionListener,
-        EDiggingHistoryFragment.OnFragmentInteractionListener,
-        EOffloadingLoadsFragment.OnFragmentInteractionListener,
-        DelayHistoryFragment.OnFragmentInteractionListener {
+class SHistoryActivity : BaseActivity(), View.OnClickListener,
+    LoadingHistoryFragment.OnFragmentInteractionListener,
+    EDiggingHistoryFragment.OnFragmentInteractionListener,
+    EOffloadingLoadsFragment.OnFragmentInteractionListener,
+    DelayHistoryFragment.OnFragmentInteractionListener {
 
     override fun onFragmentInteraction(uri: Uri) {}
 
-    private val E_LOADHISTORY: String = "E_LOADHISTORY"
+    private val LOADING_HISTORY: String = "LOADING_HISTORY"
     private val E_TRENCHINGHISTORY: String = "E_TRENCHINGHISTORY"
     private val E_DIGGINGHISTORY: String = "E_DIGGINGHISTORY"
     private val DELAY_HISTORY: String = "DELAY_HISTORY"
@@ -38,7 +35,7 @@ class EHistoryActivity : BaseActivity(), View.OnClickListener,
         super.onCreate(savedInstanceState)
 
         val contentFrameLayout = findViewById(R.id.base_content_frame) as FrameLayout
-        layoutInflater.inflate(R.layout.activity_ehistory, contentFrameLayout)
+        layoutInflater.inflate(R.layout.activity_shistory, contentFrameLayout)
         val navigationView = findViewById(R.id.base_nav_view) as NavigationView
         navigationView.menu.getItem(5).isChecked = true
 
@@ -57,24 +54,24 @@ class EHistoryActivity : BaseActivity(), View.OnClickListener,
         val menuFragment = bundle?.getString("menuFragment")
         if (menuFragment != null) {
             myHelper.log("menuFragment:${menuFragment.toString()}")
-            if (menuFragment.equals("eTrenchingHistoryFragment")) {
-                val tFragment = ETrenchingHistoryFragment.newInstance(this, E_TRENCHINGHISTORY)
-                openFragment(tFragment, E_TRENCHINGHISTORY)
+            if (menuFragment.equals("loadingHistoryFragment")) {
+                val tFragment = LoadingHistoryFragment.newInstance(this)
+                openFragment(tFragment, LOADING_HISTORY)
             } else if (menuFragment.equals("delayHistoryFragment")) {
                 val delayFragment = DelayHistoryFragment.newInstance(this, DELAY_HISTORY)
                 openFragment(delayFragment, DELAY_HISTORY)
             } else {
-                val homeFragment = EDiggingHistoryFragment.newInstance(this, E_DIGGINGHISTORY, 1)
+                val homeFragment = EDiggingHistoryFragment.newInstance(this, E_DIGGINGHISTORY, 3)
                 openFragment(homeFragment, E_DIGGINGHISTORY)
             }
         } else {
 
-            val homeFragment = ELoadingHistoryFragment.newInstance(this)
-            openFragment(homeFragment, E_LOADHISTORY)
+            val homeFragment = LoadingHistoryFragment.newInstance(this)
+            openFragment(homeFragment, LOADING_HISTORY)
         }
 
-        val eLoadingHistoryFragment = ELoadingHistoryFragment.newInstance(this)
-        openFragment(eLoadingHistoryFragment, E_LOADHISTORY)
+        val loadingHistoryFragment = LoadingHistoryFragment.newInstance(this)
+        openFragment(loadingHistoryFragment, LOADING_HISTORY)
     }
 
     private fun openFragment(fragment: Fragment, FRAGMENT_TAG: String?) {
@@ -85,39 +82,33 @@ class EHistoryActivity : BaseActivity(), View.OnClickListener,
     }
 
     private val mOnNavigationItemSelectedListener =
-            BottomNavigationView.OnNavigationItemSelectedListener { item ->
-                when (item.itemId) {
-                    R.id.navf_loading -> {
-                        val eLoadingHistoryFragment = ELoadingHistoryFragment.newInstance(this@EHistoryActivity)
-                        openFragment(eLoadingHistoryFragment, E_LOADHISTORY)
-                        return@OnNavigationItemSelectedListener true
-                    }
-                    R.id.navf_digging -> {
-                        val eDiggingHistoryFragment = EDiggingHistoryFragment.newInstance(
-                                this@EHistoryActivity,
-                                E_DIGGINGHISTORY,
-                            1
-                        )
-                        openFragment(eDiggingHistoryFragment, E_DIGGINGHISTORY)
-                        return@OnNavigationItemSelectedListener true
-                    }
-                    R.id.navf_trenching -> {
-                        val eTrenchingHistoryFragment =
-                                ETrenchingHistoryFragment.newInstance(this, E_TRENCHINGHISTORY)
-                        openFragment(eTrenchingHistoryFragment, E_TRENCHINGHISTORY)
-                        return@OnNavigationItemSelectedListener true
-                    }
-                    R.id.navf_delay -> {
-                        val delayHistoryFragment = DelayHistoryFragment.newInstance(this, DELAY_HISTORY)
-                        openFragment(delayHistoryFragment, DELAY_HISTORY)
-                        return@OnNavigationItemSelectedListener true
-                    }
-                    R.id.navf_finish -> {
-                        finish()
-                    }
+        BottomNavigationView.OnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navf_loading -> {
+                    val loadingHistoryFragment = LoadingHistoryFragment.newInstance(this)
+                    openFragment(loadingHistoryFragment, LOADING_HISTORY)
+                    return@OnNavigationItemSelectedListener true
                 }
-                false
+                R.id.navf_digging -> {
+                    val eDiggingHistoryFragment = EDiggingHistoryFragment.newInstance(
+                        this,
+                        E_DIGGINGHISTORY,
+                        3
+                    )
+                    openFragment(eDiggingHistoryFragment, E_DIGGINGHISTORY)
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.navf_delay -> {
+                    val delayHistoryFragment = DelayHistoryFragment.newInstance(this, DELAY_HISTORY)
+                    openFragment(delayHistoryFragment, DELAY_HISTORY)
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.navf_finish -> {
+                    finish()
+                }
             }
+            false
+        }
 
     override fun onClick(view: View?) {
         when (view!!.id) {
@@ -126,8 +117,7 @@ class EHistoryActivity : BaseActivity(), View.OnClickListener,
 
     fun setNavItem(currentFragmentTag: String?) {
         when (currentFragmentTag) {
-            E_LOADHISTORY -> navigationView.selectedItemId = R.id.navf_loading
-            E_TRENCHINGHISTORY -> navigationView.selectedItemId = R.id.navf_trenching
+            LOADING_HISTORY -> navigationView.selectedItemId = R.id.navf_loading
             E_DIGGINGHISTORY -> navigationView.selectedItemId = R.id.navf_digging
             DELAY_HISTORY -> navigationView.selectedItemId = R.id.nav_delay
         }

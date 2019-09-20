@@ -4,6 +4,7 @@ import android.location.Location
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
+import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -16,6 +17,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.classes.GPSLocation
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_map1.*
 
 class Map1Activity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
@@ -46,7 +48,9 @@ class Map1Activity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
             myHelper.log("mapGPSLocation:$mapGPSLocation")
         }
 
-
+        if(myHelper.getIsMachineStopped()){
+            drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+        }
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
@@ -86,27 +90,46 @@ class Map1Activity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
     private fun setUpMap() {
 
         if (mapGPSLocation.latitude != 0.0 && mapGPSLocation.longitude != 0.0) {
+
             val lat = mapGPSLocation.latitude
             val longg = mapGPSLocation.longitude
             myHelper.log("In SetupMap:$mapGPSLocation")
-            val location = LatLng(lat, longg)
+            val location1 = LatLng(lat, longg)
             map!!.addMarker(
                 MarkerOptions()
-                    .position(location)
+                    .position(location1)
                     .title(mapGPSLocation.locationName)
             )
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, ZOOM_LEVEL))
-        }
 
-        map.isMyLocationEnabled = true
-        fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
-            // Got last known location. In some rare situations this can be null.
-            if (location != null) {
-                lastLocation = location
-                val currentLatLng = LatLng(location.latitude, location.longitude)
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, ZOOM_LEVEL))
+
+            map.isMyLocationEnabled = true
+            fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
+                // Got last known location. In some rare situations this can be null.
+                if (location != null) {
+                    lastLocation = location
+                    val currentLatLng = LatLng(location.latitude, location.longitude)
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, ZOOM_LEVEL))
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, ZOOM_LEVEL))
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(location1, ZOOM_LEVEL))
+                }
+            }
+
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, ZOOM_LEVEL))
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(location1, ZOOM_LEVEL))
+
+        }else{
+            map.isMyLocationEnabled = true
+            fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
+                // Got last known location. In some rare situations this can be null.
+                if (location != null) {
+                    lastLocation = location
+                    val currentLatLng = LatLng(location.latitude, location.longitude)
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, ZOOM_LEVEL))
+                }
             }
         }
+
+
 
     }
 

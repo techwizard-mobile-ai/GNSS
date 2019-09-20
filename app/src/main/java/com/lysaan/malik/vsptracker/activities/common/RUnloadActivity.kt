@@ -31,13 +31,13 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
         myData = myHelper.getLastJourney()
         myHelper.log("myData:$myData")
 
-        if (myHelper.getMachineType() == 2) {
-            trul_task.visibility = View.GONE
-//            trul_weight.visibility = View.GONE
-        } else {
+//        if (myHelper.getMachineType() == 2) {
+//            trul_task.visibility = View.GONE
+////            trul_weight.visibility = View.GONE
+//        } else {
             trul_task.visibility = View.VISIBLE
             trul_weight.visibility = View.VISIBLE
-        }
+//        }
 
         when (myData.nextAction) {
             3 -> {

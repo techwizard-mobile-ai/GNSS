@@ -2,14 +2,15 @@ package com.lysaan.malik.vsptracker.activities.scrapper
 
 import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.navigation.NavigationView
 import android.view.View
 import android.widget.FrameLayout
+import com.google.android.material.navigation.NavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.activities.common.Location1Activity
 import com.lysaan.malik.vsptracker.activities.common.Material1Activity
+import com.lysaan.malik.vsptracker.activities.common.UnloadTaskActivity
+import com.lysaan.malik.vsptracker.activities.excavator.ESideCastingActivity
 import com.lysaan.malik.vsptracker.classes.MyData
 import kotlinx.android.synthetic.main.activity_shome.*
 
@@ -42,12 +43,21 @@ class SHomeActivity : BaseActivity(), View.OnClickListener {
         shome_logout.setOnClickListener(this)
         thome_load.setOnClickListener(this)
         thome_unload.setOnClickListener(this)
+        shome_trimming.setOnClickListener(this)
 
 
     }
 
     override fun onClick(view: View?) {
         when (view!!.id) {
+
+            R.id.shome_trimming ->{
+                val intent = Intent(this, ESideCastingActivity::class.java)
+                myData.eWorkType = 3
+                myData.eWorkActionType = 1
+                intent.putExtra("myData", myData)
+                startActivity(intent)
+            }
             R.id.thome_load -> {
                 val intent = Intent(this, Material1Activity::class.java)
 //                    TODO Delete it
@@ -56,7 +66,8 @@ class SHomeActivity : BaseActivity(), View.OnClickListener {
                 startActivity(intent)
             }
             R.id.thome_unload -> {
-                val intent = Intent(this, Location1Activity::class.java)
+//                val intent = Intent(this, Location1Activity::class.java)
+                val intent = Intent(this, UnloadTaskActivity::class.java)
                 if (myData == null) {
                     myData = MyData()
                 }

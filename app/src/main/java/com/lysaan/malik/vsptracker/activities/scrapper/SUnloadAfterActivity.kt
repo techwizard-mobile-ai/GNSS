@@ -2,9 +2,9 @@ package com.lysaan.malik.vsptracker.activities.scrapper
 
 import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.navigation.NavigationView
 import android.view.View
 import android.widget.FrameLayout
+import com.google.android.material.navigation.NavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.R
@@ -33,14 +33,34 @@ class SUnloadAfterActivity : BaseActivity(), View.OnClickListener {
             myHelper.log("myData:$myData")
         }
 
+        when (myData.nextAction) {
+            3 -> {
+                tul_back_load.visibility = View.GONE
+            }
+            else -> {
+                tul_back_load.visibility = View.VISIBLE
+            }
+        }
         sul_after_new.setOnClickListener(this)
         sul_after_repeat.setOnClickListener(this)
         sul_after_finish.setOnClickListener(this)
+        tul_back_load.setOnClickListener(this)
 
     }
 
     override fun onClick(view: View?) {
         when (view!!.id) {
+
+            R.id.tul_back_load -> {
+                val intent = Intent(this, Material1Activity::class.java)
+                myHelper.setNextAction(2)
+                myData = myHelper.getLastJourney()
+//                myData.isForBackLoad = true
+                myData.nextAction = 2
+                intent.putExtra("myData", myData)
+                startActivity(intent)
+            }
+
             R.id.sul_after_new -> {
 
 //                val intent = Intent(this, Material1Activity::class.java)
@@ -66,7 +86,15 @@ class SUnloadAfterActivity : BaseActivity(), View.OnClickListener {
 //                        myData.repeatJourney = 1
 //                    }
 //                }
-                myData.repeatJourney = 1
+                when (myData.nextAction) {
+                    0 -> {
+                        myData.repeatJourney = 1
+                    }
+                    3 -> {
+                        myData.repeatJourney = 2
+                    }
+                }
+//                myData.repeatJourney = 1
                 myData.nextAction = 0
                 myHelper.setLastJourney(myData)
                 val intent = Intent(this, RLoadActivity::class.java)

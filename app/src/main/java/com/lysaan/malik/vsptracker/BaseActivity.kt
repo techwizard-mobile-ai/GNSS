@@ -34,12 +34,15 @@ import com.lysaan.malik.vsptracker.activities.DelayActivity
 import com.lysaan.malik.vsptracker.activities.MachineTypeActivity
 import com.lysaan.malik.vsptracker.activities.Map1Activity
 import com.lysaan.malik.vsptracker.activities.common.MachineStatus1Activity
+import com.lysaan.malik.vsptracker.apis.RetrofitAPI
 import com.lysaan.malik.vsptracker.classes.EWork
 import com.lysaan.malik.vsptracker.classes.GPSLocation
 import com.lysaan.malik.vsptracker.classes.MyData
 import com.lysaan.malik.vsptracker.database.DatabaseAdapter
 import com.lysaan.malik.vsptracker.others.Utils
 import kotlinx.android.synthetic.main.app_bar_base.*
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -57,6 +60,8 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
     private val REQUEST_ACCESS_FINE_LOCATION = 1
     private lateinit var bottomNavigation: BottomNavigationView
 
+    internal lateinit var retrofit: Retrofit
+    internal lateinit var retrofitAPI: RetrofitAPI
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,6 +75,13 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
         myHelper = MyHelper(TAG1, this)
         gpsLocation = GPSLocation()
         db = DatabaseAdapter(this)
+
+        this.retrofit = Retrofit.Builder()
+            .baseUrl(RetrofitAPI.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        this.retrofitAPI = retrofit.create(RetrofitAPI::class.java)
+
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.base_nav_view)
@@ -89,7 +101,7 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
                 toolbar_title.text = "VSP Tracker - Excavator"
             }
             2 -> {
-                toolbar_title.text = "VSP Tracker - Scrapper"
+                toolbar_title.text = "VSP Tracker - Scraper"
             }
             3 -> {
                 toolbar_title.text = "VSP Tracker - Truck"
@@ -162,8 +174,8 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             }
 
 
-            val text =
-                "<font color=#FF382A>Machine is Stopped. </font><font color=#106d14><u>Click here to Start Machine</u>.</font>"
+//            val text ="<font color=#FF382A>Machine is Stopped. </font><font color=#106d14><u>Click here to Start Machine</u>.</font>"
+            val text ="<font color=#106d14><u>Click here to Start Machine</u>.</font>"
             base_machine_status.setText(Html.fromHtml(text))
             myHelper.log("Is Machine Stopped: ${myHelper.getIsMachineStopped()}")
             myHelper.log("Machine Stopped Reason: ${myHelper.getMachineStoppedReason()}")
@@ -182,11 +194,12 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
         }
 
         if(myHelper.isDelayStarted()){
-            menu.findItem(R.id.navb_delay).title= "Delay Started"
+            menu.findItem(R.id.navb_delay).title= "Waiting Started"
             menu.findItem(R.id.navb_delay).icon = getDrawable(R.drawable.ic_started)
             menu.findItem(R.id.navb_delay).setChecked(true)
+
         }else{
-            menu.findItem(R.id.navb_delay).title= "Delay Stopped"
+            menu.findItem(R.id.navb_delay).title= "Waiting Stopped"
             menu.findItem(R.id.navb_delay).icon = getDrawable(R.drawable.ic_stopped)
             menu.findItem(R.id.navb_map).setChecked(true)
         }
@@ -277,12 +290,13 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
     }
     fun startDelay(){
         if(!myHelper.isDelayStarted()){
-            myHelper.toast("Delay Started.")
+            myHelper.toast("Waiting Started.")
             myHelper.startDelay(gpsLocation)
             menu.findItem(R.id.navb_delay).icon = getDrawable(R.drawable.ic_started)
-            menu.findItem(R.id.navb_delay).title= "Delay Started"
+            menu.findItem(R.id.navb_delay).title= "Waiting Started"
             menu.findItem(R.id.navb_delay).setChecked(true)
-
+            val intent = Intent(this@BaseActivity, DelayActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -301,15 +315,26 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             eWork.unloadingGPSLocation = meter.delayStopGPSLocation
 
             menu.findItem(R.id.navb_delay).icon = getDrawable(R.drawable.ic_stopped)
-            menu.findItem(R.id.navb_delay).title= "Delay Stopped"
+            menu.findItem(R.id.navb_delay).title= "Waiting Stopped"
             menu.findItem(R.id.navb_map).setChecked(true)
 
 
             val insertID = db.insertDelay(eWork)
             if(insertID > 0){
-                myHelper.toast("Delay Stopped.\nStart Time: ${myHelper.getTime(meter.delayStartTime)}Hrs.\nTotal Time: ${myHelper.getFormatedTime(meter.delayTotalTime)}")
+
+                myHelper.toast("Waiting Stopped.\nStart Time: ${myHelper.getTime(meter.delayStartTime)}Hrs.\nTotal Time: ${myHelper.getFormatedTime(meter.delayTotalTime)}")
+
+                var dataNew = MyData()
+                var bundle: Bundle? = this.intent.extras
+                if (bundle != null) {
+                    dataNew = bundle!!.getSerializable("myData") as MyData
+                }
+                this.finish()
+                intent.putExtra("myData", dataNew)
+                myHelper.startHomeActivityByType(dataNew)
+
             }else{
-                myHelper.toast("Delay Not Stopped.")
+                myHelper.toast("Waiting Not Stopped.")
             }
             return insertID
         }else{
@@ -331,7 +356,7 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
         val details =
             "App_version:$versionCode--Device:$device--Build:$build--Manufacturer:$manufacturer--Model:$model--AndroidOS:$andoridOS"
 
-        val email = "errors@vsptracker.com"
+        val email = "support@vsptracker.com"
         val addressees: Array<String> = arrayOf(email)
         val intent = Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse("mailto:") // only email apps should handle this

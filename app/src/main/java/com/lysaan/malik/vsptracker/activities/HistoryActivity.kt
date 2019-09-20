@@ -1,12 +1,11 @@
 package com.lysaan.malik.vsptracker.activities
 
 import android.os.Bundle
-import com.google.android.material.navigation.NavigationView
-
 import android.view.View
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.navigation.NavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.adapters.ELoadingHistoryAdapter
@@ -39,7 +38,7 @@ class HistoryActivity : BaseActivity(), View.OnClickListener {
                 lh_title.text = "Excavator Loading History"
             }
             2 -> {
-                lh_title.text = "Scrapper Loading History"
+                lh_title.text = "Scraper Loading History"
             }
             3 -> {
                 lh_title.text = "Truck Loading History"

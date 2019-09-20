@@ -2,9 +2,9 @@ package com.lysaan.malik.vsptracker.activities.excavator
 
 import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.navigation.NavigationView
 import android.view.View
 import android.widget.FrameLayout
+import com.google.android.material.navigation.NavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.activities.common.Location1Activity
@@ -46,8 +46,13 @@ class EHomeActivity : BaseActivity(), View.OnClickListener {
             }
 
             R.id.ehome_trenching -> {
-                val intent = Intent(this, ESelectWorkActivity::class.java)
+//                val intent = Intent(this, ESelectWorkActivity::class.java)
+//                intent.putExtra("myData", myData)
+//                startActivity(intent)
+
+                val intent = Intent(this, ETOffLoadingActivity::class.java)
                 myData.eWorkType = 2
+                myData.eWorkActionType = 2
                 intent.putExtra("myData", myData)
                 startActivity(intent)
             }

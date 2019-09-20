@@ -6,42 +6,55 @@
     android:orientation="vertical"
     tools:context=".activities.scrapper.SUnloadAfterActivity">
 
-    <RelativeLayout style="@style/default_linearlayout">
-
-        <Button
-            android:id="@+id/sul_after_finish"
-            style="@style/next_button"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/_30sdp"
-            android:text="@string/end_work" />
-
-
-        <LinearLayout
-            style="@style/default_linearlayout"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/sul_after_new"
-                style="@style/back_button"
-                android:layout_width="0dp"
-                android:layout_weight=".3"
-                android:background="@color/colorPrimary"
-                android:text="@string/activity_sunload_after_sul_after_new_text" />
-
-            <Button
-                android:id="@+id/sul_after_repeat"
-                style="@style/next_button"
-                android:layout_width="0dp"
-                android:layout_marginEnd="0dp"
-                android:layout_weight="0.3"
-                android:text="@string/activity_sunload_after_sul_after_repeat_text" />
-        </LinearLayout>
-    </RelativeLayout>
 
     <TextView
         style="@style/activity_title"
         android:text="Select Action" />
+
+    <RelativeLayout style="@style/default_linearlayout">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                style="@style/default_linearlayout"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_20sdp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/sul_after_new"
+                    style="@style/back_button"
+                    android:layout_width="0dp"
+                    android:layout_weight=".3"
+                    android:background="@color/colorPrimary"
+                    android:text="@string/activity_sunload_after_sul_after_new_text" />
+
+                <Button
+                    android:id="@+id/sul_after_repeat"
+                    style="@style/next_button"
+                    android:layout_width="0dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_weight="0.3"
+                    android:text="@string/activity_sunload_after_sul_after_repeat_text" />
+            </LinearLayout>
+            <Button
+                android:layout_marginTop="@dimen/_10sdp"
+                android:id="@+id/tul_back_load"
+                style="@style/back_button_single"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/back_load" />
+        </LinearLayout>
+
+
+        <Button
+        android:id="@+id/sul_after_finish"
+        style="@style/next_button"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/_30sdp"
+        android:text="@string/end_work" />
+    </RelativeLayout>
+
 </LinearLayout>

@@ -33,16 +33,19 @@ class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
             myHelper.log("myData:$myData")
         }
 
+        when(myHelper.getMachineType()){
+            2-> ultask_off_site.visibility = View.INVISIBLE
+            else -> ultask_off_site.visibility = View.VISIBLE
+        }
         ultask_fill.setOnClickListener(this)
         ultask_off_site.setOnClickListener(this)
         ultask_respread.setOnClickListener(this)
         ultask_stockpile.setOnClickListener(this)
     }
-
     //    1 fill
-//    2 offsite
-//    3 respread
-//    4 stockpile
+    //    2 offsite
+    //    3 respread
+    //    4 stockpile
     override fun onClick(view: View?) {
 
         myHelper.log("MyData:$myData")

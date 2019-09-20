@@ -5,8 +5,9 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.lysaan.malik.vsptracker.MyHelper
-import com.lysaan.malik.vsptracker.classes.MyData
 import com.lysaan.malik.vsptracker.classes.EWork
+import com.lysaan.malik.vsptracker.classes.Material
+import com.lysaan.malik.vsptracker.classes.MyData
 
 const val DATABASE_NAME = "vsptracker"
 const val TABLE_E_LOAD_HISTORY = "e_load_history"
@@ -15,6 +16,11 @@ const val TABLE_E_WORK_ACTION_OFFLOADING = "ework_action_loading"
 const val TABLE_DELAY = "t_wait"
 const val TABLE_TRIP = "ttrip_simple"
 const val TABLE_MACHINE_STATUS = "machine_status"
+const val TABLE_STOP_REASONS = "stop_reasons"
+
+const val TABLE_LOCATIONS = "locations"
+const val TABLE_MACHINES = "machines"
+const val TABLE_MATERIALS = "materials"
 
 const val COL_TIME = "time"
 const val COL_DATE = "date"
@@ -34,6 +40,8 @@ const val COL_UNLOADING_GPS_LOCATION = "unloading_gps_location"
 
 const val COL_ID = "id"
 const val COL_USER_ID = "user_id"
+const val COL_DB_ID = "db_id"
+const val COL_ORG_ID = "org_id"
 
 const val COL_START_TIME = "start_time"
 const val COL_END_TIME = "end_time"
@@ -52,6 +60,10 @@ const val COL_WORK_MODE = "work_mode"
 const val COL_MACHINE_NUMBER = "machine_number"
 const val COL_MACHINE_STOPPED_REASON = "machine_stop_reason"
 
+const val COL_NAME = "name"
+const val COL_IS_DELETED = "is_deleted"
+const val COL_TYPE = "type"
+const val COL_NUMBER = "number"
 // isSync 0 = Not Uploaded to Server
 // isSync 1 = Uploaded to Server
 // isSync 2 = Uploaded to Server by Export
@@ -74,6 +86,36 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
 //                "$COL_START_TIME INTEGER, " +
 //                "$COL_STOP_TIME INTEGER" +
 //                ")"
+
+        val createStopReasonsTable = "CREATE TABLE $TABLE_STOP_REASONS (" +
+                "$COL_ID INTEGER PRIMARY KEY, " +
+                "$COL_ORG_ID INTEGER, " +
+                "$COL_NAME TEXT, " +
+                "$COL_IS_DELETED INTEGER" +
+                " )"
+
+        val createMaterialsTable = "CREATE TABLE $TABLE_MATERIALS (" +
+                "$COL_ID INTEGER PRIMARY KEY, " +
+                "$COL_ORG_ID INTEGER, " +
+                "$COL_NAME TEXT, " +
+                "$COL_IS_DELETED INTEGER" +
+                " )"
+
+        val createMachinesTable = "CREATE TABLE $TABLE_MACHINES ( " +
+                "$COL_ID INTEGER PRIMARY KEY, " +
+                "$COL_ORG_ID INTEGER, " +
+                "$COL_TYPE INTEGER, " +
+                "$COL_NUMBER TEXT, " +
+                "$COL_IS_DELETED INTEGER" +
+                " )"
+
+        val createLocationsTable = "CREATE TABLE $TABLE_LOCATIONS (" +
+                "$COL_ID INTEGER PRIMARY KEY, " +
+                "$COL_ORG_ID INTEGER, " +
+                "$COL_NAME TEXT, " +
+                "$COL_IS_DELETED INTEGER" +
+                " )"
+
 
         val createMachineStatusTable = "CREATE TABLE  $TABLE_MACHINE_STATUS (" +
                 "$COL_ID  INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -99,19 +141,24 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 "$COL_TRIP0_ID  INTEGER," +
                 "$COL_MACHINE_TYPE  INTEGER," +
                 "$COL_MACHINE_NUMBER TEXT, " +
+
                 "$COL_LOADING_MACHINE  TEXT," +
                 "$COL_LOADED_MACHINE  TEXT," +
                 "$COL_LOADING_MATERIAL  TEXT," +
                 "$COL_LOADING_LOCATION  TEXT," +
+
                 "$COL_LOADING_GPS_LOCATION  TEXT," +
                 "$COL_UNLOADING_GPS_LOCATION  TEXT," +
                 "$COL_USER_ID  TEXT," +
+
                 "$COL_START_TIME  INTEGER," +
+
                 "$COL_UNLOADING_TASK TEXT," +
                 "$COL_UNLOADING_MATERIAL TEXT," +
                 "$COL_UNLOADING_MACHINE TEXT," +
                 "$COL_UNLOADING_LOCATION TEXT," +
                 "$COL_UNLOADING_WEIGHT  REAL," +
+
                 "$COL_END_TIME INTEGER," +
                 "$COL_TOTAL_TIME INTEGER," +
                 "$COL_DATE  TEXT," +
@@ -182,6 +229,11 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 "$COL_WORK_MODE TEXT" +
                 ")"
 
+
+        db?.execSQL(createStopReasonsTable)
+        db?.execSQL(createMaterialsTable)
+        db?.execSQL(createMachinesTable)
+        db?.execSQL(createLocationsTable)
         db?.execSQL(createMachineStatusTable)
         db?.execSQL(createTripTable)
         db?.execSQL(createTWaitTable)
@@ -192,12 +244,20 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
 
+        val DROP_TABLE_STOP_REASONS = "DROP TABLE IF EXISTS " + TABLE_STOP_REASONS;
+        val DROP_TABLE_MATERIALS = "DROP TABLE IF EXISTS " + TABLE_MATERIALS;
+        val DROP_TABLE_MACHINES = "DROP TABLE IF EXISTS " + TABLE_MACHINES;
+        val DROP_TABLE_LOCATIONS = "DROP TABLE IF EXISTS " + TABLE_LOCATIONS;
         val DROP_TABLE_TRIP = "DROP TABLE IF EXISTS " + TABLE_TRIP;
         val DROP_TABLE_WAIT = "DROP TABLE IF EXISTS " + TABLE_DELAY;
         val DROP_TABLE_E_WORK_ACTION_OFFLOADING = "DROP TABLE IF EXISTS " + TABLE_E_WORK_ACTION_OFFLOADING;
         val DROP_TABLE_E_WORK = "DROP TABLE IF EXISTS " + TABLE_E_WORK;
         val DROP_TABLE_E_LOAD_HISTORY = "DROP TABLE IF EXISTS " + TABLE_E_LOAD_HISTORY;
 
+        db?.execSQL(DROP_TABLE_STOP_REASONS)
+        db?.execSQL(DROP_TABLE_MATERIALS)
+        db?.execSQL(DROP_TABLE_MACHINES)
+        db?.execSQL(DROP_TABLE_LOCATIONS)
         db?.execSQL(DROP_TABLE_TRIP)
         db?.execSQL(DROP_TABLE_WAIT)
         db?.execSQL(DROP_TABLE_E_WORK_ACTION_OFFLOADING)
@@ -205,6 +265,73 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         db?.execSQL(DROP_TABLE_E_LOAD_HISTORY)
         onCreate(db)
 
+    }
+
+    fun insertStopReasons(data : ArrayList<Material>){
+
+        val db = this.writableDatabase
+        var cv = ContentValues()
+
+        for (datum in data){
+            cv.put(COL_ID, datum.id)
+            cv.put(COL_ORG_ID, datum.orgID)
+            cv.put(COL_NAME, datum.name)
+            cv.put(COL_IS_DELETED, datum.isDeleted)
+
+            val insertID = db.replace(TABLE_STOP_REASONS, null, cv)
+            myHelper.log("StopReasons:$datum")
+            myHelper.log("StopReasons-inserID:$insertID")
+        }
+    }
+
+    fun insertMaterials(data : ArrayList<Material>){
+
+        val db = this.writableDatabase
+        var cv = ContentValues()
+
+        for (datum in data){
+            cv.put(COL_ID, datum.id)
+            cv.put(COL_ORG_ID, datum.orgID)
+            cv.put(COL_NAME, datum.name)
+            cv.put(COL_IS_DELETED, datum.isDeleted)
+
+            val insertID = db.replace(TABLE_MATERIALS, null, cv)
+            myHelper.log("Materials:$datum")
+            myHelper.log("Materials-inserID:$insertID")
+        }
+    }
+    fun insertMachines(data: ArrayList<Material>){
+
+        val db = this.writableDatabase
+        var cv = ContentValues()
+
+        for (datum in data){
+            cv.put(COL_ID, datum.id)
+            cv.put(COL_ORG_ID, datum.orgID)
+            cv.put(COL_TYPE, datum.type)
+            cv.put(COL_NUMBER, datum.number)
+            cv.put(COL_IS_DELETED, datum.isDeleted)
+
+            val insertID = db.replace(TABLE_MACHINES, null, cv)
+            myHelper.log("Machines:$datum")
+            myHelper.log("Machines-inserID:$insertID")
+        }
+    }
+    fun insertLocations(data : ArrayList<Material>){
+
+        val db = this.writableDatabase
+        var cv = ContentValues()
+
+        for (datum in data){
+            cv.put(COL_ID, datum.id)
+            cv.put(COL_ORG_ID, datum.orgID)
+            cv.put(COL_NAME, datum.name)
+            cv.put(COL_IS_DELETED, datum.isDeleted)
+
+            val insertID = db.replace(TABLE_LOCATIONS, null, cv)
+            myHelper.log("Locations:$datum")
+            myHelper.log("Locations-inserID:$insertID")
+        }
     }
 
     fun insertMachineStatus(myData: MyData): Long {
@@ -363,6 +490,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
 
     // eWorkType 1 = General Digging
     // eWorkType 2 = Trenching
+    // eWorkType 3 = Scraper Trimming
     // eWorkActionType 1 = Side Casting
     // eWorkActionType 2 = Off Loading
     fun insertEWork(eWork: EWork): Long {
@@ -437,6 +565,122 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return insertID
     }
 
+
+    fun getStopReasons(): ArrayList<Material> {
+
+        var list: ArrayList<Material> = ArrayList()
+        val db = this.readableDatabase
+
+        val query = "Select * from $TABLE_STOP_REASONS  WHERE ${COL_IS_DELETED} = 0 ORDER BY $COL_ID DESC"
+        val result = db.rawQuery(query, null)
+
+
+        if (result.moveToFirst()) {
+            do {
+                var datum = Material()
+                datum.id = result.getInt(result.getColumnIndex(COL_ID))
+                datum.orgID = result.getInt(result.getColumnIndex(COL_ORG_ID))
+                datum.name = result.getString(result.getColumnIndex(COL_NAME))
+                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+                list.add(datum)
+
+            } while (result.moveToNext())
+        } else {
+            myHelper.log("else result:$result")
+        }
+
+        result.close()
+        db.close()
+        return list
+    }
+
+
+    fun getMaterials(): ArrayList<Material> {
+
+        var list: ArrayList<Material> = ArrayList()
+        val db = this.readableDatabase
+
+        val query = "Select * from $TABLE_MATERIALS  WHERE ${COL_IS_DELETED} = 0 ORDER BY $COL_ID DESC"
+        val result = db.rawQuery(query, null)
+
+
+        if (result.moveToFirst()) {
+            do {
+                var datum = Material()
+                datum.id = result.getInt(result.getColumnIndex(COL_ID))
+                datum.orgID = result.getInt(result.getColumnIndex(COL_ORG_ID))
+                datum.name = result.getString(result.getColumnIndex(COL_NAME))
+                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+                list.add(datum)
+
+            } while (result.moveToNext())
+        } else {
+            myHelper.log("else result:$result")
+        }
+
+        result.close()
+        db.close()
+        return list
+    }
+    fun getMachines(type:Int = 0): ArrayList<Material> {
+
+        var list: ArrayList<Material> = ArrayList()
+        val db = this.readableDatabase
+        var query = ""
+        if(type < 1){
+            query = "Select * from $TABLE_MACHINES  WHERE ${COL_IS_DELETED} = 0  ORDER BY $COL_ID DESC"
+        }else{
+            query = "Select * from $TABLE_MACHINES  WHERE ${COL_IS_DELETED} = 0 AND ${COL_TYPE} = ${type} ORDER BY $COL_ID DESC"
+        }
+        val result = db.rawQuery(query, null)
+
+
+        if (result.moveToFirst()) {
+            do {
+                var datum = Material()
+                datum.id = result.getInt(result.getColumnIndex(COL_ID))
+                datum.orgID = result.getInt(result.getColumnIndex(COL_ORG_ID))
+                datum.type = result.getInt(result.getColumnIndex(COL_TYPE))
+                datum.number = result.getString(result.getColumnIndex(COL_NUMBER))
+                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+                list.add(datum)
+
+            } while (result.moveToNext())
+        } else {
+            myHelper.log("else result:$result")
+        }
+
+        result.close()
+        db.close()
+        return list
+    }
+    fun getLocations(): ArrayList<Material> {
+
+        var list: ArrayList<Material> = ArrayList()
+        val db = this.readableDatabase
+
+        val query = "Select * from $TABLE_LOCATIONS  WHERE ${COL_IS_DELETED} = 0 ORDER BY $COL_ID DESC"
+        val result = db.rawQuery(query, null)
+
+
+        if (result.moveToFirst()) {
+            do {
+                var datum = Material()
+                datum.id = result.getInt(result.getColumnIndex(COL_ID))
+                datum.orgID = result.getInt(result.getColumnIndex(COL_ORG_ID))
+                datum.name = result.getString(result.getColumnIndex(COL_NAME))
+                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+                list.add(datum)
+
+            } while (result.moveToNext())
+        } else {
+            myHelper.log("else result:$result")
+        }
+
+        result.close()
+        db.close()
+        return list
+    }
     fun getWaits(): MutableList<EWork> {
 
         var list: MutableList<EWork> = ArrayList()
@@ -531,6 +775,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
 
     // eWorkType 1 = General Digging
     // eWorkType 2 = Trenching
+    // eWorkType 3 = Scraper Trimming
     // eWorkActionType 1 = Side Casting
     // eWorkActionType 2 = Off Loading
     fun getEWorks(workType: Int): MutableList<EWork> {

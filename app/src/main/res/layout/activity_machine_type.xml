@@ -37,8 +37,13 @@
             style="@style/home_tv"
             android:text="@string/machine_number" />
 
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/machine_number1"
+            style="@style/home_spinner" />
+
         <EditText
             android:id="@+id/machine_number"
+            android:visibility="gone"
             style="@style/et_background"
             android:layout_marginStart="0dp"
             android:layout_marginTop="@dimen/_1sdp"

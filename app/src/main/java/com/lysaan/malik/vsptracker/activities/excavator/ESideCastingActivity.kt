@@ -44,6 +44,9 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
             2 -> {
                 workTitle = "Trenching (Side Casting)"
             }
+            3 ->{
+                workTitle = "Scraper Trimming"
+            }
         }
 
         eWork = EWork()
