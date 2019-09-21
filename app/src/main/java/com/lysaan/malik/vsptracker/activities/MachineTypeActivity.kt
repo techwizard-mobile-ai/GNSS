@@ -10,12 +10,14 @@ import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.adapters.SelectMachineNumberAdapter
 import com.lysaan.malik.vsptracker.adapters.SelectStateAdapter
 import com.lysaan.malik.vsptracker.classes.Material
-import com.lysaan.malik.vsptracker.classes.MyData
+import com.lysaan.malik.vsptracker.apis.trip.MyData
 import com.lysaan.malik.vsptracker.database.DatabaseAdapter
 import kotlinx.android.synthetic.main.activity_machine_type.*
+import java.util.*
 
 class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
 
+    private var machineTypes =  ArrayList<Material>()
     private var selectedMachineType = Material(0, "Select Machine Type")
     private var selectedMachineLocation = Material(0, "Select Machine Location")
     private var selectedMachineNumber = Material(0, "Select Machine Number")
@@ -27,9 +29,11 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_machine_type)
 
-        myHelper = MyHelper(TAG, this)
+        myHelper = MyHelper(TAG, this@MachineTypeActivity)
         db = DatabaseAdapter(this)
 
+//        var machineTypes = myHelper.getMachineLocations()
+        machineTypes = db.getLocations()
         selectMachineType()
         selectMachineLocation()
         selectMachineNumber()
@@ -77,7 +81,8 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
                     myHelper.toast("Please Select Machine Number")
                 } else {
                     myHelper.setMachineType(selectedMachineType.id)
-                    myHelper.setMachineNumber(machineNumber)
+                    myHelper.setMachineNumber(selectedMachineNumber.number)
+                    myHelper.setMachineID(selectedMachineNumber.id)
 
                     myHelper.startHomeActivityByType(MyData())
 //                    val intent = Intent(this, LoginActivity::class.java)
@@ -121,8 +126,7 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun selectMachineLocation() {
-        var machineTypes = myHelper.getMachineLocations()
-        machineTypes = db.getLocations()
+
         machineTypes.add(0, Material(0, "Select Machine Location"))
 //        val selectMaterialAdapter = SelectStateAdapter(this@MachineTypeActivity, machineTypes)
         val selectMaterialAdapter = SelectStateAdapter(this, machineTypes)

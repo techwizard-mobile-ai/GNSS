@@ -9,7 +9,7 @@ import com.google.android.material.navigation.NavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.classes.MyData
+import com.lysaan.malik.vsptracker.apis.trip.MyData
 import kotlinx.android.synthetic.main.activity_weight1.*
 
 class Weight1Activity : BaseActivity(), View.OnClickListener {
@@ -60,7 +60,7 @@ class Weight1Activity : BaseActivity(), View.OnClickListener {
                     val intent = intent
                     val sload_weight = sload_weight.text.toString()
                     if (!sload_weight.isNullOrBlank())
-                        myData.backUnloadedWeight = sload_weight.toDouble()
+                        myData.unloadingWeight = sload_weight.toDouble()
                     intent.putExtra("myData", myData)
                     setResult(Activity.RESULT_OK, intent)
                     finish()
@@ -68,14 +68,14 @@ class Weight1Activity : BaseActivity(), View.OnClickListener {
                     val intent = intent
                     val sload_weight = sload_weight.text.toString()
                     if (!sload_weight.isNullOrBlank())
-                        myData.backUnloadedWeight = sload_weight.toDouble()
+                        myData.unloadingWeight = sload_weight.toDouble()
                     intent.putExtra("myData", myData)
                     setResult(Activity.RESULT_OK, intent)
                     finish()
                 } else {
                     val sload_weight = sload_weight.text.toString()
                     if (!sload_weight.isNullOrBlank()) {
-                        myData.backUnloadedWeight = sload_weight.toDouble()
+                        myData.unloadingWeight = sload_weight.toDouble()
                     }
                     myHelper.log("$myData")
 
@@ -101,10 +101,10 @@ class Weight1Activity : BaseActivity(), View.OnClickListener {
 
 
                             val data1 = myHelper.getLastJourney()
-                            data1.backLoadingMachine = myData.backLoadingMachine
-                            data1.backLoadingMaterial = myData.backLoadingMaterial
-                            data1.backLoadingLocation = myData.backLoadingLocation
-                            data1.backUnloadedWeight = myData.backUnloadedWeight
+                            data1.loadingMachine = myData.loadingMachine
+                            data1.loadingMaterial = myData.loadingMaterial
+                            data1.loadingLocation = myData.loadingLocation
+                            data1.unloadingWeight = myData.unloadingWeight
                             myHelper.setLastJourney(data1)
 
                             val intent = Intent(this, RLoadActivity::class.java)
@@ -116,14 +116,14 @@ class Weight1Activity : BaseActivity(), View.OnClickListener {
 //                if (myData.isForBackLoad) {
 //                    val sload_weight = sload_weight.text.toString()
 //                    if (!sload_weight.isNullOrBlank())
-//                        myData.backUnloadedWeight = sload_weight.toDouble()
+//                        myData.unloadingWeight = sload_weight.toDouble()
 //                    myHelper.log("$myData")
 //
 //                    val data1 = myHelper.getLastJourney()
-//                    data1.backLoadingMachine = myData.backLoadingMachine
-//                    data1.backLoadingMaterial = myData.backLoadingMaterial
-//                    data1.backLoadingLocation = myData.backLoadingLocation
-//                    data1.backUnloadedWeight = myData.backUnloadedWeight
+//                    data1.loadingMachine = myData.loadingMachine
+//                    data1.loadingMaterial = myData.loadingMaterial
+//                    data1.loadingLocation = myData.loadingLocation
+//                    data1.unloadingWeight = myData.unloadingWeight
 //                    myHelper.setLastJourney(data1)
 //
 //                    val intent = Intent(this, RLoadActivity::class.java)

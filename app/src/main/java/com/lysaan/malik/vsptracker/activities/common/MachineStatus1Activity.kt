@@ -14,7 +14,8 @@ import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.activities.HourMeterStartActivity
 import com.lysaan.malik.vsptracker.adapters.MachineStatusAdapter
-import com.lysaan.malik.vsptracker.classes.MyData
+import com.lysaan.malik.vsptracker.apis.trip.MyData
+import com.lysaan.malik.vsptracker.apis.trip.TripResponse
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_machine_status1.*
 
@@ -51,8 +52,10 @@ class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
             machine_status_logout.visibility = View.GONE
         }
 
-        val stoppedReasons = myHelper.getMachineStopReasons()
-        stoppedReasons.removeAt(0)
+//        val stoppedReasons = myHelper.getMachineStopReasons()
+        val stoppedReasons = db.getStopReasons()
+//        stoppedReasons.removeAt(0)
+
 
         val mAdapter = MachineStatusAdapter(this, stoppedReasons)
         machine_status_rv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
@@ -87,24 +90,96 @@ class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
 
             R.id.machine_status_start -> {
 
-                val machineData = MyData()
+//                val machineData = MyData()
+                val machineData = db.getMachineStatus(myHelper.getMeter().machineDbID)
+                val currentTime = System.currentTimeMillis()
+                machineData.stopTime = currentTime
+                machineData.totalTime = currentTime - machineData.startTime
+                machineData.time = currentTime.toString()
+                machineData.date = myHelper.getDate(currentTime)
+
                 machineData.recordID = myHelper.getMeter().machineDbID
                 machineData.unloadingGPSLocation = gpsLocation
-                val updateID = db.updateMachineStatus(machineData)
-//                if (updateID > 0) {
-                    myHelper.toast("Machine Started Successfully")
-                    myHelper.setIsMachineStopped(false, "")
-                    if(myHelper.getIsMachineStopped()){
-                        val intent = Intent(this, HourMeterStartActivity::class.java)
-                        startActivity(intent)
-                    }else{
-                        myHelper.startHomeActivityByType(MyData())
-                    }
-//                } else {
-//                    myHelper.toast("Machine Not Started. Due to App Deleted Cache.")
-//                }
+
+                machineData.loadingGPSLocationString = myHelper.getGPSLocationToString(machineData.loadingGPSLocation)
+                machineData.unloadingGPSLocationString = myHelper.getGPSLocationToString(machineData.unloadingGPSLocation)
+
+                machineData.orgID = myHelper.getLoginAPI().org_id
+                machineData.operatorID = myHelper.getOperatorAPI().id
+                machineData.machineType = myHelper.getMachineType()
+                machineData.machineID = myHelper.getMachineID()
+                machineData.machine_stop_reason_id = myHelper.getMachineStoppedReasonID()
+
+                if(myHelper.isDailyModeStarted()){
+                    machineData.isDaysWork = 1
+                }else {
+                    machineData.isDaysWork = 0
+                }
+
+                if(myHelper.isOnline()){
+                    pushMachineStatus(machineData)
+                }else{
+                    myHelper.toast("No Internet Connection.\nDelay Not Uploaded to Server.")
+                    updateMachineStatus(machineData)
+                }
 
             }
         }
+    }
+
+    fun pushMachineStatus(machineData: MyData){
+        myHelper.showDialog()
+        myHelper.log("pushMachineStatus:$machineData")
+        val call = this.retrofitAPI.pushMachineStatus(
+            myHelper.getLoginAPI().auth_token,
+            machineData
+        )
+        call.enqueue(object : retrofit2.Callback<TripResponse> {
+            override fun onResponse(
+                call: retrofit2.Call<TripResponse>,
+                response: retrofit2.Response<TripResponse>
+            ) {
+                myHelper.hideDialog()
+                val response = response.body()
+                myHelper.log("pushMachineStatus:$response")
+                if (response!!.success && response.data != null) {
+                    machineData.isSync = 1
+                    updateMachineStatus(machineData)
+
+                } else {
+                    updateMachineStatus(machineData)
+                    if (response.message!!.equals("Token has expired")) {
+                        myHelper.log("Token Expired:$response")
+                        myHelper.refreshToken()
+                    } else {
+                        myHelper.toast(response.message)
+                    }
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<TripResponse>, t: Throwable) {
+                myHelper.hideDialog()
+                updateMachineStatus(machineData)
+                myHelper.toast(t.message.toString())
+                myHelper.log("Failure" + t.message)
+            }
+        })
+    }
+
+
+    private fun updateMachineStatus(machineData: MyData) {
+        val updateID = db.updateMachineStatus(machineData)
+//                if (updateID > 0) {
+        myHelper.toast("Machine Started Successfully")
+        myHelper.setIsMachineStopped(false, "", 0)
+        if(myHelper.getIsMachineStopped()){
+            val intent = Intent(this, HourMeterStartActivity::class.java)
+            startActivity(intent)
+        }else{
+            myHelper.startHomeActivityByType(MyData())
+        }
+//                } else {
+//                    myHelper.toast("Machine Not Started. Due to App Deleted Cache.")
+//                }
     }
 }

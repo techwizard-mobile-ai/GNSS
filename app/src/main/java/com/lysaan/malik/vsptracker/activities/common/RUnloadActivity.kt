@@ -8,7 +8,8 @@ import android.widget.FrameLayout
 import com.google.android.material.navigation.NavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.classes.MyData
+import com.lysaan.malik.vsptracker.apis.trip.MyData
+import com.lysaan.malik.vsptracker.apis.trip.TripResponse
 import kotlinx.android.synthetic.main.activity_runload.*
 
 class RUnloadActivity : BaseActivity(), View.OnClickListener {
@@ -41,10 +42,10 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
 
         when (myData.nextAction) {
             3 -> {
-                trul_task.text = myData.backUnloadingTask
-                trul_material.text = myData.backUnloadingMaterial
-                trul_location.text = myData.backUnloadingLocation
-                trul_weight.text = "Tonnes (" + myData.backUnloadedWeight + ")"
+                trul_task.text = myData.unloadingTask
+                trul_material.text = myData.unloadingMaterial
+                trul_location.text = myData.unloadingLocation
+                trul_weight.text = "Tonnes (" + myData.unloadingWeight + ")"
                 trunload_unload.text = "Back Unload"
             }
             1 -> {
@@ -86,49 +87,25 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
             R.id.trunload_unload -> {
 
                 myData.unloadingGPSLocation = gpsLocation
+                myData.orgID = myHelper.getLoginAPI().org_id
+                myData.operatorID = myHelper.getOperatorAPI().id
+                myData.machineType = myHelper.getMachineType()
+                myData.machineID = myHelper.getMachineID()
                 stopDelay()
-                when (myData.repeatJourney) {
-                    0 -> {
-                        when (myData.nextAction) {
-                            1 -> {
-                                myData.nextAction = 0
-                            }
-                            2 -> {
-                                myData.nextAction = 3
-                            }
-                        }
+                if(myHelper.isDailyModeStarted()){
+                    myData.isDaysWork = 1
+                }else {
+                    myData.isDaysWork = 0
+                }
+                myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
+                myData.unloadingGPSLocationString = myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
 
-                        db.updateTrip(myData)
-                        myHelper.setLastJourney(myData)
-                        myHelper.startLoadAfterActivityByType(myData)
-                    }
-                    1 -> {
-                        when (myData.nextAction) {
-                            1 -> {
-                                myData.nextAction = 0
-                            }
-                        }
-                        val intent = Intent(this, RLoadActivity::class.java)
-                        db.updateTrip(myData)
-                        myHelper.setLastJourney(myData)
-                        startActivity(intent)
-                        finish()
-                    }
-                    2 -> {
-                        when (myData.nextAction) {
-                            1 -> {
-                                myData.nextAction = 2
-                            }
-                            3 -> {
-                                myData.nextAction = 0
-                            }
-                        }
-                        db.updateTrip(myData)
-                        myHelper.setLastJourney(myData)
-                        val intent = Intent(this, RLoadActivity::class.java)
-                        startActivity(intent)
-                        finish()
-                    }
+                if(myHelper.isOnline()){
+                    pushTrip(myData)
+
+                }else{
+                    myHelper.toast("No Internet Connection.\nDelay Not Uploaded to Server.")
+                    saveTrip(myData)
                 }
             }
             R.id.trul_task -> {
@@ -161,6 +138,91 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
             }
         }
     }
+
+    fun pushTrip(myData: MyData){
+        myHelper.showDialog()
+        myHelper.log("pushDelay:$myData")
+        val call = this.retrofitAPI.pushTrip(
+            myHelper.getLoginAPI().auth_token,
+            myData
+        )
+        call.enqueue(object : retrofit2.Callback<TripResponse> {
+            override fun onResponse(
+                call: retrofit2.Call<TripResponse>,
+                response: retrofit2.Response<TripResponse>
+            ) {
+                myHelper.hideDialog()
+                val response = response.body()
+                myHelper.log("DelayResponse:$response")
+                if (response!!.success && response.data != null) {
+                    myData.isSync = 1
+                    saveTrip(myData)
+
+                } else {
+                    saveTrip(myData)
+                    if (response.message!!.equals("Token has expired")) {
+                        myHelper.log("Token Expired:$response")
+                        myHelper.refreshToken()
+                    } else {
+                        myHelper.toast(response.message)
+                    }
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<TripResponse>, t: Throwable) {
+                myHelper.hideDialog()
+                saveTrip(myData)
+                myHelper.log("Failure" + t.message)
+            }
+        })
+    }
+
+    fun saveTrip(myData: MyData){
+        when (myData.repeatJourney) {
+            0 -> {
+                when (myData.nextAction) {
+                    1 -> {
+                        myData.nextAction = 0
+                    }
+                    2 -> {
+                        myData.nextAction = 3
+                    }
+                }
+
+                db.updateTrip(myData)
+                myHelper.setLastJourney(myData)
+                myHelper.startLoadAfterActivityByType(myData)
+            }
+            1 -> {
+                when (myData.nextAction) {
+                    1 -> {
+                        myData.nextAction = 0
+                    }
+                }
+                val intent = Intent(this, RLoadActivity::class.java)
+                db.updateTrip(myData)
+                myHelper.setLastJourney(myData)
+                startActivity(intent)
+                finish()
+            }
+            2 -> {
+                when (myData.nextAction) {
+                    1 -> {
+                        myData.nextAction = 2
+                    }
+                    3 -> {
+                        myData.nextAction = 0
+                    }
+                }
+                db.updateTrip(myData)
+                myHelper.setLastJourney(myData)
+                val intent = Intent(this, RLoadActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }
+    }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         super.onActivityResult(requestCode, resultCode, intent)

@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.classes.MyData
+import com.lysaan.malik.vsptracker.apis.trip.MyData
 import kotlinx.android.synthetic.main.list_row_eloading.view.*
 
 class ELoadingAdapter(

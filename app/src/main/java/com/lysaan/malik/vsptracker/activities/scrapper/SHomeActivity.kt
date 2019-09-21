@@ -11,7 +11,7 @@ import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.activities.common.Material1Activity
 import com.lysaan.malik.vsptracker.activities.common.UnloadTaskActivity
 import com.lysaan.malik.vsptracker.activities.excavator.ESideCastingActivity
-import com.lysaan.malik.vsptracker.classes.MyData
+import com.lysaan.malik.vsptracker.apis.trip.MyData
 import kotlinx.android.synthetic.main.activity_shome.*
 
 class SHomeActivity : BaseActivity(), View.OnClickListener {

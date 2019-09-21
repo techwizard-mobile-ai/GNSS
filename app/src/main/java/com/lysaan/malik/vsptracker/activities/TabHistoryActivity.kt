@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.classes.MyData
+import com.lysaan.malik.vsptracker.apis.trip.MyData
 import com.lysaan.malik.vsptracker.fragments.common.DelayHistoryFragment
 import com.lysaan.malik.vsptracker.fragments.truck.LoadingHistoryFragment
 import kotlinx.android.synthetic.main.activity_tab_history.*

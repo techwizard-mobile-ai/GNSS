@@ -35,9 +35,10 @@ import com.lysaan.malik.vsptracker.activities.MachineTypeActivity
 import com.lysaan.malik.vsptracker.activities.Map1Activity
 import com.lysaan.malik.vsptracker.activities.common.MachineStatus1Activity
 import com.lysaan.malik.vsptracker.apis.RetrofitAPI
-import com.lysaan.malik.vsptracker.classes.EWork
+import com.lysaan.malik.vsptracker.apis.delay.DelayResponse
+import com.lysaan.malik.vsptracker.apis.delay.EWork
+import com.lysaan.malik.vsptracker.apis.trip.MyData
 import com.lysaan.malik.vsptracker.classes.GPSLocation
-import com.lysaan.malik.vsptracker.classes.MyData
 import com.lysaan.malik.vsptracker.database.DatabaseAdapter
 import com.lysaan.malik.vsptracker.others.Utils
 import kotlinx.android.synthetic.main.app_bar_base.*
@@ -145,7 +146,13 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
                         myHelper.toast("Map is Already Opened.")
                     }
                 }
-                R.id.navb_delay-> { toggleDelay() }
+                R.id.navb_delay-> {
+                    if(myHelper.getIsMachineStopped()){
+                        myHelper.toast("Please Start Machine First.")
+                    }else{
+                        toggleDelay()
+                    }
+                }
 
             }
             false
@@ -300,7 +307,7 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
         }
     }
 
-    fun stopDelay(): Long {
+    fun stopDelay() {
 
         if(myHelper.isDelayStarted()){
             val gpslocation = gpsLocation
@@ -318,29 +325,91 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             menu.findItem(R.id.navb_delay).title= "Waiting Stopped"
             menu.findItem(R.id.navb_map).setChecked(true)
 
+            eWork.machineID = myHelper.getMachineID()
+            eWork.orgID = myHelper.getLoginAPI().org_id
+            eWork.operatorID = myHelper.getOperatorAPI().id
+            eWork.machineType = myHelper.getMachineType()
+            val time = System.currentTimeMillis()
+            eWork.time = time.toString()
 
-            val insertID = db.insertDelay(eWork)
-            if(insertID > 0){
-
-                myHelper.toast("Waiting Stopped.\nStart Time: ${myHelper.getTime(meter.delayStartTime)}Hrs.\nTotal Time: ${myHelper.getFormatedTime(meter.delayTotalTime)}")
-
-                var dataNew = MyData()
-                var bundle: Bundle? = this.intent.extras
-                if (bundle != null) {
-                    dataNew = bundle!!.getSerializable("myData") as MyData
-                }
-                this.finish()
-                intent.putExtra("myData", dataNew)
-                myHelper.startHomeActivityByType(dataNew)
-
-            }else{
-                myHelper.toast("Waiting Not Stopped.")
+            if(myHelper.isDailyModeStarted()){
+                eWork.isDaysWork = 1
+            }else {
+                eWork.isDaysWork = 0
             }
-            return insertID
-        }else{
-            return 0
-        }
 
+
+            eWork.loadingGPSLocationString = myHelper.getGPSLocationToString(eWork.loadingGPSLocation)
+            eWork.unloadingGPSLocationString = myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
+            if(myHelper.isOnline()){
+                pushDelay(eWork)
+            }else{
+                myHelper.toast("No Internet Connection.\nDelay Not Uploaded to Server.")
+                saveDelay(eWork)
+            }
+
+
+        }
+    }
+
+    fun pushDelay(eWork: EWork){
+        myHelper.showDialog()
+        myHelper.log("pushDelay:$eWork")
+        val call = this.retrofitAPI.pushDelay(
+            myHelper.getLoginAPI().auth_token,
+            eWork
+        )
+        call.enqueue(object : retrofit2.Callback<DelayResponse> {
+            override fun onResponse(
+                call: retrofit2.Call<DelayResponse>,
+                response: retrofit2.Response<DelayResponse>
+            ) {
+                myHelper.hideDialog()
+                val response = response.body()
+                myHelper.log("DelayResponse:$response")
+                if (response!!.success && response.data != null) {
+                    eWork.isSync = 1
+                    saveDelay(eWork)
+
+                } else {
+                    saveDelay(eWork)
+                    if (response.message!!.equals("Token has expired")) {
+                        myHelper.log("Token Expired:$response")
+                        myHelper.refreshToken()
+                    } else {
+                        myHelper.toast(response.message)
+                    }
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<DelayResponse>, t: Throwable) {
+                myHelper.hideDialog()
+                saveDelay(eWork)
+                myHelper.toast(t.message.toString())
+                myHelper.log("Failure" + t.message)
+            }
+        })
+    }
+
+    private fun saveDelay(eWork: EWork) {
+
+        val insertID = db.insertDelay(eWork)
+        if(insertID > 0){
+
+            val meter = myHelper.getMeter()
+            myHelper.toast("Waiting Stopped.\nStart Time: ${myHelper.getTime(meter.delayStartTime)}Hrs.\nTotal Time: ${myHelper.getFormatedTime(meter.delayTotalTime)}")
+            var dataNew = MyData()
+            var bundle: Bundle? = this.intent.extras
+            if (bundle != null) {
+                dataNew = bundle!!.getSerializable("myData") as MyData
+            }
+            this.finish()
+            intent.putExtra("myData", dataNew)
+            myHelper.startHomeActivityByType(dataNew)
+
+        }else{
+            myHelper.toast("Waiting Not Stopped.")
+        }
 
     }
 

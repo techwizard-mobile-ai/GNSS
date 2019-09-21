@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:paddingBottom="@dimen/_10sdp"
     tools:context=".activities.common.LMachine1Activity">
 
     <TextView
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:id="@+id/lm_title"
         style="@style/activity_title"
         android:text="@string/activity_lmachine1_lm_title_text" />
 
     <GridView
+        android:layout_above="@id/lmachine_back"
+        android:layout_below="@id/lm_title"
         android:id="@+id/tlm_gridview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -23,13 +28,9 @@
         android:stretchMode="columnWidth"
         android:verticalSpacing="0dp" />
 
-
-
-    <!--<GridView-->
-    <!--android:id="@+id/gridview"-->
-    <!--android:stretchMode="none"-->
-    <!--android:horizontalSpacing="0dp"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content">-->
-    <!--</GridView>-->
-</LinearLayout>
+    <Button
+        android:id="@+id/lmachine_back"
+        style="@style/back_button_single"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>

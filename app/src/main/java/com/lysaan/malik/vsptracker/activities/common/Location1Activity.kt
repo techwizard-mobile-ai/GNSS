@@ -12,7 +12,7 @@ import com.google.android.material.navigation.NavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.adapters.CustomGrid
-import com.lysaan.malik.vsptracker.classes.MyData
+import com.lysaan.malik.vsptracker.apis.trip.MyData
 import kotlinx.android.synthetic.main.activity_location1.*
 
 class Location1Activity : BaseActivity(), View.OnClickListener {
@@ -62,24 +62,28 @@ class Location1Activity : BaseActivity(), View.OnClickListener {
             if (myData.isForLoadResult) {
                 val intent = intent
                 myData.loadingLocation = locations.get(position).name
+                myData.loading_location_id = locations.get(position).id
                 intent.putExtra("myData", myData)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
             } else if (myData.isForUnloadResult) {
                 val intent = intent
                 myData.unloadingLocation = locations.get(position).name
+                myData.unloading_location_id= locations.get(position).id
                 intent.putExtra("myData", myData)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
             } else if (myData.isForBackLoadResult) {
                 val intent = intent
-                myData.backLoadingLocation = locations.get(position).name
+                myData.loadingLocation = locations.get(position).name
+                myData.loading_location_id = locations.get(position).id
                 intent.putExtra("myData", myData)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
             } else if (myData.isForBackUnloadResult) {
                 val intent = intent
-                myData.backUnloadingLocation = locations.get(position).name
+                myData.unloadingLocation = locations.get(position).name
+                myData.unloading_location_id= locations.get(position).id
                 intent.putExtra("myData", myData)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
@@ -91,6 +95,7 @@ class Location1Activity : BaseActivity(), View.OnClickListener {
                     1 -> {
                         val intent = Intent(this, Material1Activity::class.java)
                         myData.loadingLocation = locations.get(position).name
+                        myData.loading_location_id = locations.get(position).id
                         intent.putExtra("myData", myData)
                         startActivity(intent)
 
@@ -99,7 +104,10 @@ class Location1Activity : BaseActivity(), View.OnClickListener {
                         when (myData.nextAction) {
                             0 -> {
                                 myData.loadingLocation = locations.get(position).name
+                                myData.loading_location_id = locations.get(position).id
                                 myData.unloadingMaterial = myData.loadingMaterial
+                                myData.unloading_material_id= myData.loading_material_id
+                                myData.unloading_material_id = myData.loading_material_id
                                 myHelper.setLastJourney(myData)
 
                                 val intent = Intent(this, RLoadActivity::class.java)
@@ -107,22 +115,27 @@ class Location1Activity : BaseActivity(), View.OnClickListener {
                             }
                             1 -> {
                                 myData.unloadingLocation = locations.get(position).name
+                                myData.unloading_location_id= locations.get(position).id
                                 myHelper.setLastJourney(myData)
 
                                 val intent = Intent(this, RUnloadActivity::class.java)
                                 startActivity(intent)
                             }
                             2 -> {
-                                myData.backLoadingLocation = locations.get(position).name
-                                myData.backUnloadingMaterial = myData.backLoadingMaterial
+                                myData.loadingLocation = locations.get(position).name
+                                myData.loading_location_id = locations.get(position).id
+                                myData.unloadingMaterial = myData.loadingMaterial
+                                myData.unloading_material_id= myData.loading_material_id
                                 myHelper.setLastJourney(myData)
 
                                 val intent = Intent(this, RLoadActivity::class.java)
                                 startActivity(intent)
                             }
                             3 -> {
-                                myData.backUnloadingLocation = locations.get(position).name
-                                myData.backUnloadingMaterial = myData.backLoadingMaterial
+                                myData.unloadingLocation = locations.get(position).name
+                                myData.unloading_location_id= locations.get(position).id
+                                myData.unloadingMaterial = myData.loadingMaterial
+                                myData.unloading_material_id= myData.loading_material_id
                                 myHelper.setLastJourney(myData)
 
                                 val intent = Intent(this, RUnloadActivity::class.java)

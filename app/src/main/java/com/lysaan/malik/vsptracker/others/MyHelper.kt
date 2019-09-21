@@ -34,10 +34,10 @@ import com.lysaan.malik.vsptracker.activities.truck.TUnloadAfterActivity
 import com.lysaan.malik.vsptracker.apis.RetrofitAPI
 import com.lysaan.malik.vsptracker.apis.login.LoginAPI
 import com.lysaan.malik.vsptracker.apis.login.LoginResponse
+import com.lysaan.malik.vsptracker.apis.trip.MyData
 import com.lysaan.malik.vsptracker.classes.GPSLocation
 import com.lysaan.malik.vsptracker.classes.Material
 import com.lysaan.malik.vsptracker.classes.Meter
-import com.lysaan.malik.vsptracker.classes.MyData
 import okhttp3.*
 import org.json.JSONObject
 import retrofit2.Retrofit
@@ -56,6 +56,10 @@ class MyHelper(var TAG: String, val context: Context) {
     internal lateinit var retrofit: Retrofit
     internal lateinit var retrofitAPI: RetrofitAPI
 
+    fun getMachineID() = sessionManager.getMachineID()
+    fun setMachineID(id: Int) {
+        sessionManager.setMachineID(id)
+    }
 
     fun getOperatorAPI() = sessionManager.getOperatorAPI()
     fun setOperatorAPI(loginAPI: LoginAPI){sessionManager.setOperatorAPI(loginAPI)}
@@ -146,7 +150,7 @@ class MyHelper(var TAG: String, val context: Context) {
 
 
     fun setUserID(userID: String) {}
-    fun getUserID() = ""
+    fun getUserID() = getOperatorAPI().id
 
     fun getStringToGPSLocation(stringGPSLocation: String): GPSLocation {
         return gson.fromJson(stringGPSLocation, GPSLocation::class.java)
@@ -458,9 +462,10 @@ class MyHelper(var TAG: String, val context: Context) {
         sessionManager.setNightMode(mode)
     }
 
+    fun getMachineStoppedReasonID() = sessionManager.getMachineStoppedReasonID()
     fun getIsMachineStopped() = sessionManager.getIsMachineStopped()
-    fun setIsMachineStopped(status: Boolean, reason: String) {
-        sessionManager.setMachineStopped(status, reason)
+    fun setIsMachineStopped(status: Boolean, reason: String, id: Int) {
+        sessionManager.setMachineStopped(status, reason, id)
     }
 
     fun getMachineStoppedReason() = sessionManager.getMachineStoppedReason()
@@ -555,6 +560,7 @@ class MyHelper(var TAG: String, val context: Context) {
         locations.add(Material(6, "Other 1"))
         return locations
     }
+
 
     fun getMachineNumber() = sessionManager.getMachineNumber()
     fun setMachineNumber(number: String) {

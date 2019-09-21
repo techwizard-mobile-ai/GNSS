@@ -7,10 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.R
+import com.lysaan.malik.vsptracker.activities.common.MachineStatus1Activity
 import com.lysaan.malik.vsptracker.apis.RetrofitAPI
 import com.lysaan.malik.vsptracker.apis.login.ListResponse
 import com.lysaan.malik.vsptracker.apis.login.LoginResponse
-import com.lysaan.malik.vsptracker.classes.MyData
+import com.lysaan.malik.vsptracker.apis.trip.MyData
 import com.lysaan.malik.vsptracker.database.DatabaseAdapter
 import com.lysaan.malik.vsptracker.others.Utils
 import kotlinx.android.synthetic.main.activity_operator_login.*
@@ -74,6 +75,10 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
 //            startActivity(intent)
 //            finishAffinity()
 //        }
+
+        if(myHelper.getOperatorAPI().id > 0){
+            syncData()
+        }
 
 
         myHelper.hideKeybaordOnClick(login_main_layout)
@@ -147,9 +152,14 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
 //        2. Waitings URL: v1/orgsdelays/store
 //        3. Machine Stops URL: v1/orgsmachinesstops/store
 //        getLocations()
-        if (myHelper.getMachineNumber().isNullOrBlank()) {
+
+        if (myHelper.getMachineID() < 1) {
             myHelper.log("No machine Number is entered.")
             val intent = Intent(this@OperatorLoginActivity, MachineTypeActivity::class.java)
+            startActivity(intent)
+            finishAffinity()
+        }else if(myHelper.getIsMachineStopped()){
+            val intent = Intent(this@OperatorLoginActivity, MachineStatus1Activity::class.java)
             startActivity(intent)
             finishAffinity()
         } else {

@@ -8,8 +8,8 @@ import android.widget.FrameLayout
 import com.google.android.material.navigation.NavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.classes.EWork
-import com.lysaan.malik.vsptracker.classes.MyData
+import com.lysaan.malik.vsptracker.apis.delay.EWork
+import com.lysaan.malik.vsptracker.apis.trip.MyData
 import kotlinx.android.synthetic.main.activity_delay.*
 
 class DelayActivity : BaseActivity(),
@@ -60,22 +60,19 @@ class DelayActivity : BaseActivity(),
     }
 
 
-
-
-
     override fun onClick(view: View?) {
         when (view!!.id) {
 
             R.id.day_works_action -> {
                 if (myHelper.isDelayStarted()) {
-
-                    if(stopDelay()>0){
+                    val dbID = stopDelay()
+//                    if(dbID>0){
                         day_work_title.text = "Wait For Load"
                         day_works_button.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.colorPrimary)))
                         day_works_action_text.text = "Start"
                         day_works_chronometer.stop()
                         myHelper.startHomeActivityByType(MyData())
-                    }
+//                    }
 
                 } else {
 
@@ -93,4 +90,5 @@ class DelayActivity : BaseActivity(),
         }
 
     }
+
 }

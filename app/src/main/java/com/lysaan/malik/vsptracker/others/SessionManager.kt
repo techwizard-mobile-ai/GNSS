@@ -6,8 +6,8 @@ import android.content.SharedPreferences.Editor
 import android.util.Log
 import com.google.gson.Gson
 import com.lysaan.malik.vsptracker.apis.login.LoginAPI
+import com.lysaan.malik.vsptracker.apis.trip.MyData
 import com.lysaan.malik.vsptracker.classes.Meter
-import com.lysaan.malik.vsptracker.classes.MyData
 
 class SessionManager(internal var _context: Context) {
 
@@ -23,9 +23,12 @@ class SessionManager(internal var _context: Context) {
 
     private val KEY_MACHINE_TYPE = "machine_type"
     private val KEY_MACHINE_NUMBER = "machine_number"
+    private val KEY_MACHINE_ID = "machine_id"
 
     private val KEY_IS_MACHINE_STOPPED = "is_machine_stopped"
     private val KEY_MACHINE_STOPPED_REASON = "machine_stopped_reason"
+    private val KEY_MACHINE_STOPPED_REASON_ID = "machine_stopped_reason_id"
+
     private val KEY_NIGHT_MODE = "night_mode"
 
     private val KEY_METER_RUNNING = "meter_running"
@@ -133,16 +136,23 @@ class SessionManager(internal var _context: Context) {
         editor.commit()
     }
 
+    fun getMachineStoppedReasonID() = pref.getInt(KEY_MACHINE_STOPPED_REASON_ID, 0)
     fun getMachineStoppedReason() = pref.getString(KEY_MACHINE_STOPPED_REASON, "")
     fun getIsMachineStopped() = pref.getBoolean(KEY_IS_MACHINE_STOPPED, false)
-    fun setMachineStopped(status: Boolean, reason: String) {
+    fun setMachineStopped(status: Boolean, reason: String, id: Int) {
         editor.putBoolean(KEY_IS_MACHINE_STOPPED, status)
         editor.putString(KEY_MACHINE_STOPPED_REASON, reason)
+        editor.putInt(KEY_MACHINE_STOPPED_REASON_ID, id)
         editor.commit()
     }
 
+    fun getMachineID() = pref.getInt(KEY_MACHINE_ID, 0)
     fun getMachineNumber() = pref.getString(KEY_MACHINE_NUMBER, "").toString()
 
+    fun setMachineID(id:Int){
+        editor.putInt(KEY_MACHINE_ID, id)
+        editor.commit()
+    }
     fun setMachineNumber(number: String) {
         editor.putString(KEY_MACHINE_NUMBER, number)
         editor.commit()

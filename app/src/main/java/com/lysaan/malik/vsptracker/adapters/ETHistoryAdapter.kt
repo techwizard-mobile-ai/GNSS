@@ -8,17 +8,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.classes.EWork
+import com.lysaan.malik.vsptracker.apis.delay.EWork
 import com.lysaan.malik.vsptracker.database.DatabaseAdapter
 import com.lysaan.malik.vsptracker.fragments.excavator.EOffloadingLoadsFragment
 import kotlinx.android.synthetic.main.list_row_et_history.view.*
 
 
 class ETHistoryAdapter(
-        val context: Activity,
-        val dataList: MutableList<EWork>,
-        val FRAGMENT_TAG: String,
-        val workType: Int
+    val context: Activity,
+    val dataList: MutableList<EWork>,
+    val FRAGMENT_TAG: String,
+    val workType: Int
 ) : RecyclerView.Adapter<ETHistoryAdapter
 .ViewHolder>() {
 

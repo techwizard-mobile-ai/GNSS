@@ -15,7 +15,7 @@ import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.activities.excavator.ELoadActivity
 import com.lysaan.malik.vsptracker.adapters.CustomGrid
 import com.lysaan.malik.vsptracker.classes.Material
-import com.lysaan.malik.vsptracker.classes.MyData
+import com.lysaan.malik.vsptracker.apis.trip.MyData
 import kotlinx.android.synthetic.main.activity_material1.*
 
 class Material1Activity : BaseActivity(), View.OnClickListener {
@@ -54,13 +54,14 @@ class Material1Activity : BaseActivity(), View.OnClickListener {
         val gv = findViewById(R.id.em_gridview) as GridView
 
         lateinit var materials: ArrayList<Material>
-        if (myHelper.getMachineType() == 2) {
-            materials = myHelper.getScraperMaterials()
-        } else {
-            materials = myHelper.getMaterials()
-        }
-        materials.removeAt(0)
+//        if (myHelper.getMachineType() == 2) {
+//            materials = myHelper.getScraperMaterials()
+//        } else {
+//            materials = myHelper.getMaterials()
+//        }
+//        materials.removeAt(0)
 //        val adapter = CustomGrid(this@Material1Activity, materials)
+        materials = db.getMaterials()
         val adapter = CustomGrid(this@Material1Activity, db.getMaterials())
 
         gv.setAdapter(adapter)
@@ -70,24 +71,28 @@ class Material1Activity : BaseActivity(), View.OnClickListener {
             if (myData.isForLoadResult) {
                 val intent = intent
                 myData.loadingMaterial = materials.get(position).name
+                myData.loading_material_id= materials.get(position).id
                 intent.putExtra("myData", myData)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
             } else if (myData.isForUnloadResult) {
                 val intent = intent
                 myData.unloadingMaterial = materials.get(position).name
+                myData.unloading_material_id= materials.get(position).id
                 intent.putExtra("myData", myData)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
             } else if (myData.isForBackLoadResult) {
                 val intent = intent
-                myData.backLoadingMaterial = materials.get(position).name
+                myData.loadingMaterial = materials.get(position).name
+                myData.loading_material_id= materials.get(position).id
                 intent.putExtra("myData", myData)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
             } else if (myData.isForBackUnloadResult) {
                 val intent = intent
-                myData.backUnloadingMaterial = materials.get(position).name
+                myData.unloadingMaterial = materials.get(position).name
+                myData.unloading_material_id= materials.get(position).id
                 intent.putExtra("myData", myData)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
@@ -96,6 +101,7 @@ class Material1Activity : BaseActivity(), View.OnClickListener {
                     1 -> {
                         val intent = Intent(this, ELoadActivity::class.java)
                         myData.loadingMaterial = materials.get(position).name
+                        myData.loading_material_id= materials.get(position).id
 
                         myHelper.setLastJourney(myData)
 //                        intent.putExtra("myData", myData)
@@ -105,11 +111,13 @@ class Material1Activity : BaseActivity(), View.OnClickListener {
 //                        if (myData.isUnload) {
 //                            val intent = Intent(this, Location1Activity::class.java)
 //                            myData.unloadingMaterial = materials.get(position).name
+//                myData.unloading_material_id= materials.get(position).id
 //                            intent.putExtra("myData", myData)
 //                            startActivity(intent)
 //                        } else {
 //                            val intent = Intent(this, Location1Activity::class.java)
 //                            myData.loadingMaterial = materials.get(position).name
+//                myData.loading_material_id= materials.get(position).id
 //                            intent.putExtra("myData", myData)
 //                            startActivity(intent)
 //                        }
@@ -120,49 +128,32 @@ class Material1Activity : BaseActivity(), View.OnClickListener {
                             0 -> {
                                 val intent = Intent(this, Location1Activity::class.java)
                                 myData.loadingMaterial = materials.get(position).name
+                                myData.loading_material_id= materials.get(position).id
                                 intent.putExtra("myData", myData)
                                 startActivity(intent)
                             }
                             1 -> {
                                 val intent = Intent(this, Location1Activity::class.java)
                                 myData.unloadingMaterial = materials.get(position).name
+                                myData.unloading_material_id= materials.get(position).id
                                 intent.putExtra("myData", myData)
                                 startActivity(intent)
                             }
                             2 -> {
                                 val intent = Intent(this, Location1Activity::class.java)
-                                myData.backLoadingMaterial = materials.get(position).name
+                                myData.loadingMaterial = materials.get(position).name
+                                myData.loading_material_id= materials.get(position).id
                                 intent.putExtra("myData", myData)
                                 startActivity(intent)
                             }
                             3 -> {
                                 val intent = Intent(this, Location1Activity::class.java)
-                                myData.backUnloadingMaterial = materials.get(position).name
+                                myData.unloadingMaterial = materials.get(position).name
+                                myData.unloading_material_id= materials.get(position).id
                                 intent.putExtra("myData", myData)
                                 startActivity(intent)
                             }
                         }
-//                        if(myData.isForBackUnload){
-//                            val intent = Intent(this, Location1Activity::class.java)
-//                            myData.backUnloadingMaterial = materials.get(position).name
-//                            intent.putExtra("myData", myData)
-//                            startActivity(intent)
-//                        }else if(myData.isForBackLoad){
-//                            val intent = Intent(this, Location1Activity::class.java)
-//                            myData.backLoadingMaterial = materials.get(position).name
-//                            intent.putExtra("myData", myData)
-//                            startActivity(intent)
-//                        }else if (myData.isUnload) {
-//                            val intent = Intent(this, Location1Activity::class.java)
-//                            myData.unloadingMaterial = materials.get(position).name
-//                            intent.putExtra("myData", myData)
-//                            startActivity(intent)
-//                        } else {
-//                            val intent = Intent(this, Location1Activity::class.java)
-//                            myData.loadingMaterial = materials.get(position).name
-//                            intent.putExtra("myData", myData)
-//                            startActivity(intent)
-//                        }
                     }
                 }
 

@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.classes.MyData
+import com.lysaan.malik.vsptracker.apis.trip.MyData
 
 
 object Utils {

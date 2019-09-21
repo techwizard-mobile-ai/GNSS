@@ -9,7 +9,7 @@ import android.widget.FrameLayout
 import com.google.android.material.navigation.NavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.classes.MyData
+import com.lysaan.malik.vsptracker.apis.trip.MyData
 import kotlinx.android.synthetic.main.activity_rload.*
 
 class RLoadActivity : BaseActivity(), View.OnClickListener {
@@ -64,9 +64,9 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
                     }
                     2 -> {
 
-                        trload_machine.text = myData.backLoadingMachine
-                        trload_material.text = myData.backLoadingMaterial
-                        trload_location.text = myData.backLoadingLocation
+                        trload_machine.text = myData.loadingMachine
+                        trload_material.text = myData.loadingMaterial
+                        trload_location.text = myData.loadingLocation
                     }
                 }
             }
@@ -235,10 +235,10 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
 
                         }
                         2 -> {
-                            trload_machine.text = myData.backLoadingMachine
-                            trload_material.text = myData.backLoadingMaterial
-                            trload_location.text = myData.backLoadingLocation
-//                            trload_weight.text = "Tonnes (" +myData.backUnloadedWeight +")"
+                            trload_machine.text = myData.loadingMachine
+                            trload_material.text = myData.loadingMaterial
+                            trload_location.text = myData.loadingLocation
+//                            trload_weight.text = "Tonnes (" +myData.unloadingWeight +")"
                         }
                         3 -> {
 

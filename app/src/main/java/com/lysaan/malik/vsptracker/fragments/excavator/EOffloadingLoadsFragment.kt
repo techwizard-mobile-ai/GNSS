@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.adapters.EOffLoadingAdapter
-import com.lysaan.malik.vsptracker.classes.EWork
+import com.lysaan.malik.vsptracker.apis.delay.EWork
 import com.lysaan.malik.vsptracker.database.DatabaseAdapter
 import kotlinx.android.synthetic.main.fragment_eoffloading_loads.*
 import kotlinx.android.synthetic.main.fragment_eoffloading_loads.view.*

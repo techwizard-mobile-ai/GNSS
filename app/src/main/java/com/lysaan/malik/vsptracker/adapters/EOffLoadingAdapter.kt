@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.classes.EWork
+import com.lysaan.malik.vsptracker.apis.delay.EWork
 import kotlinx.android.synthetic.main.list_row_eloading.view.*
 
 class EOffLoadingAdapter(
