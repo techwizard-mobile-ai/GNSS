@@ -9,6 +9,9 @@ import com.bumptech.glide.Glide
 import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.apis.RetrofitAPI
 import com.lysaan.malik.vsptracker.apis.login.LoginResponse
+import com.lysaan.malik.vsptracker.apis.operators.OperatorAPI
+import com.lysaan.malik.vsptracker.apis.operators.OperatorResponse
+import com.lysaan.malik.vsptracker.database.DatabaseAdapter
 import com.lysaan.malik.vsptracker.others.Utils
 import kotlinx.android.synthetic.main.activity_login.*
 import okhttp3.*
@@ -21,6 +24,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     private val TAG = this::class.java.simpleName
     private lateinit var myHelper: MyHelper
+    protected lateinit var db: DatabaseAdapter
 
     internal lateinit var retrofit: Retrofit
     internal lateinit var retrofitAPI: RetrofitAPI
@@ -36,13 +40,13 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         myHelper = MyHelper(TAG, this)
         myHelper.setProgressBar(signin_pb)
 
+        db = DatabaseAdapter(this)
+
         this.retrofit = Retrofit.Builder()
             .baseUrl(RetrofitAPI.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         this.retrofitAPI = retrofit.create(RetrofitAPI::class.java)
-
-//        myHelper.imageLoad(resources.getDrawable(R.drawable.welcome))
 
         when (myHelper.getMachineType()) {
             1 -> {
@@ -61,14 +65,6 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
 
-//        keyboard.showKeyBoard(signin_email)
-
-
-
-//        val intent = Intent(this, HourMeterStartActivity::class.java)
-//        startActivity(intent)
-
-
         myHelper.hideKeybaordOnClick(login_main_layout)
         signin_signin.setOnClickListener(this)
         signin_forgot_pass.setOnClickListener(this)
@@ -84,57 +80,21 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
                 myHelper.log("email:" + email)
                 myHelper.log("Pass" + pass)
-//                email = "zee.enterprises@mail.com"
-//                pass = "user1@123"
-//                signIn(email, pass)
 
                 if (!myHelper.isValidEmail(email)) {
                     myHelper.toast("Please Provide valid Email Address.")
                 }
-                else if (pass.length < 6) {
-                    myHelper.toast("Password Minimum Length should be 6 Characters")
+                else if (pass.length < 8) {
+                    myHelper.toast("Password Minimum Length should be 8 Characters")
                 }
                 else {
-                    signIn(email, pass)
+                    orgLogin(email, pass)
                 }
             }
         }
     }
 
-    private fun signIn(email: String, pass: String) {
 
-//        operatorLogin()
-        orgLogin(email, pass)
-
-//        if(myHelper.getIsMachineStopped()){
-//            val intent = Intent(this, MachineStatus1Activity::class.java)
-//            startActivity(intent)
-//        }else{
-//            val intent = Intent(this, HourMeterStartActivity::class.java)
-//            startActivity(intent)
-//        }
-
-//        myHelper.hideProgressBar()
-    }
-
-
-    fun operatorLogin(){
-        val call = this.retrofitAPI.getOperatorLogin(myHelper.getLoginAPI().org_id, "RJ12314", myHelper.getLoginAPI().auth_token)
-        call.enqueue(object : retrofit2.Callback<LoginResponse>{
-            override fun onResponse(
-                call: retrofit2.Call<LoginResponse>,
-                response: retrofit2.Response<LoginResponse>
-            ) {
-                val loginResponse = response.body()
-                myHelper.log("Operator:$loginResponse")
-            }
-
-            override fun onFailure(call: retrofit2.Call<LoginResponse>, t: Throwable) {
-                myHelper.log("Failure"+t.message)
-            }
-        }
-        )
-    }
     fun orgLogin(email: String, pass: String){
         myHelper.showProgressBar()
 
@@ -142,7 +102,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         call.enqueue(object : retrofit2.Callback<LoginResponse> {
 
             override fun onResponse(call: retrofit2.Call<LoginResponse>, response: retrofit2.Response<LoginResponse>) {
-                myHelper.hideProgressBar()
+//                myHelper.hideProgressBar()
                 myHelper.log("RetrofitResponse:$response")
                 val loginResponse = response.body()
                 if(loginResponse!!.success){
@@ -150,10 +110,9 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                     myHelper.log("Start OperatorLoginActivity")
                     loginResponse.data.pass = pass
                     myHelper.setLoginAPI(loginResponse.data)
-                    myHelper.toast("Organizaion Login Successful.")
-                    val intent = Intent(this@LoginActivity, OperatorLoginActivity::class.java)
-                    startActivity(intent)
+                    fetchOrgData()
                 }else{
+                    myHelper.hideProgressBar()
                     myHelper.toast(loginResponse.message)
                 }
             }
@@ -189,6 +148,257 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             override fun onFailure(call: Call, e: IOException) {
                 myHelper.hideProgressBar()
                 Log.d("OKHttp", "Failed to execute request ${e.printStackTrace()}")
+            }
+        })
+    }
+
+    fun fetchOrgData(){
+//        val intent = Intent(this@LoginActivity, OperatorLoginActivity::class.java)
+//        startActivity(intent)
+        myHelper.toast("Fetching Company Data.\nPlease wait...")
+//        fetchOperators()
+//        fetchSites()
+//        fetchMachinesTypes()
+//        fetchMachinesBrands()
+//        fetchMachinesPlants()
+//        fetchStopReasons()
+//        fetchMachines()
+//        fetchLocations()
+        fetchMaterials()
+    }
+
+    private fun fetchMaterials() {
+        val call = this.retrofitAPI.getMaterials(
+            myHelper.getLoginAPI().org_id,
+            myHelper.getLoginAPI().auth_token
+        )
+        call.enqueue(object : retrofit2.Callback<OperatorResponse> {
+            override fun onResponse(
+                call: retrofit2.Call<OperatorResponse>,
+                response: retrofit2.Response<OperatorResponse>
+            ) {
+                val response = response.body()
+                if (response!!.success && response.data != null) {
+                    db.insertMaterials(response.data as ArrayList<OperatorAPI>)
+                    fetchLocations()
+                } else {
+                    myHelper.hideProgressBar()
+                    myHelper.toast(response.message)
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
+                myHelper.hideProgressBar()
+                myHelper.log("Failure" + t.message)
+            }
+        })
+    }
+    private fun fetchLocations() {
+        val call = this.retrofitAPI.getLocations(
+            myHelper.getLoginAPI().org_id,
+            myHelper.getLoginAPI().auth_token
+        )
+        call.enqueue(object : retrofit2.Callback<OperatorResponse> {
+            override fun onResponse(
+                call: retrofit2.Call<OperatorResponse>,
+                response: retrofit2.Response<OperatorResponse>
+            ) {
+
+                val response = response.body()
+                if (response!!.success && response.data != null) {
+                    db.insertLocations(response.data as ArrayList<OperatorAPI>)
+                    fetchMachines()
+                } else {
+                    myHelper.hideProgressBar()
+                    myHelper.toast(response.message)
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
+                myHelper.hideProgressBar()
+                myHelper.log("Failure" + t.message)
+            }
+        })
+    }
+    private fun fetchMachines() {
+        val call = this.retrofitAPI.getMachines(
+            myHelper.getLoginAPI().org_id,
+            myHelper.getLoginAPI().auth_token
+        )
+        call.enqueue(object : retrofit2.Callback<OperatorResponse> {
+            override fun onResponse(
+                call: retrofit2.Call<OperatorResponse>,
+                response: retrofit2.Response<OperatorResponse>
+            ) {
+
+                val response = response.body()
+                if (response!!.success && response.data != null) {
+                    db.insertMachines(response.data as ArrayList<OperatorAPI>)
+                    fetchStopReasons()
+                } else {
+                    myHelper.hideProgressBar()
+                    myHelper.toast(response.message)
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
+                myHelper.hideProgressBar()
+                myHelper.log("Failure" + t.message)
+            }
+        })
+    }
+    private fun fetchStopReasons() {
+        val call = this.retrofitAPI.getStopReasons(
+            myHelper.getLoginAPI().org_id,
+            myHelper.getLoginAPI().auth_token
+        )
+        call.enqueue(object : retrofit2.Callback<OperatorResponse> {
+            override fun onResponse(
+                call: retrofit2.Call<OperatorResponse>,
+                response: retrofit2.Response<OperatorResponse>
+            ) {
+
+                val response = response.body()
+                if (response!!.success && response.data != null) {
+                    db.insertStopReasons(response.data as ArrayList<OperatorAPI>)
+                    fetchMachinesPlants()
+                } else {
+                    myHelper.hideProgressBar()
+                    myHelper.toast(response.message)
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
+                myHelper.hideProgressBar()
+                myHelper.log("Failure" + t.message)
+            }
+        })
+    }
+    private fun fetchMachinesPlants(){
+
+        val call = this.retrofitAPI.getMachinesPlants(
+            myHelper.getLoginAPI().org_id,
+            myHelper.getLoginAPI().auth_token)
+        call.enqueue(object : retrofit2.Callback<OperatorResponse> {
+            override fun onResponse(call: retrofit2.Call<OperatorResponse>, response: retrofit2.Response<OperatorResponse>) {
+                myHelper.log("RetrofitResponse:$response")
+                val operatorResponse = response.body()
+                if(operatorResponse!!.success && operatorResponse.data != null){
+                    myHelper.log("MachinesPlants:${operatorResponse.data}.")
+                    db.insertMachinesPlants(operatorResponse.data as ArrayList<OperatorAPI>)
+                    fetchMachinesBrands()
+                }else{
+                    myHelper.hideProgressBar()
+                    myHelper.toast(operatorResponse.message)
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
+                myHelper.hideProgressBar()
+                myHelper.toast(t.message.toString())
+                Log.e(TAG, "FailureResponse:" + t.message)
+            }
+        })
+    }
+    private fun fetchMachinesBrands(){
+
+        val call = this.retrofitAPI.getMachinesBrands(
+            myHelper.getLoginAPI().auth_token)
+        call.enqueue(object : retrofit2.Callback<OperatorResponse> {
+            override fun onResponse(call: retrofit2.Call<OperatorResponse>, response: retrofit2.Response<OperatorResponse>) {
+                myHelper.log("RetrofitResponse:$response")
+                val operatorResponse = response.body()
+                if(operatorResponse!!.success && operatorResponse.data != null){
+                    myHelper.log("MachinesBrands:${operatorResponse.data}.")
+                    db.insertMachinesBrands(operatorResponse.data as ArrayList<OperatorAPI>)
+                    fetchMachinesTypes()
+                }else{
+                    myHelper.hideProgressBar()
+                    myHelper.toast(operatorResponse.message)
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
+                myHelper.hideProgressBar()
+                myHelper.toast(t.message.toString())
+                Log.e(TAG, "FailureResponse:" + t.message)
+            }
+        })
+    }
+    private fun fetchMachinesTypes(){
+
+        val call = this.retrofitAPI.getMachinesTypes(
+            myHelper.getLoginAPI().auth_token)
+        call.enqueue(object : retrofit2.Callback<OperatorResponse> {
+            override fun onResponse(call: retrofit2.Call<OperatorResponse>, response: retrofit2.Response<OperatorResponse>) {
+                myHelper.log("RetrofitResponse:$response")
+                val operatorResponse = response.body()
+                if(operatorResponse!!.success && operatorResponse.data != null){
+                    myHelper.log("MachinesTypes:${operatorResponse.data}.")
+                    db.insertMachinesTypes(operatorResponse.data as ArrayList<OperatorAPI>)
+                    fetchSites()
+                }else{
+                    myHelper.hideProgressBar()
+                    myHelper.toast(operatorResponse.message)
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
+                myHelper.hideProgressBar()
+                myHelper.toast(t.message.toString())
+                Log.e(TAG, "FailureResponse:" + t.message)
+            }
+        })
+    }
+    private fun fetchSites(){
+
+        val call = this.retrofitAPI.getSites(
+            myHelper.getLoginAPI().auth_token)
+        call.enqueue(object : retrofit2.Callback<OperatorResponse> {
+            override fun onResponse(call: retrofit2.Call<OperatorResponse>, response: retrofit2.Response<OperatorResponse>) {
+                myHelper.log("RetrofitResponse:$response")
+                val operatorResponse = response.body()
+                if(operatorResponse!!.success && operatorResponse.data != null){
+                    myHelper.log("Sites:${operatorResponse.data}.")
+                    db.insertSites(operatorResponse.data as ArrayList<OperatorAPI>)
+                    fetchOperators()
+                }else{
+                    myHelper.hideProgressBar()
+                    myHelper.toast(operatorResponse.message)
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
+                myHelper.hideProgressBar()
+                myHelper.toast(t.message.toString())
+                Log.e(TAG, "FailureResponse:" + t.message)
+            }
+        })
+    }
+    private fun fetchOperators(){
+
+        val call = this.retrofitAPI.getOperators(
+            myHelper.getLoginAPI().org_id,
+            myHelper.getLoginAPI().auth_token)
+        call.enqueue(object : retrofit2.Callback<OperatorResponse> {
+            override fun onResponse(call: retrofit2.Call<OperatorResponse>, response: retrofit2.Response<OperatorResponse>) {
+                myHelper.log("RetrofitResponse:$response")
+                val operatorResponse = response.body()
+                if(operatorResponse!!.success && operatorResponse.data != null){
+                    myHelper.log("Operators:${operatorResponse.data}.")
+                    db.insertOperators(operatorResponse.data as ArrayList<OperatorAPI>)
+                    val intent = Intent(this@LoginActivity, OperatorLoginActivity::class.java)
+                    startActivity(intent)
+                }else{
+                    myHelper.hideProgressBar()
+                    myHelper.toast(operatorResponse.message)
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
+                myHelper.hideProgressBar()
+                myHelper.toast(t.message.toString())
+                Log.e(TAG, "FailureResponse:" + t.message)
             }
         })
     }

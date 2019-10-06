@@ -97,7 +97,8 @@
 
 <!--                <category android:name="android.intent.category.LAUNCHER" />-->
 <!--            </intent-filter>-->
-        </activity> <!-- <activity android:name=".activities.notused.EHomeOldActivity" /> -->
+        </activity>
+        <!-- <activity android:name=".activities.notused.EHomeOldActivity" /> -->
         <activity
             android:name=".BaseActivity"
             android:label="@string/app_name"

@@ -72,6 +72,7 @@ class MyHelper(var TAG: String, val context: Context) {
         val formBody = FormBody.Builder()
             .add("email", getLoginAPI().email)
             .add("password", getLoginAPI().pass)
+            .add("role", "1")
             .build()
         val request = Request.Builder()
             .url("https://vsptracker.app/api/v1/org/users/login")
@@ -82,6 +83,7 @@ class MyHelper(var TAG: String, val context: Context) {
             override fun onResponse(call: Call, response: Response) {
                 val respontString = response.body()!!.string()
                 val responeJObject = JSONObject(respontString)
+                log("RefreshToken:$respontString")
                 val success =responeJObject.getBoolean("success")
                 if(success){
                     val gson = GsonBuilder().create()
@@ -91,6 +93,8 @@ class MyHelper(var TAG: String, val context: Context) {
                     log("Success:$success")
                     log("LoginAPI:$loginAPI")
                     setLoginAPI(loginAPI)
+//                    val intent = Intent(context, LoginActivity::class.java)
+//                    context.startActivity(intent)
                 }else{
                     val intent = Intent(context, LoginActivity::class.java)
                     context.startActivity(intent)
@@ -760,7 +764,7 @@ class MyHelper(var TAG: String, val context: Context) {
 
     //    type = 1 excavator
     //    type = 2 scrapper
-    //    type = 3 truck
+    //    type = 3 truckf
     fun startHomeActivityByType(myData: MyData) {
         when (getMachineType()) {
             1 -> {

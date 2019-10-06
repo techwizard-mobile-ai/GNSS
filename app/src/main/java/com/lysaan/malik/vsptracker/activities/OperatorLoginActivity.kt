@@ -9,7 +9,6 @@ import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.activities.common.MachineStatus1Activity
 import com.lysaan.malik.vsptracker.apis.RetrofitAPI
-import com.lysaan.malik.vsptracker.apis.login.ListResponse
 import com.lysaan.malik.vsptracker.apis.login.LoginResponse
 import com.lysaan.malik.vsptracker.apis.trip.MyData
 import com.lysaan.malik.vsptracker.database.DatabaseAdapter
@@ -76,10 +75,12 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
 //            finishAffinity()
 //        }
 
-        if(myHelper.getOperatorAPI().id > 0){
-            syncData()
-        }
+//        if(myHelper.getOperatorAPI().id > 0){
+//            syncData()
+//        }
 
+//        myHelper.log("Operators:${db.getOperators()}")
+        myHelper.log("Materials:${db.getMaterials()}")
 
         myHelper.hideKeybaordOnClick(login_main_layout)
         signin_signin.setOnClickListener(this)
@@ -93,7 +94,8 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
                 if (pin.length < 3) {
                     myHelper.toast("PIN Minimum Length should be 3 Characters")
                 } else {
-                    operatorLogin(pin)
+                    myHelper.log("OperatorPIN:${db.getOperator(pin)}")
+//                    operatorLogin(pin)
                 }
             }
         }
@@ -136,23 +138,15 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
 
     fun syncData() {
 
+        if(myHelper.isOnline()){
+//            getLocations()
+        }else{
+            launchHome()
+        }
 
-        // Sync Following with Company
-        // GET Calls
-//        1. Locations URL: v1/orgslocations/list
-        getLocations()
-//        2. Machines URL: v1/orgsmachines/list
-        getMachines()
-//        3. Materials URL: v1/orgsmaterials/list
-        getMaterials()
-//        4. Machine Stop Reasons URL: v1/orgsmachinesstopsreasons/list
-        getStopReasons()
-        // POST Calls
-//        1. Trips URL: v1/orgstrips/store
-//        2. Waitings URL: v1/orgsdelays/store
-//        3. Machine Stops URL: v1/orgsmachinesstops/store
-//        getLocations()
+    }
 
+    fun launchHome(){
         if (myHelper.getMachineID() < 1) {
             myHelper.log("No machine Number is entered.")
             val intent = Intent(this@OperatorLoginActivity, MachineTypeActivity::class.java)
@@ -165,131 +159,5 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
         } else {
             myHelper.startHomeActivityByType(MyData())
         }
-    }
-
-    fun getLocations() {
-        val call = this.retrofitAPI.getLocations(
-            myHelper.getLoginAPI().org_id,
-            myHelper.getLoginAPI().auth_token
-        )
-        call.enqueue(object : retrofit2.Callback<ListResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<ListResponse>,
-                response: retrofit2.Response<ListResponse>
-            ) {
-                val response = response.body()
-                if (response!!.success && response.data != null) {
-                    db.insertLocations(response.data)
-                    getMachines()
-//                    syncData()
-                } else {
-                    if (response.message!!.equals("Token has expired")) {
-                        // refresh token
-                        myHelper.log("Token Expired:$response")
-                        myHelper.refreshToken()
-                    } else {
-                        myHelper.toast(response.message)
-                    }
-                }
-            }
-
-            override fun onFailure(call: retrofit2.Call<ListResponse>, t: Throwable) {
-                myHelper.hideProgressBar()
-                myHelper.log("Failure" + t.message)
-            }
-        })
-    }
-
-    fun getMachines() {
-        val call = this.retrofitAPI.getMachines(
-            myHelper.getLoginAPI().org_id,
-            myHelper.getLoginAPI().auth_token
-        )
-        call.enqueue(object : retrofit2.Callback<ListResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<ListResponse>,
-                response: retrofit2.Response<ListResponse>
-            ) {
-                val response = response.body()
-                if (response!!.success && response.data != null) {
-                    db.insertMachines(response.data)
-                    getMaterials()
-                } else {
-                    if (response.message!!.equals("Token has expired")) {
-                        myHelper.log("Token Expired:$response")
-                        myHelper.refreshToken()
-                    } else {
-                        myHelper.toast(response.message)
-                    }
-                }
-            }
-
-            override fun onFailure(call: retrofit2.Call<ListResponse>, t: Throwable) {
-                myHelper.hideProgressBar()
-                myHelper.log("Failure" + t.message)
-            }
-        })
-    }
-
-    fun getMaterials() {
-        val call = this.retrofitAPI.getMaterials(
-            myHelper.getLoginAPI().org_id,
-            myHelper.getLoginAPI().auth_token
-        )
-        call.enqueue(object : retrofit2.Callback<ListResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<ListResponse>,
-                response: retrofit2.Response<ListResponse>
-            ) {
-                val response = response.body()
-                if (response!!.success && response.data != null) {
-                    db.insertMaterials(response.data)
-                    getStopReasons()
-                } else {
-                    if (response.message!!.equals("Token has expired")) {
-                        myHelper.log("Token Expired:$response")
-                        myHelper.refreshToken()
-                    } else {
-                        myHelper.toast(response.message)
-                    }
-                }
-            }
-
-            override fun onFailure(call: retrofit2.Call<ListResponse>, t: Throwable) {
-                myHelper.hideProgressBar()
-                myHelper.log("Failure" + t.message)
-            }
-        })
-    }
-
-    fun getStopReasons() {
-        val call = this.retrofitAPI.getStopReasons(
-            myHelper.getLoginAPI().org_id,
-            myHelper.getLoginAPI().auth_token
-        )
-        call.enqueue(object : retrofit2.Callback<ListResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<ListResponse>,
-                response: retrofit2.Response<ListResponse>
-            ) {
-                myHelper.hideProgressBar()
-                val response = response.body()
-                if (response!!.success && response.data != null) {
-                    db.insertStopReasons(response.data)
-                } else {
-                    if (response.message!!.equals("Token has expired")) {
-                        myHelper.log("Token Expired:$response")
-                        myHelper.refreshToken()
-                    } else {
-                        myHelper.toast(response.message)
-                    }
-                }
-            }
-
-            override fun onFailure(call: retrofit2.Call<ListResponse>, t: Throwable) {
-                myHelper.hideProgressBar()
-                myHelper.log("Failure" + t.message)
-            }
-        })
     }
 }

@@ -48,7 +48,9 @@
                     android:layout_marginStart="0dp"
                     android:layout_marginEnd="0dp"
                     android:hint="Enter Operator PIN"
-                    android:inputType="textEmailAddress"
+                    android:inputType="textPassword"
+                    android:autofillHints="false"
+                    android:importantForAutofill="no"
                     android:textColor="@color/black" />
 
             </LinearLayout>

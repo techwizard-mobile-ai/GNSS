@@ -52,7 +52,7 @@ class HistoryActivity : BaseActivity(), View.OnClickListener {
         myHelper.log("Loads:${db.getELoadHistroy()}")
 
         val mAdapter = ELoadingHistoryAdapter(this@HistoryActivity, db.getELoadHistroy())
-        lh_rv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        lh_rv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false) as RecyclerView.LayoutManager?
         lh_rv!!.setAdapter(mAdapter)
 
 

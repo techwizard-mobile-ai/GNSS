@@ -9,15 +9,15 @@ import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.adapters.SelectMachineNumberAdapter
 import com.lysaan.malik.vsptracker.adapters.SelectStateAdapter
-import com.lysaan.malik.vsptracker.classes.Material
 import com.lysaan.malik.vsptracker.apis.trip.MyData
+import com.lysaan.malik.vsptracker.classes.Material
 import com.lysaan.malik.vsptracker.database.DatabaseAdapter
 import kotlinx.android.synthetic.main.activity_machine_type.*
 import java.util.*
 
 class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
 
-    private var machineTypes =  ArrayList<Material>()
+    private var machineLocations =  ArrayList<Material>()
     private var selectedMachineType = Material(0, "Select Machine Type")
     private var selectedMachineLocation = Material(0, "Select Machine Location")
     private var selectedMachineNumber = Material(0, "Select Machine Number")
@@ -33,7 +33,7 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
         db = DatabaseAdapter(this)
 
 //        var machineTypes = myHelper.getMachineLocations()
-        machineTypes = db.getLocations()
+
         selectMachineType()
         selectMachineLocation()
         selectMachineNumber()
@@ -127,9 +127,11 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun selectMachineLocation() {
 
-        machineTypes.add(0, Material(0, "Select Machine Location"))
+        machineLocations = db.getLocations()
+        myHelper.log("machineLocations:$machineLocations")
+        machineLocations.add(0, Material(0, "Select Machine Location"))
 //        val selectMaterialAdapter = SelectStateAdapter(this@MachineTypeActivity, machineTypes)
-        val selectMaterialAdapter = SelectStateAdapter(this, machineTypes)
+        val selectMaterialAdapter = SelectStateAdapter(this, machineLocations)
         machine_location!!.setAdapter(selectMaterialAdapter)
         machine_location.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
         machine_location.setSelection(0, false)
@@ -139,13 +141,13 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
                     arg0: AdapterView<*>, arg1: View,
                     position: Int, arg3: Long
             ) {
-                selectedMachineLocation = machineTypes.get(position)
-                if (machineTypes.get(position).id != 0) {
+                selectedMachineLocation = machineLocations.get(position)
+                if (machineLocations.get(position).id != 0) {
                     machine_location.setBackground(resources.getDrawable(R.drawable.spinner_border))
                 } else {
                     machine_location.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
                 }
-                Log.e(TAG, machineTypes.get(position).toString())
+                Log.e(TAG, machineLocations.get(position).toString())
             }
 
             override fun onNothingSelected(arg0: AdapterView<*>) {
