@@ -47,7 +47,7 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
 
         trload_weight.visibility = View.GONE
 
-        when(myHelper.getMachineType()){
+        when(myHelper.getMachineTypeID()){
 
             2 ->{
                 trload_machine.visibility = View.GONE
@@ -216,7 +216,7 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
                 myData = bundle!!.getSerializable("myData") as MyData
                 myHelper.log("myData:$myData")
 
-                if (myHelper.getMachineType() == 2) {
+                if (myHelper.getMachineTypeID() == 2) {
                     trload_machine.visibility = View.GONE
                     trload_material.text = myData.loadingMaterial
                     trload_location.text = myData.loadingLocation

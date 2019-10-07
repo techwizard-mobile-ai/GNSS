@@ -80,7 +80,7 @@ class EWork() : Serializable {
 
 
 
-//    var machineType = 0
+//    var machineTypeID = 0
     var machineNumber = ""
 
 
@@ -91,7 +91,7 @@ class EWork() : Serializable {
     var isSync: Int = 0
 
     override fun toString(): String {
-        return "EWork(orgID=$orgID, operatorID=$operatorID, machineType=$machineType, machineID=$machineID, loadingGPSLocationString='$loadingGPSLocationString', loadingGPSLocation=$loadingGPSLocation, unloadingGPSLocationString='$unloadingGPSLocationString', unloadingGPSLocation=$unloadingGPSLocation, startTime=$startTime, stopTime=$stopTime, totalTime=$totalTime, time='$time', date='$date', isDaysWork=$isDaysWork, workMode='$workMode', ID=$ID, eWorkID=$eWorkID, workType=$workType, workActionType=$workActionType, machineNumber='$machineNumber', isSync=$isSync)"
+        return "EWork(orgId=$orgID, operatorID=$operatorID, machineTypeID=$machineType, machineID=$machineID, loadingGPSLocationString='$loadingGPSLocationString', loadingGPSLocation=$loadingGPSLocation, unloadingGPSLocationString='$unloadingGPSLocationString', unloadingGPSLocation=$unloadingGPSLocation, startTime=$startTime, stopTime=$stopTime, totalTime=$totalTime, time='$time', date='$date', isDaysWork=$isDaysWork, workMode='$workMode', ID=$ID, eWorkID=$eWorkID, workType=$workType, workActionType=$workActionType, machineNumber='$machineNumber', isSync=$isSync)"
     }
 
 

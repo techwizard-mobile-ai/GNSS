@@ -6,7 +6,9 @@ import android.content.SharedPreferences.Editor
 import android.util.Log
 import com.google.gson.Gson
 import com.lysaan.malik.vsptracker.apis.login.LoginAPI
+import com.lysaan.malik.vsptracker.apis.operators.OperatorAPI
 import com.lysaan.malik.vsptracker.apis.trip.MyData
+import com.lysaan.malik.vsptracker.classes.Material
 import com.lysaan.malik.vsptracker.classes.Meter
 
 class SessionManager(internal var _context: Context) {
@@ -21,7 +23,7 @@ class SessionManager(internal var _context: Context) {
     private val KEY_PASS = "_pass"
     private val KEY_LOGIN_NUMBER = "isNewUser"
 
-    private val KEY_MACHINE_TYPE = "machine_type"
+    private val KEY_MACHINE_TYPE_ID = "machine_type_id"
     private val KEY_MACHINE_NUMBER = "machine_number"
     private val KEY_MACHINE_ID = "machine_id"
 
@@ -39,12 +41,32 @@ class SessionManager(internal var _context: Context) {
 
     private val KEY_LOGINAPI = "login_api"
     private val KEY_OPERATORAPI = "operator_api"
+    private val KEY_MACHINE_SETTINGS = "machine_settings"
 
     private val TAG = SessionManager::class.java.simpleName
 
     init {
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE)
         editor = pref.edit()
+    }
+
+
+    fun getMachineSettings(): Material {
+        val gson = Gson()
+        val json = pref.getString(KEY_MACHINE_SETTINGS, "")
+        val obj = gson.fromJson<Material>(json, Material::class.java)
+        if (obj == null) {
+            return Material()
+        } else {
+            return obj
+        }
+    }
+
+    fun setMachineSettings(material: Material) {
+        val gson = Gson()
+        val json = gson.toJson(material)
+        editor.putString(KEY_MACHINE_SETTINGS, json)
+        editor.commit();
     }
 
 
@@ -66,12 +88,12 @@ class SessionManager(internal var _context: Context) {
         editor.commit();
     }
 
-    fun getOperatorAPI(): LoginAPI{
+    fun getOperatorAPI(): OperatorAPI{
         val gson = Gson()
         val json = pref.getString(KEY_OPERATORAPI, "")
-        val obj = gson.fromJson<LoginAPI>(json, LoginAPI::class.java)
+        val obj = gson.fromJson<OperatorAPI>(json, OperatorAPI::class.java)
         if (obj == null) {
-            return LoginAPI()
+            return OperatorAPI()
         } else {
             return obj
         }
@@ -98,7 +120,7 @@ class SessionManager(internal var _context: Context) {
         }
     }
 
-    fun setOperatorAPI(loginAPI: LoginAPI){
+    fun setOperatorAPI(loginAPI: OperatorAPI){
         val gson = Gson()
         val json = gson.toJson(loginAPI);
         editor.putString(KEY_OPERATORAPI, json);
@@ -158,13 +180,13 @@ class SessionManager(internal var _context: Context) {
         editor.commit()
     }
 
-    fun getMachineType() = pref.getInt(KEY_MACHINE_TYPE, 0)
+    fun getMachineTypeID() = pref.getInt(KEY_MACHINE_TYPE_ID, 0)
 
-    //    type = 1 excavator
-//    type = 2 scrapper
-//    type = 3 truck
-    fun setMachineType(type: Int) {
-        editor.putInt(KEY_MACHINE_TYPE, type)
+    //    machineTypeId = 1 excavator
+//    machineTypeId = 2 scrapper
+//    machineTypeId = 3 truck
+    fun setMachineTypeID(type: Int) {
+        editor.putInt(KEY_MACHINE_TYPE_ID, type)
         editor.commit()
     }
 

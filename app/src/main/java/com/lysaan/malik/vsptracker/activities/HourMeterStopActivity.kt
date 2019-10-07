@@ -8,7 +8,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
-import com.lysaan.malik.vsptracker.apis.login.LoginAPI
+import com.lysaan.malik.vsptracker.apis.operators.OperatorAPI
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_hour_meter_stop.*
 
@@ -78,7 +78,7 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
 
                 myHelper.stopDelay(gpsLocation)
                 myHelper.stopDailyMode()
-                myHelper.setOperatorAPI(LoginAPI())
+                myHelper.setOperatorAPI(OperatorAPI())
 
                 val intent = Intent(this, OperatorLoginActivity::class.java)
                 startActivity(intent)

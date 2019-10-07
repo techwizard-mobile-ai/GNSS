@@ -14,20 +14,29 @@
         <TextView
             style="@style/activity_title"
             android:text="@string/select_machine" />
+
+        <TextView
+            style="@style/home_tv"
+            android:text="@string/select_site" />
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/mt_site"
+            style="@style/home_spinner" />
+
         <TextView
             style="@style/home_tv"
             android:text="@string/machine_type" />
-
         <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/machine_type"
             style="@style/home_spinner" />
 
         <TextView
             style="@style/home_tv"
+            android:visibility="gone"
             android:text="@string/machine_location" />
 
         <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/machine_location"
+            android:visibility="gone"
         style="@style/home_spinner" />
 
 

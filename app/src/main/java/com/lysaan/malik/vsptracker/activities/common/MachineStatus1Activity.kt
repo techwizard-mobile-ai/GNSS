@@ -106,7 +106,7 @@ class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
 
                 machineData.orgID = myHelper.getLoginAPI().org_id
                 machineData.operatorID = myHelper.getOperatorAPI().id
-                machineData.machineType = myHelper.getMachineType()
+                machineData.machineTypeID = myHelper.getMachineTypeID()
                 machineData.machineID = myHelper.getMachineID()
                 machineData.machine_stop_reason_id = myHelper.getMachineStoppedReasonID()
 

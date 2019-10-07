@@ -28,7 +28,14 @@ interface RetrofitAPI {
         const val ADMIN_MACHINE_TYPES = "adminmachinestypes/get"
         const val ADMIN_MACHINE_BRANDS = "adminmachinesbrands/get"
         const val ORGS_MACHINES_PLANTS = "orgsplants/list"
+        const val ORGS_MACHINES_TASKS = "orgstasks/list"
     }
+
+    @GET(ORGS_MACHINES_TASKS)
+    fun getMachinesTasks(
+        @Query("org_id") org_id: Int?,
+        @Query("token") token: String?
+    ): Call<OperatorResponse>
 
     @GET(ORGS_MACHINES_PLANTS)
     fun getMachinesPlants(

@@ -32,7 +32,7 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
         myData = myHelper.getLastJourney()
         myHelper.log("myData:$myData")
 
-//        if (myHelper.getMachineType() == 2) {
+//        if (myHelper.getMachineTypeID() == 2) {
 //            trul_task.visibility = View.GONE
 ////            trul_weight.visibility = View.GONE
 //        } else {
@@ -89,7 +89,7 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                 myData.unloadingGPSLocation = gpsLocation
                 myData.orgID = myHelper.getLoginAPI().org_id
                 myData.operatorID = myHelper.getOperatorAPI().id
-                myData.machineType = myHelper.getMachineType()
+                myData.machineTypeID = myHelper.getMachineTypeID()
                 myData.machineID = myHelper.getMachineID()
                 stopDelay()
                 if(myHelper.isDailyModeStarted()){
@@ -103,10 +103,12 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                 if(myHelper.isOnline()){
                     pushTrip(myData)
 
-                }else{
-                    myHelper.toast("No Internet Connection.\nDelay Not Uploaded to Server.")
-                    saveTrip(myData)
                 }
+                saveTrip(myData)
+//                else{
+//                    myHelper.toast("No Internet Connection.\nDelay Not Uploaded to Server.")
+//                    saveTrip(myData)
+//                }
             }
             R.id.trul_task -> {
                 val intent = Intent(this, UnloadTaskActivity::class.java)
@@ -140,7 +142,7 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
     }
 
     fun pushTrip(myData: MyData){
-        myHelper.showDialog()
+//        myHelper.showDialog()
         myHelper.log("pushDelay:$myData")
         val call = this.retrofitAPI.pushTrip(
             myHelper.getLoginAPI().auth_token,
@@ -151,12 +153,12 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                 call: retrofit2.Call<TripResponse>,
                 response: retrofit2.Response<TripResponse>
             ) {
-                myHelper.hideDialog()
+//                myHelper.hideDialog()
                 val response = response.body()
                 myHelper.log("DelayResponse:$response")
                 if (response!!.success && response.data != null) {
                     myData.isSync = 1
-                    saveTrip(myData)
+//                    saveTrip(myData)
 
                 } else {
                     saveTrip(myData)
@@ -170,8 +172,8 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
             }
 
             override fun onFailure(call: retrofit2.Call<TripResponse>, t: Throwable) {
-                myHelper.hideDialog()
-                saveTrip(myData)
+//                myHelper.hideDialog()
+//                saveTrip(myData)
                 myHelper.log("Failure" + t.message)
             }
         })
@@ -190,6 +192,7 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                 }
 
                 db.updateTrip(myData)
+                myData.unloadingWeight = 0.0;
                 myHelper.setLastJourney(myData)
                 myHelper.startLoadAfterActivityByType(myData)
             }
@@ -201,6 +204,7 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                 }
                 val intent = Intent(this, RLoadActivity::class.java)
                 db.updateTrip(myData)
+                myData.unloadingWeight = 0.0;
                 myHelper.setLastJourney(myData)
                 startActivity(intent)
                 finish()
@@ -215,6 +219,7 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                     }
                 }
                 db.updateTrip(myData)
+                myData.unloadingWeight = 0.0;
                 myHelper.setLastJourney(myData)
                 val intent = Intent(this, RLoadActivity::class.java)
                 startActivity(intent)

@@ -54,7 +54,7 @@ class Material1Activity : BaseActivity(), View.OnClickListener {
         val gv = findViewById(R.id.em_gridview) as GridView
 
         lateinit var materials: ArrayList<Material>
-//        if (myHelper.getMachineType() == 2) {
+//        if (myHelper.getMachineTypeID() == 2) {
 //            materials = myHelper.getScraperMaterials()
 //        } else {
 //            materials = myHelper.getMaterials()
@@ -97,7 +97,7 @@ class Material1Activity : BaseActivity(), View.OnClickListener {
                 setResult(Activity.RESULT_OK, intent)
                 finish()
             } else {
-                when (myHelper.getMachineType()) {
+                when (myHelper.getMachineTypeID()) {
                     1 -> {
                         val intent = Intent(this, ELoadActivity::class.java)
                         myData.loadingMaterial = materials.get(position).name

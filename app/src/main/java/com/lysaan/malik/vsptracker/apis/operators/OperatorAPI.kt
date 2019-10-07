@@ -30,6 +30,10 @@ class OperatorAPI : Serializable {
     @Expose
     var machinePlantId: Int = 0
 
+    @SerializedName("task_id")
+    @Expose
+    var machineTaskId: Int = 0
+
     @SerializedName("name")
     @Expose
     var name: String? = null
@@ -70,7 +74,7 @@ class OperatorAPI : Serializable {
     var updatedAt: String? = null
 
     override fun toString(): String {
-        return "OperatorAPI(id=$id, orgId=$orgId, machineTypeId=$machineTypeId, machineBrandId=$machineBrandId, name=$name, pin=$pin, status=$status, isDeleted=$isDeleted, authToken=$authToken, rememberToken=$rememberToken, createdAt=$createdAt, updatedAt=$updatedAt)"
+        return "OperatorAPI(id=$id, orgId=$orgId, siteId=$siteId, machineTypeId=$machineTypeId, machineBrandId=$machineBrandId, machinePlantId=$machinePlantId, machineTaskId=$machineTaskId, name=$name, number=$number, totalHours=$totalHours, pin=$pin, status=$status, isDeleted=$isDeleted, authToken=$authToken, rememberToken=$rememberToken, createdAt=$createdAt, updatedAt=$updatedAt)"
     }
 
 

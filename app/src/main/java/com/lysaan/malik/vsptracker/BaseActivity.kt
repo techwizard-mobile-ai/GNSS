@@ -97,7 +97,7 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
         toggle.syncState()
         navView.setNavigationItemSelectedListener(this)
 
-        when (myHelper.getMachineType()) {
+        when (myHelper.getMachineTypeID()) {
             1 -> {
                 toolbar_title.text = "VSP Tracker - Excavator"
             }
@@ -328,7 +328,7 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             eWork.machineID = myHelper.getMachineID()
             eWork.orgID = myHelper.getLoginAPI().org_id
             eWork.operatorID = myHelper.getOperatorAPI().id
-            eWork.machineType = myHelper.getMachineType()
+            eWork.machineType = myHelper.getMachineTypeID()
             val time = System.currentTimeMillis()
             eWork.time = time.toString()
 
@@ -343,17 +343,19 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             eWork.unloadingGPSLocationString = myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
             if(myHelper.isOnline()){
                 pushDelay(eWork)
-            }else{
-                myHelper.toast("No Internet Connection.\nDelay Not Uploaded to Server.")
-                saveDelay(eWork)
             }
+            saveDelay(eWork)
+//            else{
+//                myHelper.toast("No Internet Connection.\nDelay Not Uploaded to Server.")
+//                saveDelay(eWork)
+//            }
 
 
         }
     }
 
     fun pushDelay(eWork: EWork){
-        myHelper.showDialog()
+//        myHelper.showDialog()
         myHelper.log("pushDelay:$eWork")
         val call = this.retrofitAPI.pushDelay(
             myHelper.getLoginAPI().auth_token,
@@ -364,15 +366,15 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
                 call: retrofit2.Call<DelayResponse>,
                 response: retrofit2.Response<DelayResponse>
             ) {
-                myHelper.hideDialog()
+//                myHelper.hideDialog()
                 val response = response.body()
                 myHelper.log("DelayResponse:$response")
                 if (response!!.success && response.data != null) {
                     eWork.isSync = 1
-                    saveDelay(eWork)
+//                    saveDelay(eWork)
 
                 } else {
-                    saveDelay(eWork)
+//                    saveDelay(eWork)
                     if (response.message!!.equals("Token has expired")) {
                         myHelper.log("Token Expired:$response")
                         myHelper.refreshToken()
@@ -383,8 +385,8 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             }
 
             override fun onFailure(call: retrofit2.Call<DelayResponse>, t: Throwable) {
-                myHelper.hideDialog()
-                saveDelay(eWork)
+//                myHelper.hideDialog()
+//                saveDelay(eWork)
                 myHelper.toast(t.message.toString())
                 myHelper.log("Failure" + t.message)
             }
@@ -403,9 +405,11 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             if (bundle != null) {
                 dataNew = bundle!!.getSerializable("myData") as MyData
             }
-            this.finish()
+//            this.finish()
             intent.putExtra("myData", dataNew)
-            myHelper.startHomeActivityByType(dataNew)
+//            myHelper.startHomeActivityByType(dataNew)
+//            onBackPressed();
+            finishFromChild(DelayActivity())
 
         }else{
             myHelper.toast("Waiting Not Stopped.")

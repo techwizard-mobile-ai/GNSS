@@ -33,7 +33,7 @@ class HistoryActivity : BaseActivity(), View.OnClickListener {
             myHelper.log("myData:$myData")
         }
 
-        when (myHelper.getMachineType()) {
+        when (myHelper.getMachineTypeID()) {
             1 -> {
                 lh_title.text = "Excavator Loading History"
             }

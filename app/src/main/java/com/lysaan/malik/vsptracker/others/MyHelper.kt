@@ -34,6 +34,7 @@ import com.lysaan.malik.vsptracker.activities.truck.TUnloadAfterActivity
 import com.lysaan.malik.vsptracker.apis.RetrofitAPI
 import com.lysaan.malik.vsptracker.apis.login.LoginAPI
 import com.lysaan.malik.vsptracker.apis.login.LoginResponse
+import com.lysaan.malik.vsptracker.apis.operators.OperatorAPI
 import com.lysaan.malik.vsptracker.apis.trip.MyData
 import com.lysaan.malik.vsptracker.classes.GPSLocation
 import com.lysaan.malik.vsptracker.classes.Material
@@ -56,13 +57,16 @@ class MyHelper(var TAG: String, val context: Context) {
     internal lateinit var retrofit: Retrofit
     internal lateinit var retrofitAPI: RetrofitAPI
 
+    fun getMachineSettings() = sessionManager.getMachineSettings()
+    fun setMachineSettings(material: Material) { sessionManager.setMachineSettings(material)}
+
     fun getMachineID() = sessionManager.getMachineID()
     fun setMachineID(id: Int) {
         sessionManager.setMachineID(id)
     }
 
     fun getOperatorAPI() = sessionManager.getOperatorAPI()
-    fun setOperatorAPI(loginAPI: LoginAPI){sessionManager.setOperatorAPI(loginAPI)}
+    fun setOperatorAPI(loginAPI: OperatorAPI){sessionManager.setOperatorAPI(loginAPI)}
 
     fun getLoginAPI() = sessionManager.getLoginAPI()
     fun setLoginAPI(loginAPI: LoginAPI){sessionManager.setLoginAPI(loginAPI)}
@@ -75,7 +79,7 @@ class MyHelper(var TAG: String, val context: Context) {
             .add("role", "1")
             .build()
         val request = Request.Builder()
-            .url("https://vsptracker.app/api/v1/org/users/login")
+            .url("https://vsptracker.app/api/v1/org/users/login1")
             .post(formBody)
             .build()
 
@@ -93,14 +97,10 @@ class MyHelper(var TAG: String, val context: Context) {
                     log("Success:$success")
                     log("LoginAPI:$loginAPI")
                     setLoginAPI(loginAPI)
-//                    val intent = Intent(context, LoginActivity::class.java)
-//                    context.startActivity(intent)
                 }else{
                     val intent = Intent(context, LoginActivity::class.java)
                     context.startActivity(intent)
                 }
-
-
             }
 
             override fun onFailure(call: Call, e: IOException) {
@@ -572,13 +572,13 @@ class MyHelper(var TAG: String, val context: Context) {
     }
 
 
-    //    type = 1 excavator
-    //    type = 2 scrapper
-    //    type = 3 truck
-    fun getMachineType() = sessionManager.getMachineType()
+    //    machineTypeId = 1 excavator
+    //    machineTypeId = 2 scrapper
+    //    machineTypeId = 3 truck
+    fun getMachineTypeID() = sessionManager.getMachineTypeID()
 
-    fun setMachineType(type: Int) {
-        sessionManager.setMachineType(type)
+    fun setMachineTypeID(type: Int) {
+        sessionManager.setMachineTypeID(type)
     }
 
     fun isOnline(): Boolean {
@@ -745,7 +745,7 @@ class MyHelper(var TAG: String, val context: Context) {
     }
 
     fun startHistoryByType() {
-        when (getMachineType()) {
+        when (getMachineTypeID()) {
             1 -> {
                 val intent = Intent(context, EHistoryActivity::class.java)
                 context.startActivity(intent)
@@ -762,11 +762,11 @@ class MyHelper(var TAG: String, val context: Context) {
         }
     }
 
-    //    type = 1 excavator
-    //    type = 2 scrapper
-    //    type = 3 truckf
+    //    machineTypeId = 1 excavator
+    //    machineTypeId = 2 scrapper
+    //    machineTypeId = 3 truckf
     fun startHomeActivityByType(myData: MyData) {
-        when (getMachineType()) {
+        when (getMachineTypeID()) {
             1 -> {
 //                val intent = Intent(myContext, Material1Activity::class.java)
                 val intent = Intent(context, EHomeActivity::class.java)
@@ -789,7 +789,7 @@ class MyHelper(var TAG: String, val context: Context) {
 
     fun startLoadAfterActivityByType(myData: MyData) {
 
-        when (getMachineType()) {
+        when (getMachineTypeID()) {
             1 -> {
                 val intent = Intent(context, EHomeActivity::class.java)
                 intent.putExtra("myData", myData)

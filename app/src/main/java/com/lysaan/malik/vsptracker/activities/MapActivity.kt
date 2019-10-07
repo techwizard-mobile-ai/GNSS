@@ -93,18 +93,18 @@ class MapActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback{
 /*
 
     private fun stylePolygon(polygon: Polygon) {
-        var type = ""
+        var machineTypeId = ""
         // Get the myData object stored with the polygon.
         if (polygon.tag != null) {
-            type = polygon.tag.toString()
+            machineTypeId = polygon.tag.toString()
         }
 
         var pattern: List<PatternItem>? = null
         var strokeColor = COLOR_BLACK_ARGB
         var fillColor = COLOR_WHITE_ARGB
 
-        when (type) {
-            // If no type is given, allow the API to use the default.
+        when (machineTypeId) {
+            // If no machineTypeId is given, allow the API to use the default.
             "alpha" -> {
                 // Apply a stroke pattern to render a dashed line, and define colors.
                 pattern = PATTERN_POLYGON_ALPHA

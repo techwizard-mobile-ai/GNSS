@@ -184,6 +184,7 @@
     <string name="work_summary">Work Summary</string>
     <string name="select_material">Select Material</string>
     <string name="trimming">Trimming</string>
+    <string name="select_site">Select Site</string>
     <string-array name="theme_array">
         <item>Default-Theme</item>
         <item>Night-Mode</item>

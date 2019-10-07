@@ -15,9 +15,9 @@ class MyData : Serializable {
     @Expose
     var operatorID :Int = 0
 
-    @SerializedName("machine_type")
+    @SerializedName("machine_type_id")
     @Expose
-    var machineType : Int = 0
+    var machineTypeID : Int = 0
 
     @SerializedName("machine_id")
     @Expose
@@ -112,9 +112,9 @@ class MyData : Serializable {
     var isForLoadResult: Boolean = false
     var isForUnloadResult: Boolean = false
 
-    //    type = 1 excavator
-    //    type = 2 scrapper
-    //    type = 3 truck
+    //    machineTypeId = 1 excavator
+    //    machineTypeId = 2 scrapper
+    //    machineTypeId = 3 truck
     var loadedMachineType: Int = 0
 
     var loadedMachineNumber: String = ""
@@ -191,7 +191,7 @@ class MyData : Serializable {
 
     var isMapOpened: Boolean = false
     override fun toString(): String {
-        return "MyData(orgID=$orgID, operatorID=$operatorID, machineType=$machineType, machineID=$machineID, loadingGPSLocationString='$loadingGPSLocationString', unloadingGPSLocationString='$unloadingGPSLocationString', startTime=$startTime, stopTime=$stopTime, totalTime=$totalTime, time='$time', date='$date', isDaysWork=$isDaysWork, loading_machine_id=$loading_machine_id, loading_material_id=$loading_material_id, loading_location_id=$loading_location_id, unloading_task_id=$unloading_task_id, unloading_machine_id=$unloading_machine_id, unloading_material_id=$unloading_material_id, unloading_location_id=$unloading_location_id, unloadingWeight=$unloadingWeight, recordID=$recordID, isStartMachine=$isStartMachine, isForLoadResult=$isForLoadResult, isForUnloadResult=$isForUnloadResult, loadedMachineType=$loadedMachineType, loadedMachineNumber='$loadedMachineNumber', isForBackLoadResult=$isForBackLoadResult, isForBackUnloadResult=$isForBackUnloadResult, loadingMachine='$loadingMachine', loadingMaterial='$loadingMaterial', loadingLocation='$loadingLocation', unloadingTask='$unloadingTask', unloadingMachine='$unloadingMachine', unloadingMaterial='$unloadingMaterial', unloadingLocation='$unloadingLocation', loadedMachine='$loadedMachine', eWorkType=$eWorkType, eWorkActionType=$eWorkActionType, workMode='$workMode', nextAction=$nextAction, repeatJourney=$repeatJourney, tripType=$tripType, trip0ID=$trip0ID, loadingGPSLocation=$loadingGPSLocation, unloadingGPSLocation=$unloadingGPSLocation, isSync=$isSync, machineStoppedReason='$machineStoppedReason', isMapOpened=$isMapOpened)"
+        return "MyData(orgId=$orgID, operatorID=$operatorID, machineTypeID=$machineTypeID, machineID=$machineID, loadingGPSLocationString='$loadingGPSLocationString', unloadingGPSLocationString='$unloadingGPSLocationString', startTime=$startTime, stopTime=$stopTime, totalTime=$totalTime, time='$time', date='$date', isDaysWork=$isDaysWork, loading_machine_id=$loading_machine_id, loading_material_id=$loading_material_id, loading_location_id=$loading_location_id, unloading_task_id=$unloading_task_id, unloading_machine_id=$unloading_machine_id, unloading_material_id=$unloading_material_id, unloading_location_id=$unloading_location_id, unloadingWeight=$unloadingWeight, recordID=$recordID, isStartMachine=$isStartMachine, isForLoadResult=$isForLoadResult, isForUnloadResult=$isForUnloadResult, loadedMachineType=$loadedMachineType, loadedMachineNumber='$loadedMachineNumber', isForBackLoadResult=$isForBackLoadResult, isForBackUnloadResult=$isForBackUnloadResult, loadingMachine='$loadingMachine', loadingMaterial='$loadingMaterial', loadingLocation='$loadingLocation', unloadingTask='$unloadingTask', unloadingMachine='$unloadingMachine', unloadingMaterial='$unloadingMaterial', unloadingLocation='$unloadingLocation', loadedMachine='$loadedMachine', eWorkType=$eWorkType, eWorkActionType=$eWorkActionType, workMode='$workMode', nextAction=$nextAction, repeatJourney=$repeatJourney, tripType=$tripType, trip0ID=$trip0ID, loadingGPSLocation=$loadingGPSLocation, unloadingGPSLocation=$unloadingGPSLocation, isSync=$isSync, machineStoppedReason='$machineStoppedReason', isMapOpened=$isMapOpened)"
     }
 
 

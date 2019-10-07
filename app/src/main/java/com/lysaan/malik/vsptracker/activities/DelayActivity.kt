@@ -9,7 +9,6 @@ import com.google.android.material.navigation.NavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.apis.delay.EWork
-import com.lysaan.malik.vsptracker.apis.trip.MyData
 import kotlinx.android.synthetic.main.activity_delay.*
 
 class DelayActivity : BaseActivity(),
@@ -71,7 +70,9 @@ class DelayActivity : BaseActivity(),
                         day_works_button.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.colorPrimary)))
                         day_works_action_text.text = "Start"
                         day_works_chronometer.stop()
-                        myHelper.startHomeActivityByType(MyData())
+//                        myHelper.startHomeActivityByType(MyData())
+//                        finish()
+//                        onBackPressed();
 //                    }
 
                 } else {

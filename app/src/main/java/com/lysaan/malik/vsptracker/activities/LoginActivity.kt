@@ -48,7 +48,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             .build()
         this.retrofitAPI = retrofit.create(RetrofitAPI::class.java)
 
-        when (myHelper.getMachineType()) {
+        when (myHelper.getMachineTypeID()) {
             1 -> {
                 Glide.with(this).load(resources.getDrawable(com.lysaan.malik.vsptracker.R.drawable.excavator))
                         .into(signin_image)
@@ -153,20 +153,36 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     fun fetchOrgData(){
-//        val intent = Intent(this@LoginActivity, OperatorLoginActivity::class.java)
-//        startActivity(intent)
         myHelper.toast("Fetching Company Data.\nPlease wait...")
-//        fetchOperators()
-//        fetchSites()
-//        fetchMachinesTypes()
-//        fetchMachinesBrands()
-//        fetchMachinesPlants()
-//        fetchStopReasons()
-//        fetchMachines()
-//        fetchLocations()
-        fetchMaterials()
+        fetchMachinesTasks()
     }
 
+    private fun fetchMachinesTasks() {
+        val call = this.retrofitAPI.getMachinesTasks(
+            myHelper.getLoginAPI().org_id,
+            myHelper.getLoginAPI().auth_token
+        )
+        call.enqueue(object : retrofit2.Callback<OperatorResponse> {
+            override fun onResponse(
+                call: retrofit2.Call<OperatorResponse>,
+                response: retrofit2.Response<OperatorResponse>
+            ) {
+                val response = response.body()
+                if (response!!.success && response.data != null) {
+                    db.insertMachinesTasks(response.data as ArrayList<OperatorAPI>)
+                    fetchMaterials()
+                } else {
+                    myHelper.hideProgressBar()
+                    myHelper.toast(response.message)
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
+                myHelper.hideProgressBar()
+                myHelper.log("Failure" + t.message)
+            }
+        })
+    }
     private fun fetchMaterials() {
         val call = this.retrofitAPI.getMaterials(
             myHelper.getLoginAPI().org_id,

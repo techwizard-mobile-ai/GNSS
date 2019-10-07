@@ -88,10 +88,10 @@ class Location1Activity : BaseActivity(), View.OnClickListener {
                 setResult(Activity.RESULT_OK, intent)
                 finish()
             } else {
-                //    type = 1 excavator
-                //    type = 2 scrapper
-                //    type = 3 truck
-                when (myHelper.getMachineType()) {
+                //    machineTypeId = 1 excavator
+                //    machineTypeId = 2 scrapper
+                //    machineTypeId = 3 truck
+                when (myHelper.getMachineTypeID()) {
                     1 -> {
                         val intent = Intent(this, Material1Activity::class.java)
                         myData.loadingLocation = locations.get(position).name

@@ -33,7 +33,7 @@ class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
             myHelper.log("myData:$myData")
         }
 
-        when(myHelper.getMachineType()){
+        when(myHelper.getMachineTypeID()){
             2-> ultask_off_site.visibility = View.INVISIBLE
             else -> ultask_off_site.visibility = View.VISIBLE
         }
