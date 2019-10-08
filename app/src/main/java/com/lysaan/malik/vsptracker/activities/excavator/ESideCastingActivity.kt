@@ -75,8 +75,23 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
                 if (isWorking) {
                     eWork.workType = myData.eWorkType
                     eWork.workActionType = 1
-
                     eWork.unloadingGPSLocation = gpsLocation
+
+                    val time = System.currentTimeMillis()
+                    eWork.time = time.toString()
+                    eWork.stopTime = System.currentTimeMillis()
+                    eWork.totalTime = eWork.stopTime - eWork.startTime
+
+                    if(myHelper.isDailyModeStarted()){
+                        eWork.isDaysWork = 1
+                    }else {
+                        eWork.isDaysWork = 0
+                    }
+
+
+                    if(myHelper.isOnline()){
+                        pushSideCasting(eWork)
+                    }
 
                     val insertID = db.insertEWork(eWork)
                     myHelper.log("insertID:$insertID")
@@ -89,9 +104,7 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
                                         "Work Duration : ${myHelper.getTotalTimeMintues(startTime)} (Minutes)"
                         )
                         ework_action_text.text = "Start"
-
                         chronometer1.stop()
-
                         isWorking = false
                     } else {
                         myHelper.toast("MyData Not Saved.")

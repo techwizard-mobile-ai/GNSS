@@ -118,17 +118,18 @@ class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
 
                 if(myHelper.isOnline()){
                     pushMachineStatus(machineData)
-                }else{
+                }
+//                else{
                     myHelper.toast("No Internet Connection.\nDelay Not Uploaded to Server.")
                     updateMachineStatus(machineData)
-                }
+//                }
 
             }
         }
     }
 
     fun pushMachineStatus(machineData: MyData){
-        myHelper.showDialog()
+
         myHelper.log("pushMachineStatus:$machineData")
         val call = this.retrofitAPI.pushMachineStatus(
             myHelper.getLoginAPI().auth_token,
@@ -139,15 +140,15 @@ class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
                 call: retrofit2.Call<TripResponse>,
                 response: retrofit2.Response<TripResponse>
             ) {
-                myHelper.hideDialog()
+
                 val response = response.body()
                 myHelper.log("pushMachineStatus:$response")
                 if (response!!.success && response.data != null) {
                     machineData.isSync = 1
-                    updateMachineStatus(machineData)
+//                    updateMachineStatus(machineData)
 
                 } else {
-                    updateMachineStatus(machineData)
+//                    updateMachineStatus(machineData)
                     if (response.message!!.equals("Token has expired")) {
                         myHelper.log("Token Expired:$response")
                         myHelper.refreshToken()
@@ -158,8 +159,8 @@ class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
             }
 
             override fun onFailure(call: retrofit2.Call<TripResponse>, t: Throwable) {
-                myHelper.hideDialog()
-                updateMachineStatus(machineData)
+
+//                updateMachineStatus(machineData)
                 myHelper.toast(t.message.toString())
                 myHelper.log("Failure" + t.message)
             }

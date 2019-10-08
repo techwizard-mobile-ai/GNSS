@@ -12,17 +12,25 @@ class EWork() : Serializable {
     @Expose
     var orgID : Int = 0
 
+    @SerializedName("site_id")
+    @Expose
+    var siteId: Int = 0
+
     @SerializedName("operator_id")
     @Expose
     var operatorID :Int = 0
 
-    @SerializedName("machine_type")
+    @SerializedName("machine_type_id")
     @Expose
-    var machineType : Int = 0
+    var machineTypeID : Int = 0
 
     @SerializedName("machine_id")
     @Expose
     var machineID : Int = 0
+
+    @SerializedName("material_id")
+    @Expose
+    var materialID : Int = 0
 
     @SerializedName("loading_gps")
     @Expose
@@ -70,11 +78,18 @@ class EWork() : Serializable {
 
     var eWorkID = 0
 
+    // eWorkType 3 = Scraper Trimming
     // eWorkType 2 = Trenching
     // eWorkType 1 = General Digging
+    @SerializedName("work_type")
+    @Expose
     var workType = 0
+
+
     // eWorkActionType 1 = Side Casting
     // eWorkActionType 2 = Off Loading
+    @SerializedName("work_action_type")
+    @Expose
     var workActionType = 0
 
 
@@ -91,7 +106,7 @@ class EWork() : Serializable {
     var isSync: Int = 0
 
     override fun toString(): String {
-        return "EWork(orgId=$orgID, operatorID=$operatorID, machineTypeID=$machineType, machineID=$machineID, loadingGPSLocationString='$loadingGPSLocationString', loadingGPSLocation=$loadingGPSLocation, unloadingGPSLocationString='$unloadingGPSLocationString', unloadingGPSLocation=$unloadingGPSLocation, startTime=$startTime, stopTime=$stopTime, totalTime=$totalTime, time='$time', date='$date', isDaysWork=$isDaysWork, workMode='$workMode', ID=$ID, eWorkID=$eWorkID, workType=$workType, workActionType=$workActionType, machineNumber='$machineNumber', isSync=$isSync)"
+        return "EWork(orgID=$orgID, siteId=$siteId, operatorID=$operatorID, machineTypeID=$machineTypeID, machineID=$machineID, loadingGPSLocationString='$loadingGPSLocationString', loadingGPSLocation=$loadingGPSLocation, unloadingGPSLocationString='$unloadingGPSLocationString', unloadingGPSLocation=$unloadingGPSLocation, startTime=$startTime, stopTime=$stopTime, totalTime=$totalTime, time='$time', date='$date', isDaysWork=$isDaysWork, workMode='$workMode', ID=$ID, eWorkID=$eWorkID, workType=$workType, workActionType=$workActionType, machineNumber='$machineNumber', isSync=$isSync)"
     }
 
 

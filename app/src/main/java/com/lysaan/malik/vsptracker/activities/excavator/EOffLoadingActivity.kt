@@ -17,6 +17,7 @@ import com.lysaan.malik.vsptracker.apis.trip.MyData
 import kotlinx.android.synthetic.main.activity_eoff_loading.*
 
 class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
+    private val eWork = EWork()
     private val TAG = this::class.java.simpleName
     private lateinit var workTitle: String
     private var isWorking = false
@@ -75,10 +76,26 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                 stopDelay()
                 if (isWorking) {
 
-                    val eWork = EWork()
+
                     eWork.ID = eWorkID
                     eWork.startTime = startTime
                     eWork.unloadingGPSLocation = gpsLocation
+
+
+                    eWork.workType = myData.eWorkType
+                    eWork.workActionType = 2
+
+                    val time = System.currentTimeMillis()
+                    eWork.time = time.toString()
+                    eWork.stopTime = System.currentTimeMillis()
+                    eWork.totalTime = eWork.stopTime - eWork.startTime
+
+                    if(myHelper.isOnline()){
+                        pushSideCasting(eWork)
+                    }
+
+
+
 
                     val updatedID = db.updateEWork(eWork)
                     eWorkID = updatedID
@@ -109,7 +126,7 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                     chronometer1.start()
                     isWorking = true
 
-                    val eWork = EWork()
+
                     eWork.startTime = startTime
                     eWork.stopTime = System.currentTimeMillis()
                     eWork.totalTime = System.currentTimeMillis() - startTime

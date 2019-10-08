@@ -34,7 +34,7 @@ class DelayHistoryAdapter(
 
         val eWork = dataList.get(position)
 
-        when (eWork.machineType) {
+        when (eWork.machineTypeID) {
             1 -> {
                 holder.itemView.eth_machine_type.setText(":  Excavator")
             }

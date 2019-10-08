@@ -83,7 +83,7 @@ const val COL_SITE_ID = "site_id"
 const val COL_MACHINE_PLANT_ID = "machine_plant_id"
 
 
-class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 3) {
+class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 4) {
 
     val TAG = "DatabaseAdapter"
     private var myHelper: MyHelper
@@ -682,7 +682,6 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
     // eWorkActionType 2 = Off Loading
     fun insertEWork(eWork: EWork): Long {
 
-
         val currentTime = System.currentTimeMillis()
 
         eWork.stopTime = currentTime
@@ -1090,7 +1089,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             do {
                 var eWork = EWork()
                 eWork.ID = result.getInt(result.getColumnIndex(COL_ID))
-                eWork.machineType = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+                eWork.machineTypeID = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
                 eWork.machineNumber = result.getString(result.getColumnIndex(COL_MACHINE_NUMBER))
 
                 eWork.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))

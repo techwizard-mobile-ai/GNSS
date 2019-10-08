@@ -327,8 +327,9 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
 
             eWork.machineID = myHelper.getMachineID()
             eWork.orgID = myHelper.getLoginAPI().org_id
+            eWork.siteId = myHelper.getMachineSettings().siteId
             eWork.operatorID = myHelper.getOperatorAPI().id
-            eWork.machineType = myHelper.getMachineTypeID()
+            eWork.machineTypeID = myHelper.getMachineTypeID()
             val time = System.currentTimeMillis()
             eWork.time = time.toString()
 
@@ -352,6 +353,53 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
 
 
         }
+    }
+
+    fun pushSideCasting(eWork: EWork){
+
+        eWork.siteId = myHelper.getMachineSettings().siteId
+        eWork.machineID = myHelper.getMachineID()
+        eWork.orgID = myHelper.getLoginAPI().org_id
+        eWork.operatorID = myHelper.getOperatorAPI().id
+        eWork.machineTypeID = myHelper.getMachineTypeID()
+
+        eWork.loadingGPSLocationString = myHelper.getGPSLocationToString(eWork.loadingGPSLocation)
+        eWork.unloadingGPSLocationString = myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
+
+
+        myHelper.log("pushSideCasting:$eWork")
+        val call = this.retrofitAPI.pushSideCasting(
+            myHelper.getLoginAPI().auth_token,
+            eWork
+        )
+        call.enqueue(object : retrofit2.Callback<DelayResponse> {
+            override fun onResponse(
+                call: retrofit2.Call<DelayResponse>,
+                response: retrofit2.Response<DelayResponse>
+            ) {
+                val response = response.body()
+                myHelper.log("pushSideCasting:$response")
+                if (response!!.success && response.data != null) {
+                    eWork.isSync = 1
+//                    saveDelay(eWork)
+
+                } else {
+//                    saveDelay(eWork)
+                    if (response.message!!.equals("Token has expired")) {
+                        myHelper.log("Token Expired:$response")
+                        myHelper.refreshToken()
+                    } else {
+                        myHelper.toast(response.message)
+                    }
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<DelayResponse>, t: Throwable) {
+//                saveDelay(eWork)
+                myHelper.toast(t.message.toString())
+                myHelper.log("Failure" + t.message)
+            }
+        })
     }
 
     fun pushDelay(eWork: EWork){

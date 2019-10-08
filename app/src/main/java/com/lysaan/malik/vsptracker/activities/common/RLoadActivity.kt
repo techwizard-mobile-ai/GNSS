@@ -110,6 +110,8 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
                         if (insertID > 0) {
                             myHelper.toast("Load Saved Successfully.")
                             myData.recordID = insertID
+                            val currentTime = System.currentTimeMillis()
+                            myData.startTime = currentTime
                             myHelper.setLastJourney(myData)
                             myHelper.startHomeActivityByType(myData)
                         } else {

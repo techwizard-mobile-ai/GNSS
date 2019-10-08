@@ -88,10 +88,14 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
 
                 myData.unloadingGPSLocation = gpsLocation
                 myData.orgID = myHelper.getLoginAPI().org_id
+                myData.siteId = myHelper.getMachineSettings().siteId
                 myData.operatorID = myHelper.getOperatorAPI().id
                 myData.machineTypeID = myHelper.getMachineTypeID()
                 myData.machineID = myHelper.getMachineID()
                 stopDelay()
+                val currentTime = System.currentTimeMillis()
+                myData.stopTime = currentTime
+                myData.totalTime = myData.stopTime - myData.startTime
                 if(myHelper.isDailyModeStarted()){
                     myData.isDaysWork = 1
                 }else {

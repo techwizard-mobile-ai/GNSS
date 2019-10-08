@@ -29,7 +29,12 @@ interface RetrofitAPI {
         const val ADMIN_MACHINE_BRANDS = "adminmachinesbrands/get"
         const val ORGS_MACHINES_PLANTS = "orgsplants/list"
         const val ORGS_MACHINES_TASKS = "orgstasks/list"
+        const val ORGS_SIDECASTINGS = "orgssidecastings/store"
     }
+
+    @POST (ORGS_SIDECASTINGS)
+    fun pushSideCasting(@Query("token") token: String?, @Body eWork: EWork):Call<DelayResponse>
+
 
     @GET(ORGS_MACHINES_TASKS)
     fun getMachinesTasks(
