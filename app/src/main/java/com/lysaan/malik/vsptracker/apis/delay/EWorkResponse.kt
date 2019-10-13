@@ -1,14 +1,14 @@
-package com.lysaan.malik.vsptracker.apis.trip
+package com.lysaan.malik.vsptracker.apis.delay
 
 import com.google.gson.annotations.SerializedName
 
-data class TripResponse (
+data class EWorkResponse (
 
     @SerializedName("success") val success : Boolean,
-    @SerializedName("data") val data : MyData,
+    @SerializedName("data") val data : EWork,
     @SerializedName("message") val message: String
 ){
     override fun toString(): String {
-        return "DelayResponse(success=$success, data=$data, message='$message')"
+        return "EWorkResponse(success=$success, data=$data, message='$message')"
     }
 }

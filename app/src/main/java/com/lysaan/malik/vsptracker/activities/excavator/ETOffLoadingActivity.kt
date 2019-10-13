@@ -100,6 +100,7 @@ class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
 
                     eWork.stopTime = currentTime
                     eWork.totalTime = currentTime - eWork.startTime
+                    eWork.totalLoads= db.getEWorksOffLoads(eWorkID).size
 
                     if(myHelper.isOnline()){
                         pushSideCasting(eWork)
@@ -136,6 +137,8 @@ class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
 
 
                     eWork.startTime = startTime
+                    eWork.orgId = myHelper.getLoginAPI().org_id
+                    eWork.operatorId = myHelper.getOperatorAPI().id
                     eWork.stopTime = System.currentTimeMillis()
                     eWork.totalTime = System.currentTimeMillis() - startTime
                     eWork.workType = myData.eWorkType
@@ -145,7 +148,7 @@ class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
                     val insertID = db.insertEWork(eWork)
                     eWorkID = insertID.toInt()
                     myHelper.log("insertID:$insertID")
-                    myHelper.log("eWorkID:$eWorkID")
+                    myHelper.log("eWorkId:$eWorkID")
                 }
 
             }
@@ -157,7 +160,9 @@ class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
                     } else {
                         stopDelay()
                         val eWork = EWork()
-                        eWork.eWorkID = eWorkID
+                        eWork.eWorkId = eWorkID
+                        eWork.orgId = myHelper.getLoginAPI().org_id
+                        eWork.operatorId = myHelper.getOperatorAPI().id
                         eWork.loadingGPSLocation = gpsLocation
                         val insertedID = db.insertEWorkOffLoad(eWork)
                         if (insertedID > 0) {
@@ -217,7 +222,7 @@ class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
                 myHelper.log("myData:$myData")
 
                 et_offload_material.text = myData.loadingMaterial
-                eWork.materialID = myData.loading_material_id
+                eWork.materialId = myData.loading_material_id
 
             }
         }

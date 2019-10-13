@@ -89,7 +89,7 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                     eWork.time = time.toString()
                     eWork.stopTime = System.currentTimeMillis()
                     eWork.totalTime = eWork.stopTime - eWork.startTime
-
+                    eWork.totalLoads= db.getEWorksOffLoads(eWorkID).size
                     if(myHelper.isOnline()){
                         pushSideCasting(eWork)
                     }
@@ -128,6 +128,8 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
 
 
                     eWork.startTime = startTime
+                    eWork.orgId = myHelper.getLoginAPI().org_id
+                    eWork.operatorId = myHelper.getOperatorAPI().id
                     eWork.stopTime = System.currentTimeMillis()
                     eWork.totalTime = System.currentTimeMillis() - startTime
                     eWork.workType = myData.eWorkType
@@ -137,7 +139,7 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                     val insertID = db.insertEWork(eWork)
                     eWorkID = insertID.toInt()
                     myHelper.log("insertID:$insertID")
-                    myHelper.log("eWorkID:$eWorkID")
+                    myHelper.log("eWorkId:$eWorkID")
                 }
 
             }
@@ -149,7 +151,9 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                     } else {
                         stopDelay()
                         val eWork = EWork()
-                        eWork.eWorkID = eWorkID
+                        eWork.eWorkId = eWorkID
+                        eWork.orgId = myHelper.getLoginAPI().org_id
+                        eWork.operatorId = myHelper.getOperatorAPI().id
                         eWork.loadingGPSLocation = gpsLocation
                         val insertedID = db.insertEWorkOffLoad(eWork)
                         if (insertedID > 0) {

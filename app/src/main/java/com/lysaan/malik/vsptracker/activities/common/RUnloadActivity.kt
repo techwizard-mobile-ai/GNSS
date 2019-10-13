@@ -9,7 +9,7 @@ import com.google.android.material.navigation.NavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.apis.trip.MyData
-import com.lysaan.malik.vsptracker.apis.trip.TripResponse
+import com.lysaan.malik.vsptracker.apis.trip.MyDataResponse
 import kotlinx.android.synthetic.main.activity_runload.*
 
 class RUnloadActivity : BaseActivity(), View.OnClickListener {
@@ -32,7 +32,7 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
         myData = myHelper.getLastJourney()
         myHelper.log("myData:$myData")
 
-//        if (myHelper.getMachineTypeID() == 2) {
+//        if (myHelper.getMachineTypeId() == 2) {
 //            trul_task.visibility = View.GONE
 ////            trul_weight.visibility = View.GONE
 //        } else {
@@ -87,11 +87,11 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
             R.id.trunload_unload -> {
 
                 myData.unloadingGPSLocation = gpsLocation
-                myData.orgID = myHelper.getLoginAPI().org_id
+                myData.orgId = myHelper.getLoginAPI().org_id
                 myData.siteId = myHelper.getMachineSettings().siteId
-                myData.operatorID = myHelper.getOperatorAPI().id
-                myData.machineTypeID = myHelper.getMachineTypeID()
-                myData.machineID = myHelper.getMachineID()
+                myData.operatorId = myHelper.getOperatorAPI().id
+                myData.machineTypeId = myHelper.getMachineTypeID()
+                myData.machineId = myHelper.getMachineID()
                 stopDelay()
                 val currentTime = System.currentTimeMillis()
                 myData.stopTime = currentTime
@@ -152,14 +152,14 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
             myHelper.getLoginAPI().auth_token,
             myData
         )
-        call.enqueue(object : retrofit2.Callback<TripResponse> {
+        call.enqueue(object : retrofit2.Callback<MyDataResponse> {
             override fun onResponse(
-                call: retrofit2.Call<TripResponse>,
-                response: retrofit2.Response<TripResponse>
+                call: retrofit2.Call<MyDataResponse>,
+                response: retrofit2.Response<MyDataResponse>
             ) {
 //                myHelper.hideDialog()
                 val response = response.body()
-                myHelper.log("DelayResponse:$response")
+                myHelper.log("EWorkResponse:$response")
                 if (response!!.success && response.data != null) {
                     myData.isSync = 1
 //                    saveTrip(myData)
@@ -175,7 +175,7 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                 }
             }
 
-            override fun onFailure(call: retrofit2.Call<TripResponse>, t: Throwable) {
+            override fun onFailure(call: retrofit2.Call<MyDataResponse>, t: Throwable) {
 //                myHelper.hideDialog()
 //                saveTrip(myData)
                 myHelper.log("Failure" + t.message)

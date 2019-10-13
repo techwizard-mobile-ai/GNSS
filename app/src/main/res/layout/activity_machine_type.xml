@@ -4,7 +4,6 @@
     android:id="@+id/machine_type_main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     tools:context=".activities.MachineTypeActivity">
 
     <LinearLayout

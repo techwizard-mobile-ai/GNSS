@@ -3,9 +3,9 @@ package com.lysaan.malik.vsptracker.activities
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.SystemClock
-import com.google.android.material.navigation.NavigationView
 import android.view.View
 import android.widget.FrameLayout
+import com.google.android.material.navigation.NavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.apis.trip.MyData

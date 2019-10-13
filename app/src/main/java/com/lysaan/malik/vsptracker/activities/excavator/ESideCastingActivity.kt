@@ -75,6 +75,8 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
                 if (isWorking) {
                     eWork.workType = myData.eWorkType
                     eWork.workActionType = 1
+                    eWork.orgId = myHelper.getLoginAPI().org_id
+                    eWork.operatorId = myHelper.getOperatorAPI().id
                     eWork.unloadingGPSLocation = gpsLocation
 
                     val time = System.currentTimeMillis()

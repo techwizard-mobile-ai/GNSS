@@ -5,11 +5,11 @@ import com.google.gson.annotations.SerializedName
 import com.lysaan.malik.vsptracker.classes.GPSLocation
 import java.io.Serializable
 
-class MyData : Serializable {
+class MyData() : Serializable {
 
     @SerializedName("org_id")
     @Expose
-    var orgID : Int = 0
+    var orgId: Int = 0
 
     @SerializedName("site_id")
     @Expose
@@ -17,15 +17,20 @@ class MyData : Serializable {
 
     @SerializedName("operator_id")
     @Expose
-    var operatorID :Int = 0
+    var operatorId: Int = 0
 
     @SerializedName("machine_type_id")
     @Expose
-    var machineTypeID : Int = 0
+    var machineTypeId: Int = 0
+
+
+    @SerializedName("load_type_id")
+    @Expose
+    var loadTypeId: Int = 0
 
     @SerializedName("machine_id")
     @Expose
-    var machineID : Int = 0
+    var machineId: Int = 0
 
     @SerializedName("loading_gps")
     @Expose
@@ -43,6 +48,27 @@ class MyData : Serializable {
     @Expose
     var stopTime = 0L
 
+    var machineNumber = ""
+
+    @SerializedName("start_hours")
+    @Expose
+    var startHours = ""
+
+    @SerializedName("total_hours")
+    @Expose
+    var totalHours = ""
+
+
+    @SerializedName("is_start_hours_custom")
+    @Expose
+    var isStartHoursCustom = 0
+
+    @SerializedName("is_total_hours_custom")
+    @Expose
+    var isTotalHoursCustom = 0
+
+
+
     @SerializedName("total_time")
     @Expose
     var totalTime = 0L
@@ -59,45 +85,45 @@ class MyData : Serializable {
 
     @SerializedName("is_days_work")
     @Expose
-    var isDaysWork : Int = 0
+    var isDaysWork: Int = 0
 
 
     @SerializedName("loading_machine_id")
     @Expose
-    var loading_machine_id : Int = 0
+    var loading_machine_id: Int = 0
 
 
     @SerializedName("loading_material_id")
     @Expose
-    var loading_material_id : Int = 0
+    var loading_material_id: Int = 0
 
 
     @SerializedName("loading_location_id")
     @Expose
-    var loading_location_id : Int = 0
+    var loading_location_id: Int = 0
 
-//    Stockpile = 1
+    //    Stockpile = 1
 //    Fill = 2
 //    Respread = 3
 //    Off site = 4
     @SerializedName("unloading_task_id")
     @Expose
-    var unloading_task_id : Int = 0
+    var unloading_task_id: Int = 0
 
 
     @SerializedName("unloading_machine_id")
     @Expose
-    var unloading_machine_id : Int = 0
+    var unloading_machine_id: Int = 0
 
 
     @SerializedName("unloading_material_id")
     @Expose
-    var unloading_material_id : Int = 0
+    var unloading_material_id: Int = 0
 
 
     @SerializedName("unloading_location_id")
     @Expose
-    var unloading_location_id : Int = 0
+    var unloading_location_id: Int = 0
 
 
     @SerializedName("unloading_weight")
@@ -126,32 +152,32 @@ class MyData : Serializable {
     var isForBackUnloadResult: Boolean = false
 
     var loadingMachine: String = ""
-//    var loadingMachine: String = ""
+    //    var loadingMachine: String = ""
     var loadingMaterial: String = ""
-//    var loadingMaterial: String = ""
+    //    var loadingMaterial: String = ""
     var loadingLocation: String = ""
-//    var loadingLocation: String = ""
+    //    var loadingLocation: String = ""
     var unloadingTask: String = ""
-//    var unloadingTask: String = ""
+    //    var unloadingTask: String = ""
     var unloadingMachine: String = ""
-//    var unloadingMachine: String = ""
+    //    var unloadingMachine: String = ""
     var unloadingMaterial: String = ""
-//    var unloadingMaterial: String = ""
+    //    var unloadingMaterial: String = ""
     var unloadingLocation: String = ""
 //    var unloadingLocation: String = ""
 
-//    var unloadingWeight: Double = 0.0
+    //    var unloadingWeight: Double = 0.0
     var loadedMachine: String = ""
 //    var loadedMachine: String = ""
 //    var time: String = ""
 //    var date: String = ""
 
-//    eWorkType 1 = General Digging
+    //    eWorkType 1 = General Digging
 //    eWorkType 2 = Trenching
 //    eWorkType 3 = Scraper Trimming
     var eWorkType: Int = 0
 
-//    eWorkActionType 1 = Side Casting
+    //    eWorkActionType 1 = Side Casting
 //    eWorkActionType 2 = Off Loading
     var eWorkActionType: Int = 0
 
@@ -172,7 +198,7 @@ class MyData : Serializable {
 //    var stopTime = 0L
 //    var totalTime = 0L
 
-//    tripType 0 = Simple Trip
+    //    tripType 0 = Simple Trip
 //    tripType 1 = Trip for Back Load
     @SerializedName("trip_type")
     @Expose
@@ -186,7 +212,7 @@ class MyData : Serializable {
     var unloadingGPSLocation = GPSLocation()
 //    var userID = ""
 
-// isSync 0 = Not Uploaded to Server
+    // isSync 0 = Not Uploaded to Server
 // isSync 1 = Uploaded to Server
 // isSync 2 = Uploaded to Server by Export
     var isSync: Int = 0
@@ -195,7 +221,7 @@ class MyData : Serializable {
 
     var isMapOpened: Boolean = false
     override fun toString(): String {
-        return "MyData(orgID=$orgID, siteId=$siteId, operatorID=$operatorID, machineTypeID=$machineTypeID, machineID=$machineID, loadingGPSLocationString='$loadingGPSLocationString', unloadingGPSLocationString='$unloadingGPSLocationString', startTime=$startTime, stopTime=$stopTime, totalTime=$totalTime, time='$time', date='$date', isDaysWork=$isDaysWork, loading_machine_id=$loading_machine_id, loading_material_id=$loading_material_id, loading_location_id=$loading_location_id, unloading_task_id=$unloading_task_id, unloading_machine_id=$unloading_machine_id, unloading_material_id=$unloading_material_id, unloading_location_id=$unloading_location_id, unloadingWeight=$unloadingWeight, machine_stop_reason_id=$machine_stop_reason_id, recordID=$recordID, isStartMachine=$isStartMachine, isForLoadResult=$isForLoadResult, isForUnloadResult=$isForUnloadResult, loadedMachineType=$loadedMachineType, loadedMachineNumber='$loadedMachineNumber', isForBackLoadResult=$isForBackLoadResult, isForBackUnloadResult=$isForBackUnloadResult, loadingMachine='$loadingMachine', loadingMaterial='$loadingMaterial', loadingLocation='$loadingLocation', unloadingTask='$unloadingTask', unloadingMachine='$unloadingMachine', unloadingMaterial='$unloadingMaterial', unloadingLocation='$unloadingLocation', loadedMachine='$loadedMachine', eWorkType=$eWorkType, eWorkActionType=$eWorkActionType, workMode='$workMode', nextAction=$nextAction, repeatJourney=$repeatJourney, tripType=$tripType, trip0ID=$trip0ID, loadingGPSLocation=$loadingGPSLocation, unloadingGPSLocation=$unloadingGPSLocation, isSync=$isSync, machineStoppedReason='$machineStoppedReason', isMapOpened=$isMapOpened)"
+        return "MyData(orgId=$orgId, siteId=$siteId, operatorId=$operatorId, machineTypeId=$machineTypeId, machineId=$machineId, startHours='$startHours',totalHours='$totalHours', totalTime=$totalTime, isDaysWork=$isDaysWork, recordID=$recordID)"
     }
 
 

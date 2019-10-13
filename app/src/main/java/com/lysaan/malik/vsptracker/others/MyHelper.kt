@@ -87,15 +87,15 @@ class MyHelper(var TAG: String, val context: Context) {
             override fun onResponse(call: Call, response: Response) {
                 val respontString = response.body()!!.string()
                 val responeJObject = JSONObject(respontString)
-                log("RefreshToken:$respontString")
+//                log("RefreshToken:$respontString")
                 val success =responeJObject.getBoolean("success")
                 if(success){
                     val gson = GsonBuilder().create()
                     var loginAPI = gson.fromJson(responeJObject.getString("data"),LoginAPI::class.java)
                     loginAPI.pass = getLoginAPI().pass
-                    log("body:$responeJObject")
-                    log("Success:$success")
-                    log("LoginAPI:$loginAPI")
+//                    log("body:$responeJObject")
+//                    log("Success:$success")
+//                    log("LoginAPI:$loginAPI")
                     setLoginAPI(loginAPI)
                 }else{
                     val intent = Intent(context, LoginActivity::class.java)
@@ -402,6 +402,18 @@ class MyHelper(var TAG: String, val context: Context) {
 
     fun getMeterTimeForFinish(): String {
         val meterONTime = getMachineTotalTime() + getMachineStartTime()
+        return getRoundedDecimal(meterONTime / 60.0).toString()
+    }
+
+    fun getMeterTimeForFinishCustom(startHours2:String): String {
+
+        var startHours1= ""
+        if(startHours2.isNullOrEmpty())
+            startHours1 = "0"
+        else startHours1 = startHours2
+        val startHours = startHours1.toDouble()
+        val startMinutes = startHours * 60
+        val meterONTime = startMinutes + getMachineStartTime()
         return getRoundedDecimal(meterONTime / 60.0).toString()
     }
 

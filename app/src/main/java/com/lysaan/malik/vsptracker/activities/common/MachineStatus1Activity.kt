@@ -15,7 +15,7 @@ import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.activities.HourMeterStartActivity
 import com.lysaan.malik.vsptracker.adapters.MachineStatusAdapter
 import com.lysaan.malik.vsptracker.apis.trip.MyData
-import com.lysaan.malik.vsptracker.apis.trip.TripResponse
+import com.lysaan.malik.vsptracker.apis.trip.MyDataResponse
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_machine_status1.*
 
@@ -104,10 +104,11 @@ class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
                 machineData.loadingGPSLocationString = myHelper.getGPSLocationToString(machineData.loadingGPSLocation)
                 machineData.unloadingGPSLocationString = myHelper.getGPSLocationToString(machineData.unloadingGPSLocation)
 
-                machineData.orgID = myHelper.getLoginAPI().org_id
-                machineData.operatorID = myHelper.getOperatorAPI().id
-                machineData.machineTypeID = myHelper.getMachineTypeID()
-                machineData.machineID = myHelper.getMachineID()
+                machineData.orgId = myHelper.getLoginAPI().org_id
+                machineData.siteId = myHelper.getMachineSettings().siteId
+                machineData.operatorId = myHelper.getOperatorAPI().id
+                machineData.machineTypeId = myHelper.getMachineTypeID()
+                machineData.machineId = myHelper.getMachineID()
                 machineData.machine_stop_reason_id = myHelper.getMachineStoppedReasonID()
 
                 if(myHelper.isDailyModeStarted()){
@@ -135,10 +136,10 @@ class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
             myHelper.getLoginAPI().auth_token,
             machineData
         )
-        call.enqueue(object : retrofit2.Callback<TripResponse> {
+        call.enqueue(object : retrofit2.Callback<MyDataResponse> {
             override fun onResponse(
-                call: retrofit2.Call<TripResponse>,
-                response: retrofit2.Response<TripResponse>
+                call: retrofit2.Call<MyDataResponse>,
+                response: retrofit2.Response<MyDataResponse>
             ) {
 
                 val response = response.body()
@@ -158,7 +159,7 @@ class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
                 }
             }
 
-            override fun onFailure(call: retrofit2.Call<TripResponse>, t: Throwable) {
+            override fun onFailure(call: retrofit2.Call<MyDataResponse>, t: Throwable) {
 
 //                updateMachineStatus(machineData)
                 myHelper.toast(t.message.toString())

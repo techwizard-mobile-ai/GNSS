@@ -10,7 +10,7 @@ class EWork() : Serializable {
 
     @SerializedName("org_id")
     @Expose
-    var orgID : Int = 0
+    var orgId : Int = 0
 
     @SerializedName("site_id")
     @Expose
@@ -18,19 +18,23 @@ class EWork() : Serializable {
 
     @SerializedName("operator_id")
     @Expose
-    var operatorID :Int = 0
+    var operatorId :Int = 0
 
     @SerializedName("machine_type_id")
     @Expose
-    var machineTypeID : Int = 0
+    var machineTypeId : Int = 0
 
     @SerializedName("machine_id")
     @Expose
-    var machineID : Int = 0
+    var machineId : Int = 0
 
     @SerializedName("material_id")
     @Expose
-    var materialID : Int = 0
+    var materialId : Int = 0
+
+    @SerializedName("total_loads")
+    @Expose
+    var totalLoads : Int = 0
 
     @SerializedName("loading_gps")
     @Expose
@@ -52,6 +56,14 @@ class EWork() : Serializable {
     @SerializedName("end_time")
     @Expose
     var stopTime = 0L
+
+    @SerializedName("start_hours")
+    @Expose
+    var startHours = ""
+
+    @SerializedName("total_hours")
+    @Expose
+    var totalHours = ""
 
     @SerializedName("total_time")
     @Expose
@@ -76,7 +88,7 @@ class EWork() : Serializable {
 //    @Expose
     var ID = 0
 
-    var eWorkID = 0
+    var eWorkId = 0
 
     // eWorkType 3 = Scraper Trimming
     // eWorkType 2 = Trenching
@@ -95,7 +107,7 @@ class EWork() : Serializable {
 
 
 
-//    var machineTypeID = 0
+//    var machineTypeId = 0
     var machineNumber = ""
 
 
@@ -106,7 +118,7 @@ class EWork() : Serializable {
     var isSync: Int = 0
 
     override fun toString(): String {
-        return "EWork(orgID=$orgID, siteId=$siteId, operatorID=$operatorID, machineTypeID=$machineTypeID, machineID=$machineID, loadingGPSLocationString='$loadingGPSLocationString', loadingGPSLocation=$loadingGPSLocation, unloadingGPSLocationString='$unloadingGPSLocationString', unloadingGPSLocation=$unloadingGPSLocation, startTime=$startTime, stopTime=$stopTime, totalTime=$totalTime, time='$time', date='$date', isDaysWork=$isDaysWork, workMode='$workMode', ID=$ID, eWorkID=$eWorkID, workType=$workType, workActionType=$workActionType, machineNumber='$machineNumber', isSync=$isSync)"
+        return "EWork(orgId=$orgId, siteId=$siteId, operatorId=$operatorId, machineTypeId=$machineTypeId, machineId=$machineId, loadingGPSLocationString='$loadingGPSLocationString', loadingGPSLocation=$loadingGPSLocation, unloadingGPSLocationString='$unloadingGPSLocationString', unloadingGPSLocation=$unloadingGPSLocation, startTime=$startTime, stopTime=$stopTime, totalTime=$totalTime, time='$time', date='$date', isDaysWork=$isDaysWork, workMode='$workMode', ID=$ID, eWorkId=$eWorkId, workType=$workType, workActionType=$workActionType, machineNumber='$machineNumber', isSync=$isSync)"
     }
 
 

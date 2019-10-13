@@ -35,9 +35,10 @@ import com.lysaan.malik.vsptracker.activities.MachineTypeActivity
 import com.lysaan.malik.vsptracker.activities.Map1Activity
 import com.lysaan.malik.vsptracker.activities.common.MachineStatus1Activity
 import com.lysaan.malik.vsptracker.apis.RetrofitAPI
-import com.lysaan.malik.vsptracker.apis.delay.DelayResponse
 import com.lysaan.malik.vsptracker.apis.delay.EWork
+import com.lysaan.malik.vsptracker.apis.delay.EWorkResponse
 import com.lysaan.malik.vsptracker.apis.trip.MyData
+import com.lysaan.malik.vsptracker.apis.trip.MyDataResponse
 import com.lysaan.malik.vsptracker.classes.GPSLocation
 import com.lysaan.malik.vsptracker.database.DatabaseAdapter
 import com.lysaan.malik.vsptracker.others.Utils
@@ -49,12 +50,12 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
 
     private lateinit var menu: Menu
     private lateinit var location: Location
-    lateinit var gpsLocation: GPSLocation
     val TAG1 = "BaseActivity"
     protected lateinit var myHelper: MyHelper
     protected lateinit var db: DatabaseAdapter
     protected lateinit var myData: MyData
     private var locationManager: LocationManager? = null
+    lateinit var gpsLocation: GPSLocation
     var latitude: Double = 0.0
     var longitude: Double = 0.0
 
@@ -306,7 +307,6 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             startActivity(intent)
         }
     }
-
     fun stopDelay() {
 
         if(myHelper.isDelayStarted()){
@@ -325,11 +325,11 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             menu.findItem(R.id.navb_delay).title= "Waiting Stopped"
             menu.findItem(R.id.navb_map).setChecked(true)
 
-            eWork.machineID = myHelper.getMachineID()
-            eWork.orgID = myHelper.getLoginAPI().org_id
+            eWork.machineId = myHelper.getMachineID()
+            eWork.orgId = myHelper.getLoginAPI().org_id
             eWork.siteId = myHelper.getMachineSettings().siteId
-            eWork.operatorID = myHelper.getOperatorAPI().id
-            eWork.machineTypeID = myHelper.getMachineTypeID()
+            eWork.operatorId = myHelper.getOperatorAPI().id
+            eWork.machineTypeId = myHelper.getMachineTypeID()
             val time = System.currentTimeMillis()
             eWork.time = time.toString()
 
@@ -355,13 +355,81 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
         }
     }
 
+    fun saveMachineHour(myData: MyData){
+
+//        cv.put(COL_MACHINE_NUMBER, datum.loadedMachineNumber)
+
+
+        myData.siteId = myHelper.getMachineSettings().siteId
+        myData.machineId = myHelper.getMachineID()
+        myData.orgId = myHelper.getLoginAPI().org_id
+        myData.operatorId = myHelper.getOperatorAPI().id
+        myData.machineTypeId = myHelper.getMachineTypeID()
+        myData.machineId = myHelper.getMachineID()
+
+        myData.stopTime = System.currentTimeMillis()
+
+
+        myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
+        myData.unloadingGPSLocation = gpsLocation
+
+        myData.unloadingGPSLocationString = myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
+
+        val time = System.currentTimeMillis()
+        myData.time = time.toString()
+        myData.date = myHelper.getDate(time.toString())
+
+        if (myHelper.isOnline()){
+            pushMachineHour(myData);
+        }else{
+            db.insertMachineHours(myData)
+        }
+    }
+    fun pushMachineHour(myData: MyData){
+
+        val call = this.retrofitAPI.pushMachineHour(
+            myHelper.getLoginAPI().auth_token,
+            myData
+        )
+        call.enqueue(object : retrofit2.Callback<MyDataResponse> {
+            override fun onResponse(
+                call: retrofit2.Call<MyDataResponse>,
+                response: retrofit2.Response<MyDataResponse>
+            ) {
+                val response = response.body()
+                myHelper.log("pushSideCasting:$response")
+                if (response!!.success && response.data != null) {
+                    myData.isSync = 1
+//                    saveDelay(eWork)
+                    db.insertMachineHours(myData)
+
+                } else {
+                    db.insertMachineHours(myData)
+
+                    if (response.message!!.equals("Token has expired")) {
+                        myHelper.log("Token Expired:$response")
+                        myHelper.refreshToken()
+                    } else {
+                        myHelper.toast(response.message)
+                    }
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<MyDataResponse>, t: Throwable) {
+                db.insertMachineHours(myData)
+
+                myHelper.toast(t.message.toString())
+                myHelper.log("Failure" + t.message)
+            }
+        })
+    }
     fun pushSideCasting(eWork: EWork){
 
         eWork.siteId = myHelper.getMachineSettings().siteId
-        eWork.machineID = myHelper.getMachineID()
-        eWork.orgID = myHelper.getLoginAPI().org_id
-        eWork.operatorID = myHelper.getOperatorAPI().id
-        eWork.machineTypeID = myHelper.getMachineTypeID()
+        eWork.machineId = myHelper.getMachineID()
+        eWork.orgId = myHelper.getLoginAPI().org_id
+        eWork.operatorId = myHelper.getOperatorAPI().id
+        eWork.machineTypeId = myHelper.getMachineTypeID()
 
         eWork.loadingGPSLocationString = myHelper.getGPSLocationToString(eWork.loadingGPSLocation)
         eWork.unloadingGPSLocationString = myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
@@ -372,10 +440,10 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             myHelper.getLoginAPI().auth_token,
             eWork
         )
-        call.enqueue(object : retrofit2.Callback<DelayResponse> {
+        call.enqueue(object : retrofit2.Callback<EWorkResponse> {
             override fun onResponse(
-                call: retrofit2.Call<DelayResponse>,
-                response: retrofit2.Response<DelayResponse>
+                call: retrofit2.Call<EWorkResponse>,
+                response: retrofit2.Response<EWorkResponse>
             ) {
                 val response = response.body()
                 myHelper.log("pushSideCasting:$response")
@@ -394,14 +462,13 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
                 }
             }
 
-            override fun onFailure(call: retrofit2.Call<DelayResponse>, t: Throwable) {
+            override fun onFailure(call: retrofit2.Call<EWorkResponse>, t: Throwable) {
 //                saveDelay(eWork)
                 myHelper.toast(t.message.toString())
                 myHelper.log("Failure" + t.message)
             }
         })
     }
-
     fun pushDelay(eWork: EWork){
 //        myHelper.showDialog()
         myHelper.log("pushDelay:$eWork")
@@ -409,14 +476,14 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             myHelper.getLoginAPI().auth_token,
             eWork
         )
-        call.enqueue(object : retrofit2.Callback<DelayResponse> {
+        call.enqueue(object : retrofit2.Callback<EWorkResponse> {
             override fun onResponse(
-                call: retrofit2.Call<DelayResponse>,
-                response: retrofit2.Response<DelayResponse>
+                call: retrofit2.Call<EWorkResponse>,
+                response: retrofit2.Response<EWorkResponse>
             ) {
 //                myHelper.hideDialog()
                 val response = response.body()
-                myHelper.log("DelayResponse:$response")
+                myHelper.log("EWorkResponse:$response")
                 if (response!!.success && response.data != null) {
                     eWork.isSync = 1
 //                    saveDelay(eWork)
@@ -432,7 +499,7 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
                 }
             }
 
-            override fun onFailure(call: retrofit2.Call<DelayResponse>, t: Throwable) {
+            override fun onFailure(call: retrofit2.Call<EWorkResponse>, t: Throwable) {
 //                myHelper.hideDialog()
 //                saveDelay(eWork)
                 myHelper.toast(t.message.toString())
@@ -440,7 +507,6 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             }
         })
     }
-
     private fun saveDelay(eWork: EWork) {
 
         val insertID = db.insertDelay(eWork)
@@ -463,6 +529,61 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             myHelper.toast("Waiting Not Stopped.")
         }
 
+    }
+
+
+    fun pushLoad(myData: MyData){
+
+        myData.loadingGPSLocation = gpsLocation
+        myData.orgId = myHelper.getLoginAPI().org_id
+        myData.siteId = myHelper.getMachineSettings().siteId
+        myData.operatorId = myHelper.getOperatorAPI().id
+        myData.machineTypeId = myHelper.getMachineTypeID()
+        myData.machineId = myHelper.getMachineID()
+
+        stopDelay()
+        val currentTime = System.currentTimeMillis()
+        myData.startTime = currentTime
+        myData.stopTime = currentTime
+        myData.totalTime = myData.stopTime - myData.startTime
+        if(myHelper.isDailyModeStarted()){
+            myData.isDaysWork = 1
+        }else {
+            myData.isDaysWork = 0
+        }
+        myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
+        myData.time = currentTime.toString()
+        myData.date = myHelper.getDate(currentTime)
+
+        myHelper.log("pushLoad:$myData")
+
+        val call = this.retrofitAPI.pushLoad(
+            myHelper.getLoginAPI().auth_token,
+            myData
+        )
+        call.enqueue(object : retrofit2.Callback<MyDataResponse> {
+            override fun onResponse(
+                call: retrofit2.Call<MyDataResponse>,
+                response: retrofit2.Response<MyDataResponse>
+            ) {
+                val response = response.body()
+                myHelper.log("EWorkResponse:$response")
+                if (response!!.success && response.data != null) {
+                    myHelper.toast("Load Pushed to Server Successfully.")
+                } else {
+                    if (response.message!!.equals("Token has expired")) {
+                        myHelper.log("Token Expired:$response")
+                        myHelper.refreshToken()
+                    } else {
+                        myHelper.toast(response.message)
+                    }
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<MyDataResponse>, t: Throwable) {
+                myHelper.toast("Failure" + t.message)
+            }
+        })
     }
 
     fun doEmail() {
@@ -493,8 +614,6 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             startActivity(intent)
         }
     }
-
-
     fun stopGPS() {
         locationManager?.removeUpdates(locationListener)
     }

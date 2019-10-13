@@ -9,6 +9,7 @@ import com.google.android.material.navigation.NavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.apis.operators.OperatorAPI
+import com.lysaan.malik.vsptracker.apis.trip.MyData
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_hour_meter_stop.*
 
@@ -28,6 +29,18 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
 
         if(myHelper.getIsMachineStopped())
             drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+
+        myData = MyData()
+
+        if(myHelper.getMeter().isMachineTimeCustom)
+        myData.isStartHoursCustom = 1
+        myData.startHours = myHelper.getMeterTimeForFinish()
+
+
+        val meter = myHelper.getMeter()
+        myData.startTime = meter.hourStartTime
+
+        myData.loadingGPSLocation = meter.hourStartGPSLocation
 
         sfinish_reading.setText(myHelper.getMeterTimeForFinish())
 
@@ -62,11 +75,13 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
                 if (!myHelper.getMeterTimeForFinish().equals(sfinish_reading.text.toString(), true)) {
                     val meter = myHelper.getMeter()
                     meter.isMachineTimeCustom = true
+                    myData.isTotalHoursCustom = 1
                     myHelper.setMeter(meter)
                     myHelper.log("Custom Time : True, Original reading:${myHelper.getMeterTimeForFinish()}, New Reading: ${sfinish_reading.text}")
                 } else {
                     val meter = myHelper.getMeter()
                     meter.isMachineTimeCustom = false
+                    myData.isTotalHoursCustom = 0
                     myHelper.setMeter(meter)
                     myHelper.log("Custom Time : False, Original reading:${myHelper.getMeterTimeForFinish()}, New Reading: ${sfinish_reading.text}")
                 }
@@ -75,6 +90,11 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
                 val newMinutes = myHelper.getRoundedInt(minutes)
                 myHelper.log("Minutes: $newMinutes")
                 myHelper.setMachineTotalTime(newMinutes)
+
+
+                myData.totalHours = sfinish_reading.text.toString()
+
+                saveMachineHour(myData)
 
                 myHelper.stopDelay(gpsLocation)
                 myHelper.stopDailyMode()

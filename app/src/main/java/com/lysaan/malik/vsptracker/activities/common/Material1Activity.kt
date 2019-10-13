@@ -54,7 +54,7 @@ class Material1Activity : BaseActivity(), View.OnClickListener {
         val gv = findViewById(R.id.em_gridview) as GridView
 
         lateinit var materials: ArrayList<Material>
-//        if (myHelper.getMachineTypeID() == 2) {
+//        if (myHelper.getMachineTypeId() == 2) {
 //            materials = myHelper.getScraperMaterials()
 //        } else {
 //            materials = myHelper.getMaterials()

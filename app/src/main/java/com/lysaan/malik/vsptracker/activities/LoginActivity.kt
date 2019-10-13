@@ -11,6 +11,8 @@ import com.lysaan.malik.vsptracker.apis.RetrofitAPI
 import com.lysaan.malik.vsptracker.apis.login.LoginResponse
 import com.lysaan.malik.vsptracker.apis.operators.OperatorAPI
 import com.lysaan.malik.vsptracker.apis.operators.OperatorResponse
+import com.lysaan.malik.vsptracker.apis.trip.MyData
+import com.lysaan.malik.vsptracker.apis.trip.MyDataListResponse
 import com.lysaan.malik.vsptracker.database.DatabaseAdapter
 import com.lysaan.malik.vsptracker.others.Utils
 import kotlinx.android.synthetic.main.activity_login.*
@@ -78,8 +80,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 var email = signin_email.text.toString()
                 var pass = signin_pass.text.toString()
 
-                myHelper.log("email:" + email)
-                myHelper.log("Pass" + pass)
+                // myHelper.log("email:" + email)
+                // myHelper.log("Pass" + pass)
 
                 if (!myHelper.isValidEmail(email)) {
                     myHelper.toast("Please Provide valid Email Address.")
@@ -103,11 +105,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
             override fun onResponse(call: retrofit2.Call<LoginResponse>, response: retrofit2.Response<LoginResponse>) {
 //                myHelper.hideProgressBar()
-                myHelper.log("RetrofitResponse:$response")
+                 myHelper.log("RetrofitResponse:${response.body()}")
                 val loginResponse = response.body()
                 if(loginResponse!!.success){
-                    myHelper.log("SendReponse:${loginResponse.data}.")
-                    myHelper.log("Start OperatorLoginActivity")
+                    // myHelper.log("SendReponse:${loginResponse.data}.")
+                    // myHelper.log("Start OperatorLoginActivity")
                     loginResponse.data.pass = pass
                     myHelper.setLoginAPI(loginResponse.data)
                     fetchOrgData()
@@ -125,7 +127,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         })
     }
     fun fetchJSON() {
-        myHelper.log("fetchJson")
+        // myHelper.log("fetchJson")
 
         val client = OkHttpClient()
         val formBody = FormBody.Builder()
@@ -142,7 +144,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 myHelper.hideProgressBar()
                 val jsonData = response.body()!!.string()
                 val Jobject = JSONObject(jsonData)
-                myHelper.log("body:$Jobject")
+                // myHelper.log("body:$Jobject")
             }
 
             override fun onFailure(call: Call, e: IOException) {
@@ -154,9 +156,37 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     fun fetchOrgData(){
         myHelper.toast("Fetching Company Data.\nPlease wait...")
-        fetchMachinesTasks()
+        fetchMachinesHours()
+//        fetchMachinesTasks()
     }
 
+    private fun fetchMachinesHours() {
+        val call = this.retrofitAPI.getMachinesHours(
+            myHelper.getLoginAPI().org_id,
+            myHelper.getLoginAPI().auth_token
+        )
+        call.enqueue(object : retrofit2.Callback<MyDataListResponse> {
+            override fun onResponse(
+                call: retrofit2.Call<MyDataListResponse>,
+                response: retrofit2.Response<MyDataListResponse>
+            ) {
+                 myHelper.log("Response:$response")
+                val response = response.body()
+                if (response!!.success && response.data != null) {
+                    db.insertMachinesHours(response.data as ArrayList<MyData>)
+                    fetchMachinesTasks()
+                } else {
+                    myHelper.hideProgressBar()
+                    myHelper.toast(response.message)
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<MyDataListResponse>, t: Throwable) {
+                myHelper.hideProgressBar()
+                // myHelper.log("Failure" + t.message)
+            }
+        })
+    }
     private fun fetchMachinesTasks() {
         val call = this.retrofitAPI.getMachinesTasks(
             myHelper.getLoginAPI().org_id,
@@ -179,7 +209,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
             override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
                 myHelper.hideProgressBar()
-                myHelper.log("Failure" + t.message)
+                // myHelper.log("Failure" + t.message)
             }
         })
     }
@@ -205,7 +235,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
             override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
                 myHelper.hideProgressBar()
-                myHelper.log("Failure" + t.message)
+                // myHelper.log("Failure" + t.message)
             }
         })
     }
@@ -232,7 +262,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
             override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
                 myHelper.hideProgressBar()
-                myHelper.log("Failure" + t.message)
+                // myHelper.log("Failure" + t.message)
             }
         })
     }
@@ -259,7 +289,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
             override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
                 myHelper.hideProgressBar()
-                myHelper.log("Failure" + t.message)
+                // myHelper.log("Failure" + t.message)
             }
         })
     }
@@ -286,7 +316,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
             override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
                 myHelper.hideProgressBar()
-                myHelper.log("Failure" + t.message)
+                // myHelper.log("Failure" + t.message)
             }
         })
     }
@@ -297,10 +327,10 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             myHelper.getLoginAPI().auth_token)
         call.enqueue(object : retrofit2.Callback<OperatorResponse> {
             override fun onResponse(call: retrofit2.Call<OperatorResponse>, response: retrofit2.Response<OperatorResponse>) {
-                myHelper.log("RetrofitResponse:$response")
+                // myHelper.log("RetrofitResponse:$response")
                 val operatorResponse = response.body()
                 if(operatorResponse!!.success && operatorResponse.data != null){
-                    myHelper.log("MachinesPlants:${operatorResponse.data}.")
+                    // myHelper.log("MachinesPlants:${operatorResponse.data}.")
                     db.insertMachinesPlants(operatorResponse.data as ArrayList<OperatorAPI>)
                     fetchMachinesBrands()
                 }else{
@@ -322,10 +352,10 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             myHelper.getLoginAPI().auth_token)
         call.enqueue(object : retrofit2.Callback<OperatorResponse> {
             override fun onResponse(call: retrofit2.Call<OperatorResponse>, response: retrofit2.Response<OperatorResponse>) {
-                myHelper.log("RetrofitResponse:$response")
+                // myHelper.log("RetrofitResponse:$response")
                 val operatorResponse = response.body()
                 if(operatorResponse!!.success && operatorResponse.data != null){
-                    myHelper.log("MachinesBrands:${operatorResponse.data}.")
+                    // myHelper.log("MachinesBrands:${operatorResponse.data}.")
                     db.insertMachinesBrands(operatorResponse.data as ArrayList<OperatorAPI>)
                     fetchMachinesTypes()
                 }else{
@@ -347,10 +377,10 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             myHelper.getLoginAPI().auth_token)
         call.enqueue(object : retrofit2.Callback<OperatorResponse> {
             override fun onResponse(call: retrofit2.Call<OperatorResponse>, response: retrofit2.Response<OperatorResponse>) {
-                myHelper.log("RetrofitResponse:$response")
+                // myHelper.log("RetrofitResponse:$response")
                 val operatorResponse = response.body()
                 if(operatorResponse!!.success && operatorResponse.data != null){
-                    myHelper.log("MachinesTypes:${operatorResponse.data}.")
+                    // myHelper.log("MachinesTypes:${operatorResponse.data}.")
                     db.insertMachinesTypes(operatorResponse.data as ArrayList<OperatorAPI>)
                     fetchSites()
                 }else{
@@ -372,10 +402,10 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             myHelper.getLoginAPI().auth_token)
         call.enqueue(object : retrofit2.Callback<OperatorResponse> {
             override fun onResponse(call: retrofit2.Call<OperatorResponse>, response: retrofit2.Response<OperatorResponse>) {
-                myHelper.log("RetrofitResponse:$response")
+                // myHelper.log("RetrofitResponse:$response")
                 val operatorResponse = response.body()
                 if(operatorResponse!!.success && operatorResponse.data != null){
-                    myHelper.log("Sites:${operatorResponse.data}.")
+                    // myHelper.log("Sites:${operatorResponse.data}.")
                     db.insertSites(operatorResponse.data as ArrayList<OperatorAPI>)
                     fetchOperators()
                 }else{
@@ -398,10 +428,10 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             myHelper.getLoginAPI().auth_token)
         call.enqueue(object : retrofit2.Callback<OperatorResponse> {
             override fun onResponse(call: retrofit2.Call<OperatorResponse>, response: retrofit2.Response<OperatorResponse>) {
-                myHelper.log("RetrofitResponse:$response")
+                // myHelper.log("RetrofitResponse:$response")
                 val operatorResponse = response.body()
                 if(operatorResponse!!.success && operatorResponse.data != null){
-                    myHelper.log("Operators:${operatorResponse.data}.")
+                    // myHelper.log("Operators:${operatorResponse.data}.")
                     db.insertOperators(operatorResponse.data as ArrayList<OperatorAPI>)
                     val intent = Intent(this@LoginActivity, OperatorLoginActivity::class.java)
                     startActivity(intent)

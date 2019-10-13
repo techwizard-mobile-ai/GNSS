@@ -64,6 +64,7 @@
         <Button
             android:id="@+id/hm_stop_summary"
             style="@style/next_button"
+            android:visibility="gone"
             android:layout_marginTop="@dimen/_50sdp"
             android:text="@string/work_summary" />
 

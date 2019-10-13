@@ -78,6 +78,12 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
                 myData.loadedMachine = "Load"
 
                 myData.loadingGPSLocation = gpsLocation
+                myData.loadTypeId = 1
+                myData.orgId = myHelper.getLoginAPI().org_id
+                myData.operatorId = myHelper.getOperatorAPI().id
+                if(myHelper.isOnline()){
+                    pushLoad(myData)
+                }
                 val insertID = db.insertELoad(myData)
                 if (insertID > 0) {
                     myHelper.toast("Loading Successful.\nLoaded Truck Number # $insertID")
