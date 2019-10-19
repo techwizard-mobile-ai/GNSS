@@ -41,6 +41,7 @@ class ELoadingHistoryFragment : Fragment() {
             )
             db = DatabaseAdapter(myContext)
             loadingHistory = db.getELoadHistroy()
+            myHelper.log("LoadingHistory:$loadingHistory")
         }
     }
 

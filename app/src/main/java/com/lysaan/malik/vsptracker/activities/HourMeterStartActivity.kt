@@ -56,6 +56,8 @@ class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
 
         myHelper.log("Machines--:${db.getMachine(myHelper.getMachineID())}")
 
+        myHelper.log("MachinesHours--:${db.getMachinesHours()}")
+        myHelper.log("MachineHours:${db.getMachineHours(myHelper.getMachineID())}")
         var reading = db.getMachineHours(myHelper.getMachineID()).totalHours
         if(reading.isNullOrEmpty()){reading = "0.0"}
         ms_reading.setText(myHelper.getRoundedDecimal(reading!!.toDouble()).toString())

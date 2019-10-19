@@ -32,30 +32,25 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
         myData = myHelper.getLastJourney()
         myHelper.log("myData:$myData")
 
+
         when (myData.nextAction) {
             0 -> {
                 trload_load.text = "LOAD"
             }
-            1 -> {
-            }
             2 -> {
                 trload_load.text = "Back LOAD"
-            }
-            3 -> {
             }
         }
 
         trload_weight.visibility = View.GONE
 
+        if(myHelper.getMachineTypeID() == 2){
+            trload_machine.visibility = View.GONE
+        }else{
+            trload_machine.visibility = View.VISIBLE
+        }
         when(myHelper.getMachineTypeID()){
-
-            2 ->{
-                trload_machine.visibility = View.GONE
-                trload_material.text = myData.loadingMaterial
-                trload_location.text = myData.loadingLocation
-            }
-            3 ->{
-                trload_machine.visibility = View.VISIBLE
+            2, 3 ->{
                 when (myData.nextAction) {
                     0 -> {
                         trload_machine.text = myData.loadingMachine
@@ -63,14 +58,12 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
                         trload_location.text = myData.loadingLocation
                     }
                     2 -> {
-
-                        trload_machine.text = myData.loadingMachine
-                        trload_material.text = myData.loadingMaterial
-                        trload_location.text = myData.loadingLocation
+                        trload_machine.text = myData.backLoadingMachine
+                        trload_material.text = myData.backLoadingMaterial
+                        trload_location.text = myData.backLoadingLocation
                     }
                 }
             }
-
         }
 
         rload_home.setOnClickListener(this)
@@ -85,7 +78,10 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View?) {
+        myData.trip0ID = System.currentTimeMillis().toString()
+
         when (view!!.id) {
+
 
             R.id.trload_load -> {
 
@@ -96,12 +92,13 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
                         var insertID: Long = 0L
                         when (myData.nextAction) {
                             0 -> {
-                                myData.nextAction = 1
                                 insertID = db.insertTrip(myData)
+                                myData.nextAction = 1
                             }
                             2 -> {
+                                val datum = db.getTrip(myData.recordID)
+                                myData.trip0ID = datum.trip0ID
                                 myData.tripType = 1
-                                myData.trip0ID = myData.recordID.toInt()
                                 insertID = db.insertTrip(myData)
                                 myData.nextAction = 3
                             }
@@ -142,14 +139,15 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
                         when (myData.nextAction) {
                             0 -> {
                                 myData.tripType = 0
-                                myData.trip0ID = 0
                                 myData.recordID = db.insertTrip(myData)
 
                                 myData.nextAction = 1
                             }
                             2 -> {
                                 myData.tripType = 1
-                                myData.trip0ID = myData.recordID.toInt()
+
+                                val datum = db.getTrip(myData.recordID)
+                                myData.trip0ID = datum.trip0ID
                                 myData.recordID = db.insertTrip(myData)
 
                                 myData.nextAction = 3
@@ -171,29 +169,38 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
             }
             R.id.trload_machine -> {
                 val intent = Intent(this, LMachine1Activity::class.java)
-                val data1 = myHelper.getLastJourney()
-                data1.isForLoadResult = true
-                intent.putExtra("myData", data1)
+                if(myData.nextAction == 0){
+                    myData.isForLoadResult = true
+                }else{
+                    myData.isForBackLoadResult = true
+                }
+                intent.putExtra("myData", myData)
                 startActivityForResult(intent, REQUEST_MACHINE)
             }
             R.id.trload_material -> {
                 val intent = Intent(this, Material1Activity::class.java)
-                val data1 = myHelper.getLastJourney()
-                data1.isForLoadResult = true
-                intent.putExtra("myData", data1)
+                if(myData.nextAction == 0){
+                    myData.isForLoadResult = true
+                }else{
+                    myData.isForBackLoadResult = true
+                }
+                intent.putExtra("myData", myData)
                 startActivityForResult(intent, REQUEST_MATERIAL)
             }
             R.id.trload_location -> {
                 val intent = Intent(this, Location1Activity::class.java)
-                val data1 = myHelper.getLastJourney()
-                data1.isForLoadResult = true
-                intent.putExtra("myData", data1)
+                if(myData.nextAction == 0){
+                    myData.isForLoadResult = true
+                }else{
+                    myData.isForBackLoadResult = true
+                }
+                intent.putExtra("myData", myData)
                 startActivityForResult(intent, REQUEST_LOCATION)
             }
             R.id.trload_weight -> {
                 val intent = Intent(this, Weight1Activity::class.java)
                 val data1 = myHelper.getLastJourney()
-                data1.isForLoadResult = true
+                data1.isForUnloadResult = true
                 intent.putExtra("myData", data1)
                 startActivityForResult(intent, REQUEST_WEIGHT)
             }
@@ -231,22 +238,13 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
                             trload_machine.text = myData.loadingMachine
                             trload_material.text = myData.loadingMaterial
                             trload_location.text = myData.loadingLocation
-//                            trload_weight.text = "Tonnes (" +myData.unloadingWeight +")"
-                        }
-                        1 -> {
-
                         }
                         2 -> {
-                            trload_machine.text = myData.loadingMachine
-                            trload_material.text = myData.loadingMaterial
-                            trload_location.text = myData.loadingLocation
-//                            trload_weight.text = "Tonnes (" +myData.unloadingWeight +")"
-                        }
-                        3 -> {
-
+                            trload_machine.text = myData.backLoadingMachine
+                            trload_material.text = myData.backLoadingMaterial
+                            trload_location.text = myData.backLoadingLocation
                         }
                     }
-
                 }
 
 

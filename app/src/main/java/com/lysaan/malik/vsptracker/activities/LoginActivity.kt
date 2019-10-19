@@ -399,6 +399,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     private fun fetchSites(){
 
         val call = this.retrofitAPI.getSites(
+            myHelper.getLoginAPI().org_id,
             myHelper.getLoginAPI().auth_token)
         call.enqueue(object : retrofit2.Callback<OperatorResponse> {
             override fun onResponse(call: retrofit2.Call<OperatorResponse>, response: retrofit2.Response<OperatorResponse>) {

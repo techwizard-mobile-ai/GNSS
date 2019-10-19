@@ -100,6 +100,9 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
                 myHelper.stopDailyMode()
                 myHelper.setOperatorAPI(OperatorAPI())
 
+                val data = MyData()
+                myHelper.setLastJourney(data)
+
                 val intent = Intent(this, OperatorLoginActivity::class.java)
                 startActivity(intent)
                 finishAffinity()

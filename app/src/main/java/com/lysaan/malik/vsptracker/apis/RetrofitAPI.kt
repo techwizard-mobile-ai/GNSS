@@ -25,7 +25,7 @@ interface RetrofitAPI {
         const val ORGS_TRIP = "orgstrips/store"
         const val ORGS_MACHINE_STOPS = "orgsmachinesstops/store"
         const val ORGS_OPERATORS = "orgsoperators/list"
-        const val ADMIN_SITES = "adminsites/get"
+        const val ADMIN_ORGS_SITES = "adminorgssites/list"
         const val ADMIN_MACHINE_TYPES = "adminmachinestypes/get"
         const val ADMIN_MACHINE_BRANDS = "adminmachinesbrands/get"
         const val ORGS_MACHINES_PLANTS = "orgsplants/list"
@@ -73,8 +73,8 @@ interface RetrofitAPI {
     fun getMachinesTypes(@Query("token") token: String?
     ): Call<OperatorResponse>
 
-    @GET(ADMIN_SITES)
-    fun getSites(@Query("token") token: String?
+    @GET(ADMIN_ORGS_SITES)
+    fun getSites(@Query("org_id") org_id: Int?, @Query("token") token: String?
     ): Call<OperatorResponse>
 
     @GET(ORGS_OPERATORS)

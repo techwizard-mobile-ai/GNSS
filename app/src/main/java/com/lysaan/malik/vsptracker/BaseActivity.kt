@@ -219,7 +219,8 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START)
         } else {
-            super.onBackPressed()
+            myHelper.toast("Please Use App Navigation Buttons.")
+//            super.onBackPressed()
         }
     }
 

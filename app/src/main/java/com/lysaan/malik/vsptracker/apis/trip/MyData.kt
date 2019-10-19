@@ -7,6 +7,7 @@ import java.io.Serializable
 
 class MyData() : Serializable {
 
+    var id: Int = 0
     @SerializedName("org_id")
     @Expose
     var orgId: Int = 0
@@ -68,7 +69,6 @@ class MyData() : Serializable {
     var isTotalHoursCustom = 0
 
 
-
     @SerializedName("total_time")
     @Expose
     var totalTime = 0L
@@ -91,16 +91,19 @@ class MyData() : Serializable {
     @SerializedName("loading_machine_id")
     @Expose
     var loading_machine_id: Int = 0
+    var back_loading_machine_id: Int = 0
 
 
     @SerializedName("loading_material_id")
     @Expose
     var loading_material_id: Int = 0
+    var back_loading_material_id: Int = 0
 
 
     @SerializedName("loading_location_id")
     @Expose
     var loading_location_id: Int = 0
+    var back_loading_location_id: Int = 0
 
     //    Stockpile = 1
 //    Fill = 2
@@ -109,21 +112,25 @@ class MyData() : Serializable {
     @SerializedName("unloading_task_id")
     @Expose
     var unloading_task_id: Int = 0
+    var back_unloading_task_id: Int = 0
 
 
     @SerializedName("unloading_machine_id")
     @Expose
     var unloading_machine_id: Int = 0
+    var back_unloading_machine_id: Int = 0
 
 
     @SerializedName("unloading_material_id")
     @Expose
     var unloading_material_id: Int = 0
+    var back_unloading_material_id: Int = 0
 
 
     @SerializedName("unloading_location_id")
     @Expose
     var unloading_location_id: Int = 0
+    var back_unloading_location_id: Int = 0
 
 
     @SerializedName("unloading_weight")
@@ -152,19 +159,25 @@ class MyData() : Serializable {
     var isForBackUnloadResult: Boolean = false
 
     var loadingMachine: String = ""
-    //    var loadingMachine: String = ""
+    var backLoadingMachine: String = ""
+
     var loadingMaterial: String = ""
-    //    var loadingMaterial: String = ""
+    var backLoadingMaterial: String = ""
+
     var loadingLocation: String = ""
-    //    var loadingLocation: String = ""
+    var backLoadingLocation: String = ""
+
     var unloadingTask: String = ""
-    //    var unloadingTask: String = ""
+    var backUnloadingTask: String = ""
+
     var unloadingMachine: String = ""
     //    var unloadingMachine: String = ""
+
     var unloadingMaterial: String = ""
-    //    var unloadingMaterial: String = ""
+    var backUnloadingMaterial: String = ""
+
     var unloadingLocation: String = ""
-//    var unloadingLocation: String = ""
+    var backUnloadingLocation: String = ""
 
     //    var unloadingWeight: Double = 0.0
     var loadedMachine: String = ""
@@ -189,9 +202,9 @@ class MyData() : Serializable {
     // nextAction 3 = Do Back Unloading
     var nextAction: Int = 0
 
-    //    repeatJourney 0 = No Repeat Journey
+//    repeatJourney 0 = No Repeat Journey
 //    repeatJourney 1 = Repeat Journey without Back Load
-//    repeatJourney 2 = No Repeat Journey with Back Load
+//    repeatJourney 2 = Repeat Journey with Back Load
     var repeatJourney: Int = 0
 
 //    var startTime = 0L
@@ -206,10 +219,13 @@ class MyData() : Serializable {
 
     @SerializedName("trip0_id")
     @Expose
-    var trip0ID: Int = 0
+    var trip0ID: String = ""
 
     var loadingGPSLocation = GPSLocation()
+    var backLoadingGPSLocation = GPSLocation()
+
     var unloadingGPSLocation = GPSLocation()
+    var backUnloadingGPSLocation = GPSLocation()
 //    var userID = ""
 
     // isSync 0 = Not Uploaded to Server
@@ -221,7 +237,7 @@ class MyData() : Serializable {
 
     var isMapOpened: Boolean = false
     override fun toString(): String {
-        return "MyData(orgId=$orgId, siteId=$siteId, operatorId=$operatorId, machineTypeId=$machineTypeId, machineId=$machineId, startHours='$startHours',totalHours='$totalHours', totalTime=$totalTime, isDaysWork=$isDaysWork, recordID=$recordID)"
+        return "MyData(id=$id, loading_machine_id=$loading_machine_id, back_loading_machine_id=$back_loading_machine_id, loading_material_id=$loading_material_id, back_loading_material_id=$back_loading_material_id, loading_location_id=$loading_location_id, back_loading_location_id=$back_loading_location_id, unloading_task_id=$unloading_task_id, back_unloading_task_id=$back_unloading_task_id, unloading_machine_id=$unloading_machine_id, back_unloading_machine_id=$back_unloading_machine_id, unloading_material_id=$unloading_material_id, back_unloading_material_id=$back_unloading_material_id, unloading_location_id=$unloading_location_id, back_unloading_location_id=$back_unloading_location_id, unloadingWeight=$unloadingWeight, recordID=$recordID, nextAction=$nextAction, repeatJourney=$repeatJourney, tripType=$tripType, trip0ID='$trip0ID', isSync=$isSync)"
     }
 
 

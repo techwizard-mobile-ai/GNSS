@@ -178,6 +178,9 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
                     }
 
 //                    myHelper.startHomeActivityByType(MyData())
+                    val data = MyData()
+                    myHelper.setLastJourney(data)
+
                     val intent = Intent(this, HourMeterStartActivity::class.java)
                     startActivity(intent)
 //                    finishAffinity()

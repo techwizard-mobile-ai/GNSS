@@ -60,8 +60,6 @@ class SHomeActivity : BaseActivity(), View.OnClickListener {
             }
             R.id.thome_load -> {
                 val intent = Intent(this, Material1Activity::class.java)
-//                    TODO Delete it
-//                myData.isUnload = false
                 intent.putExtra("myData", myData)
                 startActivity(intent)
             }
@@ -71,8 +69,6 @@ class SHomeActivity : BaseActivity(), View.OnClickListener {
                 if (myData == null) {
                     myData = MyData()
                 }
-//                TODO Delete it
-//                myData.isUnload = true
                 intent.putExtra("myData", myData)
                 startActivity(intent)
             }

@@ -56,6 +56,8 @@ class MachineStatusAdapter(
                 myHelper.stopMachine(insertID)
                 myHelper.setIsMachineStopped(true, material.name, material.id)
 
+
+
 //                myHelper.startHomeActivityByType(MyData())
                 myHelper.logout(myContext)
                 myContext.finishAffinity()

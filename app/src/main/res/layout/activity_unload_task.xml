@@ -9,6 +9,7 @@
     tools:context=".activities.common.UnloadTaskActivity">
 
     <TextView
+        android:id="@+id/task_title"
         style="@style/activity_title"
         android:layout_marginBottom="@dimen/_5sdp"
         android:text="Select Task" />

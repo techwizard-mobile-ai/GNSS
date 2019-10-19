@@ -39,6 +39,7 @@ class EHomeActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         when (view!!.id) {
 
+//            Production Digging
             R.id.ehome_loading -> {
                 val intent = Intent(this, Location1Activity::class.java)
                 intent.putExtra("myData", myData)

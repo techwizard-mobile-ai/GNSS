@@ -49,9 +49,8 @@ class Location1Activity : BaseActivity(), View.OnClickListener {
 
 
         val gv = findViewById(R.id.l_gridview) as GridView
-//        val locations = myHelper.getLocations()
         val locations = db.getLocations()
-//        locations.removeAt(0)
+        myHelper.log("Locations:$locations")
         val adapter = CustomGrid(this@Location1Activity, locations)
 
 
@@ -75,15 +74,15 @@ class Location1Activity : BaseActivity(), View.OnClickListener {
                 finish()
             } else if (myData.isForBackLoadResult) {
                 val intent = intent
-                myData.loadingLocation = locations.get(position).name
-                myData.loading_location_id = locations.get(position).id
+                myData.backLoadingLocation = locations.get(position).name
+                myData.back_loading_location_id = locations.get(position).id
                 intent.putExtra("myData", myData)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
             } else if (myData.isForBackUnloadResult) {
                 val intent = intent
-                myData.unloadingLocation = locations.get(position).name
-                myData.unloading_location_id= locations.get(position).id
+                myData.backUnloadingLocation = locations.get(position).name
+                myData.back_unloading_location_id= locations.get(position).id
                 intent.putExtra("myData", myData)
                 setResult(Activity.RESULT_OK, intent)
                 finish()
@@ -105,9 +104,7 @@ class Location1Activity : BaseActivity(), View.OnClickListener {
                             0 -> {
                                 myData.loadingLocation = locations.get(position).name
                                 myData.loading_location_id = locations.get(position).id
-                                myData.unloadingMaterial = myData.loadingMaterial
-                                myData.unloading_material_id= myData.loading_material_id
-                                myData.unloading_material_id = myData.loading_material_id
+
                                 myHelper.setLastJourney(myData)
 
                                 val intent = Intent(this, RLoadActivity::class.java)
@@ -116,26 +113,28 @@ class Location1Activity : BaseActivity(), View.OnClickListener {
                             1 -> {
                                 myData.unloadingLocation = locations.get(position).name
                                 myData.unloading_location_id= locations.get(position).id
+
+                                myData.unloadingMaterial = myData.loadingMaterial
+                                myData.unloading_material_id = myData.loading_material_id
+
                                 myHelper.setLastJourney(myData)
 
                                 val intent = Intent(this, RUnloadActivity::class.java)
                                 startActivity(intent)
                             }
                             2 -> {
-                                myData.loadingLocation = locations.get(position).name
-                                myData.loading_location_id = locations.get(position).id
-                                myData.unloadingMaterial = myData.loadingMaterial
-                                myData.unloading_material_id= myData.loading_material_id
+                                myData.backLoadingLocation = locations.get(position).name
+                                myData.back_loading_location_id = locations.get(position).id
                                 myHelper.setLastJourney(myData)
 
                                 val intent = Intent(this, RLoadActivity::class.java)
                                 startActivity(intent)
                             }
                             3 -> {
-                                myData.unloadingLocation = locations.get(position).name
-                                myData.unloading_location_id= locations.get(position).id
-                                myData.unloadingMaterial = myData.loadingMaterial
-                                myData.unloading_material_id= myData.loading_material_id
+                                myData.backUnloadingLocation = locations.get(position).name
+                                myData.back_unloading_location_id= locations.get(position).id
+                                myData.backUnloadingMaterial = myData.backLoadingMaterial
+                                myData.back_unloading_material_id= myData.back_loading_material_id
                                 myHelper.setLastJourney(myData)
 
                                 val intent = Intent(this, RUnloadActivity::class.java)
