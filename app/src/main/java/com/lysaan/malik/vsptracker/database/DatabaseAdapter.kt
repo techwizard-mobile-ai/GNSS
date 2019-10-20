@@ -1268,6 +1268,36 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return list
     }
 
+    fun getOperatorByID(id: String): OperatorAPI {
+
+        var datum = OperatorAPI()
+
+        val db = this.readableDatabase
+
+        val query =
+            "Select * from ${TABLE_OPERATORS} WHERE ${COL_ID} =? ORDER BY $COL_ID DESC"
+        val result = db.rawQuery(query, arrayOf(id))
+
+
+        if (result.moveToFirst()) {
+            do {
+                datum.id = result.getInt(result.getColumnIndex(COL_ID))
+                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+                datum.name = result.getString(result.getColumnIndex(COL_NAME))
+                datum.pin = result.getString(result.getColumnIndex(COL_PIN))
+                datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+
+            } while (result.moveToNext())
+        } else {
+            myHelper.log("getOperator else result:$result")
+        }
+
+        result.close()
+        db.close()
+        return datum
+    }
+
     fun getOperator(pin: String): OperatorAPI {
 
         var datum = OperatorAPI()
@@ -1785,6 +1815,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         if (result.moveToFirst()) {
             do {
                 var datum = MyData()
+                datum.id = result.getInt(result.getColumnIndex(COL_ID))
                 datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
                 datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
                 datum.recordID = result.getLong(result.getColumnIndex(COL_ID))

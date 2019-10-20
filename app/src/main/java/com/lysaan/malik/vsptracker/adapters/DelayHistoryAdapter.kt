@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.apis.delay.EWork
+import com.lysaan.malik.vsptracker.database.DatabaseAdapter
 import kotlinx.android.synthetic.main.list_row_delay_history.view.*
 
 
@@ -19,6 +20,7 @@ class DelayHistoryAdapter(
 
     private val TAG = this::class.java.simpleName
     lateinit var myHelper: MyHelper
+    private lateinit var db: DatabaseAdapter
 
     override fun onCreateViewHolder(
             parent: ViewGroup,
@@ -27,6 +29,7 @@ class DelayHistoryAdapter(
         val v = LayoutInflater.from(parent.context)
                 .inflate(R.layout.list_row_delay_history, parent, false)
         myHelper = MyHelper(TAG, context)
+        db = DatabaseAdapter(context)
         return ViewHolder(v)
     }
 
@@ -46,7 +49,13 @@ class DelayHistoryAdapter(
             }
         }
 
-        holder.itemView.eth_record_number.setText(":  " + (dataList.size - position))
+
+
+        holder.itemView.eth_sync.text = ": ${if(eWork.isSync == 1) "Yes" else "No"}"
+        holder.itemView.eth_record_number.setText(":  " + (eWork.ID))
+
+        holder.itemView.eth_operator.setText(":  " + (db.getOperatorByID(eWork.operatorId.toString()).name))
+
         holder.itemView.eth_machine_number.setText(":  " + eWork.machineNumber)
         holder.itemView.eth_start_time.setText(":  " + myHelper.getTime(eWork.startTime) + " Hrs")
         holder.itemView.eth_end_time.setText(":  " + myHelper.getTime(eWork.stopTime) + " Hrs")

@@ -97,12 +97,12 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                 }else {
                     myData.isDaysWork = 0
                 }
-                myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
+                val datum = db.getTrip(myData.recordID)
+                myData.loadingGPSLocationString = myHelper.getGPSLocationToString(datum.loadingGPSLocation)
                 myData.unloadingGPSLocationString = myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
 
                 saveTrip(myData)
 
-                val datum = db.getTrip(myData.recordID)
                 myHelper.log("getTrip:$datum")
 
                 if(myData.tripType == 1) {
@@ -125,11 +125,11 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                     myData.unloadingLocation = myData.backUnloadingLocation
                     myData.unloading_location_id= myData.back_unloading_location_id
 
-                    myData.loadingGPSLocation = myData.backLoadingGPSLocation
-                    myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
-
-                    myData.unloadingGPSLocation = myData.backUnloadingGPSLocation
-                    myData.unloadingGPSLocationString = myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
+//                    myData.loadingGPSLocation = myData.backLoadingGPSLocation
+//                    myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
+//
+//                    myData.unloadingGPSLocation = myData.backUnloadingGPSLocation
+//                    myData.unloadingGPSLocationString = myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
                 }
 
 

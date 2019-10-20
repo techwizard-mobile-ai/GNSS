@@ -23,11 +23,9 @@
             android:orientation="vertical">
 
             <LinearLayout style="@style/load_history_row_item">
-
                 <TextView
                     style="@style/load_history_text"
                     android:text="@string/record_number" />
-
                 <TextView
                     android:id="@+id/eth_record_number"
                     style="@style/load_history_desc"
@@ -35,11 +33,19 @@
             </LinearLayout>
 
             <LinearLayout style="@style/load_history_row_item">
+                <TextView
+                    style="@style/load_history_text"
+                    android:text="@string/operator" />
+                <TextView
+                    android:id="@+id/eth_operator"
+                    style="@style/load_history_desc"
+                    android:text="@string/list_row_delay_history_eth_record_number_text" />
+            </LinearLayout>
 
+            <LinearLayout style="@style/load_history_row_item">
                 <TextView
                     style="@style/load_history_text"
                     android:text="@string/machine_type" />
-
                 <TextView
                     android:id="@+id/eth_machine_type"
                     style="@style/load_history_desc"
@@ -153,6 +159,19 @@
 
                 <TextView
                     android:id="@+id/eth_mode"
+                    style="@style/load_history_desc"
+                    android:text="@string/list_row_delay_history_eth_mode_text" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/lhr_sync_layout"
+                style="@style/load_history_row_item">
+
+                <TextView
+                    style="@style/load_history_text"
+                    android:text="@string/server_sync" />
+
+                <TextView
+                    android:id="@+id/eth_sync"
                     style="@style/load_history_desc"
                     android:text="@string/list_row_delay_history_eth_mode_text" />
             </LinearLayout>

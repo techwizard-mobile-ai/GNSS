@@ -27,7 +27,7 @@
 
                 <TextView
                     style="@style/load_history_text"
-                    android:text="Trip Number" />
+                    android:text="@string/trip_id" />
 
                 <TextView
                     android:id="@+id/lhr_trip_number"
@@ -41,7 +41,7 @@
 
                 <TextView
                     style="@style/load_history_text"
-                    android:text="Trip Type" />
+                    android:text="@string/trip_type" />
 
                 <TextView
                     android:id="@+id/lhr_trip_type"
@@ -55,10 +55,24 @@
 
                 <TextView
                     style="@style/load_history_text"
-                    android:text="Load Trip Number" />
+                    android:text="@string/trip_number" />
 
                 <TextView
                     android:id="@+id/lhr_trip0_id"
+                    style="@style/load_history_desc"
+                    android:text="@string/list_row_loading_history_lhr_trip0_id_text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lhr_operator_layout"
+                style="@style/load_history_row_item">
+
+                <TextView
+                    style="@style/load_history_text"
+                    android:text="@string/operator" />
+
+                <TextView
+                    android:id="@+id/lhr_operator"
                     style="@style/load_history_desc"
                     android:text="@string/list_row_loading_history_lhr_trip0_id_text" />
             </LinearLayout>
@@ -69,7 +83,7 @@
 
                 <TextView
                     style="@style/load_history_text"
-                    android:text="Loading Machine" />
+                    android:text="@string/loading_machine" />
 
                 <TextView
                     android:id="@+id/lhr_loading_machine"
@@ -83,7 +97,7 @@
 
                 <TextView
                     style="@style/load_history_text"
-                    android:text="Material" />
+                    android:text="@string/material" />
 
                 <TextView
                     android:id="@+id/lhr_loaded_material"
@@ -97,7 +111,7 @@
 
                 <TextView
                     style="@style/load_history_text"
-                    android:text="Location" />
+                    android:text="@string/location" />
 
                 <TextView
                     android:id="@+id/lhr_loading_location"
@@ -111,7 +125,7 @@
 
                 <TextView
                     style="@style/load_history_text"
-                    android:text="Loading GPS" />
+                    android:text="@string/loading_gps" />
 
                 <TextView
                     android:id="@+id/lhr_gps_loading"
@@ -125,7 +139,7 @@
 
                 <TextView
                     style="@style/load_history_text"
-                    android:text="Unloading GPS" />
+                    android:text="@string/unloading_gps" />
 
                 <TextView
                     android:id="@+id/lhr_gps_unloading"
@@ -139,7 +153,7 @@
 
                 <TextView
                     style="@style/load_history_text"
-                    android:text="Weight (Tonnes)" />
+                    android:text="@string/weight_tonnes" />
 
                 <TextView
                     android:id="@+id/lhr_loading_weight"
@@ -153,7 +167,7 @@
 
                 <TextView
                     style="@style/load_history_text"
-                    android:text="Task" />
+                    android:text="@string/task" />
 
                 <TextView
                     android:id="@+id/lhr_task"
@@ -167,7 +181,7 @@
 
                 <TextView
                     style="@style/load_history_text"
-                    android:text="Trip Time" />
+                    android:text="@string/trip_time" />
 
                 <TextView
                     android:id="@+id/lhr_time"
@@ -181,7 +195,7 @@
 
                 <TextView
                     style="@style/load_history_text"
-                    android:text="Trip Duration" />
+                    android:text="@string/trip_duration" />
 
                 <TextView
                     android:id="@+id/lhr_duration"
@@ -195,10 +209,24 @@
 
                 <TextView
                     style="@style/load_history_text"
-                    android:text="Work Mode" />
+                    android:text="@string/work_mode" />
 
                 <TextView
                     android:id="@+id/lhr_workmode"
+                    style="@style/load_history_desc"
+                    android:text="@string/list_row_loading_history_lhr_workmode_text" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/lhr_sync_layout"
+                style="@style/load_history_row_item">
+
+                <TextView
+                    style="@style/load_history_text"
+                    android:text="@string/server_sync" />
+
+                <TextView
+                    android:id="@+id/lhr_sync"
                     style="@style/load_history_desc"
                     android:text="@string/list_row_loading_history_lhr_workmode_text" />
             </LinearLayout>

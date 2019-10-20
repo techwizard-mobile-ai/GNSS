@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.apis.trip.MyData
+import com.lysaan.malik.vsptracker.database.DatabaseAdapter
 import kotlinx.android.synthetic.main.list_row_loading_history.view.*
 
 
@@ -20,6 +21,7 @@ class LoadingHistoryAdapter(
     private val TAG = this::class.java.simpleName
     private lateinit var myHelper: MyHelper
 
+    private lateinit var db: DatabaseAdapter
 
     override fun onCreateViewHolder(
             parent: ViewGroup,
@@ -30,6 +32,7 @@ class LoadingHistoryAdapter(
         val v = LayoutInflater.from(parent.context)
                 .inflate(R.layout.list_row_loading_history, parent, false)
         myHelper = MyHelper(TAG, context)
+        db = DatabaseAdapter(context)
         return ViewHolder(v)
     }
 
@@ -37,23 +40,21 @@ class LoadingHistoryAdapter(
 
         val myData = myDataList.get(position)
 
-        holder.itemView.lhr_trip0_layout.visibility = View.GONE
-        holder.itemView.lhr_trip_type_layout.visibility = View.GONE
-
-
         when (myData.tripType) {
             0 -> {
-                holder.itemView.lhr_trip_number.setText(":  ${myData.recordID}")
-//                holder.itemView.lhr_trip_type.text = ": Load Trip"
-//                holder.itemView.lhr_trip0_layout.visibility = View.GONE
+                holder.itemView.lhr_trip_number.setText(":  ${myData.id}")
+                holder.itemView.lhr_trip_type.text = ": Simple Load"
             }
             1 -> {
-                holder.itemView.lhr_trip_number.setText(":  ${myData.trip0ID}b")
-//                holder.itemView.lhr_trip_type.text = ": Back Load Trip"
-//                holder.itemView.lhr_trip0_layout.visibility = View.VISIBLE
-//                holder.itemView.lhr_trip0_id.text = ": Load Trip Number # ${myData.trip0ID}"
+                holder.itemView.lhr_trip_number.setText(":  ${myData.id}")
+                holder.itemView.lhr_trip_type.text = ": Back Load"
             }
         }
+
+
+        holder.itemView.lhr_trip0_id.text = ": ${myData.trip0ID}"
+        holder.itemView.lhr_operator.text = ": ${db.getOperatorByID(myData.operatorId.toString()).name}"
+        holder.itemView.lhr_sync.text = ": ${if(myData.isSync == 1) "Yes" else "No"}"
 
         when (myData.loadedMachineType) {
             2 -> {

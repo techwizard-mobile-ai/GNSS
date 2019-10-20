@@ -35,6 +35,7 @@ class LoadingHistoryFragment : Fragment() {
             myHelper = MyHelper(TAG, myContext)
             db = DatabaseAdapter(myContext)
             loadingHistory = db.getTrips()
+            myHelper.log("loadingHistory:$loadingHistory")
         }
     }
 

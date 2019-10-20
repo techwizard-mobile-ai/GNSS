@@ -191,4 +191,16 @@
     </string-array>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+    <string name="operator">Operator</string>
+    <string name="server_sync">Server Sync</string>
+    <string name="work_mode">Work Mode</string>
+    <string name="trip_duration">Trip Duration</string>
+    <string name="trip_time">Trip Time</string>
+    <string name="task">Task</string>
+    <string name="weight_tonnes">Weight (Tonnes)</string>
+    <string name="unloading_gps">Unloading GPS</string>
+    <string name="material">Material</string>
+    <string name="trip_number">Trip Number</string>
+    <string name="trip_type">Trip Type</string>
+    <string name="trip_id">Trip ID</string>
 </resources>
