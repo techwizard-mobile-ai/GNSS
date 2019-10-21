@@ -473,8 +473,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         cv.put(COL_IS_SYNC, datum.isSync)
 
         val insertID = db.insert(TABLE_MACHINES_HOURS, null, cv)
-        myHelper.log("MachinesHour:$datum")
-        myHelper.log("MachinesHour:insertID:$insertID")
+        // myHelper.log("MachinesHour:$datum")
+        // myHelper.log("MachinesHour:insertID:$insertID")
         return insertID;
     }
 
@@ -518,8 +518,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
 
 
             val insertID = db.insert(TABLE_MACHINES_HOURS, null, cv)
-            myHelper.log("MachinesHour:$datum")
-            myHelper.log("MachinesHour:insertID:$insertID")
+            // myHelper.log("MachinesHour:$datum")
+            // myHelper.log("MachinesHour:insertID:$insertID")
         }
     }
 
@@ -539,7 +539,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_IS_DELETED, datum.isDeleted)
 
             val insertID = db.replace(TABLE_MACHINES_TASKS, null, cv)
-            myHelper.log("insertMachinesTasks-inserID:$insertID")
+            // myHelper.log("insertMachinesTasks-inserID:$insertID")
         }
     }
 
@@ -559,7 +559,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_IS_DELETED, datum.isDeleted)
 
             val insertID = db.replace(TABLE_MACHINES_PLANTS, null, cv)
-            myHelper.log("insertMachinesPlants-inserID:$insertID")
+            // myHelper.log("insertMachinesPlants-inserID:$insertID")
         }
     }
 
@@ -577,7 +577,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_IS_DELETED, datum.isDeleted)
 
             val insertID = db.replace(TABLE_MACHINES_BRANDS, null, cv)
-            myHelper.log("insertMachinesBrands-inserID:$insertID")
+            // myHelper.log("insertMachinesBrands-inserID:$insertID")
         }
     }
 
@@ -594,7 +594,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_IS_DELETED, datum.isDeleted)
 
             val insertID = db.replace(TABLE_MACHINES_TYPES, null, cv)
-            myHelper.log("insertMachinesTypes-inserID:$insertID")
+            // myHelper.log("insertMachinesTypes-inserID:$insertID")
         }
     }
 
@@ -611,7 +611,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_IS_DELETED, datum.isDeleted)
 
             val insertID = db.replace(TABLE_SITES, null, cv)
-            myHelper.log("insertSites-inserID:$insertID")
+            // myHelper.log("insertSites-inserID:$insertID")
         }
     }
 
@@ -630,7 +630,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_IS_DELETED, datum.isDeleted)
 
             val insertID = db.replace(TABLE_OPERATORS, null, cv)
-            myHelper.log("insertOperators-inserID:$insertID")
+            // myHelper.log("insertOperators-inserID:$insertID")
         }
     }
 
@@ -647,7 +647,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_IS_DELETED, datum.isDeleted)
 
             val insertID = db.replace(TABLE_STOP_REASONS, null, cv)
-            myHelper.log("StopReasons-inserID:$insertID")
+            // myHelper.log("StopReasons-inserID:$insertID")
         }
     }
 
@@ -666,7 +666,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_IS_DELETED, datum.isDeleted)
 
             val insertID = db.replace(TABLE_MATERIALS, null, cv)
-            myHelper.log("Materials-inserID:$insertID")
+            // myHelper.log("Materials-inserID:$insertID")
         }
     }
 
@@ -688,8 +688,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_IS_DELETED, datum.isDeleted)
 
             val insertID = db.replace(TABLE_MACHINES, null, cv)
-//            myHelper.log("Machines--datum:${datum}")
-            myHelper.log("Machines-inserID:$insertID")
+//            // myHelper.log("Machines--datum:${datum}")
+            // myHelper.log("Machines-inserID:$insertID")
         }
     }
 
@@ -707,7 +707,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_IS_DELETED, datum.isDeleted)
 
             val insertID = db.replace(TABLE_LOCATIONS, null, cv)
-            myHelper.log("Locations-inserID:$insertID")
+            // myHelper.log("Locations-inserID:$insertID")
         }
     }
 
@@ -749,7 +749,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
 
 
         val insertID = db.insert(TABLE_MACHINE_STATUS, null, cv)
-        myHelper.log("insertID:$insertID")
+        // myHelper.log("insertID:$insertID")
         return insertID
     }
 
@@ -825,10 +825,10 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         cv.put(COL_USER_ID, myHelper.getUserID())
         cv.put(COL_IS_SYNC, myData.isSync)
 
-        myHelper.log("BeforeInsertTrip--:$myData")
+        // myHelper.log("BeforeInsertTrip--:$myData")
 
         val insertID = db.insert(TABLE_TRIP, null, cv)
-        myHelper.log("insertID:$insertID")
+        // myHelper.log("insertID:$insertID")
         return insertID
     }
 
@@ -864,7 +864,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         cv.put(COL_IS_SYNC, eWork.isSync)
 
         val insertID = db.insert(TABLE_DELAY, null, cv)
-        myHelper.log("insertID:$insertID")
+        // myHelper.log("insertID:$insertID")
         return insertID
     }
 
@@ -891,7 +891,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         cv.put(COL_IS_SYNC, eWork.isSync)
 
         val insertID = db.insert(TABLE_E_WORK_ACTION_OFFLOADING, null, cv)
-        myHelper.log("insertID:$insertID")
+        // myHelper.log("insertID:$insertID")
         return insertID
     }
 
@@ -935,7 +935,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         cv.put(COL_USER_ID, myHelper.getUserID())
         cv.put(COL_IS_SYNC, eWork.isSync)
         val insertID = db.insert(TABLE_E_WORK, null, cv)
-        myHelper.log("insertID:$insertID")
+        // myHelper.log("insertID:$insertID")
         return insertID
 
     }
@@ -972,7 +972,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         cv.put(COL_USER_ID, myHelper.getUserID())
         cv.put(COL_IS_SYNC, myData.isSync)
         val insertID = db.insert(TABLE_E_LOAD_HISTORY, null, cv)
-        myHelper.log("insertID:$insertID")
+        // myHelper.log("insertID:$insertID")
         return insertID
     }
 
@@ -995,8 +995,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
 
             datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
             datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
-//                myHelper.log("DB_startTime:${result.getLong(result.getColumnIndex(COL_START_TIME))}")
-//                myHelper.log("DB_StartHour:${result.getString(result.getColumnIndex(COL_START_HOURS))}")
+//                // myHelper.log("DB_startTime:${result.getLong(result.getColumnIndex(COL_START_TIME))}")
+//                // myHelper.log("DB_StartHour:${result.getString(result.getColumnIndex(COL_START_HOURS))}")
             if (result.getString(result.getColumnIndex(COL_START_HOURS)) != null)
                 datum.startHours = result.getString(result.getColumnIndex(COL_START_HOURS))
 
@@ -1025,7 +1025,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
             datum.workMode = result.getString(result.getColumnIndex(COL_WORK_MODE))
         } else {
-            myHelper.log("else result:$result")
+            // myHelper.log("else result:$result")
         }
 
         result.close()
@@ -1089,7 +1089,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 list.add(datum)
             } while (result.moveToNext())
         } else {
-            myHelper.log("else result:$result")
+            // myHelper.log("else result:$result")
         }
 
         result.close()
@@ -1120,7 +1120,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 list.add(datum)
             } while (result.moveToNext())
         } else {
-            myHelper.log("getMachinesTasks else result:$result")
+            // myHelper.log("getMachinesTasks else result:$result")
         }
 
         result.close()
@@ -1150,7 +1150,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 list.add(datum)
             } while (result.moveToNext())
         } else {
-            myHelper.log("getMachinesPlants else result:$result")
+            // myHelper.log("getMachinesPlants else result:$result")
         }
 
         result.close()
@@ -1178,7 +1178,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 list.add(datum)
             } while (result.moveToNext())
         } else {
-            myHelper.log("getMachinesBrands else result:$result")
+            // myHelper.log("getMachinesBrands else result:$result")
         }
 
         result.close()
@@ -1205,7 +1205,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 list.add(datum)
             } while (result.moveToNext())
         } else {
-            myHelper.log("getMachinesTypes else result:$result")
+            // myHelper.log("getMachinesTypes else result:$result")
         }
 
         result.close()
@@ -1231,7 +1231,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 list.add(datum)
             } while (result.moveToNext())
         } else {
-            myHelper.log("getSites else result:$result")
+            // myHelper.log("getSites else result:$result")
         }
 
         result.close()
@@ -1260,7 +1260,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 list.add(datum)
             } while (result.moveToNext())
         } else {
-            myHelper.log("getOperators else result:$result")
+            // myHelper.log("getOperators else result:$result")
         }
 
         result.close()
@@ -1290,7 +1290,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
 
             } while (result.moveToNext())
         } else {
-            myHelper.log("getOperator else result:$result")
+            // myHelper.log("getOperator else result:$result")
         }
 
         result.close()
@@ -1320,7 +1320,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
 
             } while (result.moveToNext())
         } else {
-            myHelper.log("getOperator else result:$result")
+            // myHelper.log("getOperator else result:$result")
         }
 
         result.close()
@@ -1349,7 +1349,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
 
             } while (result.moveToNext())
         } else {
-            myHelper.log("else result:$result")
+            // myHelper.log("else result:$result")
         }
 
         result.close()
@@ -1390,7 +1390,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
 
             } while (result.moveToNext())
         } else {
-            myHelper.log("else result:$result")
+            // myHelper.log("else result:$result")
         }
 
         result.close()
@@ -1410,7 +1410,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             query =
                 "Select * from $TABLE_MACHINES  WHERE ${COL_IS_DELETED} = 0 AND ${COL_STATUS} = 1 AND ${COL_SITE_ID} = ${myHelper.getMachineSettings().siteId} AND $COL_MACHINE_TYPE_ID = ${type} ORDER BY $COL_ID DESC"
         }
-        myHelper.log("rawQuery:$query")
+        // myHelper.log("rawQuery:$query")
         val result = db.rawQuery(query, null)
 
 
@@ -1442,7 +1442,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
 
             } while (result.moveToNext())
         } else {
-            myHelper.log("else result:$result")
+            // myHelper.log("else result:$result")
         }
 
         result.close()
@@ -1457,7 +1457,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
 
         query =
             "Select * from $TABLE_MACHINES  WHERE ${COL_IS_DELETED} = 0 AND ${COL_STATUS} = 1 AND ${COL_SITE_ID} = ${myHelper.getMachineSettings().siteId} AND $COL_ID = ${id} ORDER BY $COL_ID DESC"
-        myHelper.log("rawQuery:$query")
+        // myHelper.log("rawQuery:$query")
         val result = db.rawQuery(query, null)
 
 
@@ -1478,7 +1478,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         if (result.moveToFirst()) {
             do {
 
-                myHelper.log("Result:${result.toString()}")
+                // myHelper.log("Result:${result.toString()}")
                 datum.id = result.getInt(result.getColumnIndex(COL_ID))
                 datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
                 datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
@@ -1491,7 +1491,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
 
             } while (result.moveToNext())
         } else {
-            myHelper.log("else result:$result")
+            // myHelper.log("else result:$result")
         }
 
         result.close()
@@ -1521,7 +1521,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
 
             } while (result.moveToNext())
         } else {
-            myHelper.log("else result:$result")
+            // myHelper.log("else result:$result")
         }
 
         result.close()
@@ -1572,7 +1572,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 list.add(datum)
             } while (result.moveToNext())
         } else {
-            myHelper.log("else result:$result")
+            // myHelper.log("else result:$result")
         }
 
         result.close()
@@ -1617,7 +1617,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 list.add(datum)
             } while (result.moveToNext())
         } else {
-            myHelper.log("else result:$result")
+            // myHelper.log("else result:$result")
         }
 
         result.close()
@@ -1670,7 +1670,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 list.add(datum)
             } while (result.moveToNext())
         } else {
-            myHelper.log("else result:$result")
+            // myHelper.log("else result:$result")
         }
 
         result.close()
@@ -1722,7 +1722,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 list.add(datum)
             } while (result.moveToNext())
         } else {
-            myHelper.log("else result:$result")
+            // myHelper.log("else result:$result")
         }
 
         result.close()
@@ -1793,7 +1793,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.operatorId = result.getInt(result.getColumnIndex(COL_USER_ID))
                 datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
         } else {
-            myHelper.log("else result:$result")
+            // myHelper.log("else result:$result")
         }
 
         result.close()
@@ -1861,7 +1861,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 list.add(datum)
             } while (result.moveToNext())
         } else {
-            myHelper.log("else result:$result")
+            // myHelper.log("else result:$result")
         }
 
         result.close()
@@ -1914,7 +1914,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
 //                list.add(datum)
 //            } while (result.moveToNext())
         } else {
-            myHelper.log("else result:$result")
+            // myHelper.log("else result:$result")
         }
 
         result.close()
@@ -1924,7 +1924,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
 
     fun updateDelay(eWork: EWork): Int {
 
-        myHelper.log("updateDelay:$eWork")
+        // myHelper.log("updateDelay:$eWork")
 
         val db = this.writableDatabase
         val cv = ContentValues()
@@ -1932,7 +1932,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         cv.put(COL_IS_SYNC, eWork.isSync)
         val updatedID = db.update(TABLE_DELAY, cv, "$COL_ID = ${eWork.ID}", null)
 
-        myHelper.log("updatedID :$updatedID ")
+        // myHelper.log("updatedID :$updatedID ")
         return updatedID
 
     }
@@ -1947,7 +1947,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         eWork.time = currentTime.toString()
         eWork.date = myHelper.getDate(currentTime)
 
-        myHelper.log("updateEWork:$eWork")
+        // myHelper.log("updateEWork:$eWork")
 
         val db = this.writableDatabase
         val cv = ContentValues()
@@ -1962,7 +1962,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         cv.put(COL_IS_SYNC, eWork.isSync)
         val updatedID = db.update(TABLE_E_WORK, cv, "$COL_ID = ${eWork.ID}", null)
 
-        myHelper.log("updatedID :$updatedID ")
+        // myHelper.log("updatedID :$updatedID ")
         return updatedID
 
     }
@@ -1976,7 +1976,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         myData.time = currentTime.toString()
         myData.date = myHelper.getDate(currentTime)
 
-        myHelper.log("updateTrip:$myData")
+        // myHelper.log("updateTrip:$myData")
 
         val db = this.writableDatabase
         val cv = ContentValues()
@@ -2018,7 +2018,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
 
         val updatedID = db.update(TABLE_TRIP, cv, "$COL_ID = ${myData.recordID}", null)
 
-        myHelper.log("updatedID :$updatedID ")
+        // myHelper.log("updatedID :$updatedID ")
         return updatedID
 
     }
@@ -2033,7 +2033,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         myData.time = currentTime.toString()
         myData.date = myHelper.getDate(currentTime)
 
-        myHelper.log("updateTrip:$myData")
+        // myHelper.log("updateTrip:$myData")
 
         val db = this.writableDatabase
         val cv = ContentValues()
@@ -2050,7 +2050,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
 
         val updatedID = db.update(TABLE_MACHINE_STATUS, cv, "$COL_ID = ${myData.recordID}", null)
 
-        myHelper.log("updatedID :$updatedID ")
+        // myHelper.log("updatedID :$updatedID ")
         return updatedID
 
     }

@@ -12,6 +12,7 @@ import com.lysaan.malik.vsptracker.activities.common.Material1Activity
 import com.lysaan.malik.vsptracker.activities.common.UnloadTaskActivity
 import com.lysaan.malik.vsptracker.activities.excavator.ESideCastingActivity
 import com.lysaan.malik.vsptracker.apis.trip.MyData
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_shome.*
 
 class SHomeActivity : BaseActivity(), View.OnClickListener {
@@ -47,7 +48,10 @@ class SHomeActivity : BaseActivity(), View.OnClickListener {
 
 
     }
-
+    override fun onResume() {
+        super.onResume()
+        base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
+    }
     override fun onClick(view: View?) {
         when (view!!.id) {
 

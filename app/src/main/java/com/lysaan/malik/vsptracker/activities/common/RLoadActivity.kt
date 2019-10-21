@@ -10,6 +10,7 @@ import com.google.android.material.navigation.NavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.apis.trip.MyData
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_rload.*
 
 class RLoadActivity : BaseActivity(), View.OnClickListener {
@@ -76,7 +77,10 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
         trload_weight.setOnClickListener(this)
 
     }
-
+    override fun onResume() {
+        super.onResume()
+        base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
+    }
     override fun onClick(view: View?) {
         myData.trip0ID = System.currentTimeMillis().toString()
 

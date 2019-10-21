@@ -16,6 +16,7 @@ import com.lysaan.malik.vsptracker.activities.common.Material1Activity
 import com.lysaan.malik.vsptracker.adapters.EOffLoadingAdapter
 import com.lysaan.malik.vsptracker.apis.delay.EWork
 import com.lysaan.malik.vsptracker.apis.trip.MyData
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_etoff_loading.*
 
 class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
@@ -61,7 +62,10 @@ class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
         et_offload_material.setOnClickListener(this)
 
     }
-
+    override fun onResume() {
+        super.onResume()
+        base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
+    }
     override fun onBackPressed() {
 
         if (isWorking) {

@@ -61,6 +61,8 @@ class DayWorksActivity : BaseActivity(), View.OnClickListener {
         when (view!!.id) {
             R.id.day_works_action -> {
 
+                myHelper.setLastJourney(MyData())
+
                 if (myHelper.isDailyModeStarted()) {
                     day_work_title.text = "Start Day Works Mode"
                     day_works_button.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.colorPrimary)))
@@ -88,6 +90,7 @@ class DayWorksActivity : BaseActivity(), View.OnClickListener {
                     day_works_action_text.text = "Stop"
                     isDailyModeStart = true
                     myHelper.startDailyMode()
+
                     myHelper.startHomeActivityByType(MyData())
 //                    myHelper.restartActivity(intent, this)
 

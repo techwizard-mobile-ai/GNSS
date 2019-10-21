@@ -10,6 +10,7 @@ import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.apis.trip.MyData
 import com.lysaan.malik.vsptracker.apis.trip.MyDataResponse
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_runload.*
 
 class RUnloadActivity : BaseActivity(), View.OnClickListener {
@@ -60,7 +61,10 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
         trul_weight.setOnClickListener(this)
     }
 
-
+    override fun onResume() {
+        super.onResume()
+        base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
+    }
 
 
     override fun onClick(view: View?) {

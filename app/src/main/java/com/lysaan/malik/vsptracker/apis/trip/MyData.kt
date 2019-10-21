@@ -237,7 +237,7 @@ class MyData() : Serializable {
 
     var isMapOpened: Boolean = false
     override fun toString(): String {
-        return "MyData(id=$id, loadingGPSLocationString='$loadingGPSLocationString', unloadingGPSLocationString='$unloadingGPSLocationString', tripType=$tripType, trip0ID='$trip0ID', loadingGPSLocation=$loadingGPSLocation, backLoadingGPSLocation=$backLoadingGPSLocation, unloadingGPSLocation=$unloadingGPSLocation, backUnloadingGPSLocation=$backUnloadingGPSLocation, isSync=$isSync)"
+        return "MyData(id=$id, loadTypeId=$loadTypeId, nextAction=$nextAction, repeatJourney=$repeatJourney, tripType=$tripType)"
     }
 
 

@@ -11,6 +11,7 @@ import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.activities.HourMeterStopActivity
 import com.lysaan.malik.vsptracker.apis.delay.EWork
 import com.lysaan.malik.vsptracker.apis.trip.MyData
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_eside_casting.*
 
 class ESideCastingActivity : BaseActivity(), View.OnClickListener {
@@ -57,7 +58,10 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
         ework_finish.setOnClickListener(this)
 
     }
-
+    override fun onResume() {
+        super.onResume()
+        base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
+    }
     override fun onBackPressed() {
 
         if (isWorking) {

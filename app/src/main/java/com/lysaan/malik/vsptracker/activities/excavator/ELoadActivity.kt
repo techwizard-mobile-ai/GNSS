@@ -16,6 +16,7 @@ import com.lysaan.malik.vsptracker.activities.common.Location1Activity
 import com.lysaan.malik.vsptracker.activities.common.Material1Activity
 import com.lysaan.malik.vsptracker.adapters.ELoadingAdapter
 import com.lysaan.malik.vsptracker.apis.trip.MyData
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_eload.*
 
 class ELoadActivity : BaseActivity(), View.OnClickListener {
@@ -68,7 +69,10 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
     }
 
 
-
+    override fun onResume() {
+        super.onResume()
+        base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
+    }
 
     override fun onClick(view: View?) {
         when (view!!.id) {

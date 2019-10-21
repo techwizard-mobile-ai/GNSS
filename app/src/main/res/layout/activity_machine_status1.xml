@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:layout_marginBottom="@dimen/_10sdp"
     tools:context=".activities.common.Location1Activity">
 
     <TextView
@@ -59,4 +60,10 @@
               android:layout_margin="@dimen/_5sdp"
               android:stretchMode="columnWidth"
               android:gravity="center"/>-->
-</LinearLayout>
+
+    <Button
+        android:id="@+id/machine_status_back"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        style="@style/back_button_single"/>
+</RelativeLayout>

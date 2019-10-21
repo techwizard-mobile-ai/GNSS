@@ -10,6 +10,7 @@ import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.activities.common.LMachine1Activity
 import com.lysaan.malik.vsptracker.activities.common.UnloadTaskActivity
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_thome.*
 
 class THomeActivity : BaseActivity(), View.OnClickListener {
@@ -49,10 +50,10 @@ class THomeActivity : BaseActivity(), View.OnClickListener {
         thome_unload.setOnClickListener(this)
     }
 
-//    override fun onResume() {
-//        super.onResume()
-//        startGPS()
-//    }
+    override fun onResume() {
+        super.onResume()
+        base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
+    }
 //
 //    override fun onPause() {
 //        super.onPause()

@@ -16,6 +16,7 @@ import com.lysaan.malik.vsptracker.activities.excavator.ELoadActivity
 import com.lysaan.malik.vsptracker.adapters.CustomGrid
 import com.lysaan.malik.vsptracker.apis.trip.MyData
 import com.lysaan.malik.vsptracker.classes.Material
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_material1.*
 
 class Material1Activity : BaseActivity(), View.OnClickListener {
@@ -55,7 +56,7 @@ class Material1Activity : BaseActivity(), View.OnClickListener {
 
         lateinit var materials: ArrayList<Material>
         materials = db.getMaterials()
-        myHelper.log("Materials:$materials")
+//        myHelper.log("Materials:$materials")
 
         val adapter = CustomGrid(this@Material1Activity, db.getMaterials())
 
@@ -143,7 +144,10 @@ class Material1Activity : BaseActivity(), View.OnClickListener {
         ematerial1_back.setOnClickListener(this)
 
     }
-
+    override fun onResume() {
+        super.onResume()
+        base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
+    }
     override fun onClick(view: View?) {
         when (view!!.id) {
             R.id.ematerial1_back -> {

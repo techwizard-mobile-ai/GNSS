@@ -2,16 +2,16 @@ package com.lysaan.malik.vsptracker.activities.truck
 
 import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.navigation.NavigationView
-
 import android.view.View
 import android.widget.FrameLayout
+import com.google.android.material.navigation.NavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.activities.HourMeterStopActivity
 import com.lysaan.malik.vsptracker.activities.common.LMachine1Activity
 import com.lysaan.malik.vsptracker.activities.common.RLoadActivity
 import com.lysaan.malik.vsptracker.apis.trip.MyData
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_tunload_after.*
 
 class TUnloadAfterActivity : BaseActivity(), View.OnClickListener {
@@ -51,7 +51,10 @@ class TUnloadAfterActivity : BaseActivity(), View.OnClickListener {
         tul_after_finish.setOnClickListener(this)
         tul_back_load.setOnClickListener(this)
     }
-
+    override fun onResume() {
+        super.onResume()
+        base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
+    }
     override fun onClick(view: View?) {
         when (view!!.id) {
             R.id.tul_back_load -> {

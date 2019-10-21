@@ -2,11 +2,11 @@ package com.lysaan.malik.vsptracker.activities
 
 import android.net.Uri
 import android.os.Bundle
-import com.google.android.material.navigation.NavigationView
 import android.view.View
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.apis.trip.MyData
@@ -38,7 +38,7 @@ class TabHistoryActivity : BaseActivity(), View.OnClickListener,
         var bundle: Bundle? = intent.extras
         if (bundle != null) {
             myData = bundle!!.getSerializable("myData") as MyData
-            myHelper.log("myData:$myData")
+//            // myHelper.log("myData:$myData")
         }
 
 
@@ -47,7 +47,7 @@ class TabHistoryActivity : BaseActivity(), View.OnClickListener,
 
         val menuFragment = bundle?.getString("menuFragment")
         if (menuFragment != null) {
-            myHelper.log("menuFragment:${menuFragment.toString()}")
+            // myHelper.log("menuFragment:${menuFragment.toString()}")
             if (menuFragment.equals("delayHistoryFragment")) {
                 val delayFragment = DelayHistoryFragment.newInstance(this, DELAY_HISTORY)
                 openFragment(delayFragment, DELAY_HISTORY)
@@ -62,6 +62,8 @@ class TabHistoryActivity : BaseActivity(), View.OnClickListener,
 
         val eLoadingHistoryFragment = LoadingHistoryFragment.newInstance(this)
         openFragment(eLoadingHistoryFragment, LOADING_HISTORY)
+
+         myHelper.log("onCreate:${this::class.java.simpleName}");
     }
 
     private fun openFragment(fragment: Fragment, FRAGMENT_TAG: String?) {
@@ -108,7 +110,7 @@ class TabHistoryActivity : BaseActivity(), View.OnClickListener,
     override fun onBackPressed() {
 
         val count = supportFragmentManager.backStackEntryCount
-        myHelper.log("count--$count")
+        // myHelper.log("count--$count")
         if (count < 2) {
             finish()
         } else {

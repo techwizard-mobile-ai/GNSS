@@ -13,6 +13,7 @@ import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.adapters.CustomGrid
 import com.lysaan.malik.vsptracker.apis.trip.MyData
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_location1.*
 
 class Location1Activity : BaseActivity(), View.OnClickListener {
@@ -50,7 +51,7 @@ class Location1Activity : BaseActivity(), View.OnClickListener {
 
         val gv = findViewById(R.id.l_gridview) as GridView
         val locations = db.getLocations()
-        myHelper.log("Locations:$locations")
+//        myHelper.log("Locations:$locations")
         val adapter = CustomGrid(this@Location1Activity, locations)
 
 
@@ -149,7 +150,10 @@ class Location1Activity : BaseActivity(), View.OnClickListener {
 
         elocation1_back.setOnClickListener(this)
     }
-
+    override fun onResume() {
+        super.onResume()
+        base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
+    }
     override fun onClick(view: View?) {
         when (view!!.id) {
             R.id.elocation1_back -> {

@@ -12,6 +12,7 @@ import com.lysaan.malik.vsptracker.activities.HourMeterStopActivity
 import com.lysaan.malik.vsptracker.activities.common.Material1Activity
 import com.lysaan.malik.vsptracker.activities.common.RLoadActivity
 import com.lysaan.malik.vsptracker.apis.trip.MyData
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_sunload_after.*
 
 class SUnloadAfterActivity : BaseActivity(), View.OnClickListener {
@@ -47,7 +48,10 @@ class SUnloadAfterActivity : BaseActivity(), View.OnClickListener {
         tul_back_load.setOnClickListener(this)
 
     }
-
+    override fun onResume() {
+        super.onResume()
+        base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
+    }
     override fun onClick(view: View?) {
         when (view!!.id) {
 

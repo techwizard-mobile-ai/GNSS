@@ -77,6 +77,7 @@ class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
 
         machine_status_start.setOnClickListener(this)
         machine_status_logout.setOnClickListener(this)
+        machine_status_back.setOnClickListener(this)
 
     }
 
@@ -84,6 +85,7 @@ class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         when (view!!.id) {
 
+            R.id.machine_status_back ->{ finish()}
             R.id.machine_status_logout -> {
                 myHelper.logout(this)
             }

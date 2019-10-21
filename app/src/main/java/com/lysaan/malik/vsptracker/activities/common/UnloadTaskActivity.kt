@@ -10,6 +10,7 @@ import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.MyHelper
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.apis.trip.MyData
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_unload_task.*
 
 class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
@@ -107,6 +108,12 @@ class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
         ultask_respread.setOnClickListener(this)
         ultask_stockpile.setOnClickListener(this)
     }
+
+    override fun onResume() {
+        super.onResume()
+        base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
+    }
+
     //    1 fill
     //    2 offsite
     //    3 respread

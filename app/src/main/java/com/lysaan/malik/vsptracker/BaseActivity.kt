@@ -163,6 +163,16 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
     override fun onResume() {
         super.onResume()
         startGPS()
+
+//        base_nav_view.setCheckedItem(base_nav_view.checkedItem.itemId)
+
+//        myHelper.log("CurrentActivity:${this::class.java.simpleName}")
+//        onNavigationItemSelected(base_nav_view.getMenu().getItem(0));
+//        if(this::class.java.simpleName == "THomeActivity"){
+//            onNavigationItemSelected(base_nav_view.menu.getItem(0));
+//        }
+
+
         if (myHelper.getIsMachineStopped()) {
             base_machine_status_layout.visibility = View.VISIBLE
 
@@ -225,27 +235,34 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
+
+
+
         when (item.itemId) {
             R.id.nav_home -> {
                 val data = MyData()
                 myHelper.startHomeActivityByType(data)
-                finishFromChild(Map1Activity())
+                myHelper.setIsMapOpened(false)
+//                finishFromChild(Map1Activity())
             }
             R.id.nav_day_works -> {
 
                 val intent = Intent(this, DayWorksActivity::class.java)
                 startActivity(intent)
-                finishFromChild(Map1Activity())
+                myHelper.setIsMapOpened(false)
+//                finishFromChild(Map1Activity())
             }
             R.id.nav_logout -> {
                 myHelper.logout(this)
-                finishFromChild(Map1Activity())
+                myHelper.setIsMapOpened(false)
+//                finishFromChild(Map1Activity())
             }
             R.id.nav_stop_machine -> {
 
                 val intent = Intent(this, MachineStatus1Activity::class.java)
                 startActivity(intent)
-                finishFromChild(Map1Activity())
+                myHelper.setIsMapOpened(false)
+//                finishFromChild(Map1Activity())
             }
             R.id.nav_night_mode -> {
 
@@ -262,22 +279,26 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
             R.id.nav_change_machine -> {
                 val intent = Intent(this, MachineTypeActivity::class.java)
                 startActivity(intent)
-                finishFromChild(Map1Activity())
+                myHelper.setIsMapOpened(false)
+//                finishFromChild(Map1Activity())
             }
 
             R.id.nav_load_history -> {
                 myHelper.startHistoryByType()
-                finishFromChild(Map1Activity())
+                myHelper.setIsMapOpened(false)
+//                finishFromChild(Map1Activity())
             }
             R.id.nav_email -> {
                 doEmail()
-                finishFromChild(Map1Activity())
+                myHelper.setIsMapOpened(false)
+//                finishFromChild(Map1Activity())
             }
 
             R.id.nav_delay -> {
                 val intent = Intent(this, DelayActivity::class.java)
                 startActivity(intent)
-                finishFromChild(Map1Activity())
+                myHelper.setIsMapOpened(false)
+//                finishFromChild(Map1Activity())
             }
         }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)

@@ -12,6 +12,7 @@ import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
 import com.lysaan.malik.vsptracker.adapters.CustomGridLMachine
 import com.lysaan.malik.vsptracker.apis.trip.MyData
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_lmachine1.*
 
 class LMachine1Activity : BaseActivity(), View.OnClickListener {
@@ -44,7 +45,7 @@ class LMachine1Activity : BaseActivity(), View.OnClickListener {
 
         val gv = findViewById(R.id.tlm_gridview) as GridView
         val machines = db.getMachines(1)
-        myHelper.log("machines:$machines")
+//        myHelper.log("machines:$machines")
 
         val adapter = CustomGridLMachine(this@LMachine1Activity, machines)
 
@@ -89,6 +90,10 @@ class LMachine1Activity : BaseActivity(), View.OnClickListener {
         lmachine_back.setOnClickListener(this)
     }
 
+    override fun onResume() {
+        super.onResume()
+        base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
+    }
 
     override fun onClick(view: View?) {
         when (view!!.id) {

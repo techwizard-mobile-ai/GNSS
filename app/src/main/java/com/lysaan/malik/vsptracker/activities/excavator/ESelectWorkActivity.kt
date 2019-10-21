@@ -2,13 +2,13 @@ package com.lysaan.malik.vsptracker.activities.excavator
 
 import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.navigation.NavigationView
 import android.view.View
 import android.widget.FrameLayout
+import com.google.android.material.navigation.NavigationView
 import com.lysaan.malik.vsptracker.BaseActivity
 import com.lysaan.malik.vsptracker.R
-
 import com.lysaan.malik.vsptracker.apis.trip.MyData
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_eselect_work.*
 
 class ESelectWorkActivity : BaseActivity(), View.OnClickListener {
@@ -34,7 +34,10 @@ class ESelectWorkActivity : BaseActivity(), View.OnClickListener {
         eswork_off_loading.setOnClickListener(this)
     }
 
-
+    override fun onResume() {
+        super.onResume()
+        base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
+    }
     override fun onClick(view: View?) {
         when (view!!.id) {
             R.id.eswork_sidecasting -> {
