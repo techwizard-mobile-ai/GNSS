@@ -202,7 +202,7 @@ class MyData() : Serializable {
     // nextAction 3 = Do Back Unloading
     var nextAction: Int = 0
 
-//    repeatJourney 0 = No Repeat Journey
+    //    repeatJourney 0 = No Repeat Journey
 //    repeatJourney 1 = Repeat Journey without Back Load
 //    repeatJourney 2 = Repeat Journey with Back Load
     var repeatJourney: Int = 0
@@ -237,7 +237,7 @@ class MyData() : Serializable {
 
     var isMapOpened: Boolean = false
     override fun toString(): String {
-        return "MyData(id=$id, loadTypeId=$loadTypeId, nextAction=$nextAction, repeatJourney=$repeatJourney, tripType=$tripType)"
+        return "MyData(id=$id, machineId=$machineId, loadingGPSLocationString='$loadingGPSLocationString', unloadingGPSLocationString='$unloadingGPSLocationString', startTime=$startTime, stopTime=$stopTime, totalTime=$totalTime, time='$time', date='$date')"
     }
 
 

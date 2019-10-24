@@ -1134,7 +1134,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val db = this.readableDatabase
 
         val query =
-            "Select * from ${TABLE_MACHINES_PLANTS} WHERE ${COL_IS_DELETED} = 0 ORDER BY $COL_ID DESC"
+            "Select * from ${TABLE_MACHINES_PLANTS} WHERE ${COL_IS_DELETED} = 0 AND ${COL_STATUS} = 1 ORDER BY $COL_ID DESC"
         val result = db.rawQuery(query, null)
 
         if (result.moveToFirst()) {
@@ -1164,7 +1164,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val db = this.readableDatabase
 
         val query =
-            "Select * from ${TABLE_MACHINES_BRANDS} WHERE ${COL_IS_DELETED} = 0 ORDER BY $COL_ID DESC"
+            "Select * from ${TABLE_MACHINES_BRANDS} WHERE ${COL_IS_DELETED} = 0 AND ${COL_STATUS} = 1 ORDER BY $COL_ID DESC"
         val result = db.rawQuery(query, null)
 
         if (result.moveToFirst()) {
@@ -1192,7 +1192,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val db = this.readableDatabase
 
         val query =
-            "Select * from ${TABLE_MACHINES_TYPES} WHERE ${COL_IS_DELETED} = 0 ORDER BY $COL_ID DESC"
+            "Select * from ${TABLE_MACHINES_TYPES} WHERE ${COL_IS_DELETED} = 0 AND ${COL_STATUS} = 1 ORDER BY $COL_ID DESC"
         val result = db.rawQuery(query, null)
 
         if (result.moveToFirst()) {
@@ -1218,7 +1218,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         var list: ArrayList<Material> = ArrayList()
         val db = this.readableDatabase
 
-        val query = "Select * from ${TABLE_SITES} WHERE ${COL_IS_DELETED} = 0 ORDER BY $COL_ID DESC"
+        val query = "Select * from ${TABLE_SITES} WHERE ${COL_IS_DELETED} = 0 AND ${COL_STATUS} = 1 ORDER BY $COL_ID DESC"
         val result = db.rawQuery(query, null)
 
         if (result.moveToFirst()) {
@@ -1245,7 +1245,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val db = this.readableDatabase
 
         val query =
-            "Select * from ${TABLE_OPERATORS} WHERE ${COL_IS_DELETED} = 0 ORDER BY $COL_ID DESC"
+            "Select * from ${TABLE_OPERATORS} WHERE ${COL_IS_DELETED} = 0 AND ${COL_STATUS} = 1 ORDER BY $COL_ID DESC"
         val result = db.rawQuery(query, null)
 
         if (result.moveToFirst()) {
@@ -1275,7 +1275,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val db = this.readableDatabase
 
         val query =
-            "Select * from ${TABLE_OPERATORS} WHERE ${COL_ID} =? ORDER BY $COL_ID DESC"
+            "Select * from ${TABLE_OPERATORS} WHERE ${COL_IS_DELETED} = 0 AND ${COL_STATUS} = 1 AND ${COL_ID} =? ORDER BY $COL_ID DESC"
         val result = db.rawQuery(query, arrayOf(id))
 
 
@@ -1334,7 +1334,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val db = this.readableDatabase
 
         val query =
-            "Select * from $TABLE_STOP_REASONS  WHERE ${COL_IS_DELETED} = 0 ORDER BY $COL_ID DESC"
+            "Select * from $TABLE_STOP_REASONS  WHERE ${COL_IS_DELETED} = 0 AND ${COL_STATUS} = 1 ORDER BY $COL_ID DESC"
         val result = db.rawQuery(query, null)
 
 

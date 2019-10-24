@@ -136,21 +136,22 @@ class EHistoryActivity : BaseActivity(), View.OnClickListener,
 
     override fun onBackPressed() {
 
-        val count = supportFragmentManager.backStackEntryCount
-        myHelper.log("count--$count")
-        if (count < 2) {
-            finish()
-        } else {
-            supportFragmentManager.popBackStack()
-            val currentFragmentTag = supportFragmentManager.getBackStackEntryAt(count - 2).name
-
-            if (supportFragmentManager.getBackStackEntryAt(count - 2).id != navigationView.selectedItemId) {
-                setNavItem(currentFragmentTag)
-                supportFragmentManager.popBackStack()
-            } else {
-                supportFragmentManager.popBackStack()
-            }
-        }
+        super.onBackPressed()
+//        val count = supportFragmentManager.backStackEntryCount
+//        myHelper.log("count--$count")
+//        if (count < 2) {
+//            finish()
+//        } else {
+//            supportFragmentManager.popBackStack()
+//            val currentFragmentTag = supportFragmentManager.getBackStackEntryAt(count - 2).name
+//
+//            if (supportFragmentManager.getBackStackEntryAt(count - 2).id != navigationView.selectedItemId) {
+//                setNavItem(currentFragmentTag)
+//                supportFragmentManager.popBackStack()
+//            } else {
+//                supportFragmentManager.popBackStack()
+//            }
+//        }
     }
 
 }

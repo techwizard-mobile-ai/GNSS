@@ -123,6 +123,9 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
                     if (db.getOperator(pin).id > 0) {
                         myHelper.setOperatorAPI(db.getOperator(pin))
                         launchHome()
+                        if (myHelper.isOnline()) {
+                            fetchOrgData()
+                        }
                     } else {
                         myHelper.toast("Invalid PIN.\nPlease Enter Correct PIN.")
                     }
@@ -177,11 +180,11 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
             finishAffinity()
         } else {
 
-            val intent = Intent(this@OperatorLoginActivity, HourMeterStartActivity::class.java)
-            startActivity(intent)
-            finishAffinity()
+//            val intent = Intent(this@OperatorLoginActivity, HourMeterStartActivity::class.java)
+//            startActivity(intent)
+//            finishAffinity()
 
-//            myHelper.startHomeActivityByType(MyData())
+            myHelper.startHomeActivityByType(MyData())
         }
     }
 
