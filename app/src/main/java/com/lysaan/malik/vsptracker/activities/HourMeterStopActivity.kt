@@ -38,7 +38,7 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
 
 
         val meter = myHelper.getMeter()
-        myData.startTime = meter.hourStartTime
+        myData.startTime = meter.machineStartTime
 
         myData.loadingGPSLocation = meter.hourStartGPSLocation
 

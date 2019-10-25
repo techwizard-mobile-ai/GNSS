@@ -39,14 +39,16 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                 trul_task.text = myData.unloadingTask
                 trul_material.text = myData.unloadingMaterial
                 trul_location.text = myData.unloadingLocation
-                trul_weight.text = "Tonnes (" + myData.unloadingWeight + ")"
+//                trul_weight.text = "Tonnes (" + myData.unloadingWeight + ")"
+                trul_weight.text = "0.0"
                 trunload_unload.text = "Unload"
             }
             3 -> {
                 trul_task.text = myData.backUnloadingTask
                 trul_material.text = myData.backUnloadingMaterial
                 trul_location.text = myData.backUnloadingLocation
-                trul_weight.text = "Tonnes (" + myData.unloadingWeight + ")"
+//                trul_weight.text = "Tonnes (" + myData.unloadingWeight + ")"
+                trul_weight.text = "0.0"
                 trunload_unload.text = "Back Unload"
             }
         }
@@ -107,8 +109,6 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
 
                 saveTrip(myData)
 
-                myHelper.log("getTrip:$datum")
-
                 if(myData.tripType == 1) {
 
                     myData.loadingMachine = myData.backLoadingMachine
@@ -137,7 +137,7 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                 }
 
 
-
+                myData.unloadingWeight = trul_weight.text.toString().toDouble()
                 if(myHelper.isOnline()){
                     pushTrip(myData)
                 }else{
@@ -238,7 +238,7 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                     }
                 }
 
-                myData.unloadingWeight = 0.0;
+//                myData.unloadingWeight = 0.0;
                 myHelper.setLastJourney(myData)
                 myHelper.startLoadAfterActivityByType(myData)
             }
@@ -249,7 +249,7 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                     }
                 }
                 val intent = Intent(this, RLoadActivity::class.java)
-                myData.unloadingWeight = 0.0;
+//                myData.unloadingWeight = 0.0;
                 myHelper.setLastJourney(myData)
                 startActivity(intent)
                 finish()
@@ -263,7 +263,7 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                         myData.nextAction = 0
                     }
                 }
-                myData.unloadingWeight = 0.0;
+//                myData.unloadingWeight = 0.0;
                 myHelper.setLastJourney(myData)
                 val intent = Intent(this, RLoadActivity::class.java)
                 startActivity(intent)
