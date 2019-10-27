@@ -203,4 +203,6 @@
     <string name="trip_number">Trip Number</string>
     <string name="trip_type">Trip Type</string>
     <string name="trip_id">Trip ID</string>
+    <string name="load_settings">Load Settings</string>
+    <string name="unload_settings">Unload Settings</string>
 </resources>

@@ -34,15 +34,15 @@
                 android:layout_gravity="center"
                 android:elevation="16dp"
                 android:gravity="center"
-                android:text="@string/load"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/load_settings"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@android:color/white" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
 
                 android:id="@+id/thome_load_button"
-                android:layout_width="@dimen/_70sdp"
-                android:layout_height="@dimen/_70sdp"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_100sdp"
                 android:backgroundTint="@color/colorPrimary"
                 android:src="@android:color/transparent" />
         </FrameLayout>
@@ -61,14 +61,14 @@
                 android:layout_gravity="center"
                 android:elevation="16dp"
                 android:gravity="center"
-                android:text="@string/unload"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/unload_settings"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@android:color/white" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/thome_unload_button"
-                android:layout_width="@dimen/_70sdp"
-                android:layout_height="@dimen/_70sdp"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_100sdp"
                 android:backgroundTint="@color/colorPrimary"
                 android:src="@android:color/transparent" />
         </FrameLayout>

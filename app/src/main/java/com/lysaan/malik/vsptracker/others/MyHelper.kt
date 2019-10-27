@@ -202,8 +202,8 @@ class MyHelper(var TAG: String, val context: Context) {
     fun getNextAction() = getLastJourney().nextAction
 
     fun setToDoLayout(view: com.google.android.material.floatingactionbutton.FloatingActionButton) {
-        val width = context.resources.getDimensionPixelSize(R.dimen._100sdp)
-        val height = context.resources.getDimensionPixelSize(R.dimen._100sdp)
+        val width = context.resources.getDimensionPixelSize(R.dimen._120sdp)
+        val height = context.resources.getDimensionPixelSize(R.dimen._120sdp)
         val layoutParams = FrameLayout.LayoutParams(width, height)
         view.setLayoutParams(layoutParams)
     }
