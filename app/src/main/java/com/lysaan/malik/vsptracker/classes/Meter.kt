@@ -7,9 +7,12 @@ class Meter : Serializable {
     var machineStartTime: Long = 0
     var hourStartTime: Long = 0
     var isMachineStopped: Boolean = true
-    var isMachineTimeCustom: Boolean = false
+    var isMachineStartTimeCustom: Boolean = false
+    var isMachineStopTimeCustom: Boolean = false
     var machineTotalTime: Long = 0
 
+    var startHours = ""
+    var totalHours = ""
     var dailyModeStartTime: Long = 0
     var dailyModeTotalTime: Long = 0
     var isDailyModeStarted: Boolean = false
@@ -26,7 +29,7 @@ class Meter : Serializable {
     var machineHourDbID: Long = 0L
     var delayDbID: Long = 0L
     override fun toString(): String {
-        return "Meter(machineStartTime=$machineStartTime, isMachineStopped=$isMachineStopped, isMachineTimeCustom=$isMachineTimeCustom, machineTotalTime=$machineTotalTime, dailyModeStartTime=$dailyModeStartTime, dailyModeTotalTime=$dailyModeTotalTime, isDailyModeStarted=$isDailyModeStarted, machineDbID=$machineDbID, delayStartTime=$delayStartTime, delayStopTime=$delayStopTime, delayTotalTime=$delayTotalTime, delayStartGPSLocation=$delayStartGPSLocation, delayStopGPSLocation=$delayStopGPSLocation, isDelayStarted=$isDelayStarted, machineHourDbID=$machineHourDbID, delayDbID=$delayDbID)"
+        return "Meter(machineStartTime=$machineStartTime, hourStartTime=$hourStartTime, isMachineStartTimeCustom=$isMachineStartTimeCustom, isMachineStopTimeCustom=$isMachineStopTimeCustom, machineTotalTime=$machineTotalTime)"
     }
 
 

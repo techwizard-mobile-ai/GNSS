@@ -100,13 +100,13 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
 
         when (myHelper.getMachineTypeID()) {
             1 -> {
-                toolbar_title.text = "VSP Tracker - Excavator"
+                toolbar_title.text = "Excavator # ${myHelper.getMachineNumber() } : ${myHelper.getOperatorAPI().name}"
             }
             2 -> {
-                toolbar_title.text = "VSP Tracker - Scraper"
+                toolbar_title.text = "Scraper # ${myHelper.getMachineNumber() } : ${myHelper.getOperatorAPI().name}"
             }
             3 -> {
-                toolbar_title.text = "VSP Tracker - Truck"
+                toolbar_title.text = "Truck # ${myHelper.getMachineNumber() } :  ${myHelper.getOperatorAPI().name}"
             }
         }
 

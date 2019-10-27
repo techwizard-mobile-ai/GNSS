@@ -112,6 +112,10 @@ interface RetrofitAPI {
 
     @POST(LOGIN)
     @FormUrlEncoded
-    fun getLogin(@Field("email") email: String,@Field("password") password: String,@Field("role") role: Int = 1
+    fun getLogin(
+        @Field("email") email: String,
+        @Field("password") password: String,
+        @Field("role") role: Int = 1,
+        @Field("ttl") ttl: Int = 43200 // 43200 minutes = 30 days
     ): Call<LoginResponse>
 }

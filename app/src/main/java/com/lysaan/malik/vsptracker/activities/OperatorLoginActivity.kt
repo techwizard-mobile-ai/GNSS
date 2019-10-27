@@ -99,7 +99,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
 //        myHelper.log("MachinesHours:${db.getMachinesHours()}")
 
         if (myHelper.getOperatorAPI().id > 0) {
-            launchHome()
+            launchHomeForLoggedIn()
             if (myHelper.isOnline()) {
                 fetchOrgData()
             }
@@ -169,6 +169,25 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
             })
         }*/
     fun launchHome() {
+        if (myHelper.getMachineID() < 1) {
+            myHelper.log("No machine Number is entered.")
+            val intent = Intent(this@OperatorLoginActivity, MachineTypeActivity::class.java)
+            startActivity(intent)
+            finishAffinity()
+        } else if (myHelper.getIsMachineStopped()) {
+            val intent = Intent(this@OperatorLoginActivity, MachineStatus1Activity::class.java)
+            startActivity(intent)
+            finishAffinity()
+        } else {
+
+            val intent = Intent(this@OperatorLoginActivity, HourMeterStartActivity::class.java)
+            startActivity(intent)
+            finishAffinity()
+
+//            myHelper.startHomeActivityByType(MyData())
+        }
+    }
+    fun launchHomeForLoggedIn() {
         if (myHelper.getMachineID() < 1) {
             myHelper.log("No machine Number is entered.")
             val intent = Intent(this@OperatorLoginActivity, MachineTypeActivity::class.java)

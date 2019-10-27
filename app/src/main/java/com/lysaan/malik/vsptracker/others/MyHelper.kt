@@ -94,7 +94,7 @@ class MyHelper(var TAG: String, val context: Context) {
             override fun onResponse(call: Call, response: Response) {
                 val respontString = response.body()!!.string()
                 val responeJObject = JSONObject(respontString)
-//                log("RefreshToken:$respontString")
+                log("RefreshToken:$respontString")
                 val success = responeJObject.getBoolean("success")
                 if (success) {
                     val gson = GsonBuilder().create()

@@ -38,7 +38,7 @@ class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var location: Location
 
     private val REQUEST_ACCESS_FINE_LOCATION = 1
-
+    var startReading = ""
     private var locationManager: LocationManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,6 +60,7 @@ class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
         myHelper.log("MachineHours:${db.getMachineHours(myHelper.getMachineID())}")
         var reading = db.getMachineHours(myHelper.getMachineID()).totalHours
         if(reading.isNullOrEmpty()){reading = "0.0"}
+        startReading = reading
         ms_reading.setText(myHelper.getRoundedDecimal(reading!!.toDouble()).toString())
         myHelper.log("Machine_HourMeter--reading--:${reading}")
 
@@ -92,17 +93,20 @@ class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
 
             R.id.ms_continue -> {
 
-                if (!myHelper.getMeterTimeForStart().equals(ms_reading.text.toString(), true)) {
+//                if (!myHelper.getMeterTimeForStart().equals(ms_reading.text.toString(), true)) {
+                if (!startReading.equals(ms_reading.text.toString(), true)) {
                     val meter = myHelper.getMeter()
-                    meter.isMachineTimeCustom = true
+                    meter.isMachineStartTimeCustom = true
                     meter.hourStartGPSLocation = gpsLocation
                     val currentTime = System.currentTimeMillis()
                     meter.hourStartTime =currentTime
+                    meter.startHours = ms_reading.text.toString()
                     myHelper.setMeter(meter)
                     myHelper.log("Custom Time : True, Original reading:${myHelper.getMeterTimeForStart()}, New Reading: ${ms_reading.text}")
                 } else {
                     val meter = myHelper.getMeter()
-                    meter.isMachineTimeCustom = false
+                    meter.isMachineStartTimeCustom = false
+                    meter.startHours = ms_reading.text.toString()
                     myHelper.setMeter(meter)
                     myHelper.log("Custom Time : False, Original reading:${myHelper.getMeterTimeForStart()}, New Reading: ${ms_reading.text}")
                 }

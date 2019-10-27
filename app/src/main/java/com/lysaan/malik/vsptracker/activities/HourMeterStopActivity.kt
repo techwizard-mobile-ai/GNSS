@@ -32,17 +32,18 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
 
         myData = MyData()
 
-        if(myHelper.getMeter().isMachineTimeCustom)
+        val meter = myHelper.getMeter()
+        if(meter.isMachineStartTimeCustom)
         myData.isStartHoursCustom = 1
         myData.startHours = myHelper.getMeterTimeForFinish()
 
-
-        val meter = myHelper.getMeter()
         myData.startTime = meter.machineStartTime
 
         myData.loadingGPSLocation = meter.hourStartGPSLocation
 
         sfinish_reading.setText(myHelper.getMeterTimeForFinish())
+
+        myHelper.log("onCreate:$myData")
 
         sfinish_minus.setOnClickListener(this)
         sfinish_plus.setOnClickListener(this)
@@ -74,14 +75,16 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
             R.id.hm_stop_logout -> {
                 if (!myHelper.getMeterTimeForFinish().equals(sfinish_reading.text.toString(), true)) {
                     val meter = myHelper.getMeter()
-                    meter.isMachineTimeCustom = true
+                    meter.isMachineStopTimeCustom = true
                     myData.isTotalHoursCustom = 1
+                    myData.startHours = meter.startHours
                     myHelper.setMeter(meter)
                     myHelper.log("Custom Time : True, Original reading:${myHelper.getMeterTimeForFinish()}, New Reading: ${sfinish_reading.text}")
                 } else {
                     val meter = myHelper.getMeter()
-                    meter.isMachineTimeCustom = false
+                    meter.isMachineStopTimeCustom = false
                     myData.isTotalHoursCustom = 0
+                    myData.startHours = meter.startHours
                     myHelper.setMeter(meter)
                     myHelper.log("Custom Time : False, Original reading:${myHelper.getMeterTimeForFinish()}, New Reading: ${sfinish_reading.text}")
                 }
@@ -94,6 +97,7 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
 
                 myData.totalHours = sfinish_reading.text.toString()
 
+                myHelper.log("Before saveMachineHour:$myData")
                 saveMachineHour(myData)
 
                 myHelper.stopDelay(gpsLocation)

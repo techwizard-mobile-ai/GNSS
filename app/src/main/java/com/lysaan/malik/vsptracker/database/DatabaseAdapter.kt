@@ -2054,4 +2054,53 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return updatedID
 
     }
+
+    fun updateMachineHours(datum: MyData): Int {
+
+
+        val db = this.writableDatabase
+        var cv = ContentValues()
+
+
+        val currentTime = System.currentTimeMillis()
+        datum.stopTime = currentTime
+
+        val time = System.currentTimeMillis()
+        datum.time = time.toString()
+        datum.date = myHelper.getDate(time.toString())
+
+        cv.put(COL_ORG_ID, datum.orgId)
+        cv.put(COL_SITE_ID, datum.siteId)
+        cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
+        cv.put(COL_MACHINE_ID, datum.machineId)
+        cv.put(COL_MACHINE_NUMBER, datum.loadedMachineNumber)
+
+
+
+        cv.put(COL_START_TIME, datum.startTime)
+        cv.put(COL_END_TIME, datum.stopTime)
+
+        cv.put(COL_START_HOURS, datum.startHours)
+        cv.put(COL_IS_START_HOURS_CUSTOM, datum.isStartHoursCustom)
+        cv.put(COL_TOTAL_HOURS, datum.totalHours)
+        cv.put(COL_IS_TOTAL_HOURS_CUSTOM, datum.isTotalHoursCustom)
+
+        if (datum.time != null)
+            cv.put(COL_TIME, datum.time.toLong())
+        cv.put(COL_DATE, datum.date)
+        cv.put(COL_WORK_MODE, myHelper.getWorkMode())
+
+
+        cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.loadingGPSLocation)
+        )
+        cv.put(COL_UNLOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.unloadingGPSLocation)
+        )
+        cv.put(COL_USER_ID, myHelper.getUserID())
+        cv.put(COL_IS_SYNC, datum.isSync)
+
+        val updatedID = db.update(TABLE_MACHINES_HOURS, cv, "$COL_ID = ${datum.recordID}", null)
+        // myHelper.log("MachinesHour:$datum")
+        // myHelper.log("MachinesHour:insertID:$insertID")
+        return updatedID;
+    }
 }

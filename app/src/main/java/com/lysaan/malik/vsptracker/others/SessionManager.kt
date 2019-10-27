@@ -182,7 +182,7 @@ class SessionManager(internal var _context: Context) {
 
     fun getMachineTypeID() = pref.getInt(KEY_MACHINE_TYPE_ID, 0)
 
-    //    machineTypeId = 1 excavator
+//    machineTypeId = 1 excavator
 //    machineTypeId = 2 scrapper
 //    machineTypeId = 3 truck
     fun setMachineTypeID(type: Int) {

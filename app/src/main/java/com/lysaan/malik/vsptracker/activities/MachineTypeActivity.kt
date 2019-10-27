@@ -118,12 +118,13 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
         if(myHelper.getMachineID() > 0){
             val myData = MyData()
 
-            if(myHelper.getMeter().isMachineTimeCustom)
+            if(myHelper.getMeter().isMachineStartTimeCustom)
                 myData.isStartHoursCustom = 1
 
 
             myHelper.log("MachineHour:${db.getMachineHours(myHelper.getMachineID())}")
-            myData.startHours = db.getMachineHours(myHelper.getMachineID()).totalHours
+//            myData.totalHours = db.getMachineHours(myHelper.getMachineID()).totalHours
+            myData.startHours = myHelper.getMeter().startHours
             myData.machineTypeId = myHelper.getMachineTypeID()
 
             myData.totalHours = myHelper.getMeterTimeForFinishCustom(myData.startHours)
