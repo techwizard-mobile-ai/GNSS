@@ -32,6 +32,7 @@ import app.vsptracker.apis.login.LoginAPI
 import app.vsptracker.apis.login.LoginResponse
 import app.vsptracker.apis.operators.OperatorAPI
 import app.vsptracker.apis.trip.MyData
+import app.vsptracker.apis.trip.MyDataResponse
 import app.vsptracker.classes.GPSLocation
 import app.vsptracker.classes.Material
 import app.vsptracker.classes.Meter
@@ -41,7 +42,6 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import app.vsptracker.BuildConfig
 import okhttp3.*
 import org.json.JSONObject
 import retrofit2.Retrofit
@@ -131,6 +131,42 @@ class MyHelper(var TAG: String, val context: Context) {
 
             override fun onFailure(call: Call, e: IOException) {
                 log("Failed to execute request ${e.printStackTrace()}")
+            }
+        })
+    }
+
+    fun updateIsMachineRunning(isRunning:Int) {
+
+        this.retrofit = Retrofit.Builder()
+            .baseUrl(RetrofitAPI.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        this.retrofitAPI = retrofit.create(RetrofitAPI::class.java)
+
+        val call = this.retrofitAPI.updateIsMachineRunning(getLoginAPI().auth_token, getMachineID(), isRunning)
+        call.enqueue(object : retrofit2.Callback<MyDataResponse> {
+
+            override fun onResponse(call: retrofit2.Call<MyDataResponse>, response: retrofit2.Response<MyDataResponse>) {
+                log("updateMahineStatus:$response")
+                val loginResponse = response.body()
+                log("updatebody:$loginResponse")
+//                if(loginResponse!!.success){
+//                    log("SendReponse:${loginResponse.data}.")
+//                    setLoginAPI(loginResponse.data)
+//                    val intent = Intent(context, context.javaClass)
+//                    intent.putExtra("myData", MyData())
+//                    context.startActivity(intent)
+//                    toast("Please Try Again.")
+//                }else{
+//                    toast(loginResponse.message)
+//                    val intent = Intent(context, LoginActivity::class.java)
+//                    context.startActivity(intent)
+//                }
+//                myHelper.setLoginAPI(loginResponse.data)
+            }
+
+            override fun onFailure(call: retrofit2.Call<MyDataResponse>, t: Throwable) {
+                log("API Failure:" + t)
             }
         })
     }

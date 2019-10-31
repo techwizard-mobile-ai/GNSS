@@ -34,7 +34,12 @@ interface RetrofitAPI {
         const val ORGS_LOADS= "orgsloads/store"
         const val ORGS_MACHINES_HOURS = "orgsmachineshours/list"
         const val ORGS_PUSH_MACHINES_HOURS = "orgsmachineshours/store"
+        const val ORGS_MACHINES_UPDATE = "orgsmachines/update"
     }
+
+
+    @PUT (ORGS_MACHINES_UPDATE)
+    fun updateIsMachineRunning(@Query("token") token: String?, @Query("id") machineID: Int?, @Query("is_running") isRunning: Int?):Call<MyDataResponse>
 
     @POST (ORGS_PUSH_MACHINES_HOURS)
     fun pushMachineHour(@Query("token") token: String?, @Body myData: MyData):Call<MyDataResponse>

@@ -15,7 +15,7 @@
         android:screenOrientation="landscape"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <receiver android:name=".VSPTWidget">
+        <receiver android:name=".others.VSPTWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

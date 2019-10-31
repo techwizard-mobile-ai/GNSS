@@ -6,6 +6,8 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import app.vsptracker.AppRater
+import app.vsptracker.BuildConfig
+import app.vsptracker.MyHelper
 import app.vsptracker.R
 import app.vsptracker.apis.RetrofitAPI
 import app.vsptracker.apis.login.LoginResponse
@@ -16,8 +18,6 @@ import app.vsptracker.apis.trip.MyDataListResponse
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.Utils
 import com.bumptech.glide.Glide
-import app.vsptracker.BuildConfig
-import app.vsptracker.MyHelper
 import kotlinx.android.synthetic.main.activity_login.*
 import okhttp3.*
 import org.json.JSONObject
@@ -56,7 +56,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         when (myHelper.getMachineTypeID()) {
             1 -> {
                 Glide.with(this).load(resources.getDrawable(R.drawable.excavator))
-                        .into(signin_image)
+                    .into(signin_image)
             }
             2 -> {
                 Glide.with(this).load(resources.getDrawable(R.drawable.scraper)).into(signin_image)
@@ -66,7 +66,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             }
             else -> {
                 Glide.with(this).load(resources.getDrawable(R.drawable.welcomenew))
-                        .into(signin_image)
+                    .into(signin_image)
             }
         }
 
@@ -88,11 +88,9 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
                 if (!myHelper.isValidEmail(email)) {
                     myHelper.toast("Please Provide valid Email Address.")
-                }
-                else if (pass.length < 8) {
+                } else if (pass.length < 8) {
                     myHelper.toast("Password Minimum Length should be 8 Characters")
-                }
-                else {
+                } else {
                     orgLogin(email, pass)
                 }
             }
@@ -100,7 +98,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     }
 
 
-    fun orgLogin(email: String, pass: String){
+    fun orgLogin(email: String, pass: String) {
         myHelper.showProgressBar()
 
         val call = this.retrofitAPI.getLogin(email, pass)
@@ -108,25 +106,25 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
             override fun onResponse(call: retrofit2.Call<LoginResponse>, response: retrofit2.Response<LoginResponse>) {
 //                myHelper.hideProgressBar()
-                 myHelper.log("RetrofitResponse:${response.body()}")
+                myHelper.log("RetrofitResponse:${response.body()}")
                 val loginResponse = response.body()
-                if(loginResponse!!.success){
+                if (loginResponse!!.success) {
                     loginResponse.data.pass = pass
                     myHelper.setLoginAPI(loginResponse.data)
 
                     var versionCode = BuildConfig.VERSION_CODE
                     myHelper.log("App:${loginResponse.app}")
                     myHelper.log("versionCode:$versionCode")
-                    if(loginResponse.app.version_code > versionCode && loginResponse.app.is_critical> 0){
+                    if (loginResponse.app.version_code > versionCode && loginResponse.app.is_critical > 0) {
                         myHelper.log("Update App")
-                        val appRater =  AppRater()
+                        val appRater = AppRater()
                         appRater.rateNow(this@LoginActivity)
 
-                    }else{
+                    } else {
                         fetchOrgData()
                     }
 
-                }else{
+                } else {
                     myHelper.hideProgressBar()
                     myHelper.toast(loginResponse.message)
                 }
@@ -139,6 +137,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         })
     }
+
     fun fetchJSON() {
         // myHelper.log("fetchJson")
 
@@ -167,7 +166,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         })
     }
 
-    fun fetchOrgData(){
+    fun fetchOrgData() {
         myHelper.toast("Fetching Company Data.\nPlease wait...")
         fetchMachinesHours()
 //        fetchMachinesTasks()
@@ -183,7 +182,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 call: retrofit2.Call<MyDataListResponse>,
                 response: retrofit2.Response<MyDataListResponse>
             ) {
-                 myHelper.log("Response:$response")
+                myHelper.log("Response:$response")
                 val response = response.body()
                 if (response!!.success && response.data != null) {
                     db.insertMachinesHours(response.data as ArrayList<MyData>)
@@ -196,10 +195,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
             override fun onFailure(call: retrofit2.Call<MyDataListResponse>, t: Throwable) {
                 myHelper.hideProgressBar()
-                // myHelper.log("Failure" + t.message)
+                myHelper.log("Failure" + t.message)
             }
         })
     }
+
     private fun fetchMachinesTasks() {
         val call = this.retrofitAPI.getMachinesTasks(
             myHelper.getLoginAPI().org_id,
@@ -210,6 +210,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 call: retrofit2.Call<OperatorResponse>,
                 response: retrofit2.Response<OperatorResponse>
             ) {
+                myHelper.log("Response:$response")
                 val response = response.body()
                 if (response!!.success && response.data != null) {
                     db.insertMachinesTasks(response.data as ArrayList<OperatorAPI>)
@@ -222,10 +223,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
             override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
                 myHelper.hideProgressBar()
-                // myHelper.log("Failure" + t.message)
+                myHelper.log("Failure" + t.message)
             }
         })
     }
+
     private fun fetchMaterials() {
         val call = this.retrofitAPI.getMaterials(
             myHelper.getLoginAPI().org_id,
@@ -236,6 +238,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 call: retrofit2.Call<OperatorResponse>,
                 response: retrofit2.Response<OperatorResponse>
             ) {
+                myHelper.log("Response:$response")
                 val response = response.body()
                 if (response!!.success && response.data != null) {
                     db.insertMaterials(response.data as ArrayList<OperatorAPI>)
@@ -248,10 +251,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
             override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
                 myHelper.hideProgressBar()
-                // myHelper.log("Failure" + t.message)
+                myHelper.log("Failure" + t.message)
             }
         })
     }
+
     private fun fetchLocations() {
         val call = this.retrofitAPI.getLocations(
             myHelper.getLoginAPI().org_id,
@@ -263,6 +267,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 response: retrofit2.Response<OperatorResponse>
             ) {
 
+                myHelper.log("Response:$response")
                 val response = response.body()
                 if (response!!.success && response.data != null) {
                     db.insertLocations(response.data as ArrayList<OperatorAPI>)
@@ -275,10 +280,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
             override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
                 myHelper.hideProgressBar()
-                // myHelper.log("Failure" + t.message)
+                myHelper.log("Failure" + t.message)
             }
         })
     }
+
     private fun fetchMachines() {
         val call = this.retrofitAPI.getMachines(
             myHelper.getLoginAPI().org_id,
@@ -290,6 +296,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 response: retrofit2.Response<OperatorResponse>
             ) {
 
+                myHelper.log("Response:$response")
                 val response = response.body()
                 if (response!!.success && response.data != null) {
                     db.insertMachines(response.data as ArrayList<OperatorAPI>)
@@ -302,10 +309,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
             override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
                 myHelper.hideProgressBar()
-                // myHelper.log("Failure" + t.message)
+                myHelper.log("Failure" + t.message)
             }
         })
     }
+
     private fun fetchStopReasons() {
         val call = this.retrofitAPI.getStopReasons(
             myHelper.getLoginAPI().org_id,
@@ -317,6 +325,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 response: retrofit2.Response<OperatorResponse>
             ) {
 
+                myHelper.log("Response:$response")
                 val response = response.body()
                 if (response!!.success && response.data != null) {
                     db.insertStopReasons(response.data as ArrayList<OperatorAPI>)
@@ -329,24 +338,26 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
             override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
                 myHelper.hideProgressBar()
-                // myHelper.log("Failure" + t.message)
+                myHelper.log("Failure" + t.message)
             }
         })
     }
-    private fun fetchMachinesPlants(){
+
+    private fun fetchMachinesPlants() {
 
         val call = this.retrofitAPI.getMachinesPlants(
             myHelper.getLoginAPI().org_id,
-            myHelper.getLoginAPI().auth_token)
+            myHelper.getLoginAPI().auth_token
+        )
         call.enqueue(object : retrofit2.Callback<OperatorResponse> {
             override fun onResponse(call: retrofit2.Call<OperatorResponse>, response: retrofit2.Response<OperatorResponse>) {
-                // myHelper.log("RetrofitResponse:$response")
+                myHelper.log("RetrofitResponse:$response")
                 val operatorResponse = response.body()
-                if(operatorResponse!!.success && operatorResponse.data != null){
+                if (operatorResponse!!.success && operatorResponse.data != null) {
                     // myHelper.log("MachinesPlants:${operatorResponse.data}.")
                     db.insertMachinesPlants(operatorResponse.data as ArrayList<OperatorAPI>)
                     fetchMachinesBrands()
-                }else{
+                } else {
                     myHelper.hideProgressBar()
                     myHelper.toast(operatorResponse.message)
                 }
@@ -359,19 +370,21 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         })
     }
-    private fun fetchMachinesBrands(){
+
+    private fun fetchMachinesBrands() {
 
         val call = this.retrofitAPI.getMachinesBrands(
-            myHelper.getLoginAPI().auth_token)
+            myHelper.getLoginAPI().auth_token
+        )
         call.enqueue(object : retrofit2.Callback<OperatorResponse> {
             override fun onResponse(call: retrofit2.Call<OperatorResponse>, response: retrofit2.Response<OperatorResponse>) {
-                // myHelper.log("RetrofitResponse:$response")
+                myHelper.log("RetrofitResponse:$response")
                 val operatorResponse = response.body()
-                if(operatorResponse!!.success && operatorResponse.data != null){
+                if (operatorResponse!!.success && operatorResponse.data != null) {
                     // myHelper.log("MachinesBrands:${operatorResponse.data}.")
                     db.insertMachinesBrands(operatorResponse.data as ArrayList<OperatorAPI>)
                     fetchMachinesTypes()
-                }else{
+                } else {
                     myHelper.hideProgressBar()
                     myHelper.toast(operatorResponse.message)
                 }
@@ -384,19 +397,21 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         })
     }
-    private fun fetchMachinesTypes(){
+
+    private fun fetchMachinesTypes() {
 
         val call = this.retrofitAPI.getMachinesTypes(
-            myHelper.getLoginAPI().auth_token)
+            myHelper.getLoginAPI().auth_token
+        )
         call.enqueue(object : retrofit2.Callback<OperatorResponse> {
             override fun onResponse(call: retrofit2.Call<OperatorResponse>, response: retrofit2.Response<OperatorResponse>) {
-                // myHelper.log("RetrofitResponse:$response")
+                myHelper.log("RetrofitResponse:$response")
                 val operatorResponse = response.body()
-                if(operatorResponse!!.success && operatorResponse.data != null){
+                if (operatorResponse!!.success && operatorResponse.data != null) {
                     // myHelper.log("MachinesTypes:${operatorResponse.data}.")
                     db.insertMachinesTypes(operatorResponse.data as ArrayList<OperatorAPI>)
                     fetchSites()
-                }else{
+                } else {
                     myHelper.hideProgressBar()
                     myHelper.toast(operatorResponse.message)
                 }
@@ -409,20 +424,22 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         })
     }
-    private fun fetchSites(){
+
+    private fun fetchSites() {
 
         val call = this.retrofitAPI.getSites(
             myHelper.getLoginAPI().org_id,
-            myHelper.getLoginAPI().auth_token)
+            myHelper.getLoginAPI().auth_token
+        )
         call.enqueue(object : retrofit2.Callback<OperatorResponse> {
             override fun onResponse(call: retrofit2.Call<OperatorResponse>, response: retrofit2.Response<OperatorResponse>) {
-                // myHelper.log("RetrofitResponse:$response")
+                myHelper.log("RetrofitResponse:$response")
                 val operatorResponse = response.body()
-                if(operatorResponse!!.success && operatorResponse.data != null){
+                if (operatorResponse!!.success && operatorResponse.data != null) {
                     // myHelper.log("Sites:${operatorResponse.data}.")
                     db.insertSites(operatorResponse.data as ArrayList<OperatorAPI>)
                     fetchOperators()
-                }else{
+                } else {
                     myHelper.hideProgressBar()
                     myHelper.toast(operatorResponse.message)
                 }
@@ -435,21 +452,23 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         })
     }
-    private fun fetchOperators(){
+
+    private fun fetchOperators() {
 
         val call = this.retrofitAPI.getOperators(
             myHelper.getLoginAPI().org_id,
-            myHelper.getLoginAPI().auth_token)
+            myHelper.getLoginAPI().auth_token
+        )
         call.enqueue(object : retrofit2.Callback<OperatorResponse> {
             override fun onResponse(call: retrofit2.Call<OperatorResponse>, response: retrofit2.Response<OperatorResponse>) {
-                // myHelper.log("RetrofitResponse:$response")
+                myHelper.log("RetrofitResponse:$response")
                 val operatorResponse = response.body()
-                if(operatorResponse!!.success && operatorResponse.data != null){
-                    // myHelper.log("Operators:${operatorResponse.data}.")
+                if (operatorResponse!!.success && operatorResponse.data != null) {
+                    myHelper.log("Operators:${operatorResponse.data}.")
                     db.insertOperators(operatorResponse.data as ArrayList<OperatorAPI>)
                     val intent = Intent(this@LoginActivity, OperatorLoginActivity::class.java)
                     startActivity(intent)
-                }else{
+                } else {
                     myHelper.hideProgressBar()
                     myHelper.toast(operatorResponse.message)
                 }

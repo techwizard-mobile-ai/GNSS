@@ -119,6 +119,7 @@ class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
 
                 if(myHelper.isOnline()){
                     pushMachineStatus(machineData)
+                    myHelper.updateIsMachineRunning(1)
                 }
 //                else{
                     myHelper.toast("No Internet Connection.\nDelay Not Uploaded to Server.")
@@ -146,10 +147,10 @@ class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
                 myHelper.log("pushMachineStatus:$response")
                 if (response!!.success && response.data != null) {
                     machineData.isSync = 1
-//                    updateMachineStatus(machineData)
+//                    updateIsMachineRunning(machineData)
 
                 } else {
-//                    updateMachineStatus(machineData)
+//                    updateIsMachineRunning(machineData)
                     if (response.message!!.equals("Token has expired")) {
                         myHelper.log("Token Expired:$response")
                         myHelper.refreshToken()
@@ -161,7 +162,7 @@ class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
 
             override fun onFailure(call: retrofit2.Call<MyDataResponse>, t: Throwable) {
 
-//                updateMachineStatus(machineData)
+//                updateIsMachineRunning(machineData)
                 myHelper.toast(t.message.toString())
                 myHelper.log("Failure" + t.message)
             }

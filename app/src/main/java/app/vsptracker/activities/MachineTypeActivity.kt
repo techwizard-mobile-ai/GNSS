@@ -19,6 +19,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import app.vsptracker.BuildConfig
+import app.vsptracker.MyHelper
 import app.vsptracker.R
 import app.vsptracker.adapters.SelectMachineNumberAdapter
 import app.vsptracker.adapters.SelectStateAdapter
@@ -30,8 +32,6 @@ import app.vsptracker.classes.Material
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.Utils
 import com.google.android.material.snackbar.Snackbar
-import app.vsptracker.BuildConfig
-import app.vsptracker.MyHelper
 import kotlinx.android.synthetic.main.activity_machine_type.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -169,12 +169,10 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
                     }else{
                         //Different machine
 
-
+                        myHelper.updateIsMachineRunning(0)
                         myHelper.setMachineTypeID(selectedMachineType.id)
                         myHelper.setMachineNumber(selectedMachineNumber.number)
                         myHelper.setMachineID(selectedMachineNumber.id)
-
-
 
                     }
 

@@ -1,8 +1,8 @@
 package app.vsptracker.apis.operators
 
+import app.vsptracker.apis.login.AppAPI
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import app.vsptracker.apis.login.AppAPI
 
 
 class OperatorResponse {
@@ -18,4 +18,10 @@ class OperatorResponse {
     @SerializedName("app")
     @Expose
     var app : AppAPI = AppAPI()
+
+    override fun toString(): String {
+        return "OperatorResponse(success=$success, message='$message', data=$data, app=$app)"
+    }
+
+
 }

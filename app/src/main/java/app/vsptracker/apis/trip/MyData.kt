@@ -1,13 +1,16 @@
 package app.vsptracker.apis.trip
 
+import app.vsptracker.classes.GPSLocation
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import app.vsptracker.classes.GPSLocation
 import java.io.Serializable
 
 class MyData() : Serializable {
 
+    @SerializedName("id")
+    @Expose
     var id: Int = 0
+
     @SerializedName("org_id")
     @Expose
     var orgId: Int = 0
@@ -19,6 +22,10 @@ class MyData() : Serializable {
     @SerializedName("operator_id")
     @Expose
     var operatorId: Int = 0
+
+    @SerializedName("is_running")
+    @Expose
+    var isRunning: Int = 0
 
     @SerializedName("machine_type_id")
     @Expose
@@ -237,7 +244,7 @@ class MyData() : Serializable {
 
     var isMapOpened: Boolean = false
     override fun toString(): String {
-        return "MyData(id=$id, machineId=$machineId, startTime=$startTime, stopTime=$stopTime, startHours='$startHours', totalHours='$totalHours', totalTime=$totalTime, time='$time', date='$date', recordID=$recordID, isStartMachine=$isStartMachine)"
+        return "MyData(id=$id, isRunning=$isRunning, machineId=$machineId, startTime=$startTime, stopTime=$stopTime, startHours='$startHours', totalHours='$totalHours', totalTime=$totalTime, time='$time', date='$date', recordID=$recordID, isStartMachine=$isStartMachine)"
     }
 
 

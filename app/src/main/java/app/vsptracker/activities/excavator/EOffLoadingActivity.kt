@@ -139,7 +139,7 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                     eWork.workType = myData.eWorkType
                     eWork.workActionType = 2
                     eWork.loadingGPSLocation = gpsLocation
-
+                    eWork.loadingGPSLocationString = myHelper.getGPSLocationToString(eWork.loadingGPSLocation)
                     val insertID = db.insertEWork(eWork)
                     eWorkID = insertID.toInt()
                     myHelper.log("insertID:$insertID")

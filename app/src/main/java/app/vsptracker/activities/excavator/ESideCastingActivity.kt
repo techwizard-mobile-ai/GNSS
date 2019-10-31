@@ -94,7 +94,7 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
                         eWork.isDaysWork = 0
                     }
 
-
+                    myHelper.log("BeforePushSideCasting:$eWork")
                     if(myHelper.isOnline()){
                         pushSideCasting(eWork)
                     }
@@ -126,7 +126,10 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
                     chronometer1.start()
                     eWork.startTime = startTime
                     eWork.loadingGPSLocation = gpsLocation
+                    eWork.loadingGPSLocationString = myHelper.getGPSLocationToString(eWork.loadingGPSLocation)
                     isWorking = true
+                    myHelper.log("$workTitle is Started.")
+                    myHelper.log(eWork.toString())
                 }
 
             }

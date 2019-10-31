@@ -453,7 +453,7 @@ open class BaseActivity() : AppCompatActivity(), NavigationView.OnNavigationItem
         eWork.operatorId = myHelper.getOperatorAPI().id
         eWork.machineTypeId = myHelper.getMachineTypeID()
 
-        eWork.loadingGPSLocationString = myHelper.getGPSLocationToString(eWork.loadingGPSLocation)
+//        eWork.loadingGPSLocationString = myHelper.getGPSLocationToString(eWork.loadingGPSLocation)
         eWork.unloadingGPSLocationString = myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
 
 

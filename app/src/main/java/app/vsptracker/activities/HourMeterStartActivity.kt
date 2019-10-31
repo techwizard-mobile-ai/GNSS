@@ -17,19 +17,19 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import app.vsptracker.BuildConfig
+import app.vsptracker.MyHelper
 import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.GPSLocation
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.Utils
 import com.google.android.material.snackbar.Snackbar
-import app.vsptracker.BuildConfig
-import app.vsptracker.MyHelper
 import kotlinx.android.synthetic.main.activity_hour_meter_start.*
 
 class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var myData: MyData
-        private val TAG = this::class.java.simpleName
+    private val TAG = this::class.java.simpleName
     private lateinit var myHelper: MyHelper
     protected lateinit var db: DatabaseAdapter
     lateinit var gpsLocation: GPSLocation
@@ -59,7 +59,9 @@ class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
         myHelper.log("MachinesHours--:${db.getMachinesHours()}")
         myHelper.log("MachineHours:${db.getMachineHours(myHelper.getMachineID())}")
         var reading = db.getMachineHours(myHelper.getMachineID()).totalHours
-        if(reading.isNullOrEmpty()){reading = "0.0"}
+        if (reading.isNullOrEmpty()) {
+            reading = "0.0"
+        }
         startReading = reading
         ms_reading.setText(myHelper.getRoundedDecimal(reading!!.toDouble()).toString())
         myHelper.log("Machine_HourMeter--reading--:${reading}")
@@ -99,7 +101,7 @@ class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
                     meter.isMachineStartTimeCustom = true
                     meter.hourStartGPSLocation = gpsLocation
                     val currentTime = System.currentTimeMillis()
-                    meter.hourStartTime =currentTime
+                    meter.hourStartTime = currentTime
                     meter.startHours = ms_reading.text.toString()
                     myHelper.setMeter(meter)
                     myHelper.log("Custom Time : True, Original reading:${myHelper.getMeterTimeForStart()}, New Reading: ${ms_reading.text}")
@@ -116,6 +118,7 @@ class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
                 val newMinutes = myHelper.getRoundedInt(minutes)
                 myHelper.log("Minutes: $newMinutes")
                 myHelper.setMachineTotalTime(newMinutes)
+                myHelper.updateIsMachineRunning( 1)
                 myHelper.startHomeActivityByType(myData)
 
                 myHelper.startMachine()
@@ -143,6 +146,7 @@ class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
         }
 
     }
+
     fun requestPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED
@@ -192,6 +196,7 @@ class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
+
     private fun showGPSDisabledAlertToUser() {
         val alertDialogBuilder = AlertDialog.Builder(this, R.style.ThemeOverlay_AppCompat_Dialog)
         alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
@@ -213,7 +218,8 @@ class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
         var alert = alertDialogBuilder.create()
         alert.show()
     }
-    override fun onRequestPermissionsResult(requestCode: Int,permissions: Array<String>,grantResults: IntArray) {
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             REQUEST_ACCESS_FINE_LOCATION -> {
                 // If request is cancelled, the result arrays are empty.
@@ -233,6 +239,7 @@ class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
+
     private fun showSettings() {
         val snackbar = Snackbar.make(
             findViewById(android.R.id.content),
@@ -254,6 +261,7 @@ class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
         textView.maxLines = 5  //Or as much as you need
         snackbar.show()
     }
+
     private val locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: android.location.Location?) {
             makeUseofLocation(location)
@@ -272,6 +280,7 @@ class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
             showGPSDisabledAlertToUser()
         }
     }
+
     private fun makeUseofLocation(location1: Location?) {
         latitude = location1!!.latitude
         longitude = location1!!.longitude

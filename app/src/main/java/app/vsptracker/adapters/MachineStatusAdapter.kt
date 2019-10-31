@@ -5,12 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import app.vsptracker.MyHelper
 import app.vsptracker.R
 import app.vsptracker.activities.common.MachineStatus1Activity
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.Material
 import app.vsptracker.database.DatabaseAdapter
-import app.vsptracker.MyHelper
 import kotlinx.android.synthetic.main.list_row_machine_status.view.*
 
 
@@ -50,16 +50,15 @@ class MachineStatusAdapter(
 
 
             val insertID = db.insertMachineStatus(data)
+            myHelper.updateIsMachineRunning(0)
 
             if (insertID > 0) {
                 myHelper.toast("Record Saved in Database Successfully.")
                 myHelper.stopMachine(insertID)
                 myHelper.setIsMachineStopped(true, material.name, material.id)
 
-
-
-//                myHelper.startHomeActivityByType(MyData())
                 myHelper.logout(myContext)
+
                 myContext.finishAffinity()
 
             } else {
