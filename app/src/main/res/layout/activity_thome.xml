@@ -27,7 +27,6 @@
             android:layout_gravity="center">
 
             <TextView
-                android:id="@+id/thome_load_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -61,7 +60,6 @@
             android:layout_marginTop="@dimen/_40sdp">
 
             <TextView
-                android:id="@+id/thome_unload_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

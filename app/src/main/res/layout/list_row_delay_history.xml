@@ -162,9 +162,7 @@
                     style="@style/load_history_desc"
                     android:text="@string/list_row_delay_history_eth_mode_text" />
             </LinearLayout>
-            <LinearLayout
-                android:id="@+id/lhr_sync_layout"
-                style="@style/load_history_row_item">
+            <LinearLayout style="@style/load_history_row_item">
 
                 <TextView
                     style="@style/load_history_text"

@@ -21,9 +21,7 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/lhr_trip_number_layout"
-                style="@style/load_history_row_item">
+            <LinearLayout style="@style/load_history_row_item">
 
                 <TextView
                     style="@style/load_history_text"
@@ -35,9 +33,7 @@
                     android:text="@string/list_row_loading_history_lhr_trip_number_text" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/lhr_trip_type_layout"
-                style="@style/load_history_row_item">
+            <LinearLayout style="@style/load_history_row_item">
 
                 <TextView
                     style="@style/load_history_text"
@@ -49,9 +45,7 @@
                     android:text="@string/list_row_loading_history_lhr_trip_type_text" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/lhr_trip0_layout"
-                style="@style/load_history_row_item">
+            <LinearLayout style="@style/load_history_row_item">
 
                 <TextView
                     style="@style/load_history_text"
@@ -63,9 +57,7 @@
                     android:text="@string/list_row_loading_history_lhr_trip0_id_text" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/lhr_operator_layout"
-                style="@style/load_history_row_item">
+            <LinearLayout style="@style/load_history_row_item">
 
                 <TextView
                     style="@style/load_history_text"
@@ -189,9 +181,7 @@
                     android:text="@string/list_row_loading_history_lhr_time_text" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/lhr_duration_layout"
-                style="@style/load_history_row_item">
+            <LinearLayout style="@style/load_history_row_item">
 
                 <TextView
                     style="@style/load_history_text"
@@ -203,9 +193,7 @@
                     android:text="@string/list_row_loading_history_lhr_duration_text" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/lhr_workmode_layout"
-                style="@style/load_history_row_item">
+            <LinearLayout style="@style/load_history_row_item">
 
                 <TextView
                     style="@style/load_history_text"
@@ -217,9 +205,7 @@
                     android:text="@string/list_row_loading_history_lhr_workmode_text" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/lhr_sync_layout"
-                style="@style/load_history_row_item">
+            <LinearLayout style="@style/load_history_row_item">
 
                 <TextView
                     style="@style/load_history_text"

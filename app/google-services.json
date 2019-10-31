@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "427505437351",
-    "firebase_url": "https://vsptracker.firebaseio.com",
-    "project_id": "vsptracker",
-    "storage_bucket": "vsptracker.appspot.com"
+    "project_number": "832501858439",
+    "firebase_url": "https://vspt-2019.firebaseio.com",
+    "project_id": "vspt-2019",
+    "storage_bucket": "vspt-2019.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:427505437351:android:38ab1dd78d57f92f",
+        "mobilesdk_app_id": "1:832501858439:android:eec1de55bc494477243822",
         "android_client_info": {
-          "package_name": "com.lysaan.malik.vsptracker"
+          "package_name": "app.vsptracker"
         }
       },
       "oauth_client": [
         {
-          "client_id": "427505437351-8lbbd1at3coo3a2d5b89vdnm42dnm2ug.apps.googleusercontent.com",
+          "client_id": "832501858439-ae855piqt650bedqrpeoutt3gl22077t.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD1T-dvCTqXsL8a_SWWbpEAL2e3AZNJAXs"
+          "current_key": "AIzaSyByHFMbSrdidRlc0SOzYZweuKMX3Gxw2M8"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "427505437351-8lbbd1at3coo3a2d5b89vdnm42dnm2ug.apps.googleusercontent.com",
+              "client_id": "832501858439-ae855piqt650bedqrpeoutt3gl22077t.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

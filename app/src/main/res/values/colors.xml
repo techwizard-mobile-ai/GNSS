@@ -17,22 +17,12 @@
 
     <!--<color name="colorAccent">#1906d6</color>-->
     <color name="white">#FFFFFF</color>
-    <color name="darkBlue">#1906d6</color>
-    <color name="underline_tint">#2b2c2e</color>
-    <color name="cardview_light">#fbfbfb</color>
     <color name="black">#222222</color>
-    <color name="light_black">#818181</color>
-    <color name="signup_title">#0265aa</color>
-    <color name="light_blue">#0265aa</color>
-    <color name="terms">#35445f</color>
 
     <color name="light_gray">#e0e0e0</color>
     <color name="gray">#b6b4b4</color>
     <color name="gray_dark">#9f9e9e</color>
     <color name="light_white">#f0f0f0</color>
-    <color name="settings_border">#E3E3E3</color>
     <color name="red">#FF382A</color>
-    <color name="organe">#f44336</color>
 
-    <color name="grey">#9f9e9e</color>
 </resources>

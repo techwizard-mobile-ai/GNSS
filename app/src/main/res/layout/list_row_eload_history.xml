@@ -50,7 +50,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/lhr_loaded_machine_layout"
                 style="@style/load_history_row_item"
                 android:visibility="gone">
 
@@ -59,7 +58,6 @@
                     android:text="Loaded Machine" />
 
                 <TextView
-                    android:id="@+id/lhr_loaded_machine"
                     style="@style/load_history_desc"
                     android:text="@string/list_row_eload_history_lhr_loaded_machine_text" />
             </LinearLayout>
@@ -134,9 +132,7 @@
                     android:text="@string/list_row_eload_history_lhr_time_text" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/lhr_workmode_layout"
-                style="@style/load_history_row_item">
+            <LinearLayout style="@style/load_history_row_item">
 
                 <TextView
                     style="@style/load_history_text"
