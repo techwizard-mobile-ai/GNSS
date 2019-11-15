@@ -4,28 +4,28 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
-import com.google.android.material.navigation.NavigationView
 import app.vsptracker.BaseActivity
+import app.vsptracker.others.MyHelper
 import app.vsptracker.R
 import app.vsptracker.activities.common.LMachine1Activity
 import app.vsptracker.activities.common.UnloadTaskActivity
-import app.vsptracker.MyHelper
+import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_thome.*
 
 class THomeActivity : BaseActivity(), View.OnClickListener {
-    private val TAG = this::class.java.simpleName
+    private val tag = this::class.java.simpleName
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val contentFrameLayout = findViewById(R.id.base_content_frame) as FrameLayout
+        val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
         layoutInflater.inflate(R.layout.activity_thome, contentFrameLayout)
-        val navigationView = findViewById(R.id.base_nav_view) as NavigationView
+        val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
         navigationView.menu.getItem(0).isChecked = true
 
-        myHelper = MyHelper(TAG, this)
+        myHelper = MyHelper(tag, this)
 
 //        var bundle :Bundle ?=intent.extras
 //        if(bundle != null){

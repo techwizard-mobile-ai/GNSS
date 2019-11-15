@@ -17,7 +17,9 @@
         android:layout_marginTop="@dimen/_1sdp"
         android:layout_marginEnd="@dimen/_10sdp"
         android:hint="@string/activity_weight1_sload_weight_hint"
+        android:padding="@dimen/_20sdp"
         android:inputType="numberDecimal"
+        android:textSize="@dimen/_26sdp"
         android:textColor="@color/black" />
 
     <Button

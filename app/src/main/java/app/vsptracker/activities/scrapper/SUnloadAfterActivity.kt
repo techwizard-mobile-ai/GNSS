@@ -5,32 +5,32 @@ import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
 import app.vsptracker.BaseActivity
+import app.vsptracker.others.MyHelper
 import app.vsptracker.R
 import app.vsptracker.activities.HourMeterStopActivity
 import app.vsptracker.activities.common.Material1Activity
 import app.vsptracker.activities.common.RLoadActivity
 import app.vsptracker.apis.trip.MyData
 import com.google.android.material.navigation.NavigationView
-import app.vsptracker.MyHelper
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_sunload_after.*
 
 class SUnloadAfterActivity : BaseActivity(), View.OnClickListener {
-    private val TAG = this::class.java.simpleName
+    private val tag = this::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val contentFrameLayout = findViewById(R.id.base_content_frame) as FrameLayout
+        val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
         layoutInflater.inflate(R.layout.activity_sunload_after, contentFrameLayout)
-        val navigationView = findViewById(R.id.base_nav_view) as NavigationView
+        val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
         navigationView.menu.getItem(0).isChecked = true
 
-        myHelper = MyHelper(TAG, this)
+        myHelper = MyHelper(tag, this)
 
-        var bundle: Bundle? = intent.extras
+        val bundle: Bundle? = intent.extras
         if (bundle != null) {
-            myData = bundle!!.getSerializable("myData") as MyData
+            myData = bundle.getSerializable("myData") as MyData
             myHelper.log("myData:$myData")
         }
 

@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.vsptracker.MyHelper
+import app.vsptracker.others.MyHelper
 
 
 import app.vsptracker.R
@@ -58,11 +58,7 @@ class DelayHistoryFragment : Fragment() {
         val dataList = db.getWaits()
         val mAdapter = DelayHistoryAdapter(myContext, dataList)
         root!!.dh_rv.layoutManager = LinearLayoutManager(myContext, RecyclerView.VERTICAL, false)
-        root!!.dh_rv!!.setAdapter(mAdapter)
-    }
-
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
+        root!!.dh_rv!!.adapter = mAdapter
     }
 
     override fun onAttach(context: Context) {
@@ -70,7 +66,7 @@ class DelayHistoryFragment : Fragment() {
         if (context is OnFragmentInteractionListener) {
             listener = context
         } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
+            throw RuntimeException("$context must implement OnFragmentInteractionListener")
         }
     }
 

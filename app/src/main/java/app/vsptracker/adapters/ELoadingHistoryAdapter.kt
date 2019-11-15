@@ -1,51 +1,53 @@
 package app.vsptracker.adapters
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import app.vsptracker.others.MyHelper
 import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
-import app.vsptracker.MyHelper
 import kotlinx.android.synthetic.main.list_row_eload_history.view.*
 
 class ELoadingHistoryAdapter(
-        val context: Activity,
-        val myDataList: MutableList<MyData>
+    val context: Activity,
+    private val myDataList: MutableList<MyData>
 ) : RecyclerView.Adapter<ELoadingHistoryAdapter
 .ViewHolder>() {
 
-    private val TAG = this::class.java.simpleName
+    private val tag = this::class.java.simpleName
     private lateinit var myHelper: MyHelper
 
     override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int
-    ): ELoadingHistoryAdapter.ViewHolder {
+    ): ViewHolder {
 
 
         val v = LayoutInflater.from(parent.context)
                 .inflate(R.layout.list_row_eload_history, parent, false)
-        myHelper = MyHelper(TAG, context)
+        myHelper = MyHelper(tag, context)
         return ViewHolder(v)
     }
 
-    override fun onBindViewHolder(holder: ELoadingHistoryAdapter.ViewHolder, position: Int) {
+    @SuppressLint("SetTextI18n")
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        val myData = myDataList.get(position)
+        val myData = myDataList[position]
 
         if (myData.recordID < 1) {
             holder.itemView.lhr_record_number_layout.visibility = View.VISIBLE
 //            holder.itemView.lhr_record_number.setText(":  "+myData.recordID)
-            holder.itemView.lhr_record_number.setText(":  " + (myDataList.size - position))
+            holder.itemView.lhr_record_number.text = ":  " + (myDataList.size - position)
         } else {
             holder.itemView.lhr_record_number_layout.visibility = View.GONE
         }
 
-        if (!myData.loadingMachine.isNullOrBlank()) {
+        if (!myData.loadingMachine.isBlank()) {
             holder.itemView.lhr_loading_machine_layout.visibility = View.VISIBLE
-            holder.itemView.lhr_loading_machine.setText(":  " + myData.loadingMachine)
+            holder.itemView.lhr_loading_machine.text = ":  " + myData.loadingMachine
         } else {
             holder.itemView.lhr_loading_machine_layout.visibility = View.GONE
         }
@@ -57,30 +59,30 @@ class ELoadingHistoryAdapter(
 //            holder.itemView.lhr_loaded_machine_layout.visibility = View.GONE
 //        }
 
-        if (!myData.loadingMaterial.isNullOrBlank()) {
+        if (!myData.loadingMaterial.isBlank()) {
             holder.itemView.lhr_loaded_material_layout.visibility = View.VISIBLE
-            holder.itemView.lhr_loaded_material.setText(":  " + myData.loadingMaterial)
+            holder.itemView.lhr_loaded_material.text = ":  " + myData.loadingMaterial
         } else {
             holder.itemView.lhr_loaded_material_layout.visibility = View.GONE
         }
 
-        if (!myData.loadingLocation.isNullOrBlank()) {
+        if (!myData.loadingLocation.isBlank()) {
             holder.itemView.lhr_loading_location_layout.visibility = View.VISIBLE
-            holder.itemView.lhr_loading_location.setText(":  " + myData.loadingLocation)
+            holder.itemView.lhr_loading_location.text = ":  " + myData.loadingLocation
         } else {
             holder.itemView.lhr_loading_location_layout.visibility = View.GONE
         }
 
         if (myData.unloadingWeight != 0.0) {
             holder.itemView.lhr_loading_weight_layout.visibility = View.VISIBLE
-            holder.itemView.lhr_loading_weight.setText(":  " + myData.unloadingWeight)
+            holder.itemView.lhr_loading_weight.text = ":  " + myData.unloadingWeight
         } else {
             holder.itemView.lhr_loading_weight_layout.visibility = View.GONE
         }
 
-        if (!myData.date.isNullOrBlank()) {
+        if (!myData.date.isBlank()) {
             holder.itemView.lhr_time_layout.visibility = View.VISIBLE
-            holder.itemView.lhr_time.setText(": " + myData.date + " Hrs")
+            holder.itemView.lhr_time.text = ": " + myData.date + " Hrs"
         } else {
             holder.itemView.lhr_time_layout.visibility = View.GONE
         }
@@ -102,9 +104,7 @@ class ELoadingHistoryAdapter(
     }
 
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-    }
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
 }
 

@@ -1,83 +1,71 @@
 package app.vsptracker.activities
 
-import android.Manifest
-import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationListener
 import android.location.LocationManager
-import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
-import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
+import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
-import app.vsptracker.BuildConfig
-import app.vsptracker.MyHelper
+import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.adapters.SelectMachineNumberAdapter
 import app.vsptracker.adapters.SelectStateAdapter
-import app.vsptracker.apis.RetrofitAPI
 import app.vsptracker.apis.trip.MyData
-import app.vsptracker.apis.trip.MyDataResponse
-import app.vsptracker.classes.GPSLocation
 import app.vsptracker.classes.Material
-import app.vsptracker.database.DatabaseAdapter
-import app.vsptracker.others.Utils
-import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_machine_type.*
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
 
-class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
+private const val REQUEST_ACCESS_FINE_LOCATION = 1
 
-    private var machineLocations =  ArrayList<Material>()
+class MachineTypeActivity : BaseActivity(), View.OnClickListener {
+
+    private var machineLocations = ArrayList<Material>()
     private var selectedMachineSite = Material(0, "Select Machine Site")
     private var selectedMachineType = Material(0, "Select Machine Type")
     private var selectedMachineLocation = Material(0, "Select Machine Location")
     private var selectedMachineNumber = Material(0, "Select Machine Number")
-    protected lateinit var db: DatabaseAdapter
-    private lateinit var myHelper: MyHelper
-    private val TAG = this::class.java.simpleName
+    private val tag = this::class.java.simpleName
+//    private lateinit var db: DatabaseAdapter
+//    private lateinit var myHelper: MyHelper
+//    lateinit var gpsLocation: GPSLocation
+//    var latitude: Double = 0.0
+//    var longitude: Double = 0.0
 
-    lateinit var gpsLocation: GPSLocation
-    var latitude: Double = 0.0
-    var longitude: Double = 0.0
     private lateinit var location: Location
-
-    private val REQUEST_ACCESS_FINE_LOCATION = 1
-
     private var locationManager: LocationManager? = null
-
-    internal lateinit var retrofit: Retrofit
-    internal lateinit var retrofitAPI: RetrofitAPI
+    private lateinit var retrofit: Retrofit
+//    private lateinit var retrofitAPI: RetrofitAPI
+//    private lateinit var myDataPushSave: MyDataPushSave
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Utils.onActivityCreateSetTheme(this)
+//        Utils.onActivityCreateSetTheme(this)
+//        setContentView(R.layout.activity_machine_type)
 
-        setContentView(R.layout.activity_machine_type)
+        val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
+        layoutInflater.inflate(R.layout.activity_machine_type, contentFrameLayout)
+        val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
+        navigationView.menu.getItem(7).isChecked = true
 
-        myHelper = MyHelper(TAG, this@MachineTypeActivity)
-        db = DatabaseAdapter(this)
+//        if(myHelper.getIsMachineStopped() || myHelper.getMachineID() <1){
+//            drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+//        }
 
-        this.retrofit = Retrofit.Builder()
-            .baseUrl(RetrofitAPI.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        this.retrofitAPI = retrofit.create(RetrofitAPI::class.java)
+//        myHelper = MyHelper(tag, this@MachineTypeActivity)
+//        db = DatabaseAdapter(this)
 
-//        var machineTypes = myHelper.getMachineLocations()
+//        this.retrofit = Retrofit.Builder()
+//            .baseUrl(RetrofitAPI.BASE_URL)
+//            .addConverterFactory(GsonConverterFactory.create())
+//            .build()
+//        this.retrofitAPI = retrofit.create(RetrofitAPI::class.java)
+//        myDataPushSave = MyDataPushSave(this)
 
-        myHelper.log("MachineHours--:${db.getMachinesHours()}")
         selectMachineSite()
         selectMachineType()
 //        selectMachineLocation()
@@ -87,58 +75,56 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
         machine_location.isEnabled = enableList()
         myHelper.log("enableList${enableList()}")
 
-        startGPS()
-        gpsLocation = GPSLocation()
-        machine_type_main_layout.setOnTouchListener(View.OnTouchListener { v, event ->
+//        startGPS()
+//        gpsLocation = GPSLocation()
+//        machine_type_main_layout.setOnTouchListener(View.OnTouchListener { v, event ->
+//            myHelper.hideKeyboard(machine_type_main_layout)
+//            false
+//        })
+
+
+        machine_type_main_layout.setOnTouchListener { _, _ ->
             myHelper.hideKeyboard(machine_type_main_layout)
             false
-        })
-
-        mt_site.setOnTouchListener(View.OnTouchListener { v, event ->
+        }
+        mt_site.setOnTouchListener { _, _ ->
             myHelper.hideKeyboard(machine_type)
             false
-        })
-
-
-        machine_type.setOnTouchListener(View.OnTouchListener { v, event ->
+        }
+        machine_type.setOnTouchListener { _, _ ->
             myHelper.hideKeyboard(machine_type)
             false
-        })
-
-        machine_location.setOnTouchListener(View.OnTouchListener { v, event ->
+        }
+        machine_location.setOnTouchListener { _, _ ->
             myHelper.hideKeyboard(machine_location)
             false
-        })
-
-        machine_number1.setOnTouchListener(View.OnTouchListener { v, event ->
+        }
+        machine_number1.setOnTouchListener { _, _ ->
             myHelper.hideKeyboard(machine_number1)
             false
-        })
-
-        if(myHelper.getMachineID() > 0){
-            val myData = MyData()
-
-            if(myHelper.getMeter().isMachineStartTimeCustom)
-                myData.isStartHoursCustom = 1
-
-
-            myHelper.log("MachineHour:${db.getMachineHours(myHelper.getMachineID())}")
-//            myData.totalHours = db.getMachineHours(myHelper.getMachineID()).totalHours
-            myData.startHours = myHelper.getMeter().startHours
-            myData.machineTypeId = myHelper.getMachineTypeID()
-
-            myData.totalHours = myHelper.getMeterTimeForFinishCustom(myData.startHours)
-
-            val meter = myHelper.getMeter()
-            myData.startTime = meter.hourStartTime
-            myData.stopTime = System.currentTimeMillis()
-
-            myData.loadingGPSLocation = meter.hourStartGPSLocation
-            myData.unloadingGPSLocation = gpsLocation
-
-            saveMachineHour(myData)
-
         }
+
+//        if(myHelper.getMachineID() > 0){
+//            val myData = MyData()
+//
+//            if(myHelper.getMeter().isMachineStartTimeCustom)
+//                myData.isStartHoursCustom = 1
+//
+//            myData.startHours = myHelper.getMeter().startHours
+//            myData.machineTypeId = myHelper.getMachineTypeID()
+//
+//            myData.totalHours = myHelper.getMeterTimeForFinishCustom(myData.startHours)
+//
+//            val meter = myHelper.getMeter()
+//            myData.startTime = meter.hourStartTime
+//            myData.stopTime = System.currentTimeMillis()
+//
+//            myData.loadingGPSLocation = meter.hourStartGPSLocation
+//            myData.unloadingGPSLocation = gpsLocation
+//
+//            saveMachineHour(myData)
+
+//        }
         machine_save.setOnClickListener(this)
 
     }
@@ -147,131 +133,166 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
         when (view!!.id) {
             R.id.machine_save -> {
 
-                val machineNumber = machine_number.text.toString()
-                if (selectedMachineSite.id == 0) {
-                    myHelper.toast("Please Select Site")
-                }else if (selectedMachineType.id == 0) {
-                    myHelper.toast("Please Select Machine Type")
-                }
-//                else if (selectedMachineLocation.id == 0) {
-//                    myHelper.toast("Please Select Machine Location")
-//                }
-                else if (selectedMachineNumber.id == 0) {
-                    myHelper.toast("Please Select Machine Number")
-                } else {
+                machine_number.text.toString()
+                when {
+                    selectedMachineSite.id == 0 -> myHelper.toast("Please Select Site")
+                    selectedMachineType.id == 0 -> myHelper.toast("Please Select Machine Type")
+                    selectedMachineNumber.id == 0 -> myHelper.toast("Please Select Machine Number")
+                    else -> {
+                        when {
+                            //Selected Machine is Different from Previous Machine
+                            selectedMachineNumber.id != myHelper.getMachineID() -> {
 
-                    if(selectedMachineNumber.id == myHelper.getMachineID()){
-                        //Same Machine
+                                val myData = MyData()
+//                                saveMachineHour1(myData)
 
-                        myHelper.setMachineTypeID(selectedMachineType.id)
-                        myHelper.setMachineNumber(selectedMachineNumber.number)
-                        myHelper.setMachineID(selectedMachineNumber.id)
-                    }else{
-                        //Different machine
+                                myData.siteId = myHelper.getMachineSettings().siteId
+                                myData.machineId = myHelper.getMachineID()
+                                myData.orgId = myHelper.getLoginAPI().org_id
+                                myData.operatorId = myHelper.getOperatorAPI().id
+                                myData.machineId = myHelper.getMachineID()
+                                val currentTime = System.currentTimeMillis()
+                                myData.stopTime = currentTime
 
-                        myHelper.updateIsMachineRunning(0)
-                        myHelper.setMachineTypeID(selectedMachineType.id)
-                        myHelper.setMachineNumber(selectedMachineNumber.number)
-                        myHelper.setMachineID(selectedMachineNumber.id)
+                                val meter = myHelper.getMeter()
+                                myData.startTime = meter.hourStartTime
+                                myData.loadingGPSLocation = meter.hourStartGPSLocation
+                                myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
+                                myData.unloadingGPSLocation = gpsLocation
+                                myData.unloadingGPSLocationString = myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
+                                myData.machine_stop_reason_id = -2
+                                if (myHelper.getMeter().isMachineStartTimeCustom)
+                                    myData.isStartHoursCustom = 1
+                                myData.startHours = myHelper.getMeter().startHours
+                                myData.machineTypeId = myHelper.getMachineTypeID()
+                                myData.totalHours = myHelper.getMeterTimeForFinishCustom(myData.startHours)
+
+
+                                myData.time = currentTime.toString()
+                                myData.date = myHelper.getDate(currentTime.toString())
+
+                                myDataPushSave.pushInsertMachineHour(myData)
+
+
+                                myHelper.setMachineTypeID(selectedMachineType.id)
+                                myHelper.setMachineNumber(selectedMachineNumber.number)
+                                myHelper.setMachineID(selectedMachineNumber.id)
+                                val data = MyData()
+                                myHelper.setLastJourney(data)
+                                val intent = Intent(this, HourMeterStartActivity::class.java)
+                                startActivity(intent)
+
+                            }
+//                            else -> {
+//
+//                                myHelper.setMachineTypeID(selectedMachineType.id)
+//                                myHelper.setMachineNumber(selectedMachineNumber.number)
+//                                myHelper.setMachineID(selectedMachineNumber.id)
+//
+//                            }
+                        }
+
 
                     }
-
-//                    myHelper.startHomeActivityByType(MyData())
-                    val data = MyData()
-                    myHelper.setLastJourney(data)
-
-                    val intent = Intent(this, HourMeterStartActivity::class.java)
-                    startActivity(intent)
-//                    finishAffinity()
                 }
             }
         }
     }
 
-
-    fun saveMachineHour(myData: MyData){
-
-//        cv.put(COL_MACHINE_NUMBER, datum.loadedMachineNumber)
-
+    private fun saveMachineHour1(myData: MyData) {
 
         myData.siteId = myHelper.getMachineSettings().siteId
         myData.machineId = myHelper.getMachineID()
         myData.orgId = myHelper.getLoginAPI().org_id
         myData.operatorId = myHelper.getOperatorAPI().id
-
         myData.machineId = myHelper.getMachineID()
-
         myData.stopTime = System.currentTimeMillis()
-
 
         myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
         myData.unloadingGPSLocation = gpsLocation
-
         myData.unloadingGPSLocationString = myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
+        myData.machine_stop_reason_id = -2
 
-        val time = System.currentTimeMillis()
-        myData.time = time.toString()
-        myData.date = myHelper.getDate(time.toString())
+        if (myHelper.getMeter().isMachineStartTimeCustom)
+            myData.isStartHoursCustom = 1
 
-        if (myHelper.isOnline()){
-            pushMachineHour(myData);
-        }else{
-            db.insertMachineHours(myData)
-        }
+        myData.startHours = myHelper.getMeter().startHours
+        myData.machineTypeId = myHelper.getMachineTypeID()
+
+        myData.totalHours = myHelper.getMeterTimeForFinishCustom(myData.startHours)
+
+        val meter = myHelper.getMeter()
+        myData.startTime = meter.hourStartTime
+        myData.stopTime = System.currentTimeMillis()
+
+        myData.loadingGPSLocation = meter.hourStartGPSLocation
+        myData.unloadingGPSLocation = gpsLocation
+
+
+//        val time = System.currentTimeMillis()
+//        myData.time = time.toString()
+//        myData.date = myHelper.getDate(time.toString())
+
+        myDataPushSave.pushInsertMachineHour(myData)
+//        if (myHelper.isOnline()){
+//            pushMachineHour(myData)
+//        }else{
+//            db.insertMachineHours(myData)
+//        }
     }
-    fun pushMachineHour(myData: MyData){
 
-        val call = this.retrofitAPI.pushMachineHour(
-            myHelper.getLoginAPI().auth_token,
-            myData
-        )
-        call.enqueue(object : retrofit2.Callback<MyDataResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<MyDataResponse>,
-                response: retrofit2.Response<MyDataResponse>
-            ) {
-                val response = response.body()
-                myHelper.log("pushMachineHour:$response")
-                if (response!!.success && response.data != null) {
-                    myData.isSync = 1
-//                    saveDelay(eWork)
-                    db.insertMachineHours(myData)
+    /*
+        private fun pushMachineHour(myData: MyData){
 
-                } else {
-                    db.insertMachineHours(myData)
+            val call = this.retrofitAPI.pushMachinesHours(
+                myHelper.getLoginAPI().auth_token,
+                myData
+            )
+            call.enqueue(object : retrofit2.Callback<MyDataResponse> {
+                override fun onResponse(
+                    call: retrofit2.Call<MyDataResponse>,
+                    response: retrofit2.Response<MyDataResponse>
+                ) {
+                    val responseBody = response.body()
+                    myHelper.log("pushMachinesHours:$response")
+                    if (responseBody!!.success) {
+                        myData.isSync = 1
+                        db.insertMachineHours(myData)
 
-                    if (response.message!!.equals("Token has expired")) {
-                        myHelper.log("Token Expired:$response")
-                        myHelper.refreshToken()
                     } else {
-                        myHelper.toast(response.message)
+                        db.insertMachineHours(myData)
+
+                        if (responseBody.message == "Token has expired") {
+                            myHelper.log("Token Expired:$responseBody")
+                            myHelper.refreshToken()
+                        } else {
+                            myHelper.toast(responseBody.message)
+                        }
                     }
                 }
-            }
 
-            override fun onFailure(call: retrofit2.Call<MyDataResponse>, t: Throwable) {
-                db.insertMachineHours(myData)
+                override fun onFailure(call: retrofit2.Call<MyDataResponse>, t: Throwable) {
+                    db.insertMachineHours(myData)
 
-                myHelper.toast(t.message.toString())
-                myHelper.log("Failure" + t.message)
-            }
-        })
-    }
-
+                    myHelper.toast(t.message.toString())
+                    myHelper.log("Failure" + t.message)
+                }
+            })
+        }*/
     private fun selectMachineSite() {
-        var machineTypes = db.getSites()
+        val machineTypes = db.getSites()
         machineTypes.add(0, Material(0, "Select Site"))
         val selectMaterialAdapter = SelectStateAdapter(this@MachineTypeActivity, machineTypes)
-        mt_site!!.setAdapter(selectMaterialAdapter)
-        mt_site.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
+        mt_site!!.adapter = selectMaterialAdapter
+        mt_site.background = ContextCompat.getDrawable(this, R.drawable.disabled_spinner_border)
         mt_site.setSelection(0, false)
         mt_site.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
             override fun onItemSelected(
-                    arg0: AdapterView<*>, arg1: View,
-                    position: Int, arg3: Long
+                arg0: AdapterView<*>, arg1: View,
+                position: Int, arg3: Long
             ) {
-                selectedMachineSite = machineTypes.get(position)
+                selectedMachineSite = machineTypes[position]
                 val machineSettings = myHelper.getMachineSettings()
                 machineSettings.siteId = selectedMachineSite.id
                 myHelper.setMachineSettings(machineSettings)
@@ -279,15 +300,13 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
                 machine_location.isEnabled = enableList()
                 myHelper.log("enableList${enableList()}")
                 selectMachineNumber()
-//                selectMachineLocation()
 
-                if (machineTypes.get(position).id != 0) {
-                    mt_site.setBackground(resources.getDrawable(R.drawable.spinner_border))
+                if (machineTypes[position].id != 0) {
+                    mt_site.background = ContextCompat.getDrawable(applicationContext, R.drawable.spinner_border)
                 } else {
-                    mt_site.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
-
+                    mt_site.background = ContextCompat.getDrawable(applicationContext, R.drawable.disabled_spinner_border)
                 }
-                Log.e(TAG, machineTypes.get(position).toString())
+                Log.e(tag, machineTypes[position].toString())
             }
 
             override fun onNothingSelected(arg0: AdapterView<*>) {
@@ -296,32 +315,32 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun enableList() = (selectedMachineSite.id >0 && selectedMachineType.id > 0)
+    private fun enableList() = (selectedMachineSite.id > 0 && selectedMachineType.id > 0)
     private fun selectMachineType() {
-        var machineTypes = db.getMachinesTypes()
+        val machineTypes = db.getMachinesTypes()
         machineTypes.add(0, Material(0, "Select Machine Type"))
         val selectMaterialAdapter = SelectStateAdapter(this@MachineTypeActivity, machineTypes)
-        machine_type!!.setAdapter(selectMaterialAdapter)
-        machine_type.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
+        machine_type!!.adapter = selectMaterialAdapter
+        machine_type.background = ContextCompat.getDrawable(this, R.drawable.disabled_spinner_border)
         machine_type.setSelection(0, false)
         machine_type.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
             override fun onItemSelected(
-                    arg0: AdapterView<*>, arg1: View,
-                    position: Int, arg3: Long
+                arg0: AdapterView<*>, arg1: View,
+                position: Int, arg3: Long
             ) {
-                selectedMachineType = machineTypes.get(position)
+                selectedMachineType = machineTypes[position]
                 machine_number1.isEnabled = enableList()
                 machine_location.isEnabled = enableList()
                 myHelper.log("enableList${enableList()}")
-                if (machineTypes.get(position).id != 0) {
-                    machine_type.setBackground(resources.getDrawable(R.drawable.spinner_border))
+                if (machineTypes[position].id != 0) {
+                    machine_type.background = ContextCompat.getDrawable(applicationContext, R.drawable.spinner_border)
                     selectMachineNumber()
                 } else {
-                    machine_type.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
+                    machine_type.background = ContextCompat.getDrawable(applicationContext, R.drawable.disabled_spinner_border)
                     selectMachineNumber()
                 }
-                Log.e(TAG, machineTypes.get(position).toString())
+                Log.e(tag, machineTypes[position].toString())
             }
 
             override fun onNothingSelected(arg0: AdapterView<*>) {
@@ -329,29 +348,29 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
+
     private fun selectMachineLocation() {
 
         machineLocations = db.getLocations()
         myHelper.log("machineLocations:$machineLocations")
         machineLocations.add(0, Material(0, "Select Machine Location"))
-//        val selectMaterialAdapter = SelectStateAdapter(this@MachineTypeActivity, machineTypes)
         val selectMaterialAdapter = SelectStateAdapter(this, machineLocations)
-        machine_location!!.setAdapter(selectMaterialAdapter)
-        machine_location.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
+        machine_location!!.adapter = selectMaterialAdapter
+        machine_location.background = ContextCompat.getDrawable(applicationContext, R.drawable.disabled_spinner_border)
         machine_location.setSelection(0, false)
         machine_location.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
             override fun onItemSelected(
-                    arg0: AdapterView<*>, arg1: View,
-                    position: Int, arg3: Long
+                arg0: AdapterView<*>, arg1: View,
+                position: Int, arg3: Long
             ) {
-                selectedMachineLocation = machineLocations.get(position)
-                if (machineLocations.get(position).id != 0) {
-                    machine_location.setBackground(resources.getDrawable(R.drawable.spinner_border))
+                selectedMachineLocation = machineLocations[position]
+                if (machineLocations[position].id != 0) {
+                    machine_location.background = ContextCompat.getDrawable(applicationContext, R.drawable.spinner_border)
                 } else {
-                    machine_location.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
+                    machine_location.background = ContextCompat.getDrawable(applicationContext, R.drawable.disabled_spinner_border)
                 }
-                Log.e(TAG, machineLocations.get(position).toString())
+                Log.e(tag, machineLocations[position].toString())
             }
 
             override fun onNothingSelected(arg0: AdapterView<*>) {
@@ -359,40 +378,40 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
+
     private fun selectMachineNumber() {
-//        var machineTypes = myHelper.getMachineLocations()
         val machineTypes = db.getMachines(selectedMachineType.id)
         val machine = Material(0, "")
         machine.number = "Select Machine Number"
         machineTypes.add(0, machine)
-//        val selectMaterialAdapter = SelectStateAdapter(this@MachineTypeActivity, machineTypes)
         val selectMaterialAdapter = SelectMachineNumberAdapter(this@MachineTypeActivity, machineTypes)
-        machine_number1!!.setAdapter(selectMaterialAdapter)
-        machine_number1.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
+        machine_number1!!.adapter = selectMaterialAdapter
+        machine_number1.background = ContextCompat.getDrawable(applicationContext, R.drawable.disabled_spinner_border)
         machine_number1.setSelection(0, false)
         machine_number1.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
             override fun onItemSelected(
-                    arg0: AdapterView<*>, arg1: View,
-                    position: Int, arg3: Long
+                arg0: AdapterView<*>, arg1: View,
+                position: Int, arg3: Long
             ) {
-                selectedMachineNumber = machineTypes.get(position)
-                if (machineTypes.get(position).id != 0) {
-                    machine_number1.setBackground(resources.getDrawable(R.drawable.spinner_border))
+                selectedMachineNumber = machineTypes[position]
+                if (machineTypes[position].id != 0) {
+                    machine_number1.background = ContextCompat.getDrawable(applicationContext, R.drawable.spinner_border)
                 } else {
-                    machine_number1.setBackground(resources.getDrawable(R.drawable.disabled_spinner_border))
+                    machine_number1.background = ContextCompat.getDrawable(applicationContext, R.drawable.disabled_spinner_border)
                 }
-                Log.e(TAG, machineTypes.get(position).toString())
+                Log.e(tag, machineTypes[position].toString())
             }
+
             override fun onNothingSelected(arg0: AdapterView<*>) {
 
             }
         }
     }
+/*
+    private fun startGPS() {
 
-    fun startGPS() {
-
-        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?;
+        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
         try {
             myHelper.log("Permission Granted.")
             locationManager?.requestLocationUpdates(
@@ -400,7 +419,7 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
                 1000,
                 0f,
                 locationListener
-            );
+            )
 
         } catch (ex: SecurityException) {
             myHelper.log("No Location Available:${ex.message}")
@@ -408,7 +427,8 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
         }
 
     }
-    fun requestPermission() {
+
+    private fun requestPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED
         ) {
@@ -457,28 +477,27 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
+
     private fun showGPSDisabledAlertToUser() {
         val alertDialogBuilder = AlertDialog.Builder(this, R.style.ThemeOverlay_AppCompat_Dialog)
         alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
             .setCancelable(false)
             .setPositiveButton(
                 "Goto Settings Page\nTo Enable GPS"
-            ) { dialog, id ->
+            ) { _, _ ->
                 val callGPSSettingIntent = Intent(
                     Settings.ACTION_LOCATION_SOURCE_SETTINGS
                 )
                 startActivity(callGPSSettingIntent)
             }
-        alertDialogBuilder.setNegativeButton("Cancel",
-            object : DialogInterface.OnClickListener {
-                override fun onClick(dialog: DialogInterface, id: Int) {
-                    dialog.cancel()
-                }
-            })
-        var alert = alertDialogBuilder.create()
+        alertDialogBuilder.setNegativeButton(
+            "Cancel"
+        ) { dialog, _ -> dialog.cancel() }
+        val alert = alertDialogBuilder.create()
         alert.show()
     }
-    override fun onRequestPermissionsResult(requestCode: Int,permissions: Array<String>,grantResults: IntArray) {
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             REQUEST_ACCESS_FINE_LOCATION -> {
                 // If request is cancelled, the result arrays are empty.
@@ -498,6 +517,7 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
+
     private fun showSettings() {
         val snackbar = Snackbar.make(
             findViewById(android.R.id.content),
@@ -519,9 +539,10 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
         textView.maxLines = 5  //Or as much as you need
         snackbar.show()
     }
+
     private val locationListener: LocationListener = object : LocationListener {
-        override fun onLocationChanged(location: android.location.Location?) {
-            makeUseofLocation(location)
+        override fun onLocationChanged(location: Location?) {
+            makeUseOfLocation(location)
         }
 
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
@@ -537,9 +558,10 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
             showGPSDisabledAlertToUser()
         }
     }
-    private fun makeUseofLocation(location1: Location?) {
+
+    private fun makeUseOfLocation(location1: Location?) {
         latitude = location1!!.latitude
-        longitude = location1!!.longitude
+        longitude = location1.longitude
         location = location1
 
         gpsLocation.latitude = location1.latitude
@@ -555,5 +577,5 @@ class MachineTypeActivity : AppCompatActivity(), View.OnClickListener {
 //        gpsLocation.extras = location1.extras
         gpsLocation.time = location1.time
 
-    }
+    }*/
 }

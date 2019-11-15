@@ -1,6 +1,4 @@
 package app.vsptracker.activities.excavator
-
-
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -16,7 +14,11 @@ import app.vsptracker.fragments.excavator.EOffloadingLoadsFragment
 import app.vsptracker.fragments.excavator.ETrenchingHistoryFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_ehistory.*
+
+private const val E_LOADHISTORY: String = "E_LOADHISTORY"
+private const val E_TRENCHINGHISTORY: String = "E_TRENCHINGHISTORY"
+private const val E_DIGGINGHISTORY: String = "E_DIGGINGHISTORY"
+private const val DELAY_HISTORY: String = "DELAY_HISTORY"
 
 class EHistoryActivity : BaseActivity(), View.OnClickListener,
         ELoadingHistoryFragment.OnFragmentInteractionListener,
@@ -27,45 +29,45 @@ class EHistoryActivity : BaseActivity(), View.OnClickListener,
 
     override fun onFragmentInteraction(uri: Uri) {}
 
-    private val E_LOADHISTORY: String = "E_LOADHISTORY"
-    private val E_TRENCHINGHISTORY: String = "E_TRENCHINGHISTORY"
-    private val E_DIGGINGHISTORY: String = "E_DIGGINGHISTORY"
-    private val DELAY_HISTORY: String = "DELAY_HISTORY"
-    private val TAG = this::class.java.simpleName
+
+    private val tag = this::class.java.simpleName
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val contentFrameLayout = findViewById(R.id.base_content_frame) as FrameLayout
+        val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
         layoutInflater.inflate(R.layout.activity_ehistory, contentFrameLayout)
-        val navigationView = findViewById(R.id.base_nav_view) as NavigationView
-        navigationView.menu.getItem(5).isChecked = true
+        val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
+        navigationView.menu.getItem(6).isChecked = true
 
-        myHelper.setTag(TAG)
+        myHelper.setTag(tag)
 
-        var bundle: Bundle? = intent.extras
+        val bundle: Bundle? = intent.extras
         if (bundle != null) {
-            myData = bundle!!.getSerializable("myData") as MyData
+            myData = bundle.getSerializable("myData") as MyData
             myHelper.log("myData:$myData")
         }
-
 
         val bottomNavigation: BottomNavigationView = findViewById(R.id.navigationView)
         bottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
         val menuFragment = bundle?.getString("menuFragment")
         if (menuFragment != null) {
-            myHelper.log("menuFragment:${menuFragment.toString()}")
-            if (menuFragment.equals("eTrenchingHistoryFragment")) {
-                val tFragment = ETrenchingHistoryFragment.newInstance(this, E_TRENCHINGHISTORY)
-                openFragment(tFragment, E_TRENCHINGHISTORY)
-            } else if (menuFragment.equals("delayHistoryFragment")) {
-                val delayFragment = DelayHistoryFragment.newInstance(this, DELAY_HISTORY)
-                openFragment(delayFragment, DELAY_HISTORY)
-            } else {
-                val homeFragment = EDiggingHistoryFragment.newInstance(this, E_DIGGINGHISTORY, 1)
-                openFragment(homeFragment, E_DIGGINGHISTORY)
+            myHelper.log("menuFragment:${menuFragment}")
+            when (menuFragment) {
+                "eTrenchingHistoryFragment" -> {
+                    val tFragment = ETrenchingHistoryFragment.newInstance(this, E_TRENCHINGHISTORY)
+                    openFragment(tFragment, E_TRENCHINGHISTORY)
+                }
+                "delayHistoryFragment" -> {
+                    val delayFragment = DelayHistoryFragment.newInstance(this, DELAY_HISTORY)
+                    openFragment(delayFragment, DELAY_HISTORY)
+                }
+                else -> {
+                    val homeFragment = EDiggingHistoryFragment.newInstance(this, E_DIGGINGHISTORY, 1)
+                    openFragment(homeFragment, E_DIGGINGHISTORY)
+                }
             }
         } else {
 
@@ -120,38 +122,5 @@ class EHistoryActivity : BaseActivity(), View.OnClickListener,
             }
 
     override fun onClick(view: View?) {
-        when (view!!.id) {
-        }
     }
-
-    fun setNavItem(currentFragmentTag: String?) {
-        when (currentFragmentTag) {
-            E_LOADHISTORY -> navigationView.selectedItemId = R.id.navf_loading
-            E_TRENCHINGHISTORY -> navigationView.selectedItemId = R.id.navf_trenching
-            E_DIGGINGHISTORY -> navigationView.selectedItemId = R.id.navf_digging
-            DELAY_HISTORY -> navigationView.selectedItemId = R.id.nav_delay
-        }
-
-    }
-
-    override fun onBackPressed() {
-
-        super.onBackPressed()
-//        val count = supportFragmentManager.backStackEntryCount
-//        myHelper.log("count--$count")
-//        if (count < 2) {
-//            finish()
-//        } else {
-//            supportFragmentManager.popBackStack()
-//            val currentFragmentTag = supportFragmentManager.getBackStackEntryAt(count - 2).name
-//
-//            if (supportFragmentManager.getBackStackEntryAt(count - 2).id != navigationView.selectedItemId) {
-//                setNavItem(currentFragmentTag)
-//                supportFragmentManager.popBackStack()
-//            } else {
-//                supportFragmentManager.popBackStack()
-//            }
-//        }
-    }
-
 }

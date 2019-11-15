@@ -73,7 +73,7 @@ class MapActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback{
         navigationView.menu.getItem(0).isChecked = true
 
         myHelper.setTag(TAG)
-        startGPS()
+//        startGPS()
 
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment!!.getMapAsync(this)

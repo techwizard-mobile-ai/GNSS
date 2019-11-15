@@ -1,16 +1,13 @@
 package app.vsptracker.classes
 
-import app.vsptracker.MyHelper
 import java.io.Serializable
 
 class ELoad : Serializable {
 
-    private lateinit var myHelper: MyHelper
-    var loadMachine: String = ""
+    private var loadMachine: String = ""
     var time: String = ""
 
-    constructor() {
-    }
+    constructor() {}
 
     constructor(loadMachine: String, time: String) {
         this.loadMachine = loadMachine

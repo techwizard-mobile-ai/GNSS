@@ -9,7 +9,7 @@
     <item
         android:id="@+id/navf_trenching"
         android:icon="@drawable/ic_action_crop_7_5"
-        android:title="@string/treching" />
+        android:title="@string/trenching" />
 
     <item
         android:id="@+id/navf_digging"

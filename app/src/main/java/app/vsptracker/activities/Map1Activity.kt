@@ -4,7 +4,6 @@ import android.location.Location
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
-import androidx.drawerlayout.widget.DrawerLayout
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.classes.GPSLocation
@@ -18,16 +17,14 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.data.kml.KmlLayer
-import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_map1.*
 
-
+private const val ZOOM_LEVEL: Float = 19.0f
 
 class Map1Activity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
     GoogleMap.OnMarkerClickListener {
-    private val ZOOM_LEVEL: Float = 19.0f
 
-    private val TAG = this::class.java.simpleName
+    private val tag = this::class.java.simpleName
     private lateinit var map: GoogleMap
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -38,22 +35,20 @@ class Map1Activity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val contentFrameLayout = findViewById(R.id.base_content_frame) as FrameLayout
+        val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
         layoutInflater.inflate(R.layout.activity_map1, contentFrameLayout)
-//        val navigationView = findViewById(R.id.base_nav_view) as NavigationView
-//        navigationView.menu.getItem(0).isChecked = true
 
-        myHelper.setTag(TAG)
+        myHelper.setTag(tag)
 
-        var bundle: Bundle? = intent.extras
+        val bundle: Bundle? = intent.extras
         if (bundle != null) {
-            mapGPSLocation = bundle!!.getSerializable("gpsLocation") as GPSLocation
+            mapGPSLocation = bundle.getSerializable("gpsLocation") as GPSLocation
             myHelper.log("mapGPSLocation:$mapGPSLocation")
         }
 
-        if(myHelper.getIsMachineStopped()){
-            drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-        }
+//        if(myHelper.getIsMachineStopped()|| myHelper.getMachineID() <1){
+//            drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+//        }
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
@@ -95,10 +90,10 @@ class Map1Activity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
         if (mapGPSLocation.latitude != 0.0 && mapGPSLocation.longitude != 0.0) {
 
             val lat = mapGPSLocation.latitude
-            val longg = mapGPSLocation.longitude
+            val longitude = mapGPSLocation.longitude
             myHelper.log("In SetupMap:$mapGPSLocation")
-            val location1 = LatLng(lat, longg)
-            map!!.addMarker(
+            val location1 = LatLng(lat, longitude)
+            map.addMarker(
                 MarkerOptions()
                     .position(location1)
                     .title(mapGPSLocation.locationName)
@@ -130,7 +125,7 @@ class Map1Activity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, ZOOM_LEVEL))
 
                     val layer = KmlLayer(map, R.raw.dury_south, applicationContext)
-                    layer.addLayerToMap();
+                    layer.addLayerToMap()
                 }
             }
         }

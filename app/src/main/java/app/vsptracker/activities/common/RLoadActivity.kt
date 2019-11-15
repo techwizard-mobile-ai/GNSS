@@ -13,22 +13,23 @@ import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_rload.*
 
+private const val REQUEST_MACHINE = 1
+private const val REQUEST_MATERIAL = 2
+private const val REQUEST_LOCATION = 3
+private const val REQUEST_WEIGHT = 4
 class RLoadActivity : BaseActivity(), View.OnClickListener {
 
-    private val TAG = this::class.java.simpleName
-    private val REQUEST_MACHINE = 1
-    private val REQUEST_MATERIAL = 2
-    private val REQUEST_LOCATION = 3
-    private val REQUEST_WEIGHT = 4
+    private val tag = this::class.java.simpleName
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val contentFrameLayout = findViewById(R.id.base_content_frame) as FrameLayout
+        val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
         layoutInflater.inflate(R.layout.activity_rload, contentFrameLayout)
-        val navigationView = findViewById(R.id.base_nav_view) as NavigationView
+        val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
         navigationView.menu.getItem(0).isChecked = true
 
-        myHelper.setTag(TAG)
+        myHelper.setTag(tag)
 
         myData = myHelper.getLastJourney()
         myHelper.log("myData:$myData")
@@ -36,10 +37,10 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
 
         when (myData.nextAction) {
             0 -> {
-                trload_load.text = "LOAD"
+                trload_load.text = getString(R.string.load)
             }
             2 -> {
-                trload_load.text = "Back LOAD"
+                trload_load.text = getString(R.string.back_load)
             }
         }
 
@@ -93,7 +94,7 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
                 stopDelay()
                 when (myData.repeatJourney) {
                     0 -> {
-                        var insertID: Long = 0L
+                        var insertID = 0L
                         when (myData.nextAction) {
                             0 -> {
                                 insertID = db.insertTrip(myData)
@@ -224,16 +225,17 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, intent)
 
         if (resultCode == Activity.RESULT_OK) {
-            var bundle: Bundle? = intent!!.extras
+            val bundle: Bundle? = intent!!.extras
             if (bundle != null) {
-                myData = bundle!!.getSerializable("myData") as MyData
+                myData = bundle.getSerializable("myData") as MyData
                 myHelper.log("myData:$myData")
 
                 if (myHelper.getMachineTypeID() == 2) {
                     trload_machine.visibility = View.GONE
                     trload_material.text = myData.loadingMaterial
                     trload_location.text = myData.loadingLocation
-                    trload_weight.text = "Tonnes (" + myData.unloadingWeight + ")"
+//                    trload_weight.text = "Tonnes (" + myData.unloadingWeight + ")"
+                    trload_weight.text = getString(R.string.weight_tonnes_message, myData.unloadingWeight )
                 } else {
 
                     trload_machine.visibility = View.VISIBLE

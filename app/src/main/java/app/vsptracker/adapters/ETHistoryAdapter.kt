@@ -1,63 +1,69 @@
 package app.vsptracker.adapters
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import app.vsptracker.others.MyHelper
 import app.vsptracker.R
 import app.vsptracker.apis.delay.EWork
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.fragments.excavator.EOffloadingLoadsFragment
-import app.vsptracker.MyHelper
 import kotlinx.android.synthetic.main.list_row_et_history.view.*
 
 
 class ETHistoryAdapter(
     val context: Activity,
-    val dataList: MutableList<EWork>,
-    val FRAGMENT_TAG: String,
+    private val dataList: MutableList<EWork>,
+    private val FRAGMENT_TAG: String,
     val workType: Int
 ) : RecyclerView.Adapter<ETHistoryAdapter
 .ViewHolder>() {
 
-    private val TAG = this::class.java.simpleName
+    private val tag = this::class.java.simpleName
     lateinit var myHelper: MyHelper
     lateinit var db: DatabaseAdapter
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ETHistoryAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v =
                 LayoutInflater.from(parent.context).inflate(R.layout.list_row_et_history, parent, false)
-        myHelper = MyHelper(TAG, context)
+        myHelper = MyHelper(tag, context)
         db = DatabaseAdapter(context)
         return ViewHolder(v)
     }
 
-    override fun onBindViewHolder(holder: ETHistoryAdapter.ViewHolder, position: Int) {
+    @SuppressLint("SetTextI18n")
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        val eWork = dataList.get(position)
+        val eWork = dataList[position]
 
-        holder.itemView.eth_record_number.setText(":  " + (dataList.size - position))
+        holder.itemView.eth_record_number.text = ":  " + (dataList.size - position)
         if (eWork.workActionType == 1) {
             when(eWork.workType){
-                3 -> {holder.itemView.eth_action.setText(":  Trimming")}
-                else -> {holder.itemView.eth_action.setText(":  Side Casting")}
+                3 -> {
+                    holder.itemView.eth_action.text = ":  Trimming"
+                }
+                else -> {
+                    holder.itemView.eth_action.text = ":  Side Casting"
+                }
             }
 //            holder.itemView.eth_action.setText(":  Side Casting")
             holder.itemView.eth_totalloads_layout.visibility = View.GONE
         } else {
-            holder.itemView.eth_action.setText(":  Loading")
+            holder.itemView.eth_action.text = ":  Loading"
             holder.itemView.eth_totalloads_layout.visibility = View.VISIBLE
             holder.itemView.eth_totalloads.text =
                     ":  " + db.getEWorksOffLoads(eWork.ID).size.toString()
         }
 
-        holder.itemView.eth_start_time.setText(":  " + myHelper.getTime(eWork.startTime) + " Hrs")
-        holder.itemView.eth_end_time.setText(":  " + myHelper.getTime(eWork.stopTime) + " Hrs")
-        holder.itemView.eth_duration.setText(":  " + myHelper.getFormatedTime(eWork.totalTime) + " Hrs")
-        holder.itemView.eth_date.setText(":  " + myHelper.getDateTime(eWork.stopTime) + " Hrs")
-        holder.itemView.eth_mode.setText(":  ${eWork.workMode}")
+        holder.itemView.eth_start_time.text = ":  " + myHelper.getTime(eWork.startTime) + " Hrs"
+        holder.itemView.eth_end_time.text = ":  " + myHelper.getTime(eWork.stopTime) + " Hrs"
+        holder.itemView.eth_duration.text = ":  " + myHelper.getFormattedTime(eWork.totalTime) + " Hrs"
+        holder.itemView.eth_date.text = ":  " + myHelper.getDateTime(eWork.stopTime) + " Hrs"
+        holder.itemView.eth_mode.text = ":  ${eWork.workMode}"
 
 
         holder.itemView.lhr_gps_loading.text =
@@ -148,7 +154,7 @@ class ETHistoryAdapter(
 
         holder.itemView.eth_row.setOnClickListener {
             if (eWork.workActionType == 2) {
-                val activity = holder.itemView.getContext() as AppCompatActivity
+                val activity = holder.itemView.context as AppCompatActivity
                 val eOffloadingLoadsFragment = EOffloadingLoadsFragment.newInstance(
                         context, FRAGMENT_TAG, eWork
                 )
@@ -167,7 +173,7 @@ class ETHistoryAdapter(
         return dataList.size
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {}
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
 }
 

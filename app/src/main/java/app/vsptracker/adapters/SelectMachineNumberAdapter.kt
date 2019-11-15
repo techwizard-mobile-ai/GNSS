@@ -10,19 +10,14 @@ import app.vsptracker.R
 import app.vsptracker.classes.Material
 import kotlinx.android.synthetic.main.list_row_select_material.view.*
 
-class SelectMachineNumberAdapter(context: Activity, internal var materialList: List<Material>) :
+class SelectMachineNumberAdapter(context: Activity, private var materialList: List<Material>) :
         BaseAdapter() {
 
-    internal var context: Context
-    internal var flater: LayoutInflater
-
-    init {
-        this.context = context
-        flater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-    }
+    internal var context: Context = context
+    private var flater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     override fun getCount(): Int {
-        return materialList.size!!
+        return materialList.size
     }
 
     override fun getItemId(i: Int): Long {

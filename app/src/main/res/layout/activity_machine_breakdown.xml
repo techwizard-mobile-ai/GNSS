@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_marginBottom="@dimen/_10sdp"
+    tools:context=".activities.common.MachineBreakdownActivity">
+
+    <TextView
+        android:id="@+id/machine_breakdown_title"
+        style="@style/activity_title"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:text="Machine is Breakdown" />
+    <LinearLayout
+        android:layout_below="@id/machine_breakdown_title"
+        android:id="@+id/machine_status_hour_meter_layout"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/hm_stop_top"
+            android:layout_below="@id/hm_stop_top_title"
+            style="@style/home_tv"
+            android:gravity="center"
+            android:text="@string/hour_meter_finish" />
+
+        <LinearLayout
+            android:layout_below="@id/hm_stop_top"
+            style="@style/default_linearlayout"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="0dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/sfinish_minus"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:src="@drawable/ic_subtract" />
+            <EditText
+                android:id="@+id/sfinish_reading"
+                style="@style/tv_background"
+                android:layout_width="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:hint="@string/hour_meter_finish"
+                android:inputType="numberDecimal"
+                android:text="@string/activity_hour_meter_stop_sfinish_reading_text"
+                android:textColor="@color/black" />
+
+
+
+            <ImageView
+                android:id="@+id/sfinish_plus"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:src="@drawable/ic_add" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/machine_breakdown_action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center">
+
+        <TextView
+            android:id="@+id/machine_breakdown_action_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:elevation="16dp"
+            android:gravity="center"
+            android:text="@string/start"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/white" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/day_works_button"
+            android:layout_width="@dimen/_120sdp"
+            android:layout_height="@dimen/_120sdp"
+            android:src="@android:color/transparent"
+            app:backgroundTint="@color/colorPrimary" />
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/machine_breakdown_back"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        style="@style/back_button_single"/>
+</RelativeLayout>

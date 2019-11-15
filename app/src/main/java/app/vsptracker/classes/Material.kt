@@ -55,7 +55,7 @@ class Material : Serializable {
     @SerializedName("number")
     var number: String = ""
 
-    constructor() {}
+    constructor()
 
     constructor(id: Int, name: String) {
         this.id = id

@@ -1,24 +1,25 @@
 package app.vsptracker.adapters
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import app.vsptracker.others.MyHelper
 import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.database.DatabaseAdapter
-import app.vsptracker.MyHelper
 import kotlinx.android.synthetic.main.list_row_loading_history.view.*
 
 
 class LoadingHistoryAdapter(
-        val context: Activity,
-        val myDataList: MutableList<MyData>
+    val context: Activity,
+    private val myDataList: MutableList<MyData>
 ) : RecyclerView.Adapter<LoadingHistoryAdapter
 .ViewHolder>() {
 
-    private val TAG = this::class.java.simpleName
+    private val tag = this::class.java.simpleName
     private lateinit var myHelper: MyHelper
 
     private lateinit var db: DatabaseAdapter
@@ -26,27 +27,28 @@ class LoadingHistoryAdapter(
     override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int
-    ): LoadingHistoryAdapter.ViewHolder {
+    ): ViewHolder {
 
 
         val v = LayoutInflater.from(parent.context)
                 .inflate(R.layout.list_row_loading_history, parent, false)
-        myHelper = MyHelper(TAG, context)
+        myHelper = MyHelper(tag, context)
         db = DatabaseAdapter(context)
         return ViewHolder(v)
     }
 
-    override fun onBindViewHolder(holder: LoadingHistoryAdapter.ViewHolder, position: Int) {
+    @SuppressLint("SetTextI18n")
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        val myData = myDataList.get(position)
+        val myData = myDataList[position]
 
         when (myData.tripType) {
             0 -> {
-                holder.itemView.lhr_trip_number.setText(":  ${myData.id}")
+                holder.itemView.lhr_trip_number.text = ":  ${myData.id}"
                 holder.itemView.lhr_trip_type.text = ": Simple Load"
             }
             1 -> {
-                holder.itemView.lhr_trip_number.setText(":  ${myData.id}")
+                holder.itemView.lhr_trip_number.text = ":  ${myData.id}"
                 holder.itemView.lhr_trip_type.text = ": Back Load"
             }
         }
@@ -66,20 +68,18 @@ class LoadingHistoryAdapter(
                 holder.itemView.lhr_task_layout.visibility = View.VISIBLE
             }
         }
-        holder.itemView.lhr_loading_machine.setText(":  " + myData.loadingMachine)
+        holder.itemView.lhr_loading_machine.text = ":  " + myData.loadingMachine
 
-        holder.itemView.lhr_loaded_material.setText(":  ${myData.loadingMaterial} / ${myData.unloadingMaterial}")
-        holder.itemView.lhr_loading_location.setText(":  ${myData.loadingLocation} / ${myData.unloadingLocation}")
-        holder.itemView.lhr_loading_weight.setText(":  " + myData.unloadingWeight)
-        holder.itemView.lhr_task.setText(":  " + myData.unloadingTask)
+        holder.itemView.lhr_loaded_material.text = ":  ${myData.loadingMaterial} / ${myData.unloadingMaterial}"
+        holder.itemView.lhr_loading_location.text = ":  ${myData.loadingLocation} / ${myData.unloadingLocation}"
+        holder.itemView.lhr_loading_weight.text = ":  " + myData.unloadingWeight
+        holder.itemView.lhr_task.text = ":  " + myData.unloadingTask
 
-        holder.itemView.lhr_time.setText(
-                ": ${myHelper.getTime(myData.startTime)} / ${myHelper.getTime(
-                        myData.stopTime
-                )} Hrs"
-        )
+        holder.itemView.lhr_time.text = ": ${myHelper.getTime(myData.startTime)} / ${myHelper.getTime(
+            myData.stopTime
+        )} Hrs"
 
-        holder.itemView.lhr_duration.setText(": ${myHelper.getFormatedTime(myData.totalTime)} Hrs")
+        holder.itemView.lhr_duration.text = ": ${myHelper.getFormattedTime(myData.totalTime)} Hrs"
         holder.itemView.lhr_workmode.text = ": ${myData.workMode}"
 
         holder.itemView.lhr_gps_loading.text =
@@ -123,9 +123,7 @@ class LoadingHistoryAdapter(
     }
 
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-    }
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
 }
 

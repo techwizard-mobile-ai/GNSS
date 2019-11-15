@@ -50,6 +50,10 @@ class OperatorAPI : Serializable {
     @Expose
     var totalHours: String? = null
 
+    @SerializedName("auto_logout_time")
+    @Expose
+    var autoLogoutTime: String? = null
+
     @SerializedName("pin")
     @Expose
     var pin: String? = null
@@ -77,6 +81,9 @@ class OperatorAPI : Serializable {
     @Expose
     var updatedAt: String? = null
 
+    override fun toString(): String {
+        return "OperatorAPI(id=$id, name=$name, pin=$pin, status=$status, auto_logout_time=$autoLogoutTime)"
+    }
 
 
 }

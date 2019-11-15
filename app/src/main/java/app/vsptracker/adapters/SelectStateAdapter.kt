@@ -10,19 +10,14 @@ import app.vsptracker.R
 import app.vsptracker.classes.Material
 import kotlinx.android.synthetic.main.list_row_select_material.view.*
 
-class SelectStateAdapter(context: Activity, internal var materialList: List<Material>) :
+class SelectStateAdapter(context: Activity, private var materialList: List<Material>) :
         BaseAdapter() {
 
-    internal var context: Context
-    internal var flater: LayoutInflater
-
-    init {
-        this.context = context
-        flater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-    }
+    internal var context: Context = context
+    private var flater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     override fun getCount(): Int {
-        return materialList.size!!
+        return materialList.size
     }
 
     override fun getItemId(i: Int): Long {
@@ -36,7 +31,7 @@ class SelectStateAdapter(context: Activity, internal var materialList: List<Mate
     override fun getView(i: Int, view: View?, viewGroup: ViewGroup): View {
 
         val row = flater.inflate(R.layout.list_row_select_material, null)
-        row.list_row_select_material_name.setText(materialList[i].name)
+        row.list_row_select_material_name.text = materialList[i].name
         return row
 
     }

@@ -2,54 +2,50 @@ package app.vsptracker.activities
 
 import android.Manifest
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import app.vsptracker.BuildConfig
 import app.vsptracker.R
 import app.vsptracker.activities.common.MachineStatus1Activity
 import app.vsptracker.apis.RetrofitAPI
-import app.vsptracker.apis.operators.OperatorAPI
-import app.vsptracker.apis.operators.OperatorResponse
 import app.vsptracker.apis.trip.MyData
-import app.vsptracker.apis.trip.MyDataListResponse
 import app.vsptracker.classes.GPSLocation
 import app.vsptracker.database.DatabaseAdapter
+import app.vsptracker.others.MyDataPushSave
+import app.vsptracker.others.MyHelper
 import app.vsptracker.others.Utils
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
-import app.vsptracker.BuildConfig
-import app.vsptracker.MyHelper
 import kotlinx.android.synthetic.main.activity_operator_login.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+private const val REQUEST_ACCESS_FINE_LOCATION = 1
+
 class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
-    private val TAG = this::class.java.simpleName
+    private val tag = this::class.java.simpleName
     private lateinit var myHelper: MyHelper
-    protected lateinit var db: DatabaseAdapter
+    private lateinit var db: DatabaseAdapter
     lateinit var gpsLocation: GPSLocation
     var latitude: Double = 0.0
     var longitude: Double = 0.0
     private lateinit var location: Location
-
-    private val REQUEST_ACCESS_FINE_LOCATION = 1
-
     private var locationManager: LocationManager? = null
-
-    internal lateinit var retrofit: Retrofit
-    internal lateinit var retrofitAPI: RetrofitAPI
+    private lateinit var retrofit: Retrofit
+    private lateinit var retrofitAPI: RetrofitAPI
+    private lateinit var myDataPushSave: MyDataPushSave
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,11 +53,16 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
         Utils.onActivityCreateSetTheme(this)
 
         setContentView(R.layout.activity_operator_login)
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        }
 
-        myHelper = MyHelper(TAG, this)
+        myHelper = MyHelper(tag, this)
         myHelper.setProgressBar(signin_pb)
         db = DatabaseAdapter(this)
+
+        myDataPushSave = MyDataPushSave(this)
+
         gpsLocation = GPSLocation()
 
         this.retrofit = Retrofit.Builder()
@@ -73,22 +74,22 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
         when (myHelper.getMachineTypeID()) {
             1 -> {
                 Glide.with(this)
-                    .load(resources.getDrawable(R.drawable.excavator))
+                    .load(ContextCompat.getDrawable(this, R.drawable.excavator))
                     .into(signin_image)
             }
             2 -> {
                 Glide.with(this)
-                    .load(resources.getDrawable(R.drawable.scraper))
+                    .load(ContextCompat.getDrawable(this, R.drawable.scraper))
                     .into(signin_image)
             }
             3 -> {
                 Glide.with(this)
-                    .load(resources.getDrawable(R.drawable.truck))
+                    .load(ContextCompat.getDrawable(this, R.drawable.truck))
                     .into(signin_image)
             }
             else -> {
                 Glide.with(this)
-                    .load(resources.getDrawable(R.drawable.welcomenew))
+                    .load(ContextCompat.getDrawable(this, R.drawable.welcomenew))
                     .into(signin_image)
             }
         }
@@ -96,30 +97,30 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
         startGPS()
         myHelper.refreshToken()
 
-//        myHelper.log("MachinesHours:${db.getMachinesHours()}")
-
-        if (myHelper.getOperatorAPI().id > 0) {
-            launchHomeForLoggedIn()
-            if (myHelper.isOnline()) {
-                fetchOrgData()
+        /**
+         * If Operator is Logged in and App is Launched this Code block will be executed.
+         * If Internet is Available Fetch Company Data and Replace Old Data.
+         * Call launchHomeForLoggedIn() method.
+         */
+        when {
+            myHelper.getOperatorAPI().id > 0 -> {
+                when {
+                    myHelper.isOnline() -> fetchOrgData()
+                }
+                launchHomeForLoggedIn()
             }
         }
-
-
-
-        myHelper.hideKeybaordOnClick(login_main_layout)
+        myHelper.hideKeyboardOnClick(login_main_layout)
         signin_signin.setOnClickListener(this)
     }
-
     override fun onClick(view: View?) {
         when (view!!.id) {
             R.id.signin_signin -> {
-                var pin = signin_pin.text.toString()
+                val pin = signin_pin.text.toString()
                 // myHelper.log("pin:" + pin)
                 if (pin.length < 3) {
                     myHelper.toast("PIN Minimum Length should be 3 Characters")
                 } else {
-                    // myHelper.log("OperatorPIN")
                     if (db.getOperator(pin).id > 0) {
                         myHelper.setOperatorAPI(db.getOperator(pin))
                         launchHome()
@@ -133,86 +134,90 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
-
-    /*    fun operatorLogin(pin: String) {
-            myHelper.showProgressBar()
-            val call = this.retrofitAPI.getOperatorLogin(
-                myHelper.getLoginAPI().org_id,
-                pin,
-                myHelper.getLoginAPI().auth_token
-            )
-            call.enqueue(object : retrofit2.Callback<LoginResponse> {
-                override fun onResponse(
-                    call: retrofit2.Call<LoginResponse>,
-                    response: retrofit2.Response<LoginResponse>
-                ) {
-                    val loginResponse = response.body()
-                    if (loginResponse!!.success && loginResponse.data != null) {
-                        myHelper.toast("Operator Login Successful.")
-                        myHelper.setOperatorAPI(loginResponse.data)
-                        syncData()
-                    } else {
-                        if (loginResponse.message!!.equals("Token has expired")) {
-                            myHelper.log("Token Expired:$loginResponse")
-                            myHelper.refreshToken()
-                        } else {
-                            myHelper.toast(loginResponse.message)
-                            myHelper.log("loginMessage:$loginResponse")
-                        }
-                    }
-                }
-
-                override fun onFailure(call: retrofit2.Call<LoginResponse>, t: Throwable) {
-                    myHelper.hideProgressBar()
-                    myHelper.log("Failure" + t.message)
-                }
-            })
-        }*/
-    fun launchHome() {
-        if (myHelper.getMachineID() < 1) {
-            // myHelper.log("No machine Number is entered.")
-            val intent = Intent(this@OperatorLoginActivity, MachineTypeActivity::class.java)
-            startActivity(intent)
-            finishAffinity()
-        } else if (myHelper.getIsMachineStopped()) {
-            val intent = Intent(this@OperatorLoginActivity, MachineStatus1Activity::class.java)
-            startActivity(intent)
-            finishAffinity()
-        } else {
-
-            val intent = Intent(this@OperatorLoginActivity, HourMeterStartActivity::class.java)
-            startActivity(intent)
-            finishAffinity()
-
-//            myHelper.startHomeActivityByType(MyData())
+    /**
+     * This method will be called when operator Login. This method will do following actions.
+     * 1. If Machine is Not already selected Go to MachineTypeActivity to Select Site and Machine.
+     * 2. If Machine is stopped go to MachineStatus1Activity to Start Machine.
+     * 3. If above conditions are false Go to HourMeterStartActivity
+     * as new Machine is Selected and Hours to be set and Machine Time to be started.
+     */
+    private fun launchHome() {
+        when {
+            myHelper.getMachineID() < 1 -> {
+                val intent = Intent(this@OperatorLoginActivity, MachineTypeActivity::class.java)
+                startActivity(intent)
+                finishAffinity()
+            }
+            myHelper.getIsMachineStopped() -> {
+                val intent = Intent(this@OperatorLoginActivity, MachineStatus1Activity::class.java)
+                startActivity(intent)
+                finishAffinity()
+            }
+            else -> {
+                val intent = Intent(this@OperatorLoginActivity, HourMeterStartActivity::class.java)
+                startActivity(intent)
+                finishAffinity()
+            }
         }
     }
-    fun launchHomeForLoggedIn() {
-        if (myHelper.getMachineID() < 1) {
-            // myHelper.log("No machine Number is entered.")
-            val intent = Intent(this@OperatorLoginActivity, MachineTypeActivity::class.java)
-            startActivity(intent)
-            finishAffinity()
-        } else if (myHelper.getIsMachineStopped()) {
-            val intent = Intent(this@OperatorLoginActivity, MachineStatus1Activity::class.java)
-            startActivity(intent)
-            finishAffinity()
-        } else {
-
-//            val intent = Intent(this@OperatorLoginActivity, HourMeterStartActivity::class.java)
-//            startActivity(intent)
-//            finishAffinity()
-
-            myHelper.startHomeActivityByType(MyData())
+    /**
+     * This method will do following actions.
+     * 1. If Machine is Not already selected Go to MachineTypeActivity to Select Site and Machine.
+     * 2. If Machine is stopped go to MachineStatus1Activity to Start Machine.
+     * 3. If above conditions are false Launch Home Screen for selected Machine Type.
+     */
+    private fun launchHomeForLoggedIn() {
+        when {
+            myHelper.getMachineID() < 1 -> {
+                val intent = Intent(this@OperatorLoginActivity, MachineTypeActivity::class.java)
+                startActivity(intent)
+                finishAffinity()
+            }
+            myHelper.getIsMachineStopped() -> {
+                val intent = Intent(this@OperatorLoginActivity, MachineStatus1Activity::class.java)
+                startActivity(intent)
+                finishAffinity()
+            }
+            else ->
+                myHelper.startHomeActivityByType(MyData())
         }
     }
-
-    fun fetchOrgData() {
+    private fun fetchOrgData() {
         myHelper.toast("Fetching Company Data in background.")
-//        fetchMachinesTasks()
-        fetchMachinesHours()
+        myDataPushSave.fetchOrgData()
     }
+    /**
+     * Fetch Machines Logout Times and Save in Database.
+     * This Logout Time is different for each Site and each Machine Type.
+     * After inactivity of Operator, Logout function will be called and required actions will be taken.
+     */
+/*    private fun fetchMachinesAutoLogouts() {
+        val call = this.retrofitAPI.getMachinesAutoLogouts(
+            myHelper.getLoginAPI().org_id,
+            myHelper.getLoginAPI().auth_token
+        )
+        call.enqueue(object : retrofit2.Callback<OperatorResponse> {
+            override fun onResponse(
+                call: retrofit2.Call<OperatorResponse>,
+                response: retrofit2.Response<OperatorResponse>
+            ) {
+                myHelper.log("Response:$response")
+                val responseBody = response.body()
+                if (responseBody!!.success && responseBody.data != null) {
+                    db.insertMachinesAutoLogouts(responseBody.data as ArrayList<OperatorAPI>)
+                    fetchMachinesHours()
+                } else {
+                    myHelper.hideProgressBar()
+                    myHelper.toast(responseBody.message)
+                }
+            }
 
+            override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
+                myHelper.hideProgressBar()
+                myHelper.log("Failure" + t.message)
+            }
+        })
+    }
     private fun fetchMachinesHours() {
         val call = this.retrofitAPI.getMachinesHours(
             myHelper.getLoginAPI().org_id,
@@ -223,14 +228,14 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
                 call: retrofit2.Call<MyDataListResponse>,
                 response: retrofit2.Response<MyDataListResponse>
             ) {
-                // myHelper.log("Response:$response")
-                val response = response.body()
-                if (response!!.success && response.data != null) {
-                    db.insertMachinesHours(response.data as ArrayList<MyData>)
+                 myHelper.log("Response:$response")
+                val responseBody = response.body()
+                if (responseBody!!.success && responseBody.data != null) {
+                    db.insertMachinesHours(responseBody.data as ArrayList<MyData>)
                     fetchMachinesTasks()
                 } else {
                     myHelper.hideProgressBar()
-                    myHelper.toast(response.message)
+                    myHelper.toast(responseBody.message)
                 }
             }
 
@@ -240,7 +245,6 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         })
     }
-
     private fun fetchMachinesTasks() {
         val call = this.retrofitAPI.getMachinesTasks(
             myHelper.getLoginAPI().org_id,
@@ -251,13 +255,14 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
                 call: retrofit2.Call<OperatorResponse>,
                 response: retrofit2.Response<OperatorResponse>
             ) {
-                val response = response.body()
-                if (response!!.success && response.data != null) {
-                    db.insertMachinesTasks(response.data as ArrayList<OperatorAPI>)
+                myHelper.log("Response:$response")
+                val responseBody = response.body()
+                if (responseBody!!.success && responseBody.data != null) {
+                    db.insertMachinesTasks(responseBody.data as ArrayList<OperatorAPI>)
                     fetchMaterials()
                 } else {
 
-                    myHelper.toast(response.message)
+                    myHelper.toast(responseBody.message)
                 }
             }
 
@@ -267,7 +272,6 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         })
     }
-
     private fun fetchMaterials() {
         val call = this.retrofitAPI.getMaterials(
             myHelper.getLoginAPI().org_id,
@@ -278,13 +282,14 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
                 call: retrofit2.Call<OperatorResponse>,
                 response: retrofit2.Response<OperatorResponse>
             ) {
-                val response = response.body()
-                if (response!!.success && response.data != null) {
-                    db.insertMaterials(response.data as ArrayList<OperatorAPI>)
+                myHelper.log("Response:$response")
+                val responseBody = response.body()
+                if (responseBody!!.success && responseBody.data != null) {
+                    db.insertMaterials(responseBody.data as ArrayList<OperatorAPI>)
                     fetchLocations()
                 } else {
 
-                    myHelper.toast(response.message)
+                    myHelper.toast(responseBody.message)
                 }
             }
 
@@ -294,7 +299,6 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         })
     }
-
     private fun fetchLocations() {
         val call = this.retrofitAPI.getLocations(
             myHelper.getLoginAPI().org_id,
@@ -305,14 +309,14 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
                 call: retrofit2.Call<OperatorResponse>,
                 response: retrofit2.Response<OperatorResponse>
             ) {
-
-                val response = response.body()
-                if (response!!.success && response.data != null) {
-                    db.insertLocations(response.data as ArrayList<OperatorAPI>)
+                myHelper.log("Response:$response")
+                val responseBody = response.body()
+                if (responseBody!!.success && responseBody.data != null) {
+                    db.insertLocations(responseBody.data as ArrayList<OperatorAPI>)
                     fetchMachines()
                 } else {
 
-                    myHelper.toast(response.message)
+                    myHelper.toast(responseBody.message)
                 }
             }
 
@@ -322,7 +326,6 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         })
     }
-
     private fun fetchMachines() {
         val call = this.retrofitAPI.getMachines(
             myHelper.getLoginAPI().org_id,
@@ -333,14 +336,14 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
                 call: retrofit2.Call<OperatorResponse>,
                 response: retrofit2.Response<OperatorResponse>
             ) {
-
-                val response = response.body()
-                if (response!!.success && response.data != null) {
-                    db.insertMachines(response.data as ArrayList<OperatorAPI>)
+                myHelper.log("Response:$response")
+                val responseBody = response.body()
+                if (responseBody!!.success && responseBody.data != null) {
+                    db.insertMachines(responseBody.data as ArrayList<OperatorAPI>)
                     fetchStopReasons()
                 } else {
 
-                    myHelper.toast(response.message)
+                    myHelper.toast(responseBody.message)
                 }
             }
 
@@ -350,7 +353,6 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         })
     }
-
     private fun fetchStopReasons() {
         val call = this.retrofitAPI.getStopReasons(
             myHelper.getLoginAPI().org_id,
@@ -361,14 +363,14 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
                 call: retrofit2.Call<OperatorResponse>,
                 response: retrofit2.Response<OperatorResponse>
             ) {
-
-                val response = response.body()
-                if (response!!.success && response.data != null) {
-                    db.insertStopReasons(response.data as ArrayList<OperatorAPI>)
+                myHelper.log("Response:$response")
+                val responseBody = response.body()
+                if (responseBody!!.success && responseBody.data != null) {
+                    db.insertStopReasons(responseBody.data as ArrayList<OperatorAPI>)
                     fetchMachinesPlants()
                 } else {
 
-                    myHelper.toast(response.message)
+                    myHelper.toast(responseBody.message)
                 }
             }
 
@@ -378,7 +380,6 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         })
     }
-
     private fun fetchMachinesPlants() {
 
         val call = this.retrofitAPI.getMachinesPlants(
@@ -387,7 +388,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
         )
         call.enqueue(object : retrofit2.Callback<OperatorResponse> {
             override fun onResponse(call: retrofit2.Call<OperatorResponse>, response: retrofit2.Response<OperatorResponse>) {
-                // myHelper.log("RetrofitResponse:$response")
+                myHelper.log("Response:$response")
                 val operatorResponse = response.body()
                 if (operatorResponse!!.success && operatorResponse.data != null) {
                     myHelper.log("MachinesPlants:${operatorResponse.data}.")
@@ -402,11 +403,10 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
             override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
 
                 myHelper.toast(t.message.toString())
-                Log.e(TAG, "FailureResponse:" + t.message)
+                Log.e(tag, "FailureResponse:" + t.message)
             }
         })
     }
-
     private fun fetchMachinesBrands() {
 
         val call = this.retrofitAPI.getMachinesBrands(
@@ -414,7 +414,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
         )
         call.enqueue(object : retrofit2.Callback<OperatorResponse> {
             override fun onResponse(call: retrofit2.Call<OperatorResponse>, response: retrofit2.Response<OperatorResponse>) {
-                // myHelper.log("RetrofitResponse:$response")
+                 myHelper.log("RetrofitResponse:$response")
                 val operatorResponse = response.body()
                 if (operatorResponse!!.success && operatorResponse.data != null) {
                     // myHelper.log("MachinesBrands:${operatorResponse.data}.")
@@ -429,11 +429,10 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
             override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
 
                 myHelper.toast(t.message.toString())
-                Log.e(TAG, "FailureResponse:" + t.message)
+                Log.e(tag, "FailureResponse:" + t.message)
             }
         })
     }
-
     private fun fetchMachinesTypes() {
 
         val call = this.retrofitAPI.getMachinesTypes(
@@ -441,7 +440,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
         )
         call.enqueue(object : retrofit2.Callback<OperatorResponse> {
             override fun onResponse(call: retrofit2.Call<OperatorResponse>, response: retrofit2.Response<OperatorResponse>) {
-                // myHelper.log("RetrofitResponse:$response")
+                 myHelper.log("RetrofitResponse:$response")
                 val operatorResponse = response.body()
                 if (operatorResponse!!.success && operatorResponse.data != null) {
                     // myHelper.log("MachinesTypes:${operatorResponse.data}.")
@@ -456,11 +455,10 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
             override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
 
                 myHelper.toast(t.message.toString())
-                Log.e(TAG, "FailureResponse:" + t.message)
+                Log.e(tag, "FailureResponse:" + t.message)
             }
         })
     }
-
     private fun fetchSites() {
 
         val call = this.retrofitAPI.getSites(
@@ -469,7 +467,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
         )
         call.enqueue(object : retrofit2.Callback<OperatorResponse> {
             override fun onResponse(call: retrofit2.Call<OperatorResponse>, response: retrofit2.Response<OperatorResponse>) {
-                // myHelper.log("RetrofitResponse:$response")
+                 myHelper.log("RetrofitResponse:$response")
                 val operatorResponse = response.body()
                 if (operatorResponse!!.success && operatorResponse.data != null) {
                     // myHelper.log("Sites:${operatorResponse.data}.")
@@ -484,11 +482,10 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
             override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
 
                 myHelper.toast(t.message.toString())
-                Log.e(TAG, "FailureResponse:" + t.message)
+                Log.e(tag, "FailureResponse:" + t.message)
             }
         })
     }
-
     private fun fetchOperators() {
 
         val call = this.retrofitAPI.getOperators(
@@ -497,10 +494,10 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
         )
         call.enqueue(object : retrofit2.Callback<OperatorResponse> {
             override fun onResponse(call: retrofit2.Call<OperatorResponse>, response: retrofit2.Response<OperatorResponse>) {
-                // myHelper.log("RetrofitResponse:$response")
+                 myHelper.log("RetrofitResponse:$response")
                 val operatorResponse = response.body()
                 if (operatorResponse!!.success && operatorResponse.data != null) {
-                    // myHelper.log("Operators:${operatorResponse.data}.")
+                     myHelper.log("Operators:${operatorResponse.data}.")
                     db.insertOperators(operatorResponse.data as ArrayList<OperatorAPI>)
                 } else {
 
@@ -511,17 +508,13 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
             override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
 
                 myHelper.toast(t.message.toString())
-                Log.e(TAG, "FailureResponse:" + t.message)
+                Log.e(tag, "FailureResponse:" + t.message)
             }
         })
-    }
+    }*/
+    private fun startGPS() {
 
-
-
-
-    fun startGPS() {
-
-        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?;
+        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
         try {
             // myHelper.log("Permission Granted.")
             locationManager?.requestLocationUpdates(
@@ -529,7 +522,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
                 1000,
                 0f,
                 locationListener
-            );
+            )
 
         } catch (ex: SecurityException) {
             // myHelper.log("No Location Available:${ex.message}")
@@ -537,7 +530,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
         }
 
     }
-    fun requestPermission() {
+    private fun requestPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED
         ) {
@@ -592,22 +585,19 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
             .setCancelable(false)
             .setPositiveButton(
                 "Goto Settings Page\nTo Enable GPS"
-            ) { dialog, id ->
+            ) { _, _ ->
                 val callGPSSettingIntent = Intent(
                     android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
                 )
                 startActivity(callGPSSettingIntent)
             }
-        alertDialogBuilder.setNegativeButton("Cancel",
-            object : DialogInterface.OnClickListener {
-                override fun onClick(dialog: DialogInterface, id: Int) {
-                    dialog.cancel()
-                }
-            })
-        var alert = alertDialogBuilder.create()
+        alertDialogBuilder.setNegativeButton(
+            "Cancel"
+        ) { dialog, _ -> dialog.cancel() }
+        val alert = alertDialogBuilder.create()
         alert.show()
     }
-    override fun onRequestPermissionsResult(requestCode: Int,permissions: Array<String>,grantResults: IntArray) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             REQUEST_ACCESS_FINE_LOCATION -> {
                 // If request is cancelled, the result arrays are empty.
@@ -649,8 +639,8 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
         snackbar.show()
     }
     private val locationListener: LocationListener = object : LocationListener {
-        override fun onLocationChanged(location: android.location.Location?) {
-            makeUseofLocation(location)
+        override fun onLocationChanged(location: Location?) {
+            makeUseOfLocation(location)
         }
 
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
@@ -666,9 +656,9 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
             showGPSDisabledAlertToUser()
         }
     }
-    private fun makeUseofLocation(location1: Location?) {
+    private fun makeUseOfLocation(location1: Location?) {
         latitude = location1!!.latitude
-        longitude = location1!!.longitude
+        longitude = location1.longitude
         location = location1
 
         gpsLocation.latitude = location1.latitude

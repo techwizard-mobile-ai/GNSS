@@ -1,4 +1,4 @@
-package app.vsptracker
+package app.vsptracker.others
 
 import android.content.ActivityNotFoundException
 import android.content.Context

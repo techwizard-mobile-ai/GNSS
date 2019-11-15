@@ -1,34 +1,36 @@
 package app.vsptracker.activities
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
 import androidx.drawerlayout.widget.DrawerLayout
-import com.google.android.material.navigation.NavigationView
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
-import app.vsptracker.apis.operators.OperatorAPI
 import app.vsptracker.apis.trip.MyData
+import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_hour_meter_stop.*
 
 class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
 
-    private val TAG = this::class.java.simpleName
+    private val tag = this::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val contentFrameLayout = findViewById(R.id.base_content_frame) as FrameLayout
+        val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
         layoutInflater.inflate(R.layout.activity_hour_meter_stop, contentFrameLayout)
-        val navigationView = findViewById(R.id.base_nav_view) as NavigationView
+        val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
         navigationView.menu.getItem(7).isChecked = true
 
-        myHelper.setTag(TAG)
+        myHelper.setTag(tag)
 
-        if(myHelper.getIsMachineStopped())
+        if(myHelper.getIsMachineStopped()){
             drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+            hm_layout.visibility = View.GONE
+        }else{
+            hm_layout.visibility = View.VISIBLE
+        }
 
         myData = MyData()
 
@@ -100,16 +102,16 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
                 myHelper.log("Before saveMachineHour:$myData")
                 saveMachineHour(myData)
 
-                myHelper.stopDelay(gpsLocation)
-                myHelper.stopDailyMode()
-                myHelper.setOperatorAPI(OperatorAPI())
-
-                val data = MyData()
-                myHelper.setLastJourney(data)
-
-                val intent = Intent(this, OperatorLoginActivity::class.java)
-                startActivity(intent)
-                finishAffinity()
+//                myHelper.stopDelay(gpsLocation)
+//                myHelper.stopDailyMode()
+//                myHelper.setOperatorAPI(OperatorAPI())
+//
+//                val data = MyData()
+//                myHelper.setLastJourney(data)
+//
+//                val intent = Intent(this, OperatorLoginActivity::class.java)
+//                startActivity(intent)
+//                finishAffinity()
             }
         }
     }

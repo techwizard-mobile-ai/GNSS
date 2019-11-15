@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.vsptracker.MyHelper
+import app.vsptracker.others.MyHelper
 import app.vsptracker.R
 import app.vsptracker.adapters.LoadingHistoryAdapter
 import app.vsptracker.apis.trip.MyData

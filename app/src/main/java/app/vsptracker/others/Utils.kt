@@ -1,9 +1,9 @@
 package app.vsptracker.others
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import app.vsptracker.MyHelper
 import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
 
@@ -11,19 +11,17 @@ import app.vsptracker.apis.trip.MyData
 object Utils {
     private var sTheme: Int = 0
 
-    val THEME_MATERIAL_LIGHT = 0
-    val THEME_YOUR_CUSTOM_THEME = 1
-
-    val TAG1 = "Utils"
+    const val tag = "Utils"
+    @SuppressLint("StaticFieldLeak")
     private lateinit var myHelper: MyHelper
 
     fun changeToTheme(activity: Activity, theme: Int) {
         sTheme = theme
 
         var dataNew = MyData()
-        var bundle: Bundle? = activity.intent.extras
+        val bundle: Bundle? = activity.intent.extras
         if (bundle != null) {
-            dataNew = bundle!!.getSerializable("myData") as MyData
+            dataNew = bundle.getSerializable("myData") as MyData
             myHelper.log("myData:$dataNew")
         }
 
@@ -40,13 +38,10 @@ object Utils {
 
     fun onActivityCreateSetTheme(activity: Activity) {
 
-
-        myHelper = MyHelper(TAG1, activity)
-
-        if (myHelper.isNightMode()) {
-            activity.setTheme(R.style.AppTheme_NightMode)
-        } else {
-            activity.setTheme(R.style.AppTheme_NoActionBar)
+        myHelper = MyHelper(tag, activity)
+        when {
+            myHelper.isNightMode() -> activity.setTheme(R.style.AppTheme_NightMode)
+            else -> activity.setTheme(R.style.AppTheme_NoActionBar)
         }
 
     }

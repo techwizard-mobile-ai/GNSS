@@ -2,7 +2,6 @@ package app.vsptracker.activities
 
 import android.Manifest
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -18,27 +17,27 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import app.vsptracker.BuildConfig
-import app.vsptracker.MyHelper
 import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.GPSLocation
 import app.vsptracker.database.DatabaseAdapter
+import app.vsptracker.others.MyHelper
 import app.vsptracker.others.Utils
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_hour_meter_start.*
 
+private const val REQUEST_ACCESS_FINE_LOCATION = 1
 class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var myData: MyData
-    private val TAG = this::class.java.simpleName
+    private val tag = this::class.java.simpleName
     private lateinit var myHelper: MyHelper
-    protected lateinit var db: DatabaseAdapter
+    private lateinit var db: DatabaseAdapter
     lateinit var gpsLocation: GPSLocation
     var latitude: Double = 0.0
     var longitude: Double = 0.0
     private lateinit var location: Location
 
-    private val REQUEST_ACCESS_FINE_LOCATION = 1
-    var startReading = ""
+    private var startReading = ""
     private var locationManager: LocationManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,24 +45,20 @@ class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
         Utils.onActivityCreateSetTheme(this)
 
         setContentView(R.layout.activity_hour_meter_start)
-        myHelper = MyHelper(TAG, this)
+        myHelper = MyHelper(tag, this)
 
 
-//        myHelper.setTag(TAG)
+//        myHelper.setTag(tag)
         db = DatabaseAdapter(this)
         myData = MyData()
-        myHelper.hideKeybaordOnClick(hour_meter_main_layout)
+        myHelper.hideKeyboardOnClick(hour_meter_main_layout)
 
-        myHelper.log("Machines--:${db.getMachine(myHelper.getMachineID())}")
-
-        myHelper.log("MachinesHours--:${db.getMachinesHours()}")
-        myHelper.log("MachineHours:${db.getMachineHours(myHelper.getMachineID())}")
         var reading = db.getMachineHours(myHelper.getMachineID()).totalHours
-        if (reading.isNullOrEmpty()) {
+        if (reading.isEmpty()) {
             reading = "0.0"
         }
         startReading = reading
-        ms_reading.setText(myHelper.getRoundedDecimal(reading!!.toDouble()).toString())
+        ms_reading.setText(myHelper.getRoundedDecimal(reading.toDouble()).toString())
         myHelper.log("Machine_HourMeter--reading--:${reading}")
 
         startGPS()
@@ -95,7 +90,6 @@ class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
 
             R.id.ms_continue -> {
 
-//                if (!myHelper.getMeterTimeForStart().equals(ms_reading.text.toString(), true)) {
                 if (!startReading.equals(ms_reading.text.toString(), true)) {
                     val meter = myHelper.getMeter()
                     meter.isMachineStartTimeCustom = true
@@ -118,7 +112,7 @@ class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
                 val newMinutes = myHelper.getRoundedInt(minutes)
                 myHelper.log("Minutes: $newMinutes")
                 myHelper.setMachineTotalTime(newMinutes)
-                myHelper.updateIsMachineRunning( 1)
+//                myHelper.pushIsMachineRunning( 1)
                 myHelper.startHomeActivityByType(myData)
 
                 myHelper.startMachine()
@@ -128,9 +122,9 @@ class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
     }
 
 
-    fun startGPS() {
+    private fun startGPS() {
 
-        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?;
+        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
         try {
             myHelper.log("Permission Granted.")
             locationManager?.requestLocationUpdates(
@@ -138,7 +132,7 @@ class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
                 1000,
                 0f,
                 locationListener
-            );
+            )
 
         } catch (ex: SecurityException) {
             myHelper.log("No Location Available:${ex.message}")
@@ -147,7 +141,7 @@ class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
 
     }
 
-    fun requestPermission() {
+    private fun requestPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED
         ) {
@@ -203,19 +197,15 @@ class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
             .setCancelable(false)
             .setPositiveButton(
                 "Goto Settings Page\nTo Enable GPS"
-            ) { dialog, id ->
+            ) { _, _ ->
                 val callGPSSettingIntent = Intent(
                     Settings.ACTION_LOCATION_SOURCE_SETTINGS
                 )
                 startActivity(callGPSSettingIntent)
             }
-        alertDialogBuilder.setNegativeButton("Cancel",
-            object : DialogInterface.OnClickListener {
-                override fun onClick(dialog: DialogInterface, id: Int) {
-                    dialog.cancel()
-                }
-            })
-        var alert = alertDialogBuilder.create()
+        alertDialogBuilder.setNegativeButton("Cancel"
+        ) { dialog, _ -> dialog.cancel() }
+        val alert = alertDialogBuilder.create()
         alert.show()
     }
 
@@ -263,7 +253,7 @@ class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private val locationListener: LocationListener = object : LocationListener {
-        override fun onLocationChanged(location: android.location.Location?) {
+        override fun onLocationChanged(location: Location?) {
             makeUseofLocation(location)
         }
 
@@ -283,7 +273,7 @@ class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun makeUseofLocation(location1: Location?) {
         latitude = location1!!.latitude
-        longitude = location1!!.longitude
+        longitude = location1.longitude
         location = location1
 
         gpsLocation.latitude = location1.latitude

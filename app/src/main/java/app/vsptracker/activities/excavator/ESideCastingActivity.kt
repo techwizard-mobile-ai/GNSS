@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_eside_casting.*
 
 class ESideCastingActivity : BaseActivity(), View.OnClickListener {
-    private val TAG = this::class.java.simpleName
+    private val tag = this::class.java.simpleName
 
     private lateinit var workTitle: String
     private var isWorking = false
@@ -25,16 +25,16 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val contentFrameLayout = findViewById(R.id.base_content_frame) as FrameLayout
+        val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
         layoutInflater.inflate(R.layout.activity_eside_casting, contentFrameLayout)
-        val navigationView = findViewById(R.id.base_nav_view) as NavigationView
+        val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
         navigationView.menu.getItem(0).isChecked = true
 
-        myHelper.setTag(TAG)
+        myHelper.setTag(tag)
 
-        var bundle: Bundle? = intent.extras
+        val bundle: Bundle? = intent.extras
         if (bundle != null) {
-            myData = bundle!!.getSerializable("myData") as MyData
+            myData = bundle.getSerializable("myData") as MyData
             myHelper.log("myData:$myData")
         }
 
@@ -107,9 +107,9 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
                                 "$workTitle is Stopped.\n" +
                                         "MyData Saved Successfully.\n" +
                                         "Work Duration : ${myHelper.getTotalTimeVSP(startTime)} (VSP Meter).\n" +
-                                        "Work Duration : ${myHelper.getTotalTimeMintues(startTime)} (Minutes)"
+                                        "Work Duration : ${myHelper.getTotalTimeMinutes(startTime)} (Minutes)"
                         )
-                        ework_action_text.text = "Start"
+                        ework_action_text.text = getString(R.string.start)
                         chronometer1.stop()
                         isWorking = false
                     } else {
@@ -121,8 +121,8 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
                 } else {
                     startTime = System.currentTimeMillis()
                     myHelper.toast("$workTitle is Started.")
-                    ework_action_text.text = "Stop"
-                    chronometer1.setBase(SystemClock.elapsedRealtime())
+                    ework_action_text.text = getString(R.string.stop)
+                    chronometer1.base = SystemClock.elapsedRealtime()
                     chronometer1.start()
                     eWork.startTime = startTime
                     eWork.loadingGPSLocation = gpsLocation

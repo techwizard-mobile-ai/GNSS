@@ -5,7 +5,7 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-class MyData() : Serializable {
+class MyData : Serializable {
 
     @SerializedName("id")
     @Expose
@@ -145,6 +145,8 @@ class MyData() : Serializable {
     var unloadingWeight: Double = 0.0
 
 
+//    Operator Logout = -1
+//    Machine Changed = -2
     @SerializedName("machine_stop_reason_id")
     @Expose
     var machine_stop_reason_id: Int = 0
@@ -235,16 +237,16 @@ class MyData() : Serializable {
     var backUnloadingGPSLocation = GPSLocation()
 //    var userID = ""
 
-    // isSync 0 = Not Uploaded to Server
-// isSync 1 = Uploaded to Server
-// isSync 2 = Uploaded to Server by Export
+//    isSync 0 = Not Uploaded to Server
+//    isSync 1 = Uploaded to Server
+//    isSync 2 = Uploaded to Server by Export
     var isSync: Int = 0
 
     var machineStoppedReason = ""
 
     var isMapOpened: Boolean = false
     override fun toString(): String {
-        return "MyData(id=$id, isRunning=$isRunning, machineId=$machineId, startTime=$startTime, stopTime=$stopTime, startHours='$startHours', totalHours='$totalHours', totalTime=$totalTime, time='$time', date='$date', recordID=$recordID, isStartMachine=$isStartMachine)"
+        return "MyData(id=$id, isRunning=$isRunning, machineId=$machineId, startTime=$startTime, stopTime=$stopTime, startHours='$startHours', totalHours='$totalHours', totalTime=$totalTime, time='$time', date='$date', recordID=$recordID, machine_stop_reason_id=$machine_stop_reason_id)"
     }
 
 

@@ -16,14 +16,16 @@
 
         <item
             android:id="@+id/nav_delay"
-            android:icon="@drawable/ic_wait"
+            android:icon="@drawable/ic_wait1"
             android:title="@string/delay" />
-
         <item
             android:id="@+id/nav_stop_machine"
             android:icon="@drawable/ic_stop_machine"
             android:title="@string/stop_machine" />
-
+        <item
+            android:id="@+id/nav_machine_breakdown"
+            android:icon="@drawable/ic_action_report"
+            android:title="@string/machine_breakdown" />
         <item
             android:id="@+id/nav_day_works"
             android:icon="@drawable/ic_action_departure_board"

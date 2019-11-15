@@ -15,7 +15,7 @@
     <string name="forgot_password">Forgot Password?</string>
     <string name="hour_meter_start">Hour Meter Start</string>
     <string name="continuetext">Continue</string>
-    <string name="stop_machine">Stop Machine</string>
+
     <string name="hour_meter_finish">Hour Meter Finish</string>
     <string name="save">Save</string>
     <string name="machine_type">Machine Type</string>
@@ -28,7 +28,7 @@
     <string name="digging">Digging</string>
 
 
-    <string name="treching">Treching</string>
+    <string name="trenching">Trenching</string>
     <string name="loading">Loading</string>
     <string name="trenching_history">Trenching History</string>
     <string name="loading_history">Loading History</string>
@@ -54,7 +54,6 @@
     <!--    D:\Lysaan\Projects\AndroidStudioProjects\VSPTracker (master -> origin)-->
     <!--    λ gradlew extractStringsFromLayouts-->
     <string name="activity_day_works_day_works_chronometer_text">Chronometer</string>
-    <string name="activity_day_works_day_works_action_text_text">Start</string>
     <string name="activity_ehome_ehome_loading_text">Production Digging</string>
     <string name="activity_ehome_ehome_trenching_text">Trenching</string>
     <string name="activity_ehome_ehome_digging_text">General Digging</string>
@@ -181,4 +180,32 @@
     <string name="trip_id">Trip ID</string>
     <string name="load_settings">Load Settings</string>
     <string name="unload_settings">Unload Settings</string>
+    <string name="machine_breakdown">Machine Breakdown</string>
+    <string name="machine_stopped_due_to_breakdown">Machine is Stopped Due to Breakdown.</string>
+    <string name="stop_machine">Stop Machine</string>
+    <string name="start_machine">Start Machine</string>
+    <string name="stop_machine_due_to_breakdown">Stop Machine Due to Breakdown</string>
+    <string name="select_machine_stop_reason">Select Machine Stop Reason</string>
+    <string name="machine_stopped_reason">Machine Stopped Reason</string>
+    <string name="select_loading_machine">Select Loading Machine</string>
+    <string name="select_back_loading_machine">Select Back Loading Machine</string>
+    <string name="select_loading_location">Select Loading Location</string>
+    <string name="select_unloading_location">Select Unloading Location</string>
+    <string name="select_back_loading_location">Select Back Loading Location</string>
+    <string name="select_back_unloading_location">Select Back Unloading Location</string>
+    <string name="select_loading_material">Select Loading Material</string>
+    <string name="select_unloading_material">Select Unloading Material</string>
+    <string name="select_back_loading_material">Select Back Loading Material</string>
+    <string name="select_back_unloading_material">Select Back Unloading Material</string>
+
+    <string name="weight_tonnes_message">Tonnes ( %1$d! )</string >
+    <string name="back_unload">Back Unload</string>
+    <string name="select_unloading_task">Select Unloading Task</string>
+    <string name="select_back_unloading_task">Select Back Unloading Task</string>
+    <string name="stop">Stop</string>
+    <string name="start_day_works_mode">Start Day Works Mode</string>
+    <string name="stop_day_works_mode">Stop Day Works Mode</string>
+    <string name="waiting_for_load_started">Waiting For Load Started</string>
+    <string name="wait_for_load">Wait For Load</string>
+    <string name="select_action">Select Action</string>
 </resources>

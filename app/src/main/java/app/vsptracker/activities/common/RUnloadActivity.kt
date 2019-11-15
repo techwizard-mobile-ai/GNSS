@@ -13,22 +13,21 @@ import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_runload.*
 
+private const val REQUEST_MATERIAL = 2
+private const val REQUEST_LOCATION = 3
+private const val REQUEST_WEIGHT = 4
 class RUnloadActivity : BaseActivity(), View.OnClickListener {
-    private val TAG = this::class.java.simpleName
-    private val REQUEST_MACHINE = 1
-    private val REQUEST_MATERIAL = 2
-    private val REQUEST_LOCATION = 3
-    private val REQUEST_WEIGHT = 4
+    private val tag = this::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val contentFrameLayout = findViewById(R.id.base_content_frame) as FrameLayout
+        val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
         layoutInflater.inflate(R.layout.activity_runload, contentFrameLayout)
-        val navigationView = findViewById(R.id.base_nav_view) as NavigationView
+        val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
         navigationView.menu.getItem(0).isChecked = true
 
-        myHelper.setTag(TAG)
+        myHelper.setTag(tag)
 
         myData = myHelper.getLastJourney()
         myHelper.log("myData:$myData")
@@ -41,7 +40,8 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                 trul_location.text = myData.unloadingLocation
 //                trul_weight.text = "Tonnes (" + myData.unloadingWeight + ")"
                 trul_weight.text = "0.0"
-                trunload_unload.text = "Unload"
+//                trunload_unload.text = "Unload"
+                trunload_unload.text = getString(R.string.unload)
             }
             3 -> {
                 trul_task.text = myData.backUnloadingTask
@@ -49,7 +49,8 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                 trul_location.text = myData.backUnloadingLocation
 //                trul_weight.text = "Tonnes (" + myData.unloadingWeight + ")"
                 trul_weight.text = "0.0"
-                trunload_unload.text = "Back Unload"
+//                trunload_unload.text = "Back Unload"
+                trunload_unload.text = getString(R.string.back_unload)
             }
         }
 
@@ -188,7 +189,7 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    fun pushTrip(myData: MyData){
+    private fun pushTrip(myData: MyData){
         myHelper.log("pushDelay:$myData")
 
         val call = this.retrofitAPI.pushTrip(
@@ -200,19 +201,19 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                 call: retrofit2.Call<MyDataResponse>,
                 response: retrofit2.Response<MyDataResponse>
             ) {
-                val response = response.body()
-                myHelper.log("EWorkResponse:$response")
-                if (response!!.success && response.data != null) {
+                val responseBody = response.body()
+                myHelper.log("EWorkResponse:$responseBody")
+                if (responseBody!!.success) {
                     myData.isSync = 1
                     db.updateTrip(myData)
 
                 } else {
                     db.updateTrip(myData)
-                    if (response.message!!.equals("Token has expired")) {
+                    if (responseBody.message == "Token has expired") {
                         myHelper.log("Token Expired:$response")
                         myHelper.refreshToken()
                     } else {
-                        myHelper.toast(response.message)
+                        myHelper.toast(responseBody.message)
                     }
                 }
             }
@@ -226,7 +227,7 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
         })
     }
 
-    fun saveTrip(myData: MyData){
+    private fun saveTrip(myData: MyData){
         when (myData.repeatJourney) {
             0 -> {
                 when (myData.nextAction) {
@@ -277,9 +278,9 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, intent)
 
         if (resultCode == Activity.RESULT_OK) {
-            var bundle: Bundle? = intent!!.extras
+            val bundle: Bundle? = intent!!.extras
             if (bundle != null) {
-                myData = bundle!!.getSerializable("myData") as MyData
+                myData = bundle.getSerializable("myData") as MyData
                 myHelper.log("myData:$myData")
 
 

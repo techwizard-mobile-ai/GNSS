@@ -8,17 +8,19 @@
     android:paddingEnd="@dimen/_10sdp"
     tools:context=".activities.HourMeterStopActivity">
 
-
-    <TextView
-        android:id="@+id/hm_stop_top_title"
+    <LinearLayout
+        android:id="@+id/hm_layout"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        style="@style/activity_title"
-        android:text="@string/hour_meter" />
-
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/hm_stop_top_title"
+            style="@style/activity_title"
+            android:text="@string/hour_meter" />
     <TextView
         android:id="@+id/hm_stop_top"
-        android:layout_below="@id/hm_stop_top_title"
         style="@style/home_tv"
         android:gravity="center"
         android:text="@string/hour_meter_finish" />
@@ -55,7 +57,7 @@
             android:layout_height="@dimen/_30sdp"
             android:src="@drawable/ic_add" />
     </LinearLayout>
-
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

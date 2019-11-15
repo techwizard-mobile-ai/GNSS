@@ -8,6 +8,7 @@ import android.widget.FrameLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.vsptracker.BaseActivity
+import app.vsptracker.others.MyHelper
 import app.vsptracker.R
 import app.vsptracker.activities.HourMeterStopActivity
 import app.vsptracker.activities.common.Location1Activity
@@ -15,33 +16,24 @@ import app.vsptracker.activities.common.Material1Activity
 import app.vsptracker.adapters.ELoadingAdapter
 import app.vsptracker.apis.trip.MyData
 import com.google.android.material.navigation.NavigationView
-import app.vsptracker.MyHelper
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_eload.*
-
+private const val REQUEST_MATERIAL = 2
+private const val REQUEST_LOCATION = 3
 class ELoadActivity : BaseActivity(), View.OnClickListener {
 
-    private val TAG = this::class.java.simpleName
-    //    private lateinit var myData: MyData
-    private val REQUEST_MATERIAL = 2
-    private val REQUEST_LOCATION = 3
+    private val tag = this::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val contentFrameLayout = findViewById(R.id.base_content_frame) as FrameLayout
+        val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
         layoutInflater.inflate(R.layout.activity_eload, contentFrameLayout)
-        val navigationView = findViewById(R.id.base_nav_view) as NavigationView
+        val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
         navigationView.menu.getItem(0).isChecked = true
 
-        myHelper = MyHelper(TAG, this)
+        myHelper = MyHelper(tag, this)
 
-//        var bundle :Bundle ?=intent.extras
-//        if(bundle != null){
-//            myData = bundle!!.getSerializable("myData") as MyData
-//            myHelper.log("myData:$myData")
-//        }
-//        myHelper.setLastJourney(myData)
 
         myData = myHelper.getLastJourney()
         eload_material.text = myData.loadingMaterial
@@ -55,13 +47,13 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
         eload_location.setOnClickListener(this)
 
 
-        val loadHistory = db.getELoadHistroy()
+        val loadHistory = db.getELoadHistory()
         if (loadHistory.size > 0) {
             elh_rv.visibility = View.VISIBLE
             val aa = ELoadingAdapter(this@ELoadActivity, loadHistory)
             val layoutManager1 = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
             elh_rv.layoutManager = layoutManager1
-            elh_rv!!.setAdapter(aa)
+            elh_rv!!.adapter = aa
         } else {
             elh_rv.visibility = View.INVISIBLE
         }
@@ -78,8 +70,8 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
         when (view!!.id) {
             R.id.load_truck_load -> {
                 stopDelay()
-                myData.loadingMachine = myHelper.getMachineNumber().toString()
-                myData.loadedMachine = "Load"
+                myData.loadingMachine = myHelper.getMachineNumber()
+                myData.loadedMachine = getString(R.string.load)
 
                 myData.loadingGPSLocation = gpsLocation
                 myData.loadTypeId = 1
@@ -92,13 +84,13 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
                 if (insertID > 0) {
                     myHelper.toast("Loading Successful.\nLoaded Truck Number # $insertID")
 
-                    val loadHistory = db.getELoadHistroy()
+                    val loadHistory = db.getELoadHistory()
                     if (loadHistory.size > 0) {
                         elh_rv.visibility = View.VISIBLE
                         val aa = ELoadingAdapter(this@ELoadActivity, loadHistory)
                         val layoutManager1 = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
                         elh_rv.layoutManager = layoutManager1
-                        elh_rv!!.setAdapter(aa)
+                        elh_rv!!.adapter = aa
                     } else {
                         elh_rv.visibility = View.INVISIBLE
                     }
@@ -137,9 +129,9 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, intent)
 
         if (resultCode == Activity.RESULT_OK) {
-            var bundle: Bundle? = intent!!.extras
+            val bundle: Bundle? = intent!!.extras
             if (bundle != null) {
-                myData = bundle!!.getSerializable("myData") as MyData
+                myData = bundle.getSerializable("myData") as MyData
                 myHelper.log("myData:$myData")
 
 

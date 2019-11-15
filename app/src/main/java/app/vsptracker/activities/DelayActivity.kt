@@ -5,42 +5,43 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.view.View
 import android.widget.FrameLayout
-import com.google.android.material.navigation.NavigationView
+import androidx.core.content.ContextCompat
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.apis.delay.EWork
+import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_delay.*
 
 class DelayActivity : BaseActivity(),
     View.OnClickListener {
 
-    private val TAG = this::class.java.simpleName
+    private val tag = this::class.java.simpleName
     private lateinit var eWork: EWork
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val contentFrameLayout =
-            findViewById(R.id.base_content_frame) as FrameLayout
+            findViewById<FrameLayout>(R.id.base_content_frame)
         layoutInflater.inflate(
             R.layout.activity_delay,
             contentFrameLayout
         )
-        val navigationView = findViewById(R.id.base_nav_view) as NavigationView
+        val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
         navigationView.menu.getItem(1).isChecked = true
 
-        myHelper.setTag(TAG)
+        myHelper.setTag(tag)
         eWork = EWork()
-        startGPS()
+//        startGPS()
 
         val startLocation = gpsLocation
 
         if (!myHelper.isDelayStarted()) {
 
-            day_works_chronometer.setBase(SystemClock.elapsedRealtime())
+            day_works_chronometer.base = SystemClock.elapsedRealtime()
             day_works_chronometer.start()
-            day_work_title.text = "Waiting For Load Started"
-            day_works_action_text.text = "Stop"
-            day_works_button.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.black)))
+            day_work_title.text = getString(R.string.waiting_for_load_started)
+            day_works_action_text.text = getString(R.string.stop)
+            day_works_button.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
             myHelper.startDelay(startLocation)
 
         } else {
@@ -49,10 +50,10 @@ class DelayActivity : BaseActivity(),
             val meter = myHelper.getMeter()
             val startTime = meter.delayStartTime
             val totalTime = (currentTime - startTime)
-            day_works_chronometer.setBase(SystemClock.elapsedRealtime() - totalTime)
+            day_works_chronometer.base = SystemClock.elapsedRealtime() - totalTime
             day_works_chronometer.start()
-            day_works_action_text.text = "Stop"
-            day_works_button.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.black)))
+            day_works_action_text.text = getString(R.string.stop)
+            day_works_button.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
         }
 
         day_works_action.setOnClickListener(this)
@@ -64,11 +65,11 @@ class DelayActivity : BaseActivity(),
 
             R.id.day_works_action -> {
                 if (myHelper.isDelayStarted()) {
-                    val dbID = stopDelay()
+                    stopDelay()
 //                    if(dbID>0){
-                        day_work_title.text = "Wait For Load"
-                        day_works_button.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.colorPrimary)))
-                        day_works_action_text.text = "Start"
+                        day_work_title.text = getString(R.string.wait_for_load)
+                    day_works_button.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorPrimary))
+                        day_works_action_text.text = getString(R.string.start)
                         day_works_chronometer.stop()
 //                        myHelper.startHomeActivityByType(MyData())
 //                        finish()
@@ -77,12 +78,12 @@ class DelayActivity : BaseActivity(),
 
                 } else {
 
-                    day_works_chronometer.setBase(SystemClock.elapsedRealtime())
+                    day_works_chronometer.base = SystemClock.elapsedRealtime()
                     day_works_chronometer.start()
 
-                    day_work_title.text = "Waiting For Load Started"
-                    day_works_button.setBackgroundTintList(ColorStateList.valueOf(resources.getColor(R.color.black)))
-                    day_works_action_text.text = "Stop"
+                    day_work_title.text = getString(R.string.waiting_for_load_started)
+                    day_works_button.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.black))
+                    day_works_action_text.text = getString(R.string.stop)
                     val gpslocation = gpsLocation
                     myHelper.startDelay(gpslocation)
 
