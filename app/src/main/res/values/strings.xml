@@ -45,7 +45,7 @@
     <string name="back_load">Back Load</string>
     <string name="repeat_journey">Repeat Journey</string>
     <string name="new_journey">New Journey</string>
-    <string name="loading_gps">GPS Location</string>
+    <string name="loading_gps">Loading GPS</string>
     <string name="load_number">Load Number</string>
     <string name="loading_machine">Loading Machine</string>
     <string name="activity_day_works_day_work_title_text">Daily Mode</string>
@@ -155,7 +155,7 @@
     <string name="mode">Mode</string>
     <string name="gps_location">GPS Location</string>
     <string name="duration">Duration</string>
-    <string name="delay_history">Delay History</string>
+    <string name="delay_history">Waiting History</string>
     <string name="hour_meter">Hour Meter</string>
     <string name="select_machine">Select Machine</string>
     <string name="machine_location">Machine Location</string>
@@ -198,7 +198,7 @@
     <string name="select_back_loading_material">Select Back Loading Material</string>
     <string name="select_back_unloading_material">Select Back Unloading Material</string>
 
-    <string name="weight_tonnes_message">Tonnes ( %1$d! )</string >
+    <string name="weight_tonnes_message">Tonnes ( %1$d! )</string>
     <string name="back_unload">Back Unload</string>
     <string name="select_unloading_task">Select Unloading Task</string>
     <string name="select_back_unloading_task">Select Back Unloading Task</string>
@@ -208,4 +208,24 @@
     <string name="waiting_for_load_started">Waiting For Load Started</string>
     <string name="wait_for_load">Wait For Load</string>
     <string name="select_action">Select Action</string>
+
+    <string name="scraper_trimming">Scraper Trimming</string>
+    <string name="general_digging_loads_history">General Digging Loads History</string>
+    <string name="trenching_loads_history">Trenching Loads History</string>
+    <string name="machine_hrs">Machines Hrs</string>
+    <string name="machine_hours">Machines Hours</string>
+    <string name="machine_stops">Machines Stops</string>
+    <string name="operators_hrs">Operators Hrs</string>
+    <string name="operators_hours">Operators Hours</string>
+    <string name="work_history">Work History</string>
+    <string name="communicate">Communicate</string>
+    <string name="start_gps">Start GPS</string>
+    <string name="stop_gps">Stop GPS</string>
+    <string name="total_hours">Total Hours</string>
+    <string name="start_hours">Start Hours</string>
+    <string name="subtract">Subtract</string>
+    <string name="add">Add</string>
+    <string name="hrs">: Hrs</string>
+    <string name="operating_site">Operating Site</string>
+
 </resources>

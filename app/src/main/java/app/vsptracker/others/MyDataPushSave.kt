@@ -537,4 +537,55 @@ class MyDataPushSave(private val context: Context) {
     private fun insertMachineHour(myData: MyData) {
         db.insertMachineHours(myData)
     }
+
+    fun pushInsertOperatorHour(myData: MyData) {
+        myHelper.log("pushInsertOperatorHour:$myData")
+        when {
+            myHelper.isOnline() -> pushOperatorHour(myData)
+            else -> insertOperatorHour(myData)
+        }
+    }
+
+    private fun pushOperatorHour(myData: MyData) {
+
+        val call = this.retrofitAPI.pushOperatorHour(
+            myHelper.getLoginAPI().auth_token,
+            myData
+        )
+        call.enqueue(object : retrofit2.Callback<MyDataResponse> {
+            override fun onResponse(
+                call: retrofit2.Call<MyDataResponse>,
+                response: retrofit2.Response<MyDataResponse>
+            ) {
+                val responseBody = response.body()
+                myHelper.run {
+                    log("response:$response")
+                    log("responseBody:$responseBody")
+                }
+                if (responseBody!!.success) {
+                    myData.isSync = 1
+                } else {
+                    if (responseBody.message == "Token has expired") {
+                        myHelper.log("Token Expired:$response")
+                        myHelper.refreshToken()
+                    } else {
+                        myHelper.toast(responseBody.message)
+                    }
+                }
+                insertOperatorHour(myData)
+            }
+
+            override fun onFailure(call: retrofit2.Call<MyDataResponse>, t: Throwable) {
+                insertOperatorHour(myData)
+                myHelper.run {
+                    toast(t.message.toString())
+                    log("Failure" + t.message)
+                }
+            }
+        })
+    }
+
+    private fun insertOperatorHour(myData: MyData) {
+        db.insertOperatorHour(myData)
+    }
 }

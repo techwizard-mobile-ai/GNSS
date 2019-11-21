@@ -47,6 +47,7 @@ class Map1Activity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
         }
 
 //        if(myHelper.getIsMachineStopped()|| myHelper.getMachineID() <1){
+//        if( !myHelper.isNavEnabled()){
 //            drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
 //        }
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
@@ -93,13 +94,14 @@ class Map1Activity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
             val longitude = mapGPSLocation.longitude
             myHelper.log("In SetupMap:$mapGPSLocation")
             val location1 = LatLng(lat, longitude)
-            map.addMarker(
+            val marker = map.addMarker(
                 MarkerOptions()
                     .position(location1)
                     .title(mapGPSLocation.locationName)
             )
 
 
+            marker.showInfoWindow()
             map.isMyLocationEnabled = true
             fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
                 // Got last known location. In some rare situations this can be null.

@@ -7,7 +7,7 @@ import android.widget.FrameLayout
 import app.vsptracker.BaseActivity
 import app.vsptracker.others.MyHelper
 import app.vsptracker.R
-import app.vsptracker.activities.common.Material1Activity
+import app.vsptracker.activities.common.MaterialActivity
 import app.vsptracker.activities.common.UnloadTaskActivity
 import app.vsptracker.activities.excavator.ESideCastingActivity
 import com.google.android.material.navigation.NavigationView
@@ -62,12 +62,12 @@ class SHomeActivity : BaseActivity(), View.OnClickListener {
                 startActivity(intent)
             }
             R.id.thome_load -> {
-                val intent = Intent(this, Material1Activity::class.java)
+                val intent = Intent(this, MaterialActivity::class.java)
                 intent.putExtra("myData", myData)
                 startActivity(intent)
             }
             R.id.thome_unload -> {
-//                val intent = Intent(this, Location1Activity::class.java)
+//                val intent = Intent(this, LocationActivity::class.java)
                 val intent = Intent(this, UnloadTaskActivity::class.java)
                 intent.putExtra("myData", myData)
                 startActivity(intent)

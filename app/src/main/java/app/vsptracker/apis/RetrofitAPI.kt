@@ -27,11 +27,16 @@ interface RetrofitAPI {
         const val ORGS_MACHINES_TASKS = "orgstasks/list"
         const val ORGS_SIDECASTINGS = "orgssidecastings/store"
         const val ORGS_LOADS = "orgsloads/store"
-        const val ORGS_MACHINES_HOURS = "orgsmachineshours/list"
+//        const val ORGS_MACHINES_HOURS = "orgsmachineshours/list"
+        const val ORGS_MACHINES_HOURS = "orgsmachineshours/max_hours"
         const val ORGS_PUSH_MACHINES_HOURS = "orgsmachineshours/store"
         const val ORGS_MACHINES_UPDATE = "orgsmachines/update"
         const val ORGS_MACHINES_AUTO_LOGOUTS = "orgsmachinesautologouts/list"
+        const val ORGS_PUSH_OPERATORS_HOURS = "orgsoperatorshours/store"
     }
+
+    @POST(ORGS_PUSH_OPERATORS_HOURS)
+    fun pushOperatorHour(@Query("token") token: String?, @Body myData: MyData): Call<MyDataResponse>
 
     @GET(ORGS_MACHINES_AUTO_LOGOUTS)
     fun getMachinesAutoLogouts(
@@ -134,6 +139,6 @@ interface RetrofitAPI {
         @Field("email") email: String,
         @Field("password") password: String,
         @Field("role") role: Int = 1,
-        @Field("ttl") ttl: Int = 43200 // 43200 minutes = 30 days
+        @Field("ttl") ttl: Int = 43800 // 43200 minutes = 30 days
     ): Call<LoginResponse>
 }

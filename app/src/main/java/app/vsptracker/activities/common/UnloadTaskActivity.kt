@@ -153,7 +153,7 @@ class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
                                 myData.back_unloading_task_id = fillId
                             }
                         }
-                        val intent = Intent(this, Location1Activity::class.java)
+                        val intent = Intent(this, LocationActivity::class.java)
 
                         intent.putExtra("myData", myData)
                         startActivity(intent)
@@ -191,7 +191,7 @@ class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
                                 myData.back_unloading_task_id = offSiteId
                             }
                         }
-                        val intent = Intent(this, Location1Activity::class.java)
+                        val intent = Intent(this, LocationActivity::class.java)
                         myData.unloadingTask = "Off site"
                         myData.unloading_task_id = offSiteId
                         intent.putExtra("myData", myData)
@@ -231,7 +231,7 @@ class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
                                 myData.back_unloading_task_id = respreadId
                             }
                         }
-                        val intent = Intent(this, Location1Activity::class.java)
+                        val intent = Intent(this, LocationActivity::class.java)
                         myData.unloadingTask = "Respread"
                         myData.unloading_task_id = 3
                         intent.putExtra("myData", myData)
@@ -271,7 +271,7 @@ class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
                                 myData.back_unloading_task_id = stockPileId
                             }
                         }
-                        val intent = Intent(this, Location1Activity::class.java)
+                        val intent = Intent(this, LocationActivity::class.java)
                         myData.unloadingTask = "Stockpile"
                         myData.unloading_task_id = 1
                         intent.putExtra("myData", myData)

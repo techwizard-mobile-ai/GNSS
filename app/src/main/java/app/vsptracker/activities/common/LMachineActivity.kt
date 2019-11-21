@@ -13,9 +13,9 @@ import app.vsptracker.adapters.CustomGridLMachine
 import app.vsptracker.apis.trip.MyData
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_lmachine1.*
+import kotlinx.android.synthetic.main.activity_lmachine.*
 
-class LMachine1Activity : BaseActivity(), View.OnClickListener {
+class LMachineActivity : BaseActivity(), View.OnClickListener {
 
     private val tag = this::class.java.simpleName
 
@@ -23,7 +23,7 @@ class LMachine1Activity : BaseActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
 
         val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
-        layoutInflater.inflate(R.layout.activity_lmachine1, contentFrameLayout)
+        layoutInflater.inflate(R.layout.activity_lmachine, contentFrameLayout)
         val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
         navigationView.menu.getItem(0).isChecked = true
 
@@ -47,7 +47,7 @@ class LMachine1Activity : BaseActivity(), View.OnClickListener {
         val machines = db.getMachines(1)
 //        myHelper.log("machines:$machines")
 
-        val adapter = CustomGridLMachine(this@LMachine1Activity, machines)
+        val adapter = CustomGridLMachine(this@LMachineActivity, machines)
 
         gv.adapter = adapter
         gv.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
@@ -72,14 +72,14 @@ class LMachine1Activity : BaseActivity(), View.OnClickListener {
                 }
                 else -> when (myData.nextAction) {
                     0 -> {
-                        val intent = Intent(this, Material1Activity::class.java)
+                        val intent = Intent(this, MaterialActivity::class.java)
                         myData.loadingMachine = machines[position].number
                         myData.loading_machine_id = machines[position].id
                         intent.putExtra("myData", myData)
                         startActivity(intent)
                     }
                     2 -> {
-                        val intent = Intent(this, Material1Activity::class.java)
+                        val intent = Intent(this, MaterialActivity::class.java)
                         myData.backLoadingMachine = machines[position].number
                         myData.back_loading_machine_id = machines[position].id
                         intent.putExtra("myData", myData)

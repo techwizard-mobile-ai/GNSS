@@ -4,27 +4,24 @@ import android.app.Activity
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.vsptracker.others.MyHelper
-
-
 import app.vsptracker.R
 import app.vsptracker.adapters.DelayHistoryAdapter
 import app.vsptracker.apis.delay.EWork
 import app.vsptracker.database.DatabaseAdapter
+import app.vsptracker.others.MyHelper
 import kotlinx.android.synthetic.main.fragment_delay_history.view.*
 
 
 class DelayHistoryFragment : Fragment() {
     private var listener: OnFragmentInteractionListener? = null
 
-    private val TAG = this::class.java.simpleName
+    private val tag1 = this::class.java.simpleName
     private lateinit var myHelper: MyHelper
     private var root: View? = null
     private lateinit var diggingHistory: MutableList<EWork>
@@ -34,12 +31,10 @@ class DelayHistoryFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             myHelper = MyHelper(
-                    TAG,
-                    myContext
+                    tag1,
+                context as Activity
             )
-            db = DatabaseAdapter(myContext)
-            diggingHistory = db.getEWorks(1)
-            myHelper.log("Digging:$diggingHistory ")
+            db = DatabaseAdapter(context as Activity)
         }
     }
 
@@ -54,10 +49,9 @@ class DelayHistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        val workType = 1
         val dataList = db.getWaits()
-        val mAdapter = DelayHistoryAdapter(myContext, dataList)
-        root!!.dh_rv.layoutManager = LinearLayoutManager(myContext, RecyclerView.VERTICAL, false)
+        val mAdapter = DelayHistoryAdapter(context as Activity, dataList)
+        root!!.dh_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
         root!!.dh_rv!!.adapter = mAdapter
     }
 
@@ -80,19 +74,14 @@ class DelayHistoryFragment : Fragment() {
     }
 
     companion object {
-
-
-        private lateinit var myContext: Activity
         private lateinit var FRAGMENT_TAG: String
 
         @JvmStatic
         fun newInstance(
-                eHistoryActivity: Activity,
-                FRAGMENT_TG: String
+            FRAGMENT_TG: String
         ) =
                 DelayHistoryFragment().apply {
                     arguments = Bundle().apply {
-                        myContext = eHistoryActivity
                         FRAGMENT_TAG = FRAGMENT_TG
                     }
                 }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.TabHistoryActivity">
+    tools:context=".activities.truck.THistoryActivity">
 
 
     <FrameLayout
@@ -58,5 +58,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/history_navigation" />
+        app:menu="@menu/t_history_navigation" />
 </RelativeLayout>

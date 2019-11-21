@@ -3,27 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/_10sdp"
-    tools:context=".activities.common.Location1Activity">
+    tools:context=".activities.common.LMachineActivity">
 
-    <Button
-        android:id="@+id/elocation1_back"
-        style="@style/back_button_single"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="@dimen/_10sdp" />
     <TextView
-        android:id="@+id/location_title"
-        style="@style/activity_title"
         android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"
-        android:text="@string/activity_location1_elocation1_title_text" />
+        android:layout_centerHorizontal="true"
+        android:id="@+id/lm_title"
+        style="@style/activity_title"
+        android:text="@string/activity_lmachine1_lm_title_text" />
+
     <GridView
-        android:id="@+id/l_gridview"
+        android:layout_above="@id/lmachine_back"
+        android:layout_below="@id/lm_title"
+        android:id="@+id/tlm_gridview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/elocation1_back"
-        android:layout_below="@id/location_title"
         android:layout_margin="@dimen/_5sdp"
         android:columnWidth="@dimen/_120sdp"
         android:gravity="center"
@@ -32,5 +28,9 @@
         android:stretchMode="columnWidth"
         android:verticalSpacing="0dp" />
 
-
+    <Button
+        android:id="@+id/lmachine_back"
+        style="@style/back_button_single"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

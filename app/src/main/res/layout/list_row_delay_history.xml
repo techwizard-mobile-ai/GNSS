@@ -81,11 +81,11 @@
             <LinearLayout
                 android:id="@+id/lhr_gps_loading_layout"
                 style="@style/load_history_row_item"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <TextView
                     style="@style/load_history_text"
-                    android:text="@string/start_gps_location" />
+                    android:text="@string/start_gps" />
 
                 <TextView
                     android:id="@+id/lhr_gps_loading"
@@ -113,7 +113,7 @@
 
                 <TextView
                     style="@style/load_history_text"
-                    android:text="@string/gps_location" />
+                    android:text="@string/stop_gps" />
 
                 <TextView
                     android:id="@+id/lhr_gps_unloading"

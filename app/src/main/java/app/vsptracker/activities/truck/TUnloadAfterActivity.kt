@@ -7,7 +7,7 @@ import android.widget.FrameLayout
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.activities.HourMeterStopActivity
-import app.vsptracker.activities.common.LMachine1Activity
+import app.vsptracker.activities.common.LMachineActivity
 import app.vsptracker.activities.common.RLoadActivity
 import app.vsptracker.apis.trip.MyData
 import com.google.android.material.navigation.NavigationView
@@ -58,7 +58,7 @@ class TUnloadAfterActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         when (view!!.id) {
             R.id.tul_back_load -> {
-                val intent = Intent(this, LMachine1Activity::class.java)
+                val intent = Intent(this, LMachineActivity::class.java)
                 myHelper.setNextAction(2)
                 myData = myHelper.getLastJourney()
 //                myData.isForBackLoad = true
@@ -67,7 +67,7 @@ class TUnloadAfterActivity : BaseActivity(), View.OnClickListener {
                 startActivity(intent)
             }
             R.id.tul_after_new -> {
-                val intent = Intent(this, LMachine1Activity::class.java)
+                val intent = Intent(this, LMachineActivity::class.java)
                 val data = MyData()
                 myHelper.setLastJourney(data)
                 intent.putExtra("myData", data)

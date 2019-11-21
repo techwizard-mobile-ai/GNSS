@@ -32,27 +32,27 @@
             android:title="@string/day_works" />
         <item
             android:id="@+id/nav_night_mode"
-            android:icon="@drawable/ic_night_mode"
+            android:icon="@drawable/ic_dark_mode"
             android:title="@string/night_mode" />
-
         <item
             android:id="@+id/nav_load_history"
             android:icon="@drawable/ic_history"
-            android:title="@string/history" />
-
-
+            android:title="@string/work_history" />
         <item
             android:id="@+id/nav_change_machine"
             android:icon="@drawable/ic_change_machine"
             android:title="@string/change_machine" />
-
+        <item
+            android:id="@+id/nav_server_sync"
+            android:icon="@drawable/ic_server_sync"
+            android:title="@string/server_sync" />
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_logout"
             android:title="@string/logout" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="@string/communicate">
         <menu>
             <item
                 android:id="@+id/nav_email"

@@ -7,7 +7,7 @@ import android.widget.FrameLayout
 import app.vsptracker.BaseActivity
 import app.vsptracker.others.MyHelper
 import app.vsptracker.R
-import app.vsptracker.activities.common.LMachine1Activity
+import app.vsptracker.activities.common.LMachineActivity
 import app.vsptracker.activities.common.UnloadTaskActivity
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_base.*
@@ -63,7 +63,7 @@ class THomeActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         when (view!!.id) {
             R.id.thome_load -> {
-                val intent = Intent(this, LMachine1Activity::class.java)
+                val intent = Intent(this, LMachineActivity::class.java)
                 intent.putExtra("myData", myData)
                 startActivity(intent)
             }

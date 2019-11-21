@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/_10sdp"
-    tools:context=".activities.common.Material1Activity">
+    tools:context=".activities.common.MaterialActivity">
 
 
     <TextView

@@ -2,11 +2,14 @@
   <dictionary name="MalikAB">
     <words>
       <w>digginghistory</w>
+      <w>ework</w>
       <w>gpslocation</w>
       <w>gson</w>
       <w>loadhistory</w>
+      <w>loginapi</w>
       <w>logouts</w>
       <w>millisec</w>
+      <w>operatorapi</w>
       <w>orgs</w>
       <w>respread</w>
       <w>snackbar</w>

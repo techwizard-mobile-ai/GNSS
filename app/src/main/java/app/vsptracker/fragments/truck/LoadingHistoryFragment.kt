@@ -10,18 +10,18 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.vsptracker.others.MyHelper
 import app.vsptracker.R
 import app.vsptracker.adapters.LoadingHistoryAdapter
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.database.DatabaseAdapter
+import app.vsptracker.others.MyHelper
 import kotlinx.android.synthetic.main.fragment_loading_history.*
 
 
 class LoadingHistoryFragment : Fragment() {
 
     private lateinit var loadingHistory: MutableList<MyData>
-    private val TAG = this::class.java.simpleName
+    private val tag1 = this::class.java.simpleName
 
     private lateinit var myHelper: MyHelper
     private var root: View? = null
@@ -32,8 +32,8 @@ class LoadingHistoryFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            myHelper = MyHelper(TAG, myContext)
-            db = DatabaseAdapter(myContext)
+            myHelper = MyHelper(tag1, context as Activity)
+            db = DatabaseAdapter(context as Activity)
             loadingHistory = db.getTrips()
             myHelper.log("loadingHistory:$loadingHistory")
         }
@@ -50,9 +50,9 @@ class LoadingHistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val mAdapter = LoadingHistoryAdapter(myContext, loadingHistory)
-        flh_rv.layoutManager = LinearLayoutManager(myContext, RecyclerView.VERTICAL, false)
-        flh_rv!!.setAdapter(mAdapter)
+        val mAdapter = LoadingHistoryAdapter(context as Activity, loadingHistory)
+        flh_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
+        flh_rv!!.adapter = mAdapter
     }
 
     fun onButtonPressed(uri: Uri) {
@@ -64,7 +64,7 @@ class LoadingHistoryFragment : Fragment() {
         if (context is OnFragmentInteractionListener) {
             listener = context
         } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
+            throw RuntimeException("$context must implement OnFragmentInteractionListener")
         }
     }
 
@@ -79,12 +79,12 @@ class LoadingHistoryFragment : Fragment() {
 
     companion object {
 
-        private lateinit var myContext: Activity
+//        private lateinit var myContext: Activity
         @JvmStatic
-        fun newInstance(activity: Activity) =
+        fun newInstance() =
                 LoadingHistoryFragment().apply {
                     arguments = Bundle().apply {
-                        myContext = activity
+//                        myContext = activity
                     }
                 }
     }

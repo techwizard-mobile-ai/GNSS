@@ -5,7 +5,7 @@ import java.io.Serializable
 
 class LoginAPI : Serializable{
 
-    @SerializedName("id") val id : Int = 0;
+    @SerializedName("id") val id : Int = 0
     @SerializedName("name") val name : String =""
     @SerializedName("email") val email : String =""
     @SerializedName("org_id") val org_id : Int = 0

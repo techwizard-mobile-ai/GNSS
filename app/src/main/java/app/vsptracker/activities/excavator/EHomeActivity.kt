@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.FrameLayout
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
-import app.vsptracker.activities.common.Location1Activity
+import app.vsptracker.activities.common.LocationActivity
 import app.vsptracker.apis.trip.MyData
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_base.*
@@ -45,7 +45,7 @@ class EHomeActivity : BaseActivity(), View.OnClickListener {
 
 //            Production Digging
             R.id.ehome_loading -> {
-                val intent = Intent(this, Location1Activity::class.java)
+                val intent = Intent(this, LocationActivity::class.java)
                 intent.putExtra("myData", myData)
                 startActivity(intent)
             }

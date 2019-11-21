@@ -6,12 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import app.vsptracker.others.MyHelper
 import app.vsptracker.R
 import app.vsptracker.apis.delay.EWork
 import app.vsptracker.database.DatabaseAdapter
+import app.vsptracker.others.MyHelper
 import kotlinx.android.synthetic.main.list_row_delay_history.view.*
-
 
 class DelayHistoryAdapter(
     val context: Activity,
@@ -38,7 +37,7 @@ class DelayHistoryAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val eWork = dataList[position]
-
+        myHelper.log("waiting:$eWork")
         when (eWork.machineTypeId) {
             1 -> {
                 holder.itemView.eth_machine_type.text = ":  Excavator"
@@ -56,13 +55,15 @@ class DelayHistoryAdapter(
         holder.itemView.eth_sync.text = ": ${if(eWork.isSync == 1) "Yes" else "No"}"
         holder.itemView.eth_record_number.text = ":  " + (eWork.ID)
 
-        holder.itemView.eth_operator.text = ":  " + (db.getOperatorByID(eWork.operatorId.toString()).name)
+        val operatorName =  (db.getOperatorByID(eWork.operatorId.toString())).name
+        holder.itemView.eth_operator.text = ":  $operatorName"
 
         holder.itemView.eth_machine_number.text = ":  " + eWork.machineNumber
         holder.itemView.eth_start_time.text = ":  " + myHelper.getTime(eWork.startTime) + " Hrs"
         holder.itemView.eth_end_time.text = ":  " + myHelper.getTime(eWork.stopTime) + " Hrs"
         holder.itemView.eth_duration.text = ":  " + myHelper.getFormattedTime(eWork.totalTime) + " Hrs"
-        holder.itemView.eth_date.text = ":  " + myHelper.getDateTime(eWork.stopTime) + " Hrs"
+        val date = myHelper.getDateTime(eWork.stopTime)
+        holder.itemView.eth_date.text = ":  $date Hrs"
         holder.itemView.eth_mode.text = ":  ${eWork.workMode}"
 
         holder.itemView.lhr_gps_loading.text =
@@ -75,10 +76,10 @@ class DelayHistoryAdapter(
                 )} "
 
         holder.itemView.lhr_gps_loading_layout.setOnClickListener {
-            myHelper.showOnMap(eWork.loadingGPSLocation, "Delay Location")
+            myHelper.showOnMap(eWork.loadingGPSLocation, "$operatorName using Machine ${eWork.machineNumber } Started Waiting")
         }
         holder.itemView.lhr_gps_unloading_layout.setOnClickListener {
-            myHelper.showOnMap(eWork.unloadingGPSLocation, "Delay Location")
+            myHelper.showOnMap(eWork.unloadingGPSLocation, "$operatorName using Machine ${eWork.machineNumber } Stopped Waiting")
         }
 
     }

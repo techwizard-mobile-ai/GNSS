@@ -10,7 +10,6 @@ import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.fragments.common.DelayHistoryFragment
 import app.vsptracker.fragments.excavator.EDiggingHistoryFragment
-import app.vsptracker.fragments.excavator.EOffloadingLoadsFragment
 import app.vsptracker.fragments.truck.LoadingHistoryFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
@@ -22,7 +21,6 @@ private const val DELAY_HISTORY: String = "DELAY_HISTORY"
 class SHistoryActivity : BaseActivity(), View.OnClickListener,
     LoadingHistoryFragment.OnFragmentInteractionListener,
     EDiggingHistoryFragment.OnFragmentInteractionListener,
-    EOffloadingLoadsFragment.OnFragmentInteractionListener,
     DelayHistoryFragment.OnFragmentInteractionListener {
 
     override fun onFragmentInteraction(uri: Uri) {}
@@ -44,7 +42,6 @@ class SHistoryActivity : BaseActivity(), View.OnClickListener,
             myHelper.log("myData:$myData")
         }
 
-
         val bottomNavigation: BottomNavigationView = findViewById(R.id.navigationView)
         bottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
@@ -53,25 +50,25 @@ class SHistoryActivity : BaseActivity(), View.OnClickListener,
             myHelper.log("menuFragment:${menuFragment}")
             when (menuFragment) {
                 "loadingHistoryFragment" -> {
-                    val tFragment = LoadingHistoryFragment.newInstance(this)
+                    val tFragment = LoadingHistoryFragment.newInstance()
                     openFragment(tFragment, LOADING_HISTORY)
                 }
                 "delayHistoryFragment" -> {
-                    val delayFragment = DelayHistoryFragment.newInstance(this, DELAY_HISTORY)
+                    val delayFragment = DelayHistoryFragment.newInstance(DELAY_HISTORY)
                     openFragment(delayFragment, DELAY_HISTORY)
                 }
                 else -> {
-                    val homeFragment = EDiggingHistoryFragment.newInstance(this, E_DIGGINGHISTORY, 3)
+                    val homeFragment = EDiggingHistoryFragment.newInstance(E_DIGGINGHISTORY, 3)
                     openFragment(homeFragment, E_DIGGINGHISTORY)
                 }
             }
         } else {
 
-            val homeFragment = LoadingHistoryFragment.newInstance(this)
+            val homeFragment = LoadingHistoryFragment.newInstance()
             openFragment(homeFragment, LOADING_HISTORY)
         }
 
-        val loadingHistoryFragment = LoadingHistoryFragment.newInstance(this)
+        val loadingHistoryFragment = LoadingHistoryFragment.newInstance()
         openFragment(loadingHistoryFragment, LOADING_HISTORY)
     }
 
@@ -86,13 +83,12 @@ class SHistoryActivity : BaseActivity(), View.OnClickListener,
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navf_loading -> {
-                    val loadingHistoryFragment = LoadingHistoryFragment.newInstance(this)
+                    val loadingHistoryFragment = LoadingHistoryFragment.newInstance()
                     openFragment(loadingHistoryFragment, LOADING_HISTORY)
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.navf_digging -> {
                     val eDiggingHistoryFragment = EDiggingHistoryFragment.newInstance(
-                        this,
                         E_DIGGINGHISTORY,
                         3
                     )
@@ -100,7 +96,7 @@ class SHistoryActivity : BaseActivity(), View.OnClickListener,
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.navf_delay -> {
-                    val delayHistoryFragment = DelayHistoryFragment.newInstance(this, DELAY_HISTORY)
+                    val delayHistoryFragment = DelayHistoryFragment.newInstance(DELAY_HISTORY)
                     openFragment(delayHistoryFragment, DELAY_HISTORY)
                     return@OnNavigationItemSelectedListener true
                 }

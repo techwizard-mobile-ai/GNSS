@@ -18,7 +18,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import app.vsptracker.BuildConfig
 import app.vsptracker.R
-import app.vsptracker.activities.common.MachineStatus1Activity
+import app.vsptracker.activities.common.MachineStatusActivity
 import app.vsptracker.apis.RetrofitAPI
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.GPSLocation
@@ -113,6 +113,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
         myHelper.hideKeyboardOnClick(login_main_layout)
         signin_signin.setOnClickListener(this)
     }
+
     override fun onClick(view: View?) {
         when (view!!.id) {
             R.id.signin_signin -> {
@@ -122,7 +123,15 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
                     myHelper.toast("PIN Minimum Length should be 3 Characters")
                 } else {
                     if (db.getOperator(pin).id > 0) {
-                        myHelper.setOperatorAPI(db.getOperator(pin))
+                        val operator = db.getOperator(pin)
+                        val operatorAPI = MyData()
+                        operatorAPI.id = operator.id
+                        operatorAPI.name = operator.name
+                        operatorAPI.startTime = System.currentTimeMillis()
+                        operatorAPI.loadingGPSLocation = gpsLocation
+
+//                        myHelper.setOperatorAPI(db.getOperator(pin))
+                        myHelper.setOperatorAPI(operatorAPI)
                         launchHome()
                         if (myHelper.isOnline()) {
                             fetchOrgData()
@@ -134,10 +143,11 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
+
     /**
      * This method will be called when operator Login. This method will do following actions.
      * 1. If Machine is Not already selected Go to MachineTypeActivity to Select Site and Machine.
-     * 2. If Machine is stopped go to MachineStatus1Activity to Start Machine.
+     * 2. If Machine is stopped go to MachineStatusActivity to Start Machine.
      * 3. If above conditions are false Go to HourMeterStartActivity
      * as new Machine is Selected and Hours to be set and Machine Time to be started.
      */
@@ -149,7 +159,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
                 finishAffinity()
             }
             myHelper.getIsMachineStopped() -> {
-                val intent = Intent(this@OperatorLoginActivity, MachineStatus1Activity::class.java)
+                val intent = Intent(this@OperatorLoginActivity, MachineStatusActivity::class.java)
                 startActivity(intent)
                 finishAffinity()
             }
@@ -160,10 +170,11 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
+
     /**
      * This method will do following actions.
      * 1. If Machine is Not already selected Go to MachineTypeActivity to Select Site and Machine.
-     * 2. If Machine is stopped go to MachineStatus1Activity to Start Machine.
+     * 2. If Machine is stopped go to MachineStatusActivity to Start Machine.
      * 3. If above conditions are false Launch Home Screen for selected Machine Type.
      */
     private fun launchHomeForLoggedIn() {
@@ -174,7 +185,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
                 finishAffinity()
             }
             myHelper.getIsMachineStopped() -> {
-                val intent = Intent(this@OperatorLoginActivity, MachineStatus1Activity::class.java)
+                val intent = Intent(this@OperatorLoginActivity, MachineStatusActivity::class.java)
                 startActivity(intent)
                 finishAffinity()
             }
@@ -182,10 +193,12 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
                 myHelper.startHomeActivityByType(MyData())
         }
     }
+
     private fun fetchOrgData() {
         myHelper.toast("Fetching Company Data in background.")
         myDataPushSave.fetchOrgData()
     }
+
     /**
      * Fetch Machines Logout Times and Save in Database.
      * This Logout Time is different for each Site and each Machine Type.
@@ -530,6 +543,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
         }
 
     }
+
     private fun requestPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED
@@ -579,6 +593,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
+
     private fun showGPSDisabledAlertToUser() {
         val alertDialogBuilder = AlertDialog.Builder(this, R.style.ThemeOverlay_AppCompat_Dialog)
         alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
@@ -597,6 +612,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
         val alert = alertDialogBuilder.create()
         alert.show()
     }
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             REQUEST_ACCESS_FINE_LOCATION -> {
@@ -617,6 +633,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
+
     private fun showSettings() {
         val snackbar = Snackbar.make(
             findViewById(android.R.id.content),
@@ -638,6 +655,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
         textView.maxLines = 5  //Or as much as you need
         snackbar.show()
     }
+
     private val locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location?) {
             makeUseOfLocation(location)
@@ -656,6 +674,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
             showGPSDisabledAlertToUser()
         }
     }
+
     private fun makeUseOfLocation(location1: Location?) {
         latitude = location1!!.latitude
         longitude = location1.longitude

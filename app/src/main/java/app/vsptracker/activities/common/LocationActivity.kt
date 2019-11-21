@@ -14,9 +14,9 @@ import app.vsptracker.adapters.CustomGrid
 import app.vsptracker.apis.trip.MyData
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_location1.*
+import kotlinx.android.synthetic.main.activity_location.*
 
-class Location1Activity : BaseActivity(), View.OnClickListener {
+class LocationActivity : BaseActivity(), View.OnClickListener {
 
     private val tag = this::class.java.simpleName
 
@@ -24,7 +24,7 @@ class Location1Activity : BaseActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
 
         val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
-        layoutInflater.inflate(R.layout.activity_location1, contentFrameLayout)
+        layoutInflater.inflate(R.layout.activity_location, contentFrameLayout)
         val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
         navigationView.menu.getItem(0).isChecked = true
 
@@ -52,7 +52,7 @@ class Location1Activity : BaseActivity(), View.OnClickListener {
         val gv = findViewById<GridView>(R.id.l_gridview)
         val locations = db.getLocations()
 //        myHelper.log("Locations:$locations")
-        val adapter = CustomGrid(this@Location1Activity, locations)
+        val adapter = CustomGrid(this@LocationActivity, locations)
 
 
         gv.adapter = adapter
@@ -97,7 +97,7 @@ class Location1Activity : BaseActivity(), View.OnClickListener {
                     //    machineTypeId = 3 truck
                     when (myHelper.getMachineTypeID()) {
                         1 -> {
-                            val intent = Intent(this, Material1Activity::class.java)
+                            val intent = Intent(this, MaterialActivity::class.java)
                             myData.loadingLocation = locations[position].name
                             myData.loading_location_id = locations[position].id
                             intent.putExtra("myData", myData)

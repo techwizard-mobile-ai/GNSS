@@ -16,7 +16,7 @@ import app.vsptracker.adapters.SelectStateAdapter
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.Material
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_machine_type.*
+import kotlinx.android.synthetic.main.activity_machine_change.*
 import retrofit2.Retrofit
 import java.util.*
 
@@ -45,13 +45,14 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        Utils.onActivityCreateSetTheme(this)
-//        setContentView(R.layout.activity_machine_type)
+//        setContentView(R.layout.activity_machine_change)
 
         val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
-        layoutInflater.inflate(R.layout.activity_machine_type, contentFrameLayout)
+        layoutInflater.inflate(R.layout.activity_machine_change, contentFrameLayout)
         val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
         navigationView.menu.getItem(7).isChecked = true
 
+        myHelper.log("meter.hourStartGPSLocation:${myHelper.getMeter().hourStartGPSLocation}")
 //        if(myHelper.getIsMachineStopped() || myHelper.getMachineID() <1){
 //            drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
 //        }
@@ -73,7 +74,7 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
 
         machine_number1.isEnabled = enableList()
         machine_location.isEnabled = enableList()
-        myHelper.log("enableList${enableList()}")
+//        myHelper.log("enableList${enableList()}")
 
 //        startGPS()
 //        gpsLocation = GPSLocation()
@@ -155,15 +156,16 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
                                 myData.stopTime = currentTime
 
                                 val meter = myHelper.getMeter()
-                                myData.startTime = meter.hourStartTime
+//                                myData.startTime = meter.hourStartTime
                                 myData.loadingGPSLocation = meter.hourStartGPSLocation
                                 myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
                                 myData.unloadingGPSLocation = gpsLocation
                                 myData.unloadingGPSLocationString = myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
                                 myData.machine_stop_reason_id = -2
-                                if (myHelper.getMeter().isMachineStartTimeCustom)
+                                if (meter.isMachineStartTimeCustom)
                                     myData.isStartHoursCustom = 1
-                                myData.startHours = myHelper.getMeter().startHours
+                                myData.startHours = meter.startHours
+                                myData.startTime = meter.machineStartTime
                                 myData.machineTypeId = myHelper.getMachineTypeID()
                                 myData.totalHours = myHelper.getMeterTimeForFinishCustom(myData.startHours)
 
@@ -177,6 +179,9 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
                                 myHelper.setMachineTypeID(selectedMachineType.id)
                                 myHelper.setMachineNumber(selectedMachineNumber.number)
                                 myHelper.setMachineID(selectedMachineNumber.id)
+//                                TODO Check this
+//                                myHelper.setIsMachineStopped(true, "Machine Changed", -2)
+                                myHelper.setIsNavEnabled(false)
                                 val data = MyData()
                                 myHelper.setLastJourney(data)
                                 val intent = Intent(this, HourMeterStartActivity::class.java)
@@ -198,7 +203,7 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
             }
         }
     }
-
+/*
     private fun saveMachineHour1(myData: MyData) {
 
         myData.siteId = myHelper.getMachineSettings().siteId
@@ -239,7 +244,7 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
 //        }else{
 //            db.insertMachineHours(myData)
 //        }
-    }
+    }*/
 
     /*
         private fun pushMachineHour(myData: MyData){
@@ -352,7 +357,7 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
     private fun selectMachineLocation() {
 
         machineLocations = db.getLocations()
-        myHelper.log("machineLocations:$machineLocations")
+//        myHelper.log("machineLocations:$machineLocations")
         machineLocations.add(0, Material(0, "Select Machine Location"))
         val selectMaterialAdapter = SelectStateAdapter(this, machineLocations)
         machine_location!!.adapter = selectMaterialAdapter

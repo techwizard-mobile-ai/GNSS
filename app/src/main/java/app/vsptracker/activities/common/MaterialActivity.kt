@@ -9,17 +9,17 @@ import android.widget.AdapterView
 import android.widget.FrameLayout
 import android.widget.GridView
 import app.vsptracker.BaseActivity
-import app.vsptracker.others.MyHelper
 import app.vsptracker.R
 import app.vsptracker.activities.excavator.ELoadActivity
 import app.vsptracker.adapters.CustomGrid
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.Material
+import app.vsptracker.others.MyHelper
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_material1.*
+import kotlinx.android.synthetic.main.activity_material.*
 
-class Material1Activity : BaseActivity(), View.OnClickListener {
+class MaterialActivity : BaseActivity(), View.OnClickListener {
 
 
     private val tag = this::class.java.simpleName
@@ -29,7 +29,7 @@ class Material1Activity : BaseActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
 
         val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
-        layoutInflater.inflate(R.layout.activity_material1, contentFrameLayout)
+        layoutInflater.inflate(R.layout.activity_material, contentFrameLayout)
         val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
         navigationView.menu.getItem(0).isChecked = true
 
@@ -58,7 +58,7 @@ class Material1Activity : BaseActivity(), View.OnClickListener {
         val materials: ArrayList<Material> = db.getMaterials()
         //        myHelper.log("Materials:$materials")
 
-        val adapter = CustomGrid(this@Material1Activity, db.getMaterials())
+        val adapter = CustomGrid(this@MaterialActivity, db.getMaterials())
 
         gv.adapter = adapter
         gv.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
@@ -110,28 +110,28 @@ class Material1Activity : BaseActivity(), View.OnClickListener {
 
                         when (myData.nextAction) {
                             0 -> {
-                                val intent = Intent(this, Location1Activity::class.java)
+                                val intent = Intent(this, LocationActivity::class.java)
                                 myData.loadingMaterial = materials[position].name
                                 myData.loading_material_id= materials[position].id
                                 intent.putExtra("myData", myData)
                                 startActivity(intent)
                             }
                             1 -> {
-                                val intent = Intent(this, Location1Activity::class.java)
+                                val intent = Intent(this, LocationActivity::class.java)
                                 myData.unloadingMaterial = materials[position].name
                                 myData.unloading_material_id= materials[position].id
                                 intent.putExtra("myData", myData)
                                 startActivity(intent)
                             }
                             2 -> {
-                                val intent = Intent(this, Location1Activity::class.java)
+                                val intent = Intent(this, LocationActivity::class.java)
                                 myData.backLoadingMaterial = materials[position].name
                                 myData.back_loading_material_id= materials[position].id
                                 intent.putExtra("myData", myData)
                                 startActivity(intent)
                             }
                             3 -> {
-                                val intent = Intent(this, Location1Activity::class.java)
+                                val intent = Intent(this, LocationActivity::class.java)
                                 myData.backUnloadingMaterial = materials[position].name
                                 myData.back_unloading_material_id= materials[position].id
                                 intent.putExtra("myData", myData)

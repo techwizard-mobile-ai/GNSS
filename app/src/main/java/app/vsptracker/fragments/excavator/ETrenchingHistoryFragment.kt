@@ -10,17 +10,17 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.vsptracker.others.MyHelper
 import app.vsptracker.R
 import app.vsptracker.adapters.ETHistoryAdapter
 import app.vsptracker.apis.delay.EWork
 import app.vsptracker.database.DatabaseAdapter
+import app.vsptracker.others.MyHelper
 import kotlinx.android.synthetic.main.fragment_etrenching_history.view.*
 
 
 class ETrenchingHistoryFragment : Fragment() {
 
-    private val TAG = this::class.java.simpleName
+    private val tag1 = this::class.java.simpleName
 
     private lateinit var myHelper: MyHelper
     private var root: View? = null
@@ -34,10 +34,10 @@ class ETrenchingHistoryFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             myHelper = MyHelper(
-                    TAG,
-                    myContext
+                    tag1,
+                context as Activity
             )
-            db = DatabaseAdapter(myContext)
+            db = DatabaseAdapter(context as Activity)
             trenchingHistory = db.getEWorks(2)
             myHelper.log("Trenching:$trenchingHistory")
 
@@ -59,11 +59,11 @@ class ETrenchingHistoryFragment : Fragment() {
 
         val workType = 2
         val mAdapter = ETHistoryAdapter(
-                myContext, trenchingHistory,
+            context as Activity, trenchingHistory,
                 FRAGMENT_TAG, workType
         )
-        root!!.eth_rv.layoutManager = LinearLayoutManager(myContext, RecyclerView.VERTICAL, false)
-        root!!.eth_rv!!.setAdapter(mAdapter)
+        root!!.eth_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
+        root!!.eth_rv!!.adapter = mAdapter
     }
 
     fun onButtonPressed(uri: Uri) {
@@ -75,7 +75,7 @@ class ETrenchingHistoryFragment : Fragment() {
         if (context is OnFragmentInteractionListener) {
             listener = context
         } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
+            throw RuntimeException("$context must implement OnFragmentInteractionListener")
         }
     }
 
@@ -91,17 +91,16 @@ class ETrenchingHistoryFragment : Fragment() {
     }
 
     companion object {
-        private lateinit var myContext: Activity
+//        private lateinit var myContext: Activity
         private lateinit var FRAGMENT_TAG: String
 
         @JvmStatic
         fun newInstance(
-            eHistoryActivity: Activity,
             FRAGMENT_TG: String
         ) =
                 ETrenchingHistoryFragment().apply {
                     arguments = Bundle().apply {
-                        myContext = eHistoryActivity
+//                        myContext = eHistoryActivity
                         FRAGMENT_TAG = FRAGMENT_TG
                     }
                 }

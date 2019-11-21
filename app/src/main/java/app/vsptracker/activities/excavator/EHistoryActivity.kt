@@ -57,25 +57,25 @@ class EHistoryActivity : BaseActivity(), View.OnClickListener,
             myHelper.log("menuFragment:${menuFragment}")
             when (menuFragment) {
                 "eTrenchingHistoryFragment" -> {
-                    val tFragment = ETrenchingHistoryFragment.newInstance(this, E_TRENCHINGHISTORY)
+                    val tFragment = ETrenchingHistoryFragment.newInstance(E_TRENCHINGHISTORY)
                     openFragment(tFragment, E_TRENCHINGHISTORY)
                 }
                 "delayHistoryFragment" -> {
-                    val delayFragment = DelayHistoryFragment.newInstance(this, DELAY_HISTORY)
+                    val delayFragment = DelayHistoryFragment.newInstance(DELAY_HISTORY)
                     openFragment(delayFragment, DELAY_HISTORY)
                 }
                 else -> {
-                    val homeFragment = EDiggingHistoryFragment.newInstance(this, E_DIGGINGHISTORY, 1)
+                    val homeFragment = EDiggingHistoryFragment.newInstance(E_DIGGINGHISTORY, 1)
                     openFragment(homeFragment, E_DIGGINGHISTORY)
                 }
             }
         } else {
 
-            val homeFragment = ELoadingHistoryFragment.newInstance(this)
+            val homeFragment = ELoadingHistoryFragment.newInstance()
             openFragment(homeFragment, E_LOADHISTORY)
         }
 
-        val eLoadingHistoryFragment = ELoadingHistoryFragment.newInstance(this)
+        val eLoadingHistoryFragment = ELoadingHistoryFragment.newInstance()
         openFragment(eLoadingHistoryFragment, E_LOADHISTORY)
     }
 
@@ -90,14 +90,13 @@ class EHistoryActivity : BaseActivity(), View.OnClickListener,
             BottomNavigationView.OnNavigationItemSelectedListener { item ->
                 when (item.itemId) {
                     R.id.navf_loading -> {
-                        val eLoadingHistoryFragment = ELoadingHistoryFragment.newInstance(this@EHistoryActivity)
+                        val eLoadingHistoryFragment = ELoadingHistoryFragment.newInstance()
                         openFragment(eLoadingHistoryFragment, E_LOADHISTORY)
                         return@OnNavigationItemSelectedListener true
                     }
                     R.id.navf_digging -> {
                         val eDiggingHistoryFragment = EDiggingHistoryFragment.newInstance(
-                                this@EHistoryActivity,
-                                E_DIGGINGHISTORY,
+                            E_DIGGINGHISTORY,
                             1
                         )
                         openFragment(eDiggingHistoryFragment, E_DIGGINGHISTORY)
@@ -105,12 +104,12 @@ class EHistoryActivity : BaseActivity(), View.OnClickListener,
                     }
                     R.id.navf_trenching -> {
                         val eTrenchingHistoryFragment =
-                                ETrenchingHistoryFragment.newInstance(this, E_TRENCHINGHISTORY)
+                                ETrenchingHistoryFragment.newInstance(E_TRENCHINGHISTORY)
                         openFragment(eTrenchingHistoryFragment, E_TRENCHINGHISTORY)
                         return@OnNavigationItemSelectedListener true
                     }
                     R.id.navf_delay -> {
-                        val delayHistoryFragment = DelayHistoryFragment.newInstance(this, DELAY_HISTORY)
+                        val delayHistoryFragment = DelayHistoryFragment.newInstance(DELAY_HISTORY)
                         openFragment(delayHistoryFragment, DELAY_HISTORY)
                         return@OnNavigationItemSelectedListener true
                     }

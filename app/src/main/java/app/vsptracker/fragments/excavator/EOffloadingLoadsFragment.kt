@@ -10,17 +10,17 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.vsptracker.others.MyHelper
 import app.vsptracker.R
 import app.vsptracker.adapters.EOffLoadingAdapter
 import app.vsptracker.apis.delay.EWork
 import app.vsptracker.database.DatabaseAdapter
+import app.vsptracker.others.MyHelper
 import kotlinx.android.synthetic.main.fragment_eoffloading_loads.*
 import kotlinx.android.synthetic.main.fragment_eoffloading_loads.view.*
 
 
 class EOffloadingLoadsFragment : Fragment() {
-    private val TAG = this::class.java.simpleName
+    private val tag1 = this::class.java.simpleName
 
     private lateinit var myHelper: MyHelper
     private var root: View? = null
@@ -35,10 +35,10 @@ class EOffloadingLoadsFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             myHelper = MyHelper(
-                    TAG,
-                    myContext
+                    tag1,
+                context as Activity
             )
-            db = DatabaseAdapter(myContext)
+            db = DatabaseAdapter(context as Activity)
             myHelper.log("eWork:$eWork ")
         }
     }
@@ -56,19 +56,19 @@ class EOffloadingLoadsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if (eWork.workType == 1) {
-            offloading_loads_title.text = "General Digging Loads History"
+            offloading_loads_title.text = getString(R.string.general_digging_loads_history)
         } else {
-            offloading_loads_title.text = "Trenching Loads History"
+            offloading_loads_title.text = getString(R.string.trenching_loads_history)
         }
 
         val mAdapter = EOffLoadingAdapter(
-                myContext, db.getEWorksOffLoads(
+            context as Activity, db.getEWorksOffLoads(
                 eWork.ID
         )
         )
         root!!.eoff_fragment_rv.layoutManager =
-                LinearLayoutManager(myContext, RecyclerView.VERTICAL, false)
-        root!!.eoff_fragment_rv!!.setAdapter(mAdapter)
+                LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
+        root!!.eoff_fragment_rv!!.adapter = mAdapter
     }
 
     fun onButtonPressed(uri: Uri) {
@@ -80,7 +80,7 @@ class EOffloadingLoadsFragment : Fragment() {
         if (context is OnFragmentInteractionListener) {
             listener = context
         } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
+            throw RuntimeException("$context must implement OnFragmentInteractionListener")
         }
     }
 
@@ -96,15 +96,15 @@ class EOffloadingLoadsFragment : Fragment() {
     companion object {
 
 
-        private lateinit var myContext: Activity
+//        private lateinit var myContext: Activity
         private lateinit var FRAGMENT_TAG: String
         private lateinit var eWork: EWork
 
         @JvmStatic
-        fun newInstance(mContext: Activity, fragmentTag: String, eWork1: EWork) =
+        fun newInstance(fragmentTag: String, eWork1: EWork) =
                 EOffloadingLoadsFragment().apply {
                     arguments = Bundle().apply {
-                        myContext = mContext
+//                        myContext = mContext
                         FRAGMENT_TAG = fragmentTag
                         eWork = eWork1
                     }

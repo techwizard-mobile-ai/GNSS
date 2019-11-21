@@ -28,10 +28,8 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
         navigationView.menu.getItem(0).isChecked = true
 
         myHelper.setTag(tag)
-
         myData = myHelper.getLastJourney()
         myHelper.log("myData:$myData")
-
 
         when (myData.nextAction) {
             1 -> {
@@ -157,7 +155,7 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                 startActivityForResult(intent, REQUEST_MATERIAL)
             }
             R.id.trul_material -> {
-                val intent = Intent(this, Material1Activity::class.java)
+                val intent = Intent(this, MaterialActivity::class.java)
                 if(myData.nextAction == 1){
                     myData.isForUnloadResult = true
                 }else{
@@ -167,7 +165,7 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                 startActivityForResult(intent, REQUEST_MATERIAL)
             }
             R.id.trul_location -> {
-                val intent = Intent(this, Location1Activity::class.java)
+                val intent = Intent(this, LocationActivity::class.java)
                 if(myData.nextAction == 1){
                     myData.isForUnloadResult = true
                 }else{
@@ -177,7 +175,7 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                 startActivityForResult(intent, REQUEST_LOCATION)
             }
             R.id.trul_weight -> {
-                val intent = Intent(this, Weight1Activity::class.java)
+                val intent = Intent(this, WeightActivity::class.java)
                 if(myData.nextAction == 1){
                     myData.isForUnloadResult = true
                 }else{

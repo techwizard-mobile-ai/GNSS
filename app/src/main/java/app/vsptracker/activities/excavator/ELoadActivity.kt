@@ -11,8 +11,8 @@ import app.vsptracker.BaseActivity
 import app.vsptracker.others.MyHelper
 import app.vsptracker.R
 import app.vsptracker.activities.HourMeterStopActivity
-import app.vsptracker.activities.common.Location1Activity
-import app.vsptracker.activities.common.Material1Activity
+import app.vsptracker.activities.common.LocationActivity
+import app.vsptracker.activities.common.MaterialActivity
 import app.vsptracker.adapters.ELoadingAdapter
 import app.vsptracker.apis.trip.MyData
 import com.google.android.material.navigation.NavigationView
@@ -108,14 +108,14 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
                 startActivity(intent)
             }
             R.id.eload_material -> {
-                val intent = Intent(this, Material1Activity::class.java)
+                val intent = Intent(this, MaterialActivity::class.java)
 //                val data1 = myHelper.getLastJourney()
                 myData.isForLoadResult = true
                 intent.putExtra("myData", myData)
                 startActivityForResult(intent, REQUEST_MATERIAL)
             }
             R.id.eload_location -> {
-                val intent = Intent(this, Location1Activity::class.java)
+                val intent = Intent(this, LocationActivity::class.java)
 //                val data1 = myHelper.getLastJourney()
                 myData.isForLoadResult = true
                 intent.putExtra("myData", myData)

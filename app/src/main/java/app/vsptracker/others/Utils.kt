@@ -21,8 +21,8 @@ object Utils {
         var dataNew = MyData()
         val bundle: Bundle? = activity.intent.extras
         if (bundle != null) {
+            if(bundle.getSerializable("myData") != null)
             dataNew = bundle.getSerializable("myData") as MyData
-            myHelper.log("myData:$dataNew")
         }
 
         activity.finish()

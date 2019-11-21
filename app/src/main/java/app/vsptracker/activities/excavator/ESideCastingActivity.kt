@@ -45,7 +45,7 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
             2 -> {
                 workTitle = "Trenching (Side Casting)"
             }
-            3 ->{
+            3 -> {
                 workTitle = "Scraper Trimming"
             }
         }
@@ -58,10 +58,12 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
         ework_finish.setOnClickListener(this)
 
     }
+
     override fun onResume() {
         super.onResume()
         base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
     }
+
     override fun onBackPressed() {
 
         if (isWorking) {
@@ -85,17 +87,17 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
 
                     val time = System.currentTimeMillis()
                     eWork.time = time.toString()
-                    eWork.stopTime = System.currentTimeMillis()
+                    eWork.stopTime = time
                     eWork.totalTime = eWork.stopTime - eWork.startTime
 
-                    if(myHelper.isDailyModeStarted()){
+                    if (myHelper.isDailyModeStarted()) {
                         eWork.isDaysWork = 1
-                    }else {
+                    } else {
                         eWork.isDaysWork = 0
                     }
 
-                    myHelper.log("BeforePushSideCasting:$eWork")
-                    if(myHelper.isOnline()){
+                    myHelper.log("before$workTitle:$eWork")
+                    if (myHelper.isOnline()) {
                         pushSideCasting(eWork)
                     }
 
@@ -104,10 +106,10 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
 
                     if (insertID > 0) {
                         myHelper.toast(
-                                "$workTitle is Stopped.\n" +
-                                        "MyData Saved Successfully.\n" +
-                                        "Work Duration : ${myHelper.getTotalTimeVSP(startTime)} (VSP Meter).\n" +
-                                        "Work Duration : ${myHelper.getTotalTimeMinutes(startTime)} (Minutes)"
+                            "$workTitle is Stopped.\n" +
+                                    "MyData Saved Successfully.\n" +
+                                    "Work Duration : ${myHelper.getTotalTimeVSP(startTime)} (VSP Meter).\n" +
+                                    "Work Duration : ${myHelper.getTotalTimeMinutes(startTime)} (Minutes)"
                         )
                         ework_action_text.text = getString(R.string.start)
                         chronometer1.stop()

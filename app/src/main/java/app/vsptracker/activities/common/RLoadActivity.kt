@@ -173,7 +173,7 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
                 }
             }
             R.id.trload_machine -> {
-                val intent = Intent(this, LMachine1Activity::class.java)
+                val intent = Intent(this, LMachineActivity::class.java)
                 if(myData.nextAction == 0){
                     myData.isForLoadResult = true
                 }else{
@@ -183,7 +183,7 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
                 startActivityForResult(intent, REQUEST_MACHINE)
             }
             R.id.trload_material -> {
-                val intent = Intent(this, Material1Activity::class.java)
+                val intent = Intent(this, MaterialActivity::class.java)
                 if(myData.nextAction == 0){
                     myData.isForLoadResult = true
                 }else{
@@ -193,7 +193,7 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
                 startActivityForResult(intent, REQUEST_MATERIAL)
             }
             R.id.trload_location -> {
-                val intent = Intent(this, Location1Activity::class.java)
+                val intent = Intent(this, LocationActivity::class.java)
                 if(myData.nextAction == 0){
                     myData.isForLoadResult = true
                 }else{
@@ -203,7 +203,7 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
                 startActivityForResult(intent, REQUEST_LOCATION)
             }
             R.id.trload_weight -> {
-                val intent = Intent(this, Weight1Activity::class.java)
+                val intent = Intent(this, WeightActivity::class.java)
                 val data1 = myHelper.getLastJourney()
                 data1.isForUnloadResult = true
                 intent.putExtra("myData", data1)

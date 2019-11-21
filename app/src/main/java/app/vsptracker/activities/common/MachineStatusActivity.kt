@@ -12,14 +12,13 @@ import app.vsptracker.R
 import app.vsptracker.activities.HourMeterStartActivity
 import app.vsptracker.activities.OperatorLoginActivity
 import app.vsptracker.adapters.MachineStatusAdapter
-import app.vsptracker.apis.operators.OperatorAPI
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.apis.trip.MyDataResponse
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_machine_status1.*
+import kotlinx.android.synthetic.main.activity_machine_status.*
 
-class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
+class MachineStatusActivity : BaseActivity(), View.OnClickListener {
 
     private val tag = this::class.java.simpleName
 
@@ -27,12 +26,11 @@ class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
 
         val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
-        layoutInflater.inflate(R.layout.activity_machine_status1, contentFrameLayout)
+        layoutInflater.inflate(R.layout.activity_machine_status, contentFrameLayout)
         val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
         navigationView.menu.getItem(2).isChecked = true
 
         myHelper.setTag(tag)
-
 
         if (myHelper.getIsMachineStopped()) {
             machine_status_title.text = getString(R.string.machine_stopped_reason)
@@ -54,7 +52,6 @@ class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
             machine_status_back.visibility = View.VISIBLE
         }
 
-
         myData = MyData()
 
         val meter = myHelper.getMeter()
@@ -65,11 +62,9 @@ class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
         myData.loadingGPSLocation = meter.hourStartGPSLocation
         sfinish_reading.setText(myHelper.getMeterTimeForFinish())
 
-
         val stoppedReasons = db.getStopReasons()
         myHelper.log("MachineStops:$stoppedReasons")
         stoppedReasons.removeAt(0)
-
 
         val mAdapter = MachineStatusAdapter(this, stoppedReasons)
         machine_status_rv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
@@ -103,9 +98,17 @@ class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
             R.id.machine_status_back ->{ finish()}
             R.id.machine_status_logout -> {
                 if(myHelper.getIsMachineStopped()){
+                    val operatorAPI = myHelper.getOperatorAPI()
+                    operatorAPI.unloadingGPSLocation = gpsLocation
+                    operatorAPI.stopTime = System.currentTimeMillis()
+                    operatorAPI.totalTime = operatorAPI.stopTime - operatorAPI.startTime
+                    operatorAPI.loadingGPSLocationString = myHelper.getGPSLocationToString(operatorAPI.loadingGPSLocation)
+                    operatorAPI.unloadingGPSLocationString = myHelper.getGPSLocationToString(operatorAPI.unloadingGPSLocation)
+                    myDataPushSave.pushInsertOperatorHour(operatorAPI)
+
                     myHelper.stopDelay(gpsLocation)
                     myHelper.stopDailyMode()
-                    myHelper.setOperatorAPI(OperatorAPI())
+                    myHelper.setOperatorAPI(MyData())
 
                     val data = MyData()
                     myHelper.setLastJourney(data)
@@ -121,7 +124,7 @@ class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
             R.id.machine_status_start -> {
 
 //                val machineData = MyData()
-                val machineData = db.getMachineStatus(myHelper.getMeter().machineDbID)
+                val machineData = db.getMachineStopByID(myHelper.getMeter().machineDbID)
                 val currentTime = System.currentTimeMillis()
                 machineData.stopTime = currentTime
                 machineData.totalTime = currentTime - machineData.startTime
@@ -149,9 +152,7 @@ class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
 
                 if(myHelper.isOnline()){
                     pushMachinesStops(machineData)
-
                 }
-
                 updateMachineStatus(machineData)
 
             }
@@ -199,7 +200,7 @@ class MachineStatus1Activity : BaseActivity(), View.OnClickListener {
 
 
     private fun updateMachineStatus(machineData: MyData) {
-        db.updateMachineStatus(machineData)
+        db.updateMachineStop(machineData)
 //                if (updateID > 0) {
         myHelper.toast("Machine Started Successfully")
         myHelper.setIsMachineStopped(false, "", 0)

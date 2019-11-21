@@ -84,7 +84,7 @@ class MachineBreakdownActivity : BaseActivity(), View.OnClickListener {
                 data.loadingGPSLocation = gpsLocation
 
 
-                val insertID = db.insertMachineStatus(data)
+                val insertID = db.insertMachineStop(data)
                 if (insertID > 0) {
                     myHelper.toast("Record Saved in Database Successfully.")
                     myHelper.stopMachine(insertID, material)

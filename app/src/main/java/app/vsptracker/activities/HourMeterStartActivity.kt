@@ -1,40 +1,29 @@
 package app.vsptracker.activities
 
-import android.Manifest
-import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationListener
 import android.location.LocationManager
-import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
 import android.view.View
-import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import app.vsptracker.BuildConfig
+import android.widget.FrameLayout
+import androidx.drawerlayout.widget.DrawerLayout
+import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
-import app.vsptracker.classes.GPSLocation
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyHelper
-import app.vsptracker.others.Utils
-import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.navigation.NavigationView
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_hour_meter_start.*
 
 private const val REQUEST_ACCESS_FINE_LOCATION = 1
-class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
-    private lateinit var myData: MyData
+class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
+//    private lateinit var myData: MyData
     private val tag = this::class.java.simpleName
-    private lateinit var myHelper: MyHelper
-    private lateinit var db: DatabaseAdapter
-    lateinit var gpsLocation: GPSLocation
-    var latitude: Double = 0.0
-    var longitude: Double = 0.0
+//    private lateinit var myHelper: MyHelper
+//    private lateinit var db: DatabaseAdapter
+//    var gpsLocation = GPSLocation()
+//    var latitude: Double = 0.0
+//    var longitude: Double = 0.0
     private lateinit var location: Location
 
     private var startReading = ""
@@ -42,9 +31,17 @@ class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Utils.onActivityCreateSetTheme(this)
+//        Utils.onActivityCreateSetTheme(this)
+//        setContentView(R.layout.activity_hour_meter_start)
 
-        setContentView(R.layout.activity_hour_meter_start)
+        val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
+        layoutInflater.inflate(R.layout.activity_hour_meter_start, contentFrameLayout)
+        val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
+        navigationView.menu.getItem(7).isChecked = true
+
+//        if(myHelper.getIsMachineStopped()){
+            drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+//        }
         myHelper = MyHelper(tag, this)
 
 
@@ -61,8 +58,8 @@ class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
         ms_reading.setText(myHelper.getRoundedDecimal(reading.toDouble()).toString())
         myHelper.log("Machine_HourMeter--reading--:${reading}")
 
-        startGPS()
-        gpsLocation = GPSLocation()
+//        gpsLocation = GPSLocation()
+//        startGPS()
 
         ms_minus.setOnClickListener(this)
         ms_plus.setOnClickListener(this)
@@ -89,23 +86,23 @@ class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
             }
 
             R.id.ms_continue -> {
+                val meter = myHelper.getMeter()
+                meter.hourStartGPSLocation = gpsLocation
+                val currentTime = System.currentTimeMillis()
+                meter.hourStartTime = currentTime
+                meter.startHours = ms_reading.text.toString()
 
                 if (!startReading.equals(ms_reading.text.toString(), true)) {
-                    val meter = myHelper.getMeter()
+
                     meter.isMachineStartTimeCustom = true
-                    meter.hourStartGPSLocation = gpsLocation
-                    val currentTime = System.currentTimeMillis()
-                    meter.hourStartTime = currentTime
-                    meter.startHours = ms_reading.text.toString()
-                    myHelper.setMeter(meter)
                     myHelper.log("Custom Time : True, Original reading:${myHelper.getMeterTimeForStart()}, New Reading: ${ms_reading.text}")
                 } else {
-                    val meter = myHelper.getMeter()
                     meter.isMachineStartTimeCustom = false
-                    meter.startHours = ms_reading.text.toString()
-                    myHelper.setMeter(meter)
                     myHelper.log("Custom Time : False, Original reading:${myHelper.getMeterTimeForStart()}, New Reading: ${ms_reading.text}")
                 }
+
+
+                myHelper.setMeter(meter)
 
                 val value = ms_reading.text.toString().toDouble()
                 val minutes = value * 60
@@ -113,6 +110,7 @@ class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
                 myHelper.log("Minutes: $newMinutes")
                 myHelper.setMachineTotalTime(newMinutes)
 //                myHelper.pushIsMachineRunning( 1)
+                myHelper.setIsNavEnabled(true)
                 myHelper.startHomeActivityByType(myData)
 
                 myHelper.startMachine()
@@ -121,7 +119,7 @@ class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-
+/*
     private fun startGPS() {
 
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
@@ -289,5 +287,5 @@ class HourMeterStartActivity : AppCompatActivity(), View.OnClickListener {
 //        gpsLocation.extras = location1.extras
         gpsLocation.time = location1.time
 
-    }
+    }*/
 }

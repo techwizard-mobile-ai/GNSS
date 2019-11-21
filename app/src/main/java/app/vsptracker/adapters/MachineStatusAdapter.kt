@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import app.vsptracker.R
-import app.vsptracker.activities.common.MachineStatus1Activity
+import app.vsptracker.activities.common.MachineStatusActivity
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.Material
 import app.vsptracker.database.DatabaseAdapter
@@ -43,8 +43,8 @@ class MachineStatusAdapter(
 
             val data = MyData()
             data.machineStoppedReason = material.name
-            data.loadingGPSLocation = (myContext as MachineStatus1Activity).gpsLocation
-            val insertID = db.insertMachineStatus(data)
+            data.loadingGPSLocation = (myContext as MachineStatusActivity).gpsLocation
+            val insertID = db.insertMachineStop(data)
             if (insertID > 0) {
                 myHelper.toast("Record Saved in Database Successfully.")
                 myHelper.stopMachine(insertID, material)
@@ -55,14 +55,11 @@ class MachineStatusAdapter(
                 myHelper.toast("Machine Not Stopped. Please try again.")
             }
         }
-
     }
 
     override fun getItemCount(): Int {
         return dataList.size
     }
-
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
-
 }
 

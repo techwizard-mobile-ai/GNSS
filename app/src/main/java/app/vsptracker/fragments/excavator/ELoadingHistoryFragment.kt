@@ -4,25 +4,24 @@ import android.app.Activity
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.vsptracker.others.MyHelper
 import app.vsptracker.R
 import app.vsptracker.adapters.ELoadingHistoryAdapter
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.database.DatabaseAdapter
+import app.vsptracker.others.MyHelper
 import kotlinx.android.synthetic.main.fragment_eloading_history.view.*
 
 
 class ELoadingHistoryFragment : Fragment() {
 
     private lateinit var loadingHistory: MutableList<MyData>
-    private val TAG = this::class.java.simpleName
+    private val tag1 = this::class.java.simpleName
 
     private lateinit var myHelper: MyHelper
     private var root: View? = null
@@ -36,10 +35,10 @@ class ELoadingHistoryFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             myHelper = MyHelper(
-                    TAG,
-                    myContext
+                    tag1,
+                context as Activity
             )
-            db = DatabaseAdapter(myContext)
+            db = DatabaseAdapter(context as Activity)
             loadingHistory = db.getELoadHistory()
             myHelper.log("LoadingHistory:$loadingHistory")
         }
@@ -57,9 +56,9 @@ class ELoadingHistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val mAdapter = ELoadingHistoryAdapter(myContext, loadingHistory)
-        root!!.elh_rv.layoutManager = LinearLayoutManager(myContext, RecyclerView.VERTICAL, false)
-        root!!.elh_rv!!.setAdapter(mAdapter)
+        val mAdapter = ELoadingHistoryAdapter(context as Activity, loadingHistory)
+        root!!.elh_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
+        root!!.elh_rv!!.adapter = mAdapter
     }
 
 
@@ -72,7 +71,7 @@ class ELoadingHistoryFragment : Fragment() {
         if (context is OnFragmentInteractionListener) {
             listener = context
         } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
+            throw RuntimeException("$context must implement OnFragmentInteractionListener")
         }
     }
 
@@ -87,14 +86,12 @@ class ELoadingHistoryFragment : Fragment() {
 
     companion object {
 
-        private lateinit var myContext: Activity
+//        private lateinit var myContext: Activity
         @JvmStatic
-        fun newInstance(
-                eHistoryActivity: Activity
-        ) =
+        fun newInstance() =
                 ELoadingHistoryFragment().apply {
                     arguments = Bundle().apply {
-                        myContext = eHistoryActivity
+//                        myContext = eHistoryActivity
                     }
                 }
     }

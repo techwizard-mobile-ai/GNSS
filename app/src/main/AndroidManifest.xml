@@ -15,7 +15,8 @@
         android:screenOrientation="landscape"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".activities.common.MachineBreakdownActivity"></activity>
+        <activity android:name=".activities.ServerSyncActivity"></activity>
+        <activity android:name=".activities.common.MachineBreakdownActivity" />
 
         <receiver android:name=".others.VSPTWidget">
             <intent-filter>
@@ -51,7 +52,7 @@
             android:required="false" />
 
         <activity android:name=".activities.MapActivity" />
-        <activity android:name=".activities.TabHistoryActivity" />
+        <activity android:name=".activities.truck.THistoryActivity" />
         <activity android:name=".activities.DelayActivity" />
         <activity android:name=".activities.DayWorksActivity" />
         <activity android:name=".activities.excavator.EOffLoadingActivity" />
@@ -61,13 +62,13 @@
         <activity android:name=".activities.excavator.EHomeActivity" />
         <activity android:name=".activities.common.RUnloadActivity" />
         <activity android:name=".activities.common.RLoadActivity" />
-        <activity android:name=".activities.HistoryActivity" />
+
         <activity android:name=".activities.common.UnloadTaskActivity" />
-        <activity android:name=".activities.common.MachineStatus1Activity" />
-        <activity android:name=".activities.common.Weight1Activity" />
-        <activity android:name=".activities.common.LMachine1Activity" />
-        <activity android:name=".activities.common.Location1Activity" />
-        <activity android:name=".activities.common.Material1Activity" />
+        <activity android:name=".activities.common.MachineStatusActivity" />
+        <activity android:name=".activities.common.WeightActivity" />
+        <activity android:name=".activities.common.LMachineActivity" />
+        <activity android:name=".activities.common.LocationActivity" />
+        <activity android:name=".activities.common.MaterialActivity" />
         <activity android:name=".activities.truck.TUnloadAfterActivity" /> <!-- <activity android:name=".activities.notused.TUnloadActivity" /> -->
         <!-- <activity android:name=".activities.notused.TLoadActivity" /> -->
         <activity android:name=".activities.truck.THomeActivity" />

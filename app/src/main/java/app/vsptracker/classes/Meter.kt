@@ -29,7 +29,7 @@ class Meter : Serializable {
     var machineHourDbID: Long = 0L
     var delayDbID: Long = 0L
     override fun toString(): String {
-        return "Meter(machineStartTime=$machineStartTime, delayStartGPSLocation=$delayStartGPSLocation hourStartTime=$hourStartTime, isMachineStartTimeCustom=$isMachineStartTimeCustom, isMachineStopTimeCustom=$isMachineStopTimeCustom, machineTotalTime=$machineTotalTime)"
+        return "Meter(machineStartTime=$machineStartTime, hourStartGPSLocation=$hourStartGPSLocation, delayStartGPSLocation=$delayStartGPSLocation hourStartTime=$hourStartTime, isMachineStartTimeCustom=$isMachineStartTimeCustom, isMachineStopTimeCustom=$isMachineStopTimeCustom, machineTotalTime=$machineTotalTime)"
     }
 
 

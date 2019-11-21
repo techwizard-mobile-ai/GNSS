@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/ss_machine_hour"
+        android:icon="@drawable/ic_machine_hours"
+        android:title="@string/machine_hrs" />
+
+    <item
+        android:id="@+id/ss_machine_stop"
+        android:icon="@drawable/ic_machine_stops"
+        android:title="@string/machine_stops" />
+
+    <item
+        android:id="@+id/ss_operator_hour"
+        android:icon="@drawable/ic_operators_hours"
+        android:title="@string/operators_hrs" />
+
+    <item
+        android:id="@+id/navf_finish"
+        android:icon="@drawable/ic_action_cancel_presentation"
+        android:title="@string/finish" />
+
+</menu>

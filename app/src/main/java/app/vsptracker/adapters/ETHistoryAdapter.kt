@@ -1,5 +1,4 @@
 package app.vsptracker.adapters
-
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.view.LayoutInflater
@@ -7,14 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import app.vsptracker.others.MyHelper
 import app.vsptracker.R
 import app.vsptracker.apis.delay.EWork
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.fragments.excavator.EOffloadingLoadsFragment
+import app.vsptracker.others.MyHelper
 import kotlinx.android.synthetic.main.list_row_et_history.view.*
-
-
 class ETHistoryAdapter(
     val context: Activity,
     private val dataList: MutableList<EWork>,
@@ -40,6 +37,7 @@ class ETHistoryAdapter(
 
         val eWork = dataList[position]
 
+        myHelper.log(eWork.toString())
         holder.itemView.eth_record_number.text = ":  " + (dataList.size - position)
         if (eWork.workActionType == 1) {
             when(eWork.workType){
@@ -57,6 +55,11 @@ class ETHistoryAdapter(
             holder.itemView.eth_totalloads_layout.visibility = View.VISIBLE
             holder.itemView.eth_totalloads.text =
                     ":  " + db.getEWorksOffLoads(eWork.ID).size.toString()
+        }
+
+        when (eWork.isSync) {
+            1 -> holder.itemView.eth_is_sync.text = ":  Yes"
+            else -> holder.itemView.eth_is_sync.text = ":  No"
         }
 
         holder.itemView.eth_start_time.text = ":  " + myHelper.getTime(eWork.startTime) + " Hrs"
@@ -121,7 +124,7 @@ class ETHistoryAdapter(
 //            myHelper.showOnMap(eWork.unloadingGPSLocation, "GPS Location")
             when(eWork.workType){
                 3 -> {
-                    myHelper.showOnMap(eWork.loadingGPSLocation, "Scraper Trimming Start")
+                    myHelper.showOnMap(eWork.loadingGPSLocation, "Scraper Trimming Stop")
                 }
                 2 -> {
 //                    Trenching
@@ -156,7 +159,7 @@ class ETHistoryAdapter(
             if (eWork.workActionType == 2) {
                 val activity = holder.itemView.context as AppCompatActivity
                 val eOffloadingLoadsFragment = EOffloadingLoadsFragment.newInstance(
-                        context, FRAGMENT_TAG, eWork
+                    FRAGMENT_TAG, eWork
                 )
                 val transaction = activity.supportFragmentManager.beginTransaction()
                 transaction.replace(R.id.fragment_container, eOffloadingLoadsFragment, FRAGMENT_TAG)

@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.activities.HourMeterStopActivity
-import app.vsptracker.activities.common.Material1Activity
+import app.vsptracker.activities.common.MaterialActivity
 import app.vsptracker.adapters.EOffLoadingAdapter
 import app.vsptracker.apis.delay.EWork
 import app.vsptracker.apis.trip.MyData
@@ -84,7 +84,7 @@ class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
                 if (isWorking) {
                     myHelper.showStopMessage(startTime)
                 } else {
-                    val intent = Intent(this, Material1Activity::class.java)
+                    val intent = Intent(this, MaterialActivity::class.java)
                     myData.isForLoadResult = true
                     intent.putExtra("myData", myData)
                     startActivityForResult(intent, REQUEST_MATERIAL)

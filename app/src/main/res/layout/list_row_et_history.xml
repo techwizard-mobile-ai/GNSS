@@ -66,7 +66,7 @@
 
                 <TextView
                     style="@style/load_history_text"
-                    android:text="@string/start_gps_location" />
+                    android:text="@string/start_gps" />
 
                 <TextView
                     android:id="@+id/lhr_gps_loading"
@@ -94,7 +94,7 @@
 
                 <TextView
                     style="@style/load_history_text"
-                    android:text="@string/stop_gps_location" />
+                    android:text="@string/stop_gps" />
 
                 <TextView
                     android:id="@+id/lhr_gps_unloading"
@@ -156,6 +156,19 @@
                     android:id="@+id/eth_mode"
                     style="@style/load_history_desc"
                     android:text="@string/list_row_et_history_eth_mode_text" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/load_history_row_item">
+
+                <TextView
+                    style="@style/load_history_text"
+                    android:text="@string/server_sync" />
+
+                <TextView
+                    android:id="@+id/eth_is_sync"
+                    style="@style/load_history_desc"
+                    android:text="@string/server_sync" />
             </LinearLayout>
         </LinearLayout>
 

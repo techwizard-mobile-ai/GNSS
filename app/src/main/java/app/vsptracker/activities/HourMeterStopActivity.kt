@@ -21,7 +21,7 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
         val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
         layoutInflater.inflate(R.layout.activity_hour_meter_stop, contentFrameLayout)
         val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-        navigationView.menu.getItem(7).isChecked = true
+        navigationView.menu.getItem(9).isChecked = true
 
         myHelper.setTag(tag)
 
@@ -95,11 +95,26 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
                 val newMinutes = myHelper.getRoundedInt(minutes)
                 myHelper.log("Minutes: $newMinutes")
                 myHelper.setMachineTotalTime(newMinutes)
-
-
                 myData.totalHours = sfinish_reading.text.toString()
-
                 myHelper.log("Before saveMachineHour:$myData")
+
+                val operatorAPI = myHelper.getOperatorAPI()
+                operatorAPI.unloadingGPSLocation = gpsLocation
+                operatorAPI.orgId = myHelper.getLoginAPI().org_id
+                operatorAPI.siteId = myHelper.getMachineSettings().siteId
+                operatorAPI.operatorId = operatorAPI.id
+                when{
+                    myHelper.isDailyModeStarted() -> operatorAPI.isDaysWork = 1
+                    else -> operatorAPI.isDaysWork = 0
+                }
+//                operatorAPI.isDaysWork = myHelper.isDailyModeStarted()
+                operatorAPI.stopTime = System.currentTimeMillis()
+                operatorAPI.totalTime = operatorAPI.stopTime - operatorAPI.startTime
+                operatorAPI.loadingGPSLocationString = myHelper.getGPSLocationToString(operatorAPI.loadingGPSLocation)
+                operatorAPI.unloadingGPSLocationString = myHelper.getGPSLocationToString(operatorAPI.unloadingGPSLocation)
+                myDataPushSave.pushInsertOperatorHour(operatorAPI)
+
+                myData.machine_stop_reason_id = -1
                 saveMachineHour(myData)
 
 //                myHelper.stopDelay(gpsLocation)

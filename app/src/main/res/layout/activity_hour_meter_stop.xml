@@ -26,7 +26,6 @@
         android:text="@string/hour_meter_finish" />
 
     <LinearLayout
-        android:layout_below="@id/hm_stop_top"
         style="@style/default_linearlayout"
         android:layout_height="wrap_content"
         android:layout_marginStart="0dp"
@@ -37,7 +36,8 @@
             android:id="@+id/sfinish_minus"
             android:layout_width="@dimen/_30sdp"
             android:layout_height="@dimen/_30sdp"
-            android:src="@drawable/ic_subtract" />
+            android:src="@drawable/ic_subtract"
+            tools:ignore="ContentDescription" />
         <EditText
             android:id="@+id/sfinish_reading"
             style="@style/tv_background"
@@ -47,7 +47,8 @@
             android:hint="@string/hour_meter_finish"
             android:inputType="numberDecimal"
             android:text="@string/activity_hour_meter_stop_sfinish_reading_text"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            tools:ignore="Autofill" />
 
 
 
@@ -55,7 +56,8 @@
             android:id="@+id/sfinish_plus"
             android:layout_width="@dimen/_30sdp"
             android:layout_height="@dimen/_30sdp"
-            android:src="@drawable/ic_add" />
+            android:src="@drawable/ic_add"
+            tools:ignore="ContentDescription" />
     </LinearLayout>
     </LinearLayout>
     <LinearLayout

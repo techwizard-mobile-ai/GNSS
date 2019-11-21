@@ -23,6 +23,10 @@ class MyData : Serializable {
     @Expose
     var operatorId: Int = 0
 
+    @SerializedName("name")
+    @Expose
+    var name: String? = null
+
     @SerializedName("is_running")
     @Expose
     var isRunning: Int = 0
@@ -240,14 +244,30 @@ class MyData : Serializable {
 //    isSync 0 = Not Uploaded to Server
 //    isSync 1 = Uploaded to Server
 //    isSync 2 = Uploaded to Server by Export
+    @SerializedName("server_sync")
+    @Expose
     var isSync: Int = 0
 
     var machineStoppedReason = ""
 
     var isMapOpened: Boolean = false
     override fun toString(): String {
-        return "MyData(id=$id, isRunning=$isRunning, machineId=$machineId, startTime=$startTime, stopTime=$stopTime, startHours='$startHours', totalHours='$totalHours', totalTime=$totalTime, time='$time', date='$date', recordID=$recordID, machine_stop_reason_id=$machine_stop_reason_id)"
+        return "MyData(" +
+                "siteId=$siteId, " +
+                "machineTypeId=$machineTypeId, " +
+                "machineStoppedReason='$machineStoppedReason', " +
+                "startTime='$startTime', " +
+                "stopTime=$stopTime" +
+                "totalTime=$totalTime" +
+                "time=$time" +
+                "date=$date" +
+                "getWorkMode=$workMode" +
+                "totalTime=$totalTime" +
+
+                "loadingGPSLocation=$loadingGPSLocation" +
+                "unloadingGPSLocation=$unloadingGPSLocation" +
+                "userID=$operatorId" +
+                "isSync=$isSync" +
+                ")"
     }
-
-
 }
