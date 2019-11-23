@@ -39,20 +39,10 @@ class MachineHourAdapter(
         val eWork = dataList[position]
 
         myHelper.log(eWork.toString())
-//        when (eWork.machineTypeId) {
-//            1 -> {
-//                holder.itemView.eth_machine_type.text = ":  Excavator"
-//            }
-//            2 -> {
-//                holder.itemView.eth_machine_type.text = ":  Scraper"
-//            }
-//            3 -> {
-//                holder.itemView.eth_machine_type.text = ":  Truck"
-//            }
-//        }
+
         holder.itemView.eth_machine_type.text = ":  ${db.getMachineTypeByID(eWork.machineTypeId).name}"
         holder.itemView.eth_sync.text = ": ${if (eWork.isSync == 1) "Yes" else "No"}"
-        holder.itemView.eth_record_number.text = ":  " + (eWork.id)
+        holder.itemView.eth_record_number.text = ":  " + (dataList.size - position)
         val operatorName = db.getOperatorByID(eWork.operatorId.toString()).name
         holder.itemView.eth_operator.text = ":  $operatorName"
 

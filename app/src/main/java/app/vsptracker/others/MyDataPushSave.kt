@@ -75,7 +75,8 @@ class MyDataPushSave(private val context: Context) {
                 val responseBody = response.body()
                 if (responseBody!!.success && responseBody.data != null) {
                     db.insertMachinesAutoLogouts(responseBody.data as ArrayList<OperatorAPI>)
-                    fetchMachinesHours()
+//                    fetchMachinesHours()
+                    fetchMachinesTasks()
                 } else {
                     myHelper.hideProgressBar()
                     myHelper.toast(responseBody.message)
@@ -89,6 +90,12 @@ class MyDataPushSave(private val context: Context) {
         })
     }
 
+    /**
+     * No Need to Sync this data as It will not work properly when Operator don't have Internet connection
+     * on Login ang Logout and data will not be Synced with Server.
+     * Secondly this data can be corrected by Operator on Login/Logout by matching it with Machine Odometer.
+     * Thirdly this data will only be used for Machine Inspection nothing more.
+     */
     private fun fetchMachinesHours() {
         val call = this.retrofitAPI.getMachinesHours(
             myHelper.getLoginAPI().org_id,
@@ -244,6 +251,7 @@ class MyDataPushSave(private val context: Context) {
             }
         })
     }
+
 
     private fun fetchStopReasons() {
         val call = this.retrofitAPI.getStopReasons(
@@ -459,8 +467,8 @@ class MyDataPushSave(private val context: Context) {
                 }
                 when {
                     responseBody!!.success -> eWork.isSync = 1
-                    else -> when {
-                        responseBody.message == "Token has expired" -> {
+                    else -> when (responseBody.message) {
+                        "Token has expired" -> {
                             myHelper.run {
                                 log("Token Expired:$response")
                                 refreshToken()
@@ -587,5 +595,64 @@ class MyDataPushSave(private val context: Context) {
 
     private fun insertOperatorHour(myData: MyData) {
         db.insertOperatorHour(myData)
+    }
+
+    /**
+     * Machine Stop Entry is Pushed when Machine is Started Again.
+     * When Machine is Started, Entry will be pushed to Portal and then it will update Machine Stop Entry in Database.
+     */
+    fun pushUpdateMachineStop(myData: MyData){
+        myHelper.log("pushUpdateMachineStop:$myData")
+        when {
+            myHelper.isOnline() -> pushMachinesStop(myData)
+            else -> updateMachineStop(myData)
+        }
+    }
+    private fun pushMachinesStop(machineData: MyData){
+
+        val call = this.retrofitAPI.pushMachinesStops(
+            myHelper.getLoginAPI().auth_token,
+            machineData
+        )
+        call.enqueue(object : retrofit2.Callback<MyDataResponse> {
+            override fun onResponse(
+                call: retrofit2.Call<MyDataResponse>,
+                response: retrofit2.Response<MyDataResponse>
+            ) {
+                myHelper.log("pushMachinesStop:$response")
+                val responseBody = response.body()
+                myHelper.log("pushMachinesStopData:${responseBody}")
+                if (responseBody!!.success) {
+                    machineData.isSync = 1
+//                    myHelper.pushIsMachineRunning(1, responseBody.data.id)
+//                    pushIsMachineRunning(machineData)
+
+                } else {
+//                    pushIsMachineRunning(machineData)
+                    if (responseBody.message == "Token has expired") {
+                        myHelper.run {
+                            log("Token Expired:$response")
+                            refreshToken()
+                        }
+                    } else {
+                        myHelper.toast(responseBody.message)
+                    }
+                }
+                updateMachineStop(machineData)
+            }
+
+            override fun onFailure(call: retrofit2.Call<MyDataResponse>, t: Throwable) {
+
+                updateMachineStop(machineData)
+                myHelper.run {
+                    toast(t.message.toString())
+                    log("Failure" + t.message)
+                }
+            }
+        })
+    }
+
+    private fun updateMachineStop(machineData:  MyData){
+        db.updateMachineStop(machineData)
     }
 }

@@ -535,6 +535,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val cv = ContentValues()
 
         for (datum in data) {
+//            myHelper.log("MachinesHours:${datum.loadingGPSLocationString}-- ${datum.unloadingGPSLocationString}")
             cv.put(COL_ORG_ID, datum.orgId)
             cv.put(COL_SITE_ID, datum.siteId)
             cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
@@ -552,9 +553,12 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_WORK_MODE, myHelper.getWorkMode())
 
 
-            cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.loadingGPSLocation))
-            cv.put(COL_UNLOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.unloadingGPSLocation))
-            cv.put(COL_USER_ID, myHelper.getUserID())
+//            cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.loadingGPSLocation))
+            cv.put(COL_LOADING_GPS_LOCATION, datum.loadingGPSLocationString)
+//            cv.put(COL_UNLOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.unloadingGPSLocation))
+            cv.put(COL_UNLOADING_GPS_LOCATION, datum.unloadingGPSLocationString)
+
+            cv.put(COL_USER_ID, datum.operatorId)
             cv.put(COL_IS_SYNC, datum.isSync)
 
 
@@ -754,6 +758,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
 
     fun insertMachineStop(myData: MyData): Long {
 
+        myHelper.log("insertMachineStop:$myData")
         val currentTime = System.currentTimeMillis()
         myData.startTime = currentTime
 
@@ -767,6 +772,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val cv = ContentValues()
         cv.put(COL_ORG_ID, myData.orgId)
         cv.put(COL_SITE_ID, myData.siteId)
+//        TODO Add Machine ID Column
         cv.put(COL_MACHINE_TYPE_ID, myData.loadedMachineType)
         cv.put(COL_MACHINE_NUMBER, myData.loadedMachineNumber)
         cv.put(COL_MACHINE_STOPPED_REASON, myData.machineStoppedReason)
@@ -1203,16 +1209,20 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
                 datum.workMode = result.getString(result.getColumnIndex(COL_WORK_MODE))
 
-                datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
-                    result.getString(
-                        result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                    )
+                val loadingGPS = result.getString(
+                    result.getColumnIndex(COL_LOADING_GPS_LOCATION)
                 )
-                datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
-                    result.getString(
-                        result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                    )
+//                myHelper.log("loadingGPS:$loadingGPS")
+//                if(loadingGPS == null)
+//                    loadingGPS = GPSLocation()
+                if(loadingGPS != null)
+                datum.loadingGPSLocation = myHelper.getStringToGPSLocation( loadingGPS)
+
+                val unloadingGPS = result.getString(
+                    result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
                 )
+                if(unloadingGPS != null)
+                datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(unloadingGPS)
 
                 datum.operatorId = result.getInt(result.getColumnIndex(COL_USER_ID))
                 datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
@@ -2015,11 +2025,10 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val query = "Select * from $TABLE_MACHINE_STATUS  ORDER BY $COL_ID DESC"
         val result = db.rawQuery(query, null)
 
-
-
         if (result.moveToFirst()) {
             do {
                 val datum = MyData()
+                datum.id = result.getInt(result.getColumnIndex(COL_ID))
                 datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
                 datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
                 datum.recordID = result.getLong(result.getColumnIndex(COL_ID))

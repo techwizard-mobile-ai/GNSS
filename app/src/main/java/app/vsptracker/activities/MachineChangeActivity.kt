@@ -127,7 +127,6 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
 
 //        }
         machine_save.setOnClickListener(this)
-
     }
 
     override fun onClick(view: View?) {

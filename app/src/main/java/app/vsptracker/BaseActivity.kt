@@ -343,7 +343,12 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 myHelper.setIsMapOpened(false)
             }
 
-            R.id.nav_server_sync -> {
+            R.id.nav_hours_reporting-> {
+                val intent = Intent(this, HoursReportingActivity::class.java)
+                startActivity(intent)
+                myHelper.setIsMapOpened(false)
+            }
+            R.id.nav_server_sync-> {
                 val intent = Intent(this, ServerSyncActivity::class.java)
                 startActivity(intent)
                 myHelper.setIsMapOpened(false)

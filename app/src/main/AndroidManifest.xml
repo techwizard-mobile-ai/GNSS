@@ -15,7 +15,8 @@
         android:screenOrientation="landscape"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".activities.ServerSyncActivity"></activity>
+        <activity android:name=".activities.ServerSyncActivity" />
+        <activity android:name=".activities.HoursReportingActivity" />
         <activity android:name=".activities.common.MachineBreakdownActivity" />
 
         <receiver android:name=".others.VSPTWidget">
@@ -62,19 +63,21 @@
         <activity android:name=".activities.excavator.EHomeActivity" />
         <activity android:name=".activities.common.RUnloadActivity" />
         <activity android:name=".activities.common.RLoadActivity" />
-
         <activity android:name=".activities.common.UnloadTaskActivity" />
         <activity android:name=".activities.common.MachineStatusActivity" />
         <activity android:name=".activities.common.WeightActivity" />
         <activity android:name=".activities.common.LMachineActivity" />
         <activity android:name=".activities.common.LocationActivity" />
         <activity android:name=".activities.common.MaterialActivity" />
-        <activity android:name=".activities.truck.TUnloadAfterActivity" /> <!-- <activity android:name=".activities.notused.TUnloadActivity" /> -->
+        <activity android:name=".activities.truck.TUnloadAfterActivity" />
+        <!-- <activity android:name=".activities.notused.TUnloadActivity" /> -->
         <!-- <activity android:name=".activities.notused.TLoadActivity" /> -->
         <activity android:name=".activities.truck.THomeActivity" />
         <activity android:name=".activities.HourMeterStartActivity" />
         <activity android:name=".activities.HourMeterStopActivity" />
-        <activity android:name=".activities.scrapper.SUnloadAfterActivity" /> <!-- <activity android:name=".activities.notused.MachineStatusActivity" /> -->
+        <activity android:name=".activities.scrapper.SUnloadAfterActivity" />
+
+        <!-- <activity android:name=".activities.notused.MachineStatusActivity" /> -->
         <!-- <activity android:name=".activities.notused.SUnloadActivity" /> -->
         <!-- <activity android:name=".activities.notused.SLoadActivity" /> -->
         <activity android:name=".activities.scrapper.SHomeActivity" />
@@ -101,6 +104,7 @@
             android:name=".BaseActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
+
     </application>
 
 </manifest>

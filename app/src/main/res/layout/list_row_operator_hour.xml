@@ -26,7 +26,7 @@
 
                 <TextView
                     style="@style/load_history_text"
-                    android:text="@string/record_number" />
+                    android:text="@string/id" />
 
                 <TextView
                     android:id="@+id/eth_record_number"

@@ -43,6 +43,10 @@
             android:icon="@drawable/ic_change_machine"
             android:title="@string/change_machine" />
         <item
+            android:id="@+id/nav_hours_reporting"
+            android:icon="@drawable/ic_hours_reporting"
+            android:title="@string/hours_reporting" />
+        <item
             android:id="@+id/nav_server_sync"
             android:icon="@drawable/ic_server_sync"
             android:title="@string/server_sync" />

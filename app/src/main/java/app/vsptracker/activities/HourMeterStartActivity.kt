@@ -9,6 +9,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
+import app.vsptracker.apis.trip.MyDataListResponse
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyHelper
 import com.google.android.material.navigation.NavigationView
@@ -60,7 +61,7 @@ class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
 
 //        gpsLocation = GPSLocation()
 //        startGPS()
-
+        fetchMachineMaxHours()
         ms_minus.setOnClickListener(this)
         ms_plus.setOnClickListener(this)
         ms_continue.setOnClickListener(this)
@@ -90,10 +91,10 @@ class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
                 meter.hourStartGPSLocation = gpsLocation
                 val currentTime = System.currentTimeMillis()
                 meter.hourStartTime = currentTime
+                meter.machineStartTime = currentTime
                 meter.startHours = ms_reading.text.toString()
 
                 if (!startReading.equals(ms_reading.text.toString(), true)) {
-
                     meter.isMachineStartTimeCustom = true
                     myHelper.log("Custom Time : True, Original reading:${myHelper.getMeterTimeForStart()}, New Reading: ${ms_reading.text}")
                 } else {
@@ -117,6 +118,36 @@ class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
                 finishAffinity()
             }
         }
+    }
+
+
+    private fun fetchMachineMaxHours() {
+        val call = this.retrofitAPI.getMachineMaxHour(
+            myHelper.getMachineID(),
+            myHelper.getLoginAPI().org_id,
+            myHelper.getLoginAPI().auth_token
+        )
+        call.enqueue(object : retrofit2.Callback<MyDataListResponse> {
+            override fun onResponse(
+                call: retrofit2.Call<MyDataListResponse>,
+                response: retrofit2.Response<MyDataListResponse>
+            ) {
+                myHelper.log("Response:$response")
+                val responseBody = response.body()
+                myHelper.log("responseBody:$responseBody")
+                if (responseBody!!.success && responseBody.data != null) {
+                    ms_reading.setText(responseBody.data!![0].totalHours)
+                } else {
+                    myHelper.hideProgressBar()
+                    myHelper.toast(responseBody.message)
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<MyDataListResponse>, t: Throwable) {
+                myHelper.hideProgressBar()
+                myHelper.log("Failure" + t.message)
+            }
+        })
     }
 
 /*

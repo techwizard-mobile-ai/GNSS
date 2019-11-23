@@ -13,7 +13,6 @@ import app.vsptracker.activities.HourMeterStartActivity
 import app.vsptracker.activities.OperatorLoginActivity
 import app.vsptracker.adapters.MachineStatusAdapter
 import app.vsptracker.apis.trip.MyData
-import app.vsptracker.apis.trip.MyDataResponse
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_machine_status.*
@@ -150,15 +149,16 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
                     machineData.isDaysWork = 0
                 }
 
-                if(myHelper.isOnline()){
-                    pushMachinesStops(machineData)
-                }
-                updateMachineStatus(machineData)
+//                if(myHelper.isOnline()){
+//                    pushMachinesStops(machineData)
+//                }
+                myDataPushSave.pushUpdateMachineStop(machineData)
+                updateMachineStatus()
 
             }
         }
     }
-
+/*
     private fun pushMachinesStops(machineData: MyData){
 
         val call = this.retrofitAPI.pushMachinesStops(
@@ -196,12 +196,11 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
                 myHelper.log("Failure" + t.message)
             }
         })
-    }
+    }*/
 
 
-    private fun updateMachineStatus(machineData: MyData) {
-        db.updateMachineStop(machineData)
-//                if (updateID > 0) {
+    private fun updateMachineStatus() {
+//        db.updateMachineStop(machineData)
         myHelper.toast("Machine Started Successfully")
         myHelper.setIsMachineStopped(false, "", 0)
         if(myHelper.getIsMachineStopped()){
@@ -210,8 +209,5 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
         }else{
             myHelper.startHomeActivityByType(MyData())
         }
-//                } else {
-//                    myHelper.toast("Machine Not Started. Due to App Deleted Cache.")
-//                }
     }
 }

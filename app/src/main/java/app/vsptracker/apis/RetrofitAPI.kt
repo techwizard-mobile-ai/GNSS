@@ -27,13 +27,27 @@ interface RetrofitAPI {
         const val ORGS_MACHINES_TASKS = "orgstasks/list"
         const val ORGS_SIDECASTINGS = "orgssidecastings/store"
         const val ORGS_LOADS = "orgsloads/store"
+
+//        This is replaced with ORGS_MACHINE_MAX_HOUR.
+//        This is replaced with max_hours to get Max Total Hours for a Machine in Single Entry
 //        const val ORGS_MACHINES_HOURS = "orgsmachineshours/list"
         const val ORGS_MACHINES_HOURS = "orgsmachineshours/max_hours"
         const val ORGS_PUSH_MACHINES_HOURS = "orgsmachineshours/store"
         const val ORGS_MACHINES_UPDATE = "orgsmachines/update"
         const val ORGS_MACHINES_AUTO_LOGOUTS = "orgsmachinesautologouts/list"
         const val ORGS_PUSH_OPERATORS_HOURS = "orgsoperatorshours/store"
+        const val ORGS_MACHINE_MAX_HOUR ="orgsmachineshours/machine_max_hour"
     }
+
+    /**
+     * This API call will be Made in Start Hour Meter and this Total Hours will be compared with App Machine Max Hour
+     * Greater value will be placed in Hour Meter And Operator will see Max Hour for Start of Machine.
+     * Now Either Operator will Correct Start Hours Manually OR use already displayed Hours if that reading is correct.
+     */
+    @GET(ORGS_MACHINE_MAX_HOUR)
+    fun getMachineMaxHour(
+        @Query("machine_id") machine_id: Int?, @Query("org_id") org_id: Int?, @Query("token") token: String?
+    ): Call<MyDataListResponse>
 
     @POST(ORGS_PUSH_OPERATORS_HOURS)
     fun pushOperatorHour(@Query("token") token: String?, @Body myData: MyData): Call<MyDataResponse>

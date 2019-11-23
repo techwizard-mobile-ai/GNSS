@@ -44,7 +44,6 @@ class MachineBreakdownActivity : BaseActivity(), View.OnClickListener {
         myData.loadingGPSLocation = meter.hourStartGPSLocation
         sfinish_reading.setText(myHelper.getMeterTimeForFinish())
 
-
         machine_breakdown_back.setOnClickListener(this)
         machine_breakdown_action.setOnClickListener(this)
         sfinish_minus.setOnClickListener(this)
@@ -82,6 +81,7 @@ class MachineBreakdownActivity : BaseActivity(), View.OnClickListener {
                 val material = stoppedReasons[0]
                 data.machineStoppedReason = material.name
                 data.loadingGPSLocation = gpsLocation
+                data.siteId = myHelper.getMachineSettings().siteId
 
 
                 val insertID = db.insertMachineStop(data)

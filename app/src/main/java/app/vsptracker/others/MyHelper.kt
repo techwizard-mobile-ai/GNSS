@@ -182,7 +182,12 @@ class MyHelper(private var TAG: String, val context: Context) {
 
     fun getUserID() = getOperatorAPI().id
     fun getStringToGPSLocation(stringGPSLocation: String): GPSLocation {
-        return gson.fromJson(stringGPSLocation, GPSLocation::class.java)
+//        log("getStringToGPSLocation:$stringGPSLocation")
+         return if (stringGPSLocation == null)
+            GPSLocation()
+        else gson.fromJson(stringGPSLocation, GPSLocation::class.java)
+
+
     }
 
     fun getGPSLocationToString(gpsMaterial: GPSLocation): String {

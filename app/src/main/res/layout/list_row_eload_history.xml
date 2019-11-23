@@ -27,7 +27,7 @@
 
                 <TextView
                     style="@style/load_history_text"
-                    android:text="@string/load_number" />
+                    android:text="@string/id" />
 
                 <TextView
                     android:id="@+id/lhr_record_number"
