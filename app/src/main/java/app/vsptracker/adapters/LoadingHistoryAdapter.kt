@@ -6,10 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import app.vsptracker.others.MyHelper
 import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.database.DatabaseAdapter
+import app.vsptracker.others.MyHelper
 import kotlinx.android.synthetic.main.list_row_loading_history.view.*
 
 
@@ -55,7 +55,7 @@ class LoadingHistoryAdapter(
 
 
         holder.itemView.lhr_trip0_id.text = ": ${myData.trip0ID}"
-        holder.itemView.lhr_operator.text = ": ${db.getOperatorByID(myData.operatorId.toString()).name}"
+        holder.itemView.lhr_operator.text = ": ${db.getOperatorByID(myData.operatorId).name}"
         holder.itemView.lhr_sync.text = ": ${if(myData.isSync == 1) "Yes" else "No"}"
 
         when (myData.loadedMachineType) {
@@ -68,6 +68,10 @@ class LoadingHistoryAdapter(
                 holder.itemView.lhr_task_layout.visibility = View.VISIBLE
             }
         }
+        holder.itemView.lhr_site.text = ":  " + db.getSiteByID(myData.siteId).name
+        holder.itemView.lhr_machine_type.text = ":  " + db.getMachineTypeByID(myData.machineTypeId).name
+        holder.itemView.lhr_machine_number.text = ":  " + db.getMachineByID(myData.machineId).number
+
         holder.itemView.lhr_loading_machine.text = ":  " + myData.loadingMachine
 
         holder.itemView.lhr_loaded_material.text = ":  ${myData.loadingMaterial} / ${myData.unloadingMaterial}"

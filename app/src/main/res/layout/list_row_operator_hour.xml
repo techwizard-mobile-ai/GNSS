@@ -38,6 +38,18 @@
 
                 <TextView
                     style="@style/load_history_text"
+                    android:text="@string/operating_site" />
+
+                <TextView
+                    android:id="@+id/oh_site"
+                    style="@style/load_history_desc"
+                    android:text="@string/list_row_delay_history_eth_machine_number_text" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/load_history_row_item">
+
+                <TextView
+                    style="@style/load_history_text"
                     android:text="@string/operator" />
 
                 <TextView
@@ -46,17 +58,6 @@
                     android:text="@string/list_row_delay_history_eth_record_number_text" />
             </LinearLayout>
 
-            <LinearLayout style="@style/load_history_row_item">
-
-                <TextView
-                    style="@style/load_history_text"
-                    android:text="@string/operating_site" />
-
-                <TextView
-                    android:id="@+id/oh_site"
-                    style="@style/load_history_desc"
-                    android:text="@string/list_row_delay_history_eth_machine_number_text" />
-            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/lhr_loading_machine_layout"
@@ -74,8 +75,7 @@
 
             <LinearLayout
                 android:id="@+id/lhr_gps_loading_layout"
-                style="@style/load_history_row_item"
-                >
+                style="@style/load_history_row_item">
 
                 <TextView
                     style="@style/load_history_text"
@@ -87,8 +87,7 @@
                     android:text="@string/list_row_delay_history_lhr_gps_loading_text" />
             </LinearLayout>
 
-            <LinearLayout
-                style="@style/load_history_row_item">
+            <LinearLayout style="@style/load_history_row_item">
 
                 <TextView
                     style="@style/load_history_text"
@@ -114,8 +113,8 @@
                     android:text="@string/list_row_delay_history_lhr_gps_unloading_text" />
             </LinearLayout>
 
-            <LinearLayout
-                style="@style/load_history_row_item">
+            <LinearLayout style="@style/load_history_row_item">
+
                 <TextView
                     style="@style/load_history_text"
                     android:text="@string/duration" />
@@ -125,9 +124,11 @@
                     style="@style/load_history_desc"
                     android:text="@string/list_row_delay_history_eth_duration_text" />
             </LinearLayout>
+
             <LinearLayout
-                android:visibility="gone"
-                style="@style/load_history_row_item">
+                style="@style/load_history_row_item"
+                android:visibility="gone">
+
                 <TextView
                     style="@style/load_history_text"
                     android:text="@string/date" />

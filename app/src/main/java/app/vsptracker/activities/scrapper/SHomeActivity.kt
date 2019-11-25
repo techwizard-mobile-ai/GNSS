@@ -5,11 +5,11 @@ import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
 import app.vsptracker.BaseActivity
-import app.vsptracker.others.MyHelper
 import app.vsptracker.R
 import app.vsptracker.activities.common.MaterialActivity
 import app.vsptracker.activities.common.UnloadTaskActivity
 import app.vsptracker.activities.excavator.ESideCastingActivity
+import app.vsptracker.others.MyHelper
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_shome.*
@@ -29,7 +29,7 @@ class SHomeActivity : BaseActivity(), View.OnClickListener {
         myHelper = MyHelper(tag, this)
 
         myData = myHelper.getLastJourney()
-        myHelper.log("myData:$myData")
+//        myHelper.log("myData:$myData")
 
         when (myHelper.getNextAction()) {
             0, 2 -> {

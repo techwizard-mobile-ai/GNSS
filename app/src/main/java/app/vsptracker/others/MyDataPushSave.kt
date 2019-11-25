@@ -11,6 +11,7 @@ import app.vsptracker.apis.operators.OperatorResponse
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.apis.trip.MyDataListResponse
 import app.vsptracker.apis.trip.MyDataResponse
+import app.vsptracker.classes.Material
 import app.vsptracker.database.DatabaseAdapter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -251,7 +252,6 @@ class MyDataPushSave(private val context: Context) {
             }
         })
     }
-
 
     private fun fetchStopReasons() {
         val call = this.retrofitAPI.getStopReasons(
@@ -599,16 +599,18 @@ class MyDataPushSave(private val context: Context) {
 
     /**
      * Machine Stop Entry is Pushed when Machine is Started Again.
-     * When Machine is Started, Entry will be pushed to Portal and then it will update Machine Stop Entry in Database.
+     * When Machine is Started, Entry will be pushed to Portal and then
+     * it will update Machine Stop Entry in Database.
      */
-    fun pushUpdateMachineStop(myData: MyData){
+    fun pushUpdateMachineStop(myData: MyData) {
         myHelper.log("pushUpdateMachineStop:$myData")
         when {
             myHelper.isOnline() -> pushMachinesStop(myData)
             else -> updateMachineStop(myData)
         }
     }
-    private fun pushMachinesStop(machineData: MyData){
+
+    private fun pushMachinesStop(machineData: MyData) {
 
         val call = this.retrofitAPI.pushMachinesStops(
             myHelper.getLoginAPI().auth_token,
@@ -652,7 +654,161 @@ class MyDataPushSave(private val context: Context) {
         })
     }
 
-    private fun updateMachineStop(machineData:  MyData){
-        db.updateMachineStop(machineData)
+    private fun updateMachineStop(machineData: MyData): Int {
+        val updateID = db.updateMachineStop(machineData)
+        myHelper.log("updateMachineStopID:$updateID")
+        return updateID
     }
+
+    /**
+     * This method is called when a machine is stopped and saved in database.
+     * When machine is started again this database entry is updated (by method updateMachineStop) and same data is
+     * being pushed to Server.
+     */
+    fun insertMachineStop(myData: MyData, material: Material): Long {
+        val currentTime = System.currentTimeMillis()
+        myData.startTime = currentTime
+
+//        val time = System.currentTimeMillis()
+        myData.time = currentTime.toString()
+        myData.date = myHelper.getDate(currentTime.toString())
+        myData.loadedMachineType = myHelper.getMachineTypeID()
+        myData.loadedMachineNumber = myHelper.getMachineNumber()
+
+        val insertID = db.insertMachineStop(myData)
+        myHelper.log("insertMachineStopID:$insertID")
+        if (insertID > 0) myHelper.toast("Machine Stopped due to " + material.name) else myHelper.toast("Machine Stop Entry not Saved in Database.")
+        myHelper.stopMachine(insertID, material)
+        return insertID
+    }
+
+    /**
+     * This method is called when Loading is done on RLoadActivity. Load data is saved in database but not
+     * pushed to server. When Unloading is done, this data is first retrieved from database and updated
+     * data is Pushed to server and Updated in Database.
+     */
+    fun insertTrip(myData: MyData): Long {
+        val insertID = db.insertTrip(myData)
+        myHelper.log("insertTripID:$insertID")
+        return insertID
+    }
+
+    fun pushUpdateTrip(myData: MyData) {
+        when {
+            myHelper.isOnline() -> pushTrip(myData)
+            else -> {
+                myHelper.toast("No Internet Connection.\nDelay Not Uploaded to Server.")
+                updateTrip(myData)
+            }
+        }
+    }
+
+    private fun pushTrip(myData: MyData) {
+        myHelper.log("pushTrip:$myData")
+
+        val call = this.retrofitAPI.pushTrip(
+            myHelper.getLoginAPI().auth_token,
+            myData
+        )
+        call.enqueue(object : retrofit2.Callback<MyDataResponse> {
+            override fun onResponse(
+                call: retrofit2.Call<MyDataResponse>,
+                response: retrofit2.Response<MyDataResponse>
+            ) {
+                myHelper.log(response.toString())
+                val responseBody = response.body()
+                myHelper.log("EWorkResponse:$responseBody")
+                if (responseBody!!.success) {
+                    myData.isSync = 1
+                    updateTrip(myData)
+
+                } else {
+                    updateTrip(myData)
+                    if (responseBody.message == "Token has expired") {
+                        myHelper.log("Token Expired:$response")
+                        myHelper.refreshToken()
+                    } else {
+                        myHelper.toast(responseBody.message)
+                    }
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<MyDataResponse>, t: Throwable) {
+//                myHelper.hideDialog()
+//                saveTrip(myData)
+                updateTrip(myData)
+                myHelper.log("Failure" + t.message)
+            }
+        })
+    }
+
+    private fun updateTrip(myData: MyData): Int {
+        val updateID = db.updateTrip(myData)
+        myHelper.log("updateTripID:$updateID")
+        return updateID
+    }
+
+    fun pushInsertSideCasting(eWork: EWork) {
+
+        eWork.siteId = myHelper.getMachineSettings().siteId
+        eWork.machineId = myHelper.getMachineID()
+        eWork.orgId = myHelper.getLoginAPI().org_id
+        eWork.operatorId = myHelper.getOperatorAPI().id
+        eWork.machineTypeId = myHelper.getMachineTypeID()
+        eWork.unloadingGPSLocationString = myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
+
+        when {
+            myHelper.isOnline() -> pushSideCasting(eWork)
+            else -> {
+                myHelper.toast("No Internet Connection.\nData Not Uploaded to Server.")
+                insertSideCasting(eWork)
+            }
+        }
+    }
+
+    private fun pushSideCasting(eWork: EWork) {
+
+        val call = this.retrofitAPI.pushSideCastings(
+            myHelper.getLoginAPI().auth_token,
+            eWork
+        )
+        call.enqueue(object : retrofit2.Callback<EWorkResponse> {
+            override fun onResponse(
+                call: retrofit2.Call<EWorkResponse>,
+                response: retrofit2.Response<EWorkResponse>
+            ) {
+                myHelper.log("$response")
+                val responseBody = response.body()
+                myHelper.log("pushSideCastings:$responseBody")
+                if (responseBody!!.success) {
+                    eWork.isSync = 1
+                } else {
+                    if (responseBody.message == "Token has expired") {
+                        myHelper.run {
+                            log("Token Expired:$response")
+                            refreshToken()
+                        }
+                    } else {
+                        myHelper.toast(responseBody.message)
+                    }
+                }
+                insertSideCasting(eWork)
+            }
+
+            override fun onFailure(call: retrofit2.Call<EWorkResponse>, t: Throwable) {
+                insertSideCasting(eWork)
+                myHelper.run {
+                    toast(t.message.toString())
+                    log("Failure" + t.message)
+                }
+            }
+        })
+    }
+
+    private fun insertSideCasting(eWork: EWork) {
+        val insertID = db.insertSideCasting(eWork)
+        myHelper.log("insertID:$insertID")
+    }
+
+
 }

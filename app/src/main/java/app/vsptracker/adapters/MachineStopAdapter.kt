@@ -44,7 +44,7 @@ class MachineStopAdapter(
         holder.itemView.oh_site.text = ":  $siteName"
         holder.itemView.eth_sync.text = ": ${if (datum.isSync == 1) "Yes" else "No"}"
         holder.itemView.eth_record_number.text = ":  " + (datum.id)
-        val operatorName = db.getOperatorByID(datum.operatorId.toString()).name
+        val operatorName = db.getOperatorByID(datum.operatorId).name
         holder.itemView.eth_operator.text = ":  $operatorName"
 
         if(datum.startTime > 0)

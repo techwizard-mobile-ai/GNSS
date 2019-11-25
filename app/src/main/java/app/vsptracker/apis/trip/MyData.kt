@@ -255,6 +255,7 @@ class MyData : Serializable {
         return "MyData(" +
                 "siteId=$siteId, " +
                 "machineTypeId=$machineTypeId, " +
+                "machineId=$machineId, " +
                 "machineStoppedReason='$machineStoppedReason', " +
                 "startTime='$startTime', " +
                 "stopTime=$stopTime" +

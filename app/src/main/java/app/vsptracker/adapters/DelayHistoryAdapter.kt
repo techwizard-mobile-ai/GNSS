@@ -54,8 +54,9 @@ class DelayHistoryAdapter(
 
         holder.itemView.eth_sync.text = ": ${if(eWork.isSync == 1) "Yes" else "No"}"
         holder.itemView.eth_record_number.text = ":  " + (eWork.ID)
+        holder.itemView.eth_site.text = ":  ${db.getSiteByID(eWork.siteId).name}"
 
-        val operatorName =  (db.getOperatorByID(eWork.operatorId.toString())).name
+        val operatorName =  (db.getOperatorByID(eWork.operatorId)).name
         holder.itemView.eth_operator.text = ":  $operatorName"
 
         holder.itemView.eth_machine_number.text = ":  " + eWork.machineNumber

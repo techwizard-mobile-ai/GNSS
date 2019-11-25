@@ -526,6 +526,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 }
             })
         }*/
+
     fun pushSideCasting(eWork: EWork) {
 
         eWork.siteId = myHelper.getMachineSettings().siteId
@@ -716,7 +717,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
         try {
-            myHelper.log("Permission Granted.")
+//            myHelper.log("Permission Granted.")
             locationManager?.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
                 1000,

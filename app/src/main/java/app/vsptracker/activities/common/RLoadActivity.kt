@@ -97,14 +97,14 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
                         var insertID = 0L
                         when (myData.nextAction) {
                             0 -> {
-                                insertID = db.insertTrip(myData)
+                                insertID = myDataPushSave.insertTrip(myData)
                                 myData.nextAction = 1
                             }
                             2 -> {
                                 val datum = db.getTrip(myData.recordID)
                                 myData.trip0ID = datum.trip0ID
                                 myData.tripType = 1
-                                insertID = db.insertTrip(myData)
+                                insertID = myDataPushSave.insertTrip(myData)
                                 myData.nextAction = 3
                             }
                         }
@@ -128,7 +128,7 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
                             }
                         }
                         val intent = Intent(this, RUnloadActivity::class.java)
-                        val insertID = db.insertTrip(myData)
+                        val insertID = myDataPushSave.insertTrip(myData)
                         if (insertID > 0) {
                             myHelper.toast("Load Saved Successfully.")
                             myData.recordID = insertID
@@ -144,7 +144,7 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
                         when (myData.nextAction) {
                             0 -> {
                                 myData.tripType = 0
-                                myData.recordID = db.insertTrip(myData)
+                                myData.recordID = myDataPushSave.insertTrip(myData)
 
                                 myData.nextAction = 1
                             }
@@ -153,7 +153,7 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
 
                                 val datum = db.getTrip(myData.recordID)
                                 myData.trip0ID = datum.trip0ID
-                                myData.recordID = db.insertTrip(myData)
+                                myData.recordID = myDataPushSave.insertTrip(myData)
 
                                 myData.nextAction = 3
                             }

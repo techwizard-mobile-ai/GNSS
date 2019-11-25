@@ -22,11 +22,9 @@
             android:orientation="vertical">
 
             <LinearLayout style="@style/load_history_row_item">
-
                 <TextView
                     style="@style/load_history_text"
                     android:text="@string/id" />
-
                 <TextView
                     android:id="@+id/lhr_trip_number"
                     style="@style/load_history_desc"
@@ -34,11 +32,38 @@
             </LinearLayout>
 
             <LinearLayout style="@style/load_history_row_item">
+                <TextView
+                    style="@style/load_history_text"
+                    android:text="@string/operating_site" />
+                <TextView
+                    android:id="@+id/lhr_site"
+                    style="@style/load_history_desc"
+                    android:text="@string/list_row_loading_history_lhr_trip_number_text" />
+            </LinearLayout>
 
+            <LinearLayout style="@style/load_history_row_item">
+                <TextView
+                    style="@style/load_history_text"
+                    android:text="@string/machine_type" />
+                <TextView
+                    android:id="@+id/lhr_machine_type"
+                    style="@style/load_history_desc"
+                    android:text="@string/list_row_loading_history_lhr_trip_number_text" />
+            </LinearLayout>
+            <LinearLayout style="@style/load_history_row_item">
+                <TextView
+                    style="@style/load_history_text"
+                    android:text="@string/machine_number" />
+                <TextView
+                    android:id="@+id/lhr_machine_number"
+                    style="@style/load_history_desc"
+                    android:text="@string/list_row_loading_history_lhr_trip_number_text" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/load_history_row_item">
                 <TextView
                     style="@style/load_history_text"
                     android:text="@string/trip_type" />
-
                 <TextView
                     android:id="@+id/lhr_trip_type"
                     style="@style/load_history_desc"

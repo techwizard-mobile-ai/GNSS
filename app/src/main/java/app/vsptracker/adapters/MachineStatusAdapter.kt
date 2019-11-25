@@ -39,21 +39,22 @@ class MachineStatusAdapter(
 
         holder.itemView.machine_status_rv_title.text = material.name
         holder.itemView.machine_status_rv_title.setOnClickListener {
-            myHelper.toast("Machine Stopped due to : " + material.name)
+//            myHelper.toast("Machine Stopped due to : " + material.name)
 
             val data = MyData()
             data.machineStoppedReason = material.name
             data.loadingGPSLocation = (myContext as MachineStatusActivity).gpsLocation
-            val insertID = db.insertMachineStop(data)
-            if (insertID > 0) {
-                myHelper.toast("Record Saved in Database Successfully.")
-                myHelper.stopMachine(insertID, material)
+//            val insertID = db.insertMachineStop(data)
+            myContext.myDataPushSave.insertMachineStop(data, material)
+//            if (insertID > 0) {
+//                myHelper.toast("Record Saved in Database Successfully.")
+//                myHelper.stopMachine(insertID, material)
 //                myHelper.setIsMachineStopped(true, material.name, material.id)
                 myHelper.logout(myContext)
                 myContext.finishAffinity()
-            } else {
-                myHelper.toast("Machine Not Stopped. Please try again.")
-            }
+//            } else {
+//                myHelper.toast("Machine Not Stopped. Please try again.")
+//            }
         }
     }
 

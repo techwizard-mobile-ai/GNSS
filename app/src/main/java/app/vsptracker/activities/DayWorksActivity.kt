@@ -48,8 +48,12 @@ class DayWorksActivity : BaseActivity(), View.OnClickListener {
             day_work_title.text = getString(R.string.start_day_works_mode)
             day_works_button.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorPrimary))
             day_works_action_text.text = getString(R.string.start)
-            val meter = myHelper.getMeter()
-            day_works_chronometer.base = SystemClock.elapsedRealtime() - meter.dailyModeTotalTime
+
+//            Previously it was counting total Day Works Time but now as entries for each mode changed
+//            are saved in database. No need to Count Previous Time for Days Works
+//            val meter = myHelper.getMeter()
+//            day_works_chronometer.base = SystemClock.elapsedRealtime() - meter.dailyModeTotalTime
+            day_works_chronometer.base = SystemClock.elapsedRealtime()
         }
         day_works_action.setOnClickListener(this)
     }
@@ -68,14 +72,12 @@ class DayWorksActivity : BaseActivity(), View.OnClickListener {
                     isDailyModeStart = false
                     day_works_chronometer.stop()
                     myHelper.stopDailyMode()
-
                     myHelper.startHomeActivityByType(MyData())
 
                 } else {
 
-
-
-                    day_works_chronometer.base = SystemClock.elapsedRealtime() - myHelper.getMeter().dailyModeTotalTime
+//                    day_works_chronometer.base = SystemClock.elapsedRealtime() - myHelper.getMeter().dailyModeTotalTime
+                    day_works_chronometer.base = SystemClock.elapsedRealtime()
                     day_works_chronometer.start()
 
                     day_work_title.text = getString(R.string.stop_day_works_mode)

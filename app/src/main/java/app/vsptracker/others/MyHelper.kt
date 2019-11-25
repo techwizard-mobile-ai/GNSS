@@ -257,9 +257,11 @@ class MyHelper(private var TAG: String, val context: Context) {
             meter.isDailyModeStarted = false
             val startTime = meter.dailyModeStartTime
             val totalTime = (currentTime - startTime) + meter.dailyModeTotalTime
-            meter.dailyModeTotalTime = totalTime
+            meter.dailyModeTotalTime = 0L
             log("MeterStopAfter:$meter")
+//            Reset Meter as we are not counting Daily Mode as whole but in entries
             setMeter(meter)
+//            setMeter(Meter())
             toast("Day Works Stopped.\nStart Time: ${getTime(getMeter().dailyModeStartTime)}.\nTotal Time: ${getMinutesFromMillisec(totalTime)}")
         }
 //        else {
@@ -488,7 +490,7 @@ class MyHelper(private var TAG: String, val context: Context) {
         val data = MyData()
         setLastJourney(data)
 //            toast("Machine is Stopped.\n Machine Total Time : $meterONTime (mins)")
-        toast("Machine is Stopped.")
+//        toast("Machine is Stopped.")
     }
 
     fun startMachine() {

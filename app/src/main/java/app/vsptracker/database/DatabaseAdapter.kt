@@ -126,7 +126,7 @@ const val DROP_TABLE_E_LOAD_HISTORY = "DROP TABLE IF EXISTS $TABLE_E_LOAD_HISTOR
 const val DROP_TABLE_MACHINES_AUTO_LOGOUTS = "DROP TABLE IF EXISTS $TABLE_MACHINES_AUTO_LOGOUTS"
 const val DROP_TABLE_OPERATORS_HOURS = "DROP TABLE IF EXISTS $TABLE_OPERATORS_HOURS"
 
-class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 4) {
+class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 5) {
 
     val tag = "DatabaseAdapter"
     private var myHelper: MyHelper
@@ -138,7 +138,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
     override fun onCreate(db: SQLiteDatabase?) {
 
 
-        val createMachinesHoursTable = "CREATE TABLE  $TABLE_MACHINES_HOURS (" +
+        val createMachinesHoursTable = "CREATE TABLE IF NOT EXISTS  $TABLE_MACHINES_HOURS (" +
                 "$COL_ID  INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "$COL_ORG_ID INTEGER, " +
                 "$COL_SITE_ID INTEGER, " +
@@ -161,7 +161,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 ")"
 
 
-        val createMachinesTasksTable = "CREATE TABLE $TABLE_MACHINES_TASKS ( " +
+        val createMachinesTasksTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES_TASKS ( " +
                 "$COL_ID INTEGER PRIMARY KEY, " +
                 "$COL_ORG_ID INTEGER, " +
                 "$COL_SITE_ID INTEGER, " +
@@ -172,7 +172,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 "$COL_IS_DELETED INTEGER" +
                 " )"
 
-        val createMachinesPlantsTable = "CREATE TABLE $TABLE_MACHINES_PLANTS ( " +
+        val createMachinesPlantsTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES_PLANTS ( " +
                 "$COL_ID INTEGER PRIMARY KEY, " +
                 "$COL_ORG_ID INTEGER, " +
                 "$COL_MACHINE_TYPE_ID INTEGER, " +
@@ -182,7 +182,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 "$COL_IS_DELETED INTEGER" +
                 " )"
 
-        val createMachinesBrandsTable = "CREATE TABLE $TABLE_MACHINES_BRANDS ( " +
+        val createMachinesBrandsTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES_BRANDS ( " +
                 "$COL_ID INTEGER PRIMARY KEY, " +
                 "$COL_MACHINE_TYPE_ID INTEGER, " +
                 "$COL_NAME TEXT, " +
@@ -190,21 +190,21 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 "$COL_IS_DELETED INTEGER" +
                 " )"
 
-        val createMachinesTypesTable = "CREATE TABLE $TABLE_MACHINES_TYPES ( " +
+        val createMachinesTypesTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES_TYPES ( " +
                 "$COL_ID INTEGER PRIMARY KEY, " +
                 "$COL_NAME TEXT, " +
                 "$COL_STATUS INTEGER, " +
                 "$COL_IS_DELETED INTEGER" +
                 " )"
 
-        val createSitesTable = "CREATE TABLE $TABLE_SITES ( " +
+        val createSitesTable = "CREATE TABLE IF NOT EXISTS $TABLE_SITES ( " +
                 "$COL_ID INTEGER PRIMARY KEY, " +
                 "$COL_NAME TEXT, " +
                 "$COL_STATUS INTEGER, " +
                 "$COL_IS_DELETED INTEGER" +
                 " )"
 
-        val createOperatorsTable = "CREATE TABLE $TABLE_OPERATORS ( " +
+        val createOperatorsTable = "CREATE TABLE IF NOT EXISTS $TABLE_OPERATORS ( " +
                 "$COL_ID INTEGER PRIMARY KEY, " +
                 "$COL_ORG_ID INTEGER, " +
                 "$COL_NAME TEXT, " +
@@ -213,7 +213,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 "$COL_IS_DELETED INTEGER" +
                 " )"
 
-        val createStopReasonsTable = "CREATE TABLE $TABLE_STOP_REASONS (" +
+        val createStopReasonsTable = "CREATE TABLE IF NOT EXISTS $TABLE_STOP_REASONS (" +
                 "$COL_ID INTEGER PRIMARY KEY, " +
                 "$COL_ORG_ID INTEGER, " +
                 "$COL_NAME TEXT, " +
@@ -221,7 +221,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 "$COL_IS_DELETED INTEGER" +
                 " )"
 
-        val createMaterialsTable = "CREATE TABLE $TABLE_MATERIALS (" +
+        val createMaterialsTable = "CREATE TABLE IF NOT EXISTS $TABLE_MATERIALS (" +
                 "$COL_ID INTEGER PRIMARY KEY, " +
                 "$COL_ORG_ID INTEGER, " +
                 "$COL_SITE_ID INTEGER, " +
@@ -232,7 +232,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 " )"
 
 
-        val createLocationsTable = "CREATE TABLE $TABLE_LOCATIONS (" +
+        val createLocationsTable = "CREATE TABLE IF NOT EXISTS $TABLE_LOCATIONS (" +
                 "$COL_ID INTEGER PRIMARY KEY, " +
                 "$COL_ORG_ID INTEGER, " +
                 "$COL_SITE_ID INTEGER, " +
@@ -242,7 +242,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 " )"
 
 
-        val createMachineStatusTable = "CREATE TABLE  $TABLE_MACHINE_STATUS (" +
+        val createMachineStatusTable = "CREATE TABLE IF NOT EXISTS  $TABLE_MACHINE_STATUS (" +
                 "$COL_ID  INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "$COL_ORG_ID INTEGER, " +
                 "$COL_SITE_ID INTEGER, " +
@@ -262,13 +262,14 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 ")"
 
 
-        val createTripTable = "CREATE TABLE  $TABLE_TRIP (" +
+        val createTripTable = "CREATE TABLE IF NOT EXISTS  $TABLE_TRIP (" +
                 "$COL_ID  INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "$COL_ORG_ID INTEGER, " +
                 "$COL_SITE_ID INTEGER, " +
                 "$COL_TRIP_TYPE  INTEGER," +
                 "$COL_TRIP0_ID  TEXT," +
                 "$COL_MACHINE_TYPE_ID  INTEGER," +
+                "$COL_MACHINE_ID INTEGER," +
                 "$COL_MACHINE_NUMBER TEXT, " +
                 "$COL_LOADING_MACHINE  TEXT," +
                 "$COL_LOADING_MACHINE_ID  INTEGER," +
@@ -297,7 +298,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 "$COL_WORK_MODE TEXT" +
                 ")"
 
-        val createTWaitTable = "CREATE TABLE $TABLE_DELAY ( " +
+        val createTWaitTable = "CREATE TABLE IF NOT EXISTS $TABLE_DELAY ( " +
                 "$COL_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "$COL_ORG_ID INTEGER, " +
                 "$COL_SITE_ID INTEGER, " +
@@ -315,7 +316,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 "$COL_WORK_MODE TEXT" +
                 ")"
 
-        val createEWorkActionOffloadingTable = "CREATE TABLE $TABLE_E_WORK_ACTION_OFFLOADING ( " +
+        val createEWorkActionOffloadingTable = "CREATE TABLE IF NOT EXISTS $TABLE_E_WORK_ACTION_OFFLOADING ( " +
                 "$COL_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "$COL_ORG_ID INTEGER, " +
                 "$COL_SITE_ID INTEGER, " +
@@ -329,7 +330,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 "$COL_WORK_MODE TEXT " +
                 ")"
 
-        val createEWorkTable = "CREATE TABLE $TABLE_E_WORK ( " +
+        val createEWorkTable = "CREATE TABLE IF NOT EXISTS $TABLE_E_WORK ( " +
                 "$COL_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "$COL_ORG_ID INTEGER, " +
                 "$COL_SITE_ID INTEGER, " +
@@ -347,7 +348,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 "$COL_WORK_MODE TEXT" +
                 ")"
 
-        val createLoadHistoryTable = "CREATE TABLE " + TABLE_E_LOAD_HISTORY + " (" +
+        val createLoadHistoryTable = "CREATE TABLE IF NOT EXISTS " + TABLE_E_LOAD_HISTORY + " (" +
                 "$COL_ID  INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "$COL_ORG_ID INTEGER, " +
                 "$COL_SITE_ID INTEGER, " +
@@ -366,7 +367,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 "$COL_WORK_MODE TEXT" +
                 ")"
 
-        val createMachinesTable = "CREATE TABLE $TABLE_MACHINES ( " +
+        val createMachinesTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES ( " +
                 "$COL_ID INTEGER PRIMARY KEY, " +
                 "$COL_ORG_ID INTEGER, " +
                 "$COL_SITE_ID INTEGER, " +
@@ -380,7 +381,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 " )"
 
 
-        val createMachinesAutoLogoutsTable = "CREATE TABLE $TABLE_MACHINES_AUTO_LOGOUTS ( " +
+        val createMachinesAutoLogoutsTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES_AUTO_LOGOUTS ( " +
                 "$COL_ID INTEGER PRIMARY KEY, " +
                 "$COL_ORG_ID INTEGER, " +
                 "$COL_SITE_ID INTEGER, " +
@@ -391,7 +392,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 " )"
 
 
-        val createOperatorsHoursTable = "CREATE TABLE  $TABLE_OPERATORS_HOURS (" +
+        val createOperatorsHoursTable = "CREATE TABLE IF NOT EXISTS  $TABLE_OPERATORS_HOURS (" +
                 "$COL_ID  INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "$COL_ORG_ID INTEGER, " +
                 "$COL_SITE_ID INTEGER, " +
@@ -523,7 +524,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         cv.put(COL_WORK_MODE, myHelper.getWorkMode())
         cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.loadingGPSLocation))
         cv.put(COL_UNLOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.unloadingGPSLocation))
-        cv.put(COL_USER_ID, myHelper.getUserID())
+        cv.put(COL_USER_ID, datum.operatorId)
         cv.put(COL_IS_SYNC, datum.isSync)
         return db.insert(TABLE_MACHINES_HOURS, null, cv)
     }
@@ -759,14 +760,14 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
     fun insertMachineStop(myData: MyData): Long {
 
         myHelper.log("insertMachineStop:$myData")
-        val currentTime = System.currentTimeMillis()
-        myData.startTime = currentTime
-
-        val time = System.currentTimeMillis()
-        myData.time = time.toString()
-        myData.date = myHelper.getDate(time.toString())
-        myData.loadedMachineType = myHelper.getMachineTypeID()
-        myData.loadedMachineNumber = myHelper.getMachineNumber()
+//        val currentTime = System.currentTimeMillis()
+//        myData.startTime = currentTime
+//
+//        val time = System.currentTimeMillis()
+//        myData.time = time.toString()
+//        myData.date = myHelper.getDate(time.toString())
+//        myData.loadedMachineType = myHelper.getMachineTypeID()
+//        myData.loadedMachineNumber = myHelper.getMachineNumber()
 
         val db = this.writableDatabase
         val cv = ContentValues()
@@ -791,7 +792,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             COL_UNLOADING_GPS_LOCATION,
             myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
         )
-        cv.put(COL_USER_ID, myHelper.getUserID())
+        cv.put(COL_USER_ID, myData.operatorId)
         cv.put(COL_IS_SYNC, myData.isSync)
 
 
@@ -801,6 +802,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
 
     fun insertTrip(myData: MyData): Long {
 
+
+        myHelper.log("insertTrip:$myData")
 
         val currentTime = System.currentTimeMillis()
 
@@ -867,7 +870,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             COL_UNLOADING_GPS_LOCATION,
             myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
         )
-        cv.put(COL_USER_ID, myHelper.getUserID())
+        cv.put(COL_USER_ID, myData.operatorId)
         cv.put(COL_IS_SYNC, myData.isSync)
 
         // myHelper.log("BeforeInsertTrip--:$myData")
@@ -890,7 +893,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val cv = ContentValues()
         cv.put(COL_ORG_ID, eWork.orgId)
         cv.put(COL_SITE_ID, eWork.siteId)
-        cv.put(COL_MACHINE_TYPE_ID, myHelper.getMachineTypeID())
+        cv.put(COL_MACHINE_TYPE_ID, eWork.machineTypeId)
         cv.put(COL_MACHINE_NUMBER, myHelper.getMachineNumber())
         cv.put(COL_START_TIME, eWork.startTime)
         cv.put(COL_END_TIME, eWork.stopTime)
@@ -904,7 +907,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             COL_UNLOADING_GPS_LOCATION,
             myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
         )
-        cv.put(COL_USER_ID, myHelper.getUserID())
+        cv.put(COL_USER_ID, eWork.operatorId)
         cv.put(COL_IS_SYNC, eWork.isSync)
 
         myHelper.log("delayInsert:$eWork")
@@ -931,7 +934,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             COL_UNLOADING_GPS_LOCATION,
             myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
         )
-        cv.put(COL_USER_ID, myHelper.getUserID())
+        cv.put(COL_USER_ID, eWork.operatorId)
         cv.put(COL_IS_SYNC, eWork.isSync)
 
         // myHelper.log("insertID:$insertID")
@@ -945,7 +948,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
      * eWorkActionType 1 = Side Casting
      * eWorkActionType 2 = Off Loading
      */
-    fun insertEWork(eWork: EWork): Long {
+    fun insertSideCasting(eWork: EWork): Long {
 
         val currentTime = System.currentTimeMillis()
         myHelper.log("insertEWork:$eWork")
@@ -977,7 +980,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
 
         cv.put(COL_UNLOADING_GPS_LOCATION, myHelper.getGPSLocationToString(eWork.unloadingGPSLocation))
 
-        cv.put(COL_USER_ID, myHelper.getUserID())
+        cv.put(COL_USER_ID, eWork.operatorId)
         cv.put(COL_IS_SYNC, eWork.isSync)
         // myHelper.log("insertID:$insertID")
         return db.insert(TABLE_E_WORK, null, cv)
@@ -1013,7 +1016,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             COL_UNLOADING_GPS_LOCATION,
             myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
         )
-        cv.put(COL_USER_ID, myHelper.getUserID())
+        cv.put(COL_USER_ID, myData.operatorId)
         cv.put(COL_IS_SYNC, myData.isSync)
         // myHelper.log("insertID:$insertID")
         return db.insert(TABLE_E_LOAD_HISTORY, null, cv)
@@ -1444,15 +1447,15 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return list
     }
 
-    fun getOperatorByID(id: String): OperatorAPI {
+    fun getOperatorByID(id: Int): OperatorAPI {
 
         val datum = OperatorAPI()
 
         val db = this.readableDatabase
 
-        val query =
-            "Select * from $TABLE_OPERATORS WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 AND $COL_ID =? ORDER BY $COL_ID DESC"
-        val result = db.rawQuery(query, arrayOf(id))
+//        val query = "Select * from $TABLE_OPERATORS WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 AND $COL_ID =? ORDER BY $COL_ID DESC"
+        val query = "SELECT * FROM $TABLE_OPERATORS WHERE $COL_ID = $id ORDER BY $COL_ID DESC"
+        val result = db.rawQuery(query, null)
 
 
         if (result.moveToFirst()) {
@@ -1796,7 +1799,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val db = this.readableDatabase
 
         val query =
-            "Select * from $TABLE_E_LOAD_HISTORY WHERE $COL_MACHINE_TYPE_ID = ${myHelper.getMachineTypeID()} ORDER BY $COL_ID DESC"
+//            "Select * from $TABLE_E_LOAD_HISTORY WHERE $COL_MACHINE_TYPE_ID = ${myHelper.getMachineTypeID()} ORDER BY $COL_ID DESC"
+            "Select * from $TABLE_E_LOAD_HISTORY ORDER BY $COL_ID DESC"
         val result = db.rawQuery(query, null)
 
         if (result.moveToFirst()) {
@@ -1908,8 +1912,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
 
         val list: MutableList<MyData> = ArrayList()
         val db = this.readableDatabase
-        val query =
-            "Select * from $TABLE_TRIP  WHERE $COL_MACHINE_TYPE_ID = ${myHelper.getMachineTypeID()} ORDER BY $COL_ID DESC"
+//        val query = "Select * from $TABLE_TRIP  WHERE $COL_MACHINE_TYPE_ID = ${myHelper.getMachineTypeID()} ORDER BY $COL_ID DESC"
+        val query = "Select * from $TABLE_TRIP  ORDER BY $COL_ID DESC"
         val result = db.rawQuery(query, null)
 
         if (result.moveToFirst()) {
@@ -1918,6 +1922,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.id = result.getInt(result.getColumnIndex(COL_ID))
                 datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
                 datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+                datum.machineTypeId= result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+                datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
                 datum.recordID = result.getLong(result.getColumnIndex(COL_ID))
                 datum.tripType = result.getInt(result.getColumnIndex(COL_TRIP_TYPE))
                 datum.trip0ID = result.getString(result.getColumnIndex(COL_TRIP0_ID))
@@ -2105,6 +2111,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
     }
 
     fun updateTrip(myData: MyData): Int {
+        myHelper.log("updateTrip:$myData")
         val currentTime = System.currentTimeMillis()
 
         myData.stopTime = currentTime
@@ -2141,6 +2148,9 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         }
 
 
+
+        cv.put(COL_MACHINE_TYPE_ID, myData.machineTypeId)
+        cv.put(COL_MACHINE_ID, myData.machineId)
 
         cv.put(COL_END_TIME, myData.stopTime)
         cv.put(COL_TOTAL_TIME, myData.totalTime)
@@ -2190,10 +2200,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
 
     fun updateMachineHours(datum: MyData): Int {
 
-
         val db = this.writableDatabase
         val cv = ContentValues()
-
 
         val currentTime = System.currentTimeMillis()
         datum.stopTime = currentTime
@@ -2207,8 +2215,6 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
         cv.put(COL_MACHINE_ID, datum.machineId)
         cv.put(COL_MACHINE_NUMBER, datum.loadedMachineNumber)
-
-
 
         cv.put(COL_START_TIME, datum.startTime)
         cv.put(COL_END_TIME, datum.stopTime)
@@ -2229,7 +2235,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         cv.put(
             COL_UNLOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.unloadingGPSLocation)
         )
-        cv.put(COL_USER_ID, myHelper.getUserID())
+        cv.put(COL_USER_ID, datum.operatorId)
         cv.put(COL_IS_SYNC, datum.isSync)
 
         // myHelper.log("MachinesHour:$datum")

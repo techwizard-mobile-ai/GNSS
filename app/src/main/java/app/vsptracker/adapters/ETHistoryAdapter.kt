@@ -62,6 +62,8 @@ class ETHistoryAdapter(
             else -> holder.itemView.eth_is_sync.text = ":  No"
         }
 
+        holder.itemView.eth_site.text = ":  ${db.getSiteByID(eWork.siteId).name}"
+        holder.itemView.eth_operator.text = ":  ${db.getOperatorByID(eWork.operatorId).name}"
         holder.itemView.eth_start_time.text = ":  " + myHelper.getTime(eWork.startTime) + " Hrs"
         holder.itemView.eth_end_time.text = ":  " + myHelper.getTime(eWork.stopTime) + " Hrs"
         holder.itemView.eth_duration.text = ":  " + myHelper.getFormattedTime(eWork.totalTime) + " Hrs"

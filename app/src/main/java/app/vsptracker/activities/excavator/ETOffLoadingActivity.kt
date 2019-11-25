@@ -27,7 +27,6 @@ class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
     private var eWorkID = 0
     private var startTime = 0L
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -149,7 +148,7 @@ class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
                     eWork.workActionType = 2
                     eWork.loadingGPSLocation = gpsLocation
                     eWork.loadingGPSLocationString = myHelper.getGPSLocationToString(eWork.loadingGPSLocation)
-                    val insertID = db.insertEWork(eWork)
+                    val insertID = db.insertSideCasting(eWork)
                     eWorkID = insertID.toInt()
                     myHelper.log("insertID:$insertID")
                     myHelper.log("eWorkId:$eWorkID")

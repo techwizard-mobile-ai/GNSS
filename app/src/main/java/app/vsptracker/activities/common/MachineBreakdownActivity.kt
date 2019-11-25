@@ -75,25 +75,21 @@ class MachineBreakdownActivity : BaseActivity(), View.OnClickListener {
             R.id.machine_breakdown_action ->{
                 val data = MyData()
                 val stoppedReasons = db.getStopReasons()
-                myHelper.log("MachineStops:$stoppedReasons")
-
                 // First Reason for Machine Stops is Breakdown for All Companies
                 val material = stoppedReasons[0]
                 data.machineStoppedReason = material.name
                 data.loadingGPSLocation = gpsLocation
                 data.siteId = myHelper.getMachineSettings().siteId
 
-
-                val insertID = db.insertMachineStop(data)
-                if (insertID > 0) {
-                    myHelper.toast("Record Saved in Database Successfully.")
-                    myHelper.stopMachine(insertID, material)
+                myDataPushSave.insertMachineStop(data, material)
+//                if (insertID > 0) {
+//                    myHelper.toast("Record Saved in Database Successfully.")
+//                    myHelper.stopMachine(insertID, material)
                     myHelper.logout(this)
                     finishAffinity()
-
-                } else {
-                    myHelper.toast("Machine Not Stopped. Please try again.")
-                }
+//                } else {
+//                    myHelper.toast("Machine Not Stopped. Please try again.")
+//                }
 
             }
         }

@@ -1,10 +1,12 @@
 package app.vsptracker.activities.excavator
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.View
 import android.widget.FrameLayout
+import androidx.core.content.ContextCompat
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.activities.HourMeterStopActivity
@@ -35,7 +37,6 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
         val bundle: Bundle? = intent.extras
         if (bundle != null) {
             myData = bundle.getSerializable("myData") as MyData
-            myHelper.log("myData:$myData")
         }
 
         when (myData.eWorkType) {
@@ -97,32 +98,40 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
                     }
 
                     myHelper.log("before$workTitle:$eWork")
-                    if (myHelper.isOnline()) {
-                        pushSideCasting(eWork)
-                    }
+                    myDataPushSave.pushInsertSideCasting(eWork)
 
-                    val insertID = db.insertEWork(eWork)
-                    myHelper.log("insertID:$insertID")
+//                    if (myHelper.isOnline()) {
+//                        pushSideCasting(eWork)
+//                    }
 
-                    if (insertID > 0) {
-                        myHelper.toast(
-                            "$workTitle is Stopped.\n" +
-                                    "MyData Saved Successfully.\n" +
-                                    "Work Duration : ${myHelper.getTotalTimeVSP(startTime)} (VSP Meter).\n" +
-                                    "Work Duration : ${myHelper.getTotalTimeMinutes(startTime)} (Minutes)"
-                        )
-                        ework_action_text.text = getString(R.string.start)
-                        chronometer1.stop()
-                        isWorking = false
-                    } else {
-                        myHelper.toast("MyData Not Saved.")
-                        isWorking = false
-                    }
+//                    val insertID = db.insertSideCasting(eWork)
+//                    myHelper.log("insertID:$insertID")
+
+//                    if (insertID > 0) {
+                    myHelper.toast(
+                        "$workTitle is Stopped.\n" +
+                                "Data Saved Successfully.\n" +
+                                "Work Duration : ${myHelper.getTotalTimeVSP(startTime)} (VSP Meter).\n" +
+                                "Work Duration : ${myHelper.getTotalTimeMinutes(startTime)} (Minutes)"
+                    )
+                    ework_action_fab.backgroundTintList = ColorStateList.valueOf(
+                        ContextCompat.getColor(this, R.color.colorPrimary)
+                    )
+                    ework_action_text.text = getString(R.string.start)
+                    chronometer1.stop()
+                    isWorking = false
+//                    } else {
+//                        myHelper.toast("MyData Not Saved.")
+//                        isWorking = false
+//                    }
 
 
                 } else {
                     startTime = System.currentTimeMillis()
                     myHelper.toast("$workTitle is Started.")
+                    ework_action_fab.backgroundTintList = ColorStateList.valueOf(
+                        ContextCompat.getColor(this, R.color.black)
+                    )
                     ework_action_text.text = getString(R.string.stop)
                     chronometer1.base = SystemClock.elapsedRealtime()
                     chronometer1.start()

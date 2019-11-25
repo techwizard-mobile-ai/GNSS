@@ -40,10 +40,11 @@ class MachineHourAdapter(
 
         myHelper.log(eWork.toString())
 
+        holder.itemView.eth_site.text = ":  ${db.getSiteByID(eWork.siteId).name}"
         holder.itemView.eth_machine_type.text = ":  ${db.getMachineTypeByID(eWork.machineTypeId).name}"
         holder.itemView.eth_sync.text = ": ${if (eWork.isSync == 1) "Yes" else "No"}"
         holder.itemView.eth_record_number.text = ":  " + (dataList.size - position)
-        val operatorName = db.getOperatorByID(eWork.operatorId.toString()).name
+        val operatorName = db.getOperatorByID(eWork.operatorId).name
         holder.itemView.eth_operator.text = ":  $operatorName"
 
         val machineNumber = db.getMachineByID(eWork.machineId).number

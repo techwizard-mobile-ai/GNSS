@@ -34,6 +34,16 @@
                     android:text="@string/list_row_delay_history_eth_record_number_text" />
             </LinearLayout>
 
+
+            <LinearLayout style="@style/load_history_row_item">
+                <TextView
+                    style="@style/load_history_text"
+                    android:text="@string/operating_site" />
+                <TextView
+                    android:id="@+id/oh_site"
+                    style="@style/load_history_desc"
+                    android:text="@string/list_row_delay_history_eth_machine_number_text" />
+            </LinearLayout>
             <LinearLayout style="@style/load_history_row_item">
 
                 <TextView
@@ -44,18 +54,6 @@
                     android:id="@+id/eth_operator"
                     style="@style/load_history_desc"
                     android:text="@string/list_row_delay_history_eth_record_number_text" />
-            </LinearLayout>
-
-            <LinearLayout style="@style/load_history_row_item">
-
-                <TextView
-                    style="@style/load_history_text"
-                    android:text="@string/operating_site" />
-
-                <TextView
-                    android:id="@+id/oh_site"
-                    style="@style/load_history_desc"
-                    android:text="@string/list_row_delay_history_eth_machine_number_text" />
             </LinearLayout>
 
             <LinearLayout

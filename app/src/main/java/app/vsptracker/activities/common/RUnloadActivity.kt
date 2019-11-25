@@ -8,7 +8,6 @@ import android.widget.FrameLayout
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
-import app.vsptracker.apis.trip.MyDataResponse
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_runload.*
@@ -67,10 +66,47 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
         base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
     }
 
+/*
+    private fun pushTrip(myData: MyData){
+        myHelper.log("pushDelay:$myData")
+
+        val call = this.retrofitAPI.pushTrip(
+            myHelper.getLoginAPI().auth_token,
+            myData
+        )
+        call.enqueue(object : retrofit2.Callback<MyDataResponse> {
+            override fun onResponse(
+                call: retrofit2.Call<MyDataResponse>,
+                response: retrofit2.Response<MyDataResponse>
+            ) {
+                val responseBody = response.body()
+                myHelper.log("EWorkResponse:$responseBody")
+                if (responseBody!!.success) {
+                    myData.isSync = 1
+                    db.updateTrip(myData)
+
+                } else {
+                    db.updateTrip(myData)
+                    if (responseBody.message == "Token has expired") {
+                        myHelper.log("Token Expired:$response")
+                        myHelper.refreshToken()
+                    } else {
+                        myHelper.toast(responseBody.message)
+                    }
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<MyDataResponse>, t: Throwable) {
+//                myHelper.hideDialog()
+//                saveTrip(myData)
+                db.updateTrip(myData)
+                myHelper.log("Failure" + t.message)
+            }
+        })
+    }*/
 
     override fun onClick(view: View?) {
         when (view!!.id) {
-
 
             R.id.runload_home -> {
                 val data = MyData()
@@ -137,12 +173,13 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
 
 
                 myData.unloadingWeight = trul_weight.text.toString().toDouble()
-                if(myHelper.isOnline()){
-                    pushTrip(myData)
-                }else{
-                    myHelper.toast("No Internet Connection.\nDelay Not Uploaded to Server.")
-                    db.updateTrip(myData)
-                }
+                myDataPushSave.pushUpdateTrip(myData)
+//                if(myHelper.isOnline()){
+//                    pushTrip(myData)
+//                }else{
+//                    myHelper.toast("No Internet Connection.\nDelay Not Uploaded to Server.")
+//                    db.updateTrip(myData)
+//                }
             }
             R.id.trul_task -> {
                 val intent = Intent(this, UnloadTaskActivity::class.java)
@@ -185,44 +222,6 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                 startActivityForResult(intent, REQUEST_WEIGHT)
             }
         }
-    }
-
-    private fun pushTrip(myData: MyData){
-        myHelper.log("pushDelay:$myData")
-
-        val call = this.retrofitAPI.pushTrip(
-            myHelper.getLoginAPI().auth_token,
-            myData
-        )
-        call.enqueue(object : retrofit2.Callback<MyDataResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<MyDataResponse>,
-                response: retrofit2.Response<MyDataResponse>
-            ) {
-                val responseBody = response.body()
-                myHelper.log("EWorkResponse:$responseBody")
-                if (responseBody!!.success) {
-                    myData.isSync = 1
-                    db.updateTrip(myData)
-
-                } else {
-                    db.updateTrip(myData)
-                    if (responseBody.message == "Token has expired") {
-                        myHelper.log("Token Expired:$response")
-                        myHelper.refreshToken()
-                    } else {
-                        myHelper.toast(responseBody.message)
-                    }
-                }
-            }
-
-            override fun onFailure(call: retrofit2.Call<MyDataResponse>, t: Throwable) {
-//                myHelper.hideDialog()
-//                saveTrip(myData)
-                db.updateTrip(myData)
-                myHelper.log("Failure" + t.message)
-            }
-        })
     }
 
     private fun saveTrip(myData: MyData){
