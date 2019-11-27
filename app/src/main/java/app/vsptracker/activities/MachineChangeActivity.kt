@@ -164,6 +164,7 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
                                 if (meter.isMachineStartTimeCustom)
                                     myData.isStartHoursCustom = 1
                                 myData.startHours = meter.startHours
+                                if(myHelper.isDailyModeStarted()) myData.isDayWorks = 1 else myData.isDayWorks = 0
                                 myData.startTime = meter.machineStartTime
                                 myData.machineTypeId = myHelper.getMachineTypeID()
                                 myData.totalHours = myHelper.getMeterTimeForFinishCustom(myData.startHours)

@@ -129,20 +129,19 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
 
                 myData.backUnloadingMaterial = myData.backLoadingMaterial
                 myData.back_unloading_material_id = myData.back_loading_material_id
-                stopDelay()
+
                 val currentTime = System.currentTimeMillis()
                 myData.stopTime = currentTime
                 myData.totalTime = myData.stopTime - myData.startTime
                 if(myHelper.isDailyModeStarted()){
-                    myData.isDaysWork = 1
+                    myData.isDayWorks = 1
                 }else {
-                    myData.isDaysWork = 0
+                    myData.isDayWorks = 0
                 }
                 val datum = db.getTrip(myData.recordID)
                 myData.loadingGPSLocationString = myHelper.getGPSLocationToString(datum.loadingGPSLocation)
                 myData.unloadingGPSLocationString = myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
 
-                saveTrip(myData)
 
                 if(myData.tripType == 1) {
 
@@ -174,6 +173,8 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
 
                 myData.unloadingWeight = trul_weight.text.toString().toDouble()
                 myDataPushSave.pushUpdateTrip(myData)
+                saveTrip(myData)
+                stopDelay()
 //                if(myHelper.isOnline()){
 //                    pushTrip(myData)
 //                }else{

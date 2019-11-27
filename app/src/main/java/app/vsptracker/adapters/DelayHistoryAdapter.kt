@@ -53,7 +53,7 @@ class DelayHistoryAdapter(
 
 
         holder.itemView.eth_sync.text = ": ${if(eWork.isSync == 1) "Yes" else "No"}"
-        holder.itemView.eth_record_number.text = ":  " + (eWork.ID)
+        holder.itemView.eth_record_number.text = ":  " + (eWork.id)
         holder.itemView.eth_site.text = ":  ${db.getSiteByID(eWork.siteId).name}"
 
         val operatorName =  (db.getOperatorByID(eWork.operatorId)).name
@@ -65,7 +65,12 @@ class DelayHistoryAdapter(
         holder.itemView.eth_duration.text = ":  " + myHelper.getFormattedTime(eWork.totalTime) + " Hrs"
         val date = myHelper.getDateTime(eWork.stopTime)
         holder.itemView.eth_date.text = ":  $date Hrs"
-        holder.itemView.eth_mode.text = ":  ${eWork.workMode}"
+
+        when {
+            eWork.isDayWorks > 0 -> { holder.itemView.eth_mode.text = context.getString(R.string.day_works_text) }
+            else -> holder.itemView.eth_mode.text = context.getString(R.string.standard_mode_text)
+        }
+//        holder.itemView.eth_mode.text = ":  ${eWork.workMode}"
 
         holder.itemView.lhr_gps_loading.text =
                 ": ${myHelper.getRoundedDecimal(eWork.loadingGPSLocation.latitude)} / ${myHelper.getRoundedDecimal(

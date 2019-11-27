@@ -53,7 +53,7 @@ class OperatorHourAdapter(
         holder.itemView.eth_duration.text = ":  " + myHelper.getFormattedTime(datum.totalTime) + " Hrs"
         holder.itemView.eth_date.text = ":  " + myHelper.getDateTime(datum.stopTime) + " Hrs"
 
-        holder.itemView.eth_mode.text = ":  "+ if(datum.isDaysWork>0) "Day Works" else "Standard Mode"
+        holder.itemView.eth_mode.text = ":  "+ if(datum.isDayWorks>0) "Day Works" else "Standard Mode"
 
         holder.itemView.mh_gps_loading.text =
             ": ${myHelper.getRoundedDecimal(datum.loadingGPSLocation.latitude)} / ${myHelper.getRoundedDecimal(

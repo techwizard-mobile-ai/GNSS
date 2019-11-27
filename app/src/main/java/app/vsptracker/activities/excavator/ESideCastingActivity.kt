@@ -39,6 +39,7 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
             myData = bundle.getSerializable("myData") as MyData
         }
 
+        myHelper.log("$myData")
         when (myData.eWorkType) {
             1 -> {
                 workTitle = "General Digging (Side Casting)"
@@ -92,9 +93,9 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
                     eWork.totalTime = eWork.stopTime - eWork.startTime
 
                     if (myHelper.isDailyModeStarted()) {
-                        eWork.isDaysWork = 1
+                        eWork.isDayWorks = 1
                     } else {
-                        eWork.isDaysWork = 0
+                        eWork.isDayWorks = 0
                     }
 
                     myHelper.log("before$workTitle:$eWork")

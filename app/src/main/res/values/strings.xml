@@ -159,7 +159,6 @@
     <string name="hour_meter">Hour Meter</string>
     <string name="select_machine">Select Machine</string>
     <string name="machine_location">Machine Location</string>
-    <string name="location">Location</string>
     <string name="material_weight_tonnes">Material Weight (Tonnes)</string>
     <string name="map">Map</string>
     <string name="work_summary">Work Summary</string>
@@ -168,13 +167,11 @@
     <string name="select_site">Select Site</string>
     <string name="operator">Operator</string>
     <string name="server_sync">Server Sync</string>
-    <string name="work_mode">Work Mode</string>
     <string name="trip_duration">Trip Duration</string>
     <string name="trip_time">Trip Time</string>
     <string name="task">Task</string>
     <string name="weight_tonnes">Weight (Tonnes)</string>
     <string name="unloading_gps">Unloading GPS</string>
-    <string name="material">Material</string>
     <string name="trip_number">Trip Number</string>
     <string name="trip_type">Trip Type</string>
     <string name="trip_id">Trip ID</string>
@@ -210,6 +207,7 @@
     <string name="select_action">Select Action</string>
 
     <string name="scraper_trimming">Scraper Trimming</string>
+    <string name="scraper_trimming1">:  Scraper Trimming</string>
     <string name="general_digging_loads_history">General Digging Loads History</string>
     <string name="trenching_loads_history">Trenching Loads History</string>
     <string name="machine_hrs">Machines Hrs</string>
@@ -228,5 +226,29 @@
     <string name="hrs">: Hrs</string>
     <string name="operating_site">Operating Site</string>
     <string name="hours_reporting">Hours Reporting</string>
+    <string name="loaded_machine">Loaded Machine</string>
+    <string name="material">Material</string>
+    <string name="location">Location</string>
+    <string name="weight">Weight</string>
+    <string name="loading_time">Loading Time</string>
+    <string name="work_mode">Work Mode</string>
+    <string name="standard_mode_text">:  Standard Mode</string>
+    <string name="day_works_text">:  Day Works</string>
+    <string name="upload_data">Upload Data</string>
+    <string name="data_type">Data Type</string>
+    <string name="trips">: Trips</string>
+    <string name="total_trips">Total Trips</string>
+    <string name="remaining">Remaining</string>
+    <string name="server_synced">Server Synced</string>
+    <string name="truck_trips">:  Truck Trips</string>
+    <string name="scraper_trips">:  Scraper Trips</string>
+    <string name="total">Total</string>
+    <string name="excavator_loading">:  Excavator Loading</string>
+    <string name="excavator_trenching">:  Excavator Trenching</string>
+    <string name="excavator_digging">:  Excavator Digging</string>
+    <string name="waitings">:  Waitings</string>
+    <string name="machines_hours">:  Machines Hours</string>
+    <string name="operators_hours1">:  Operators Hours</string>
+    <string name="machines_stops">:  Machines Stops</string>
 
 </resources>

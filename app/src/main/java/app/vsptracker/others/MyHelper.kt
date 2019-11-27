@@ -3,6 +3,7 @@ package app.vsptracker.others
 //import android.app.ProgressDialog
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -51,7 +52,7 @@ import kotlin.math.roundToLong
 
 @SuppressLint("SimpleDateFormat")
 class MyHelper(private var TAG: String, val context: Context) {
-    //    private var dialog: ProgressDialog? = null
+    private var dialog: ProgressDialog? = null
     private var progressBar: ProgressBar? = null
     private var sessionManager: SessionManager = SessionManager(context)
     private val gson = Gson()
@@ -668,6 +669,22 @@ class MyHelper(private var TAG: String, val context: Context) {
         val intent = Intent(activity, HourMeterStopActivity::class.java)
         activity.startActivity(intent)
     }
+
+    fun hideDialog() {
+        if (dialog!!.isShowing)
+            dialog!!.dismiss()
+    }
+    fun showDialog() {
+        try {
+            dialog = ProgressDialog.show(
+                context, "", "Fetching Machine Total Hours. Please wait...", true, true
+            )
+
+        } catch (exception: Exception) {
+            log("showDialogException:$exception")
+        }
+    }
+
 /*
     fun imageLoadFromURL(url: String, imageView: ImageView, myContext: Context) {
 
@@ -715,19 +732,7 @@ class MyHelper(private var TAG: String, val context: Context) {
             toast("$exception")
         }
     }
-    fun hideDialog() {
-        if (dialog!!.isShowing)
-            dialog!!.dismiss()
-    }
-    fun showDialog() {
-        try {
-            dialog = ProgressDialog.show(
-                context, "", "Loading. Please wait...", true
-            )
-        } catch (exception: Exception) {
-            log("showDialogException:$exception")
-        }
-    }
+
     fun isValidUsername(target: String): Boolean {
         return if (TextUtils.isEmpty(target)) {
             false

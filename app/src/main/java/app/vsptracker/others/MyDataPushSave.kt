@@ -39,6 +39,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 private const val REQUEST_ACCESS_FINE_LOCATION = 1
 
 class MyDataPushSave(private val context: Context) {
+    private val  noInternetMessage = "No Internet Connection.\nData Not Uploaded to Server but Saved in App."
     private val tag = this::class.java.simpleName
     private val myHelper = MyHelper(tag, context)
     private val db = DatabaseAdapter(context)
@@ -449,7 +450,10 @@ class MyDataPushSave(private val context: Context) {
     fun pushInsertDelay(eWork: EWork) {
         when {
             myHelper.isOnline() -> pushDelay(eWork)
-            else -> insertDelay(eWork)
+            else -> {
+                myHelper.toast(noInternetMessage)
+                insertDelay(eWork)
+            }
         }
     }
 
@@ -499,7 +503,10 @@ class MyDataPushSave(private val context: Context) {
         myHelper.log("pushInsertMachineHour:$myData")
         when {
             myHelper.isOnline() -> pushMachineHour(myData)
-            else -> insertMachineHour(myData)
+            else -> {
+                myHelper.toast(noInternetMessage)
+                insertMachineHour(myData)
+            }
         }
     }
 
@@ -550,7 +557,10 @@ class MyDataPushSave(private val context: Context) {
         myHelper.log("pushInsertOperatorHour:$myData")
         when {
             myHelper.isOnline() -> pushOperatorHour(myData)
-            else -> insertOperatorHour(myData)
+            else -> {
+                myHelper.toast(noInternetMessage)
+                insertOperatorHour(myData)
+            }
         }
     }
 
@@ -606,7 +616,10 @@ class MyDataPushSave(private val context: Context) {
         myHelper.log("pushUpdateMachineStop:$myData")
         when {
             myHelper.isOnline() -> pushMachinesStop(myData)
-            else -> updateMachineStop(myData)
+            else -> {
+                myHelper.toast(noInternetMessage)
+                updateMachineStop(myData)
+            }
         }
     }
 
@@ -697,7 +710,7 @@ class MyDataPushSave(private val context: Context) {
         when {
             myHelper.isOnline() -> pushTrip(myData)
             else -> {
-                myHelper.toast("No Internet Connection.\nDelay Not Uploaded to Server.")
+                myHelper.toast(noInternetMessage)
                 updateTrip(myData)
             }
         }
@@ -760,14 +773,13 @@ class MyDataPushSave(private val context: Context) {
         when {
             myHelper.isOnline() -> pushSideCasting(eWork)
             else -> {
-                myHelper.toast("No Internet Connection.\nData Not Uploaded to Server.")
-                insertSideCasting(eWork)
+                myHelper.toast(noInternetMessage)
+                insertEWork(eWork)
             }
         }
     }
 
     private fun pushSideCasting(eWork: EWork) {
-
         val call = this.retrofitAPI.pushSideCastings(
             myHelper.getLoginAPI().auth_token,
             eWork
@@ -792,11 +804,11 @@ class MyDataPushSave(private val context: Context) {
                         myHelper.toast(responseBody.message)
                     }
                 }
-                insertSideCasting(eWork)
+                insertEWork(eWork)
             }
 
             override fun onFailure(call: retrofit2.Call<EWorkResponse>, t: Throwable) {
-                insertSideCasting(eWork)
+                insertEWork(eWork)
                 myHelper.run {
                     toast(t.message.toString())
                     log("Failure" + t.message)
@@ -805,10 +817,73 @@ class MyDataPushSave(private val context: Context) {
         })
     }
 
-    private fun insertSideCasting(eWork: EWork) {
-        val insertID = db.insertSideCasting(eWork)
+    fun insertEWork(eWork: EWork): Long {
+        val insertID = db.insertEWork(eWork)
         myHelper.log("insertID:$insertID")
+        return insertID
     }
 
+    fun pushUpdateEWork(eWork: EWork): Int {
+        when {
+            myHelper.isOnline() -> pushEWork(eWork)
+            else -> {
+                myHelper.toast(noInternetMessage)
+                updateEWork(eWork)
+            }
+        }
+        return 1
+    }
 
+    private fun pushEWork(eWork: EWork) {
+
+        myHelper.log("pushSideCastings:$eWork")
+        val call = this.retrofitAPI.pushSideCastings(
+            myHelper.getLoginAPI().auth_token,
+            eWork
+        )
+        call.enqueue(object : retrofit2.Callback<EWorkResponse> {
+            override fun onResponse(
+                call: retrofit2.Call<EWorkResponse>,
+                response: retrofit2.Response<EWorkResponse>
+            ) {
+                myHelper.log("$response")
+                val responseBody = response.body()
+                myHelper.log("pushSideCastings:$responseBody")
+                if (responseBody!!.success) {
+                    eWork.isSync = 1
+                } else {
+                    if (responseBody.message == "Token has expired") {
+                        myHelper.log("Token Expired:$response")
+                        myHelper.refreshToken()
+                    } else {
+                        myHelper.toast(responseBody.message)
+                    }
+                }
+                updateEWork(eWork)
+            }
+
+            override fun onFailure(call: retrofit2.Call<EWorkResponse>, t: Throwable) {
+                updateEWork(eWork)
+                myHelper.toast(t.message.toString())
+                myHelper.log("Failure" + t.message)
+            }
+        })
+    }
+
+    private fun updateEWork(eWork: EWork){
+        val updatedID = db.updateEWork(eWork)
+        myHelper.log("updateEworkID:$updatedID")
+    }
+
+    fun insertELoad(myData: MyData): Long {
+        val insertID = db.insertELoad(myData)
+        myHelper.log("insertELoadID:$insertID")
+        return insertID
+    }
+
+    fun insertEWorkOffLoad(eWork: EWork): Long {
+        val insertID = db.insertEWorkOffLoad(eWork)
+        myHelper.log("insertEWorkOffLoadID:$insertID")
+        return insertID
+    }
 }

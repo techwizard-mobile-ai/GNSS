@@ -144,9 +144,9 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
                 machineData.machine_stop_reason_id = myHelper.getMachineStoppedReasonID()
 
                 if(myHelper.isDailyModeStarted()){
-                    machineData.isDaysWork = 1
+                    machineData.isDayWorks = 1
                 }else {
-                    machineData.isDaysWork = 0
+                    machineData.isDayWorks = 0
                 }
 
 //                if(myHelper.isOnline()){

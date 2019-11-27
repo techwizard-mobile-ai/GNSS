@@ -75,10 +75,8 @@ class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-
     override fun onClick(view: View?) {
         when (view!!.id) {
-
             R.id.et_offload_material ->{
                 if (isWorking) {
                     myHelper.showStopMessage(startTime)
@@ -88,35 +86,46 @@ class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
                     intent.putExtra("myData", myData)
                     startActivityForResult(intent, REQUEST_MATERIAL)
                 }
-
             }
             R.id.ework_offload_action -> {
                 stopDelay()
                 if (isWorking) {
-
-
-                    eWork.ID = eWorkID
+                    eWork.id = eWorkID
                     eWork.startTime = startTime
                     eWork.unloadingGPSLocation = gpsLocation
-
                     val currentTime = System.currentTimeMillis()
-
                     eWork.stopTime = currentTime
                     eWork.totalTime = currentTime - eWork.startTime
-                    eWork.totalLoads= db.getEWorksOffLoads(eWorkID).size
+                    eWork.time = currentTime.toString()
+                    eWork.date = myHelper.getDate(currentTime)
 
-                    if(myHelper.isOnline()){
-                        pushSideCasting(eWork)
+                    eWork.totalLoads= db.getEWorksOffLoads(eWorkID).size
+                    if (myHelper.isDailyModeStarted()) {
+                        eWork.isDayWorks = 1
+                    } else {
+                        eWork.isDayWorks = 0
                     }
 
-                    val updatedID = db.updateEWork(eWork)
-                    eWorkID = updatedID
-                    myHelper.log("updatedID :$updatedID ")
-//
-                    if (updatedID > 0) {
+                    eWork.siteId = myHelper.getMachineSettings().siteId
+                    eWork.machineId = myHelper.getMachineID()
+                    eWork.orgId = myHelper.getLoginAPI().org_id
+                    eWork.operatorId = myHelper.getOperatorAPI().id
+                    eWork.machineTypeId = myHelper.getMachineTypeID()
+
+//                    eWork.loadingGPSLocationString = myHelper.getGPSLocationToString(eWork.loadingGPSLocation)
+                    eWork.unloadingGPSLocationString = myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
+
+
+//                    if(myHelper.isOnline()){
+//                        pushSideCasting(eWork)
+//                    }
+//                    val updatedID = db.updateEWork(eWork)
+//                    eWorkID = updatedID
+//                    myHelper.log("updatedID :$updatedID ")
+                    if (myDataPushSave.pushUpdateEWork(eWork) > 0) {
                         myHelper.toast(
                             "$workTitle is Stopped.\n" +
-                                    "MyData Saved Successfully.\n" +
+                                    "Data Saved Successfully.\n" +
                                     "Work Duration : ${myHelper.getTotalTimeVSP(startTime)} (VSP Meter).\n" +
                                     "Work Duration : ${myHelper.getTotalTimeMinutes(startTime)} (Minutes)"
                         )
@@ -125,7 +134,7 @@ class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
                         isWorking = false
                         eWorkID = 0
                     } else {
-                        myHelper.toast("MyData Not Saved.")
+                        myHelper.toast("Data Not Saved.")
                         isWorking = false
                     }
 
@@ -138,17 +147,23 @@ class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
                     chronometer1.start()
                     isWorking = true
 
-
                     eWork.startTime = startTime
                     eWork.orgId = myHelper.getLoginAPI().org_id
                     eWork.operatorId = myHelper.getOperatorAPI().id
+                    eWork.siteId = myHelper.getMachineSettings().siteId
                     eWork.stopTime = System.currentTimeMillis()
                     eWork.totalTime = System.currentTimeMillis() - startTime
                     eWork.workType = myData.eWorkType
+                    if (myHelper.isDailyModeStarted()) {
+                        eWork.isDayWorks = 1
+                    } else {
+                        eWork.isDayWorks = 0
+                    }
+
                     eWork.workActionType = 2
                     eWork.loadingGPSLocation = gpsLocation
                     eWork.loadingGPSLocationString = myHelper.getGPSLocationToString(eWork.loadingGPSLocation)
-                    val insertID = db.insertSideCasting(eWork)
+                    val insertID = myDataPushSave.insertEWork(eWork)
                     eWorkID = insertID.toInt()
                     myHelper.log("insertID:$insertID")
                     myHelper.log("eWorkId:$eWorkID")
@@ -167,7 +182,7 @@ class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
                         eWork.orgId = myHelper.getLoginAPI().org_id
                         eWork.operatorId = myHelper.getOperatorAPI().id
                         eWork.loadingGPSLocation = gpsLocation
-                        val insertedID = db.insertEWorkOffLoad(eWork)
+                        val insertedID = myDataPushSave.insertEWorkOffLoad(eWork)
                         if (insertedID > 0) {
                             myHelper.toast("Load Saved Successfully.")
 
@@ -182,7 +197,6 @@ class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
                             } else {
                                 eoff_rv.visibility = View.INVISIBLE
                             }
-
 
                         } else {
                             myHelper.toast("Load Not Saved. Please Try again.")
@@ -223,7 +237,6 @@ class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
             if (bundle != null) {
                 myData = bundle.getSerializable("myData") as MyData
                 myHelper.log("myData:$myData")
-
                 et_offload_material.text = myData.loadingMaterial
                 eWork.materialId = myData.loading_material_id
 

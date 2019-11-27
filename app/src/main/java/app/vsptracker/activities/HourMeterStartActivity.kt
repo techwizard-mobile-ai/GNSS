@@ -61,7 +61,8 @@ class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
 
 //        gpsLocation = GPSLocation()
 //        startGPS()
-        fetchMachineMaxHours()
+        if(myHelper.isOnline())
+            fetchMachineMaxHours()
         ms_minus.setOnClickListener(this)
         ms_plus.setOnClickListener(this)
         ms_continue.setOnClickListener(this)
@@ -122,6 +123,7 @@ class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
 
 
     private fun fetchMachineMaxHours() {
+        myHelper.showDialog()
         val call = this.retrofitAPI.getMachineMaxHour(
             myHelper.getMachineID(),
             myHelper.getLoginAPI().org_id,
@@ -132,6 +134,7 @@ class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
                 call: retrofit2.Call<MyDataListResponse>,
                 response: retrofit2.Response<MyDataListResponse>
             ) {
+                myHelper.hideDialog()
                 myHelper.log("Response:$response")
                 val responseBody = response.body()
                 myHelper.log("responseBody:$responseBody")
@@ -144,6 +147,7 @@ class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
             }
 
             override fun onFailure(call: retrofit2.Call<MyDataListResponse>, t: Throwable) {
+                myHelper.hideDialog()
                 myHelper.hideProgressBar()
                 myHelper.log("Failure" + t.message)
             }

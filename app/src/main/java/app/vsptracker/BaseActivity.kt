@@ -411,8 +411,8 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             eWork.time = time.toString()
 
             when {
-                myHelper.isDailyModeStarted() -> eWork.isDaysWork = 1
-                else -> eWork.isDaysWork = 0
+                myHelper.isDailyModeStarted() -> eWork.isDayWorks = 1
+                else -> eWork.isDayWorks = 0
             }
 
             eWork.loadingGPSLocationString = myHelper.getGPSLocationToString(eWork.loadingGPSLocation)
@@ -455,7 +455,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         myData.operatorId = myHelper.getOperatorAPI().id
         myData.machineTypeId = myHelper.getMachineTypeID()
         myData.machineId = myHelper.getMachineID()
-
+        if(myHelper.isDailyModeStarted()) myData.isDayWorks = 1 else myData.isDayWorks = 0
         myData.stopTime = System.currentTimeMillis()
 
         myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
@@ -537,7 +537,6 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
 //        eWork.loadingGPSLocationString = myHelper.getGPSLocationToString(eWork.loadingGPSLocation)
         eWork.unloadingGPSLocationString = myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
-
 
         myHelper.log("pushSideCastings:$eWork")
         val call = this.retrofitAPI.pushSideCastings(
@@ -630,7 +629,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             myHelper.toast("Waiting Not Stopped.")
         }
     }*/
-    fun pushLoad(myData: MyData) {
+    fun pushELoad(myData: MyData) {
 
         myData.loadingGPSLocation = gpsLocation
         myData.orgId = myHelper.getLoginAPI().org_id
@@ -645,9 +644,9 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         myData.stopTime = currentTime
         myData.totalTime = myData.stopTime - myData.startTime
         if (myHelper.isDailyModeStarted()) {
-            myData.isDaysWork = 1
+            myData.isDayWorks = 1
         } else {
-            myData.isDaysWork = 0
+            myData.isDayWorks = 0
         }
         myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
         myData.time = currentTime.toString()

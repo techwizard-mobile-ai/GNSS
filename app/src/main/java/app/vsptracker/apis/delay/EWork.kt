@@ -1,8 +1,8 @@
 package app.vsptracker.apis.delay
 
+import app.vsptracker.classes.GPSLocation
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import app.vsptracker.classes.GPSLocation
 import java.io.Serializable
 
 class EWork() : Serializable {
@@ -81,12 +81,12 @@ class EWork() : Serializable {
 
     @SerializedName("is_days_work")
     @Expose
-    var isDaysWork : Int = 0
-    var workMode = ""
+    var isDayWorks : Int = 0
+//    var workMode = ""
 
 //    @SerializedName("id")
 //    @Expose
-    var ID = 0
+    var id = 0
 
     var eWorkId = 0
 
@@ -118,7 +118,7 @@ class EWork() : Serializable {
     var isSync: Int = 0
 
     override fun toString(): String {
-        return "EWork(orgId=$orgId, siteId=$siteId, operatorId=$operatorId, machineTypeId=$machineTypeId, machineId=$machineId, loadingGPSLocationString='$loadingGPSLocationString', loadingGPSLocation=$loadingGPSLocation, unloadingGPSLocationString='$unloadingGPSLocationString', unloadingGPSLocation=$unloadingGPSLocation, startTime=$startTime, stopTime=$stopTime, totalTime=$totalTime, time='$time', date='$date', isDaysWork=$isDaysWork, workMode='$workMode', ID=$ID, eWorkId=$eWorkId, workType=$workType, workActionType=$workActionType, machineNumber='$machineNumber', isSync=$isSync)"
+        return "EWork(orgId=$orgId, siteId=$siteId, operatorId=$operatorId, machineTypeId=$machineTypeId, materialId=$materialId, machineId=$machineId, loadingGPSLocationString='$loadingGPSLocationString', loadingGPSLocation=$loadingGPSLocation, unloadingGPSLocationString='$unloadingGPSLocationString', unloadingGPSLocation=$unloadingGPSLocation, startTime=$startTime, stopTime=$stopTime, totalTime=$totalTime, time='$time', date='$date', isDaysWork=$isDayWorks, id=$id, eWorkId=$eWorkId, workType=$workType, workActionType=$workActionType, machineNumber='$machineNumber', isSync=$isSync)"
     }
 
 

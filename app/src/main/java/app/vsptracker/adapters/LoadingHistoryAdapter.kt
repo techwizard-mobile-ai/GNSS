@@ -55,7 +55,8 @@ class LoadingHistoryAdapter(
 
 
         holder.itemView.lhr_trip0_id.text = ": ${myData.trip0ID}"
-        holder.itemView.lhr_operator.text = ": ${db.getOperatorByID(myData.operatorId).name}"
+        val operatorName = db.getOperatorByID(myData.operatorId).name
+        holder.itemView.lhr_operator.text = ": $operatorName"
         holder.itemView.lhr_sync.text = ": ${if(myData.isSync == 1) "Yes" else "No"}"
 
         when (myData.loadedMachineType) {
@@ -70,7 +71,8 @@ class LoadingHistoryAdapter(
         }
         holder.itemView.lhr_site.text = ":  " + db.getSiteByID(myData.siteId).name
         holder.itemView.lhr_machine_type.text = ":  " + db.getMachineTypeByID(myData.machineTypeId).name
-        holder.itemView.lhr_machine_number.text = ":  " + db.getMachineByID(myData.machineId).number
+        val machineNumber = db.getMachineByID(myData.machineId).number
+        holder.itemView.lhr_machine_number.text = ":  $machineNumber"
 
         holder.itemView.lhr_loading_machine.text = ":  " + myData.loadingMachine
 
@@ -84,7 +86,12 @@ class LoadingHistoryAdapter(
         )} Hrs"
 
         holder.itemView.lhr_duration.text = ": ${myHelper.getFormattedTime(myData.totalTime)} Hrs"
-        holder.itemView.lhr_workmode.text = ": ${myData.workMode}"
+
+        when (myData.isDayWorks) {
+            1 -> holder.itemView.lhr_workmode.text = context.getString(R.string.day_works_text)
+            else -> holder.itemView.lhr_workmode.text = context.getString(R.string.standard_mode_text)
+        }
+//        holder.itemView.lhr_workmode.text = ": ${myData.workMode}"
 
         holder.itemView.lhr_gps_loading.text =
                 ": ${myHelper.getRoundedDecimal(myData.loadingGPSLocation.latitude)} / ${myHelper.getRoundedDecimal(
@@ -98,10 +105,10 @@ class LoadingHistoryAdapter(
         holder.itemView.lhr_gps_loading_layout.setOnClickListener {
             when (myData.tripType) {
                 0 -> {
-                    myHelper.showOnMap(myData.loadingGPSLocation, "Loading Location (${myData.loadingLocation})")
+                    myHelper.showOnMap(myData.loadingGPSLocation, "$machineNumber, $operatorName, Loading Location (${myData.loadingLocation})")
                 }
                 1 -> {
-                    myHelper.showOnMap(myData.loadingGPSLocation, "Back Loading Location (${myData.loadingLocation})")
+                    myHelper.showOnMap(myData.loadingGPSLocation, "$machineNumber, $operatorName, Back Loading Location (${myData.loadingLocation})")
                 }
             }
 
@@ -109,10 +116,10 @@ class LoadingHistoryAdapter(
         holder.itemView.lhr_gps_unloading_layout.setOnClickListener {
             when (myData.tripType) {
                 0 -> {
-                    myHelper.showOnMap(myData.unloadingGPSLocation, "Unloading Location (${myData.unloadingLocation})")
+                    myHelper.showOnMap(myData.unloadingGPSLocation, "$machineNumber, $operatorName, Unloading Location (${myData.unloadingLocation})")
                 }
                 1 -> {
-                    myHelper.showOnMap(myData.unloadingGPSLocation, "Back Unloading Location (${myData.unloadingLocation})")
+                    myHelper.showOnMap(myData.unloadingGPSLocation, "$machineNumber, $operatorName, Back Unloading Location (${myData.unloadingLocation})")
                 }
             }
 

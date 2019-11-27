@@ -100,8 +100,8 @@ class DayWorksActivity : BaseActivity(), View.OnClickListener {
         operatorAPI.siteId = myHelper.getMachineSettings().siteId
         operatorAPI.operatorId = operatorAPI.id
         when{
-            myHelper.isDailyModeStarted() -> operatorAPI.isDaysWork = 1
-            else -> operatorAPI.isDaysWork = 0
+            myHelper.isDailyModeStarted() -> operatorAPI.isDayWorks = 1
+            else -> operatorAPI.isDayWorks = 0
         }
 //                operatorAPI.isDaysWork = myHelper.isDailyModeStarted()
         operatorAPI.stopTime = System.currentTimeMillis()

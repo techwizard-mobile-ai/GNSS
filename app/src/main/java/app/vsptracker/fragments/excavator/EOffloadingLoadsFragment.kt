@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.fragment_eoffloading_loads.*
 import kotlinx.android.synthetic.main.fragment_eoffloading_loads.view.*
 
 
-class EOffloadingLoadsFragment : Fragment() {
+class EOffloadingLoadsFragment : Fragment(){
     private val tag1 = this::class.java.simpleName
 
     private lateinit var myHelper: MyHelper
@@ -63,7 +63,7 @@ class EOffloadingLoadsFragment : Fragment() {
 
         val mAdapter = EOffLoadingAdapter(
             context as Activity, db.getEWorksOffLoads(
-                eWork.ID
+                eWork.id
         )
         )
         root!!.eoff_fragment_rv.layoutManager =

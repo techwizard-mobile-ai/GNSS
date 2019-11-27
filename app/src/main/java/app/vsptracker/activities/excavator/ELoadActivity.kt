@@ -8,13 +8,14 @@ import android.widget.FrameLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.vsptracker.BaseActivity
-import app.vsptracker.others.MyHelper
 import app.vsptracker.R
 import app.vsptracker.activities.HourMeterStopActivity
 import app.vsptracker.activities.common.LocationActivity
 import app.vsptracker.activities.common.MaterialActivity
 import app.vsptracker.adapters.ELoadingAdapter
 import app.vsptracker.apis.trip.MyData
+import app.vsptracker.apis.trip.MyDataResponse
+import app.vsptracker.others.MyHelper
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_eload.*
@@ -77,27 +78,53 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
                 myData.loadTypeId = 1
                 myData.orgId = myHelper.getLoginAPI().org_id
                 myData.operatorId = myHelper.getOperatorAPI().id
-                if(myHelper.isOnline()){
-                    pushLoad(myData)
-                }
-                val insertID = db.insertELoad(myData)
-                if (insertID > 0) {
-                    myHelper.toast("Loading Successful.\nLoaded Truck Number # $insertID")
 
-                    val loadHistory = db.getELoadHistory()
-                    if (loadHistory.size > 0) {
-                        elh_rv.visibility = View.VISIBLE
-                        val aa = ELoadingAdapter(this@ELoadActivity, loadHistory)
-                        val layoutManager1 = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-                        elh_rv.layoutManager = layoutManager1
-                        elh_rv!!.adapter = aa
-                    } else {
-                        elh_rv.visibility = View.INVISIBLE
-                    }
 
+                myData.loadingGPSLocation = gpsLocation
+                myData.orgId = myHelper.getLoginAPI().org_id
+                myData.siteId = myHelper.getMachineSettings().siteId
+                myData.operatorId = myHelper.getOperatorAPI().id
+                myData.machineTypeId = myHelper.getMachineTypeID()
+                myData.machineId = myHelper.getMachineID()
+
+                val currentTime = System.currentTimeMillis()
+                myData.startTime = currentTime
+                myData.stopTime = currentTime
+                myData.totalTime = myData.stopTime - myData.startTime
+                if (myHelper.isDailyModeStarted()) {
+                    myData.isDayWorks = 1
                 } else {
-                    myHelper.toast("Error while Saving Record.")
+                    myData.isDayWorks = 0
                 }
+                myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
+                myData.time = currentTime.toString()
+                myData.date = myHelper.getDate(currentTime)
+
+                myData.loadedMachineType = myHelper.getMachineTypeID()
+
+                pushInsertELoad(myData)
+                stopDelay()
+//                if(myHelper.isOnline()){
+//                    pushELoad(myData)
+//                }
+//                val insertID = db.insertELoad(myData)
+//                if (insertID > 0) {
+                    myHelper.toast("Loading Successful.")
+
+//                    val loadHistory = db.getELoadHistory()
+//                    if (loadHistory.size > 0) {
+//                        elh_rv.visibility = View.VISIBLE
+//                        val aa = ELoadingAdapter(this@ELoadActivity, loadHistory)
+//                        val layoutManager1 = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+//                        elh_rv.layoutManager = layoutManager1
+//                        elh_rv!!.adapter = aa
+//                    } else {
+//                        elh_rv.visibility = View.INVISIBLE
+//                    }
+
+//                } else {
+//                    myHelper.toast("Error while Saving Record.")
+//                }
 
             }
             R.id.eload_back -> {
@@ -123,7 +150,97 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
             }
         }
     }
+    private fun pushInsertELoad(myData: MyData): Int {
 
+        when {
+            myHelper.isOnline() -> pushELoad1(myData)
+            else -> {
+                myHelper.toast("No Internet Connection.\nData Saved in App but Not Uploaded to Server.")
+                insertELoad(myData)
+            }
+        }
+        return 1
+    }
+
+    private fun pushELoad1(myData: MyData) {
+
+//        myData.loadingGPSLocation = gpsLocation
+//        myData.orgId = myHelper.getLoginAPI().org_id
+//        myData.siteId = myHelper.getMachineSettings().siteId
+//        myData.operatorId = myHelper.getOperatorAPI().id
+//        myData.machineTypeId = myHelper.getMachineTypeID()
+//        myData.machineId = myHelper.getMachineID()
+//
+//        stopDelay()
+//        val currentTime = System.currentTimeMillis()
+//        myData.startTime = currentTime
+//        myData.stopTime = currentTime
+//        myData.totalTime = myData.stopTime - myData.startTime
+//        if (myHelper.isDailyModeStarted()) {
+//            myData.isDaysWork = 1
+//        } else {
+//            myData.isDaysWork = 0
+//        }
+//        myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
+//        myData.time = currentTime.toString()
+//        myData.date = myHelper.getDate(currentTime)
+
+        myHelper.log("pushELoad:$myData")
+
+        val call = this.retrofitAPI.pushLoads(
+            myHelper.getLoginAPI().auth_token,
+            myData
+        )
+        call.enqueue(object : retrofit2.Callback<MyDataResponse> {
+            override fun onResponse(
+                call: retrofit2.Call<MyDataResponse>,
+                response: retrofit2.Response<MyDataResponse>
+            ) {
+                myHelper.log(response.toString())
+                val responseBody = response.body()
+                myHelper.log("EWorkResponse:$responseBody")
+                if (responseBody!!.success) {
+                    myHelper.toast("Load Pushed to Server Successfully.")
+                    myData.isSync = 1
+                } else {
+                    if (responseBody.message == "Token has expired") {
+                        myHelper.log("Token Expired:$responseBody")
+                        myHelper.refreshToken()
+                    } else {
+                        myHelper.toast(responseBody.message)
+                    }
+                }
+                insertELoad(myData)
+            }
+
+            override fun onFailure(call: retrofit2.Call<MyDataResponse>, t: Throwable) {
+                insertELoad(myData)
+                myHelper.toast("Failure" + t.message)
+            }
+        })
+    }
+
+    private fun insertELoad(myData: MyData): Long {
+        myHelper.log("insertELoad:$myData")
+        val insertID = myDataPushSave.insertELoad(myData)
+        myHelper.log("insertELoadID:$insertID")
+
+        if(insertID > 0){
+            val loadHistory = db.getELoadHistory()
+            if (loadHistory.size > 0) {
+                elh_rv.visibility = View.VISIBLE
+                val aa = ELoadingAdapter(this@ELoadActivity, loadHistory)
+                val layoutManager1 = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+                elh_rv.layoutManager = layoutManager1
+                elh_rv!!.adapter = aa
+            } else {
+                elh_rv.visibility = View.INVISIBLE
+            }
+        }
+
+
+        return insertID
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         super.onActivityResult(requestCode, resultCode, intent)

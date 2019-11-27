@@ -38,7 +38,7 @@ class ETHistoryAdapter(
         val eWork = dataList[position]
 
         myHelper.log(eWork.toString())
-        holder.itemView.eth_record_number.text = ":  " + (dataList.size - position)
+        holder.itemView.eth_record_number.text = ":  ${eWork.id}"
         if (eWork.workActionType == 1) {
             when(eWork.workType){
                 3 -> {
@@ -54,7 +54,7 @@ class ETHistoryAdapter(
             holder.itemView.eth_action.text = ":  Loading"
             holder.itemView.eth_totalloads_layout.visibility = View.VISIBLE
             holder.itemView.eth_totalloads.text =
-                    ":  " + db.getEWorksOffLoads(eWork.ID).size.toString()
+                    ":  " + db.getEWorksOffLoads(eWork.id).size.toString()
         }
 
         when (eWork.isSync) {
@@ -62,14 +62,18 @@ class ETHistoryAdapter(
             else -> holder.itemView.eth_is_sync.text = ":  No"
         }
 
+        when (eWork.isDayWorks) {
+            1 -> holder.itemView.eth_mode.text = context.getString(R.string.day_works_text)
+            else -> holder.itemView.eth_mode.text = context.getString(R.string.standard_mode_text)
+        }
+
         holder.itemView.eth_site.text = ":  ${db.getSiteByID(eWork.siteId).name}"
+        holder.itemView.eth_material.text = ":  ${db.getMaterialByID(eWork.materialId).name}"
         holder.itemView.eth_operator.text = ":  ${db.getOperatorByID(eWork.operatorId).name}"
         holder.itemView.eth_start_time.text = ":  " + myHelper.getTime(eWork.startTime) + " Hrs"
         holder.itemView.eth_end_time.text = ":  " + myHelper.getTime(eWork.stopTime) + " Hrs"
         holder.itemView.eth_duration.text = ":  " + myHelper.getFormattedTime(eWork.totalTime) + " Hrs"
         holder.itemView.eth_date.text = ":  " + myHelper.getDateTime(eWork.stopTime) + " Hrs"
-        holder.itemView.eth_mode.text = ":  ${eWork.workMode}"
-
 
         holder.itemView.lhr_gps_loading.text =
                 ": ${myHelper.getRoundedDecimal(eWork.loadingGPSLocation.latitude)} / ${myHelper.getRoundedDecimal(
@@ -168,8 +172,6 @@ class ETHistoryAdapter(
                 transaction.addToBackStack(FRAGMENT_TAG)
                 transaction.commit()
             }
-
-
         }
 
     }

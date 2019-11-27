@@ -35,9 +35,11 @@
             </LinearLayout>
 
             <LinearLayout style="@style/load_history_row_item">
+
                 <TextView
                     style="@style/load_history_text"
                     android:text="@string/operating_site" />
+
                 <TextView
                     android:id="@+id/eth_site"
                     style="@style/load_history_desc"
@@ -45,9 +47,11 @@
             </LinearLayout>
 
             <LinearLayout style="@style/load_history_row_item">
+
                 <TextView
                     style="@style/load_history_text"
                     android:text="@string/operator" />
+
                 <TextView
                     android:id="@+id/eth_operator"
                     style="@style/load_history_desc"
@@ -55,9 +59,11 @@
             </LinearLayout>
 
             <LinearLayout style="@style/load_history_row_item">
+
                 <TextView
                     style="@style/load_history_text"
                     android:text="@string/action" />
+
                 <TextView
                     android:id="@+id/eth_action"
                     style="@style/load_history_desc"
@@ -135,6 +141,19 @@
             </LinearLayout>
 
             <LinearLayout
+                style="@style/load_history_row_item">
+
+                <TextView
+                    style="@style/load_history_text"
+                    android:text="@string/material" />
+
+                <TextView
+                    android:id="@+id/eth_material"
+                    style="@style/load_history_desc"
+                    android:text="@string/material" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/eth_totalloads_layout"
                 style="@style/load_history_row_item">
 
@@ -176,8 +195,7 @@
                     android:text="@string/list_row_et_history_eth_mode_text" />
             </LinearLayout>
 
-            <LinearLayout
-                style="@style/load_history_row_item">
+            <LinearLayout style="@style/load_history_row_item">
 
                 <TextView
                     style="@style/load_history_text"

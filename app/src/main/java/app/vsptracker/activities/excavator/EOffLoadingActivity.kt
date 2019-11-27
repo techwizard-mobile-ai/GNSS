@@ -58,17 +58,18 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
         ework_offload_finish.setOnClickListener(this)
 
     }
+
     override fun onResume() {
         super.onResume()
         base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
     }
+
     override fun onBackPressed() {
 
         if (isWorking) {
             myHelper.showStopMessage(startTime)
         } else {
             super.onBackPressed()
-            finish()
         }
     }
 
@@ -80,37 +81,49 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                 stopDelay()
                 if (isWorking) {
 
-
-                    eWork.ID = eWorkID
+                    eWork.id = eWorkID
                     eWork.startTime = startTime
                     eWork.unloadingGPSLocation = gpsLocation
-
 
                     eWork.workType = myData.eWorkType
                     eWork.workActionType = 2
 
-                    val time = System.currentTimeMillis()
-                    eWork.time = time.toString()
-                    eWork.stopTime = System.currentTimeMillis()
+//                    val time = System.currentTimeMillis()
+                    val currentTime = System.currentTimeMillis()
+
+                    eWork.time = currentTime.toString()
+                    eWork.stopTime = currentTime
                     eWork.totalTime = eWork.stopTime - eWork.startTime
+                    eWork.totalLoads = db.getEWorksOffLoads(eWorkID).size
+
+                    eWork.time = currentTime.toString()
+                    eWork.date = myHelper.getDate(currentTime)
                     eWork.totalLoads= db.getEWorksOffLoads(eWorkID).size
-                    if(myHelper.isOnline()){
-                        pushSideCasting(eWork)
+                    if (myHelper.isDailyModeStarted()) {
+                        eWork.isDayWorks = 1
+                    } else {
+                        eWork.isDayWorks = 0
                     }
 
+                    eWork.machineId = myHelper.getMachineID()
+                    eWork.orgId = myHelper.getLoginAPI().org_id
+                    eWork.operatorId = myHelper.getOperatorAPI().id
+                    eWork.machineTypeId = myHelper.getMachineTypeID()
 
-
-
-                    val updatedID = db.updateEWork(eWork)
-                    eWorkID = updatedID
-                    myHelper.log("updatedID :$updatedID ")
+//                    if (myHelper.isOnline()) {
+//                        pushSideCasting(eWork)
+//                    }
 //
-                    if (updatedID > 0) {
+//                    val updatedID = db.updateEWork(eWork)
+//                    eWorkID = updatedID
+//                    myHelper.log("updatedID :$updatedID ")
+
+                    if (myDataPushSave.pushUpdateEWork(eWork) > 0) {
                         myHelper.toast(
-                                "$workTitle is Stopped.\n" +
-                                        "MyData Saved Successfully.\n" +
-                                        "Work Duration : ${myHelper.getTotalTimeVSP(startTime)} (VSP Meter).\n" +
-                                        "Work Duration : ${myHelper.getTotalTimeMinutes(startTime)} (Minutes)"
+                            "$workTitle is Stopped.\n" +
+                                    "MyData Saved Successfully.\n" +
+                                    "Work Duration : ${myHelper.getTotalTimeVSP(startTime)} (VSP Meter).\n" +
+                                    "Work Duration : ${myHelper.getTotalTimeMinutes(startTime)} (Minutes)"
                         )
                         ework_action_text.text = getString(R.string.start)
                         chronometer1.stop()
@@ -120,8 +133,6 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                         myHelper.toast("MyData Not Saved.")
                         isWorking = false
                     }
-
-
                 } else {
                     startTime = System.currentTimeMillis()
                     myHelper.toast("$workTitle is Started.")
@@ -130,9 +141,9 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                     chronometer1.start()
                     isWorking = true
 
-
                     eWork.startTime = startTime
                     eWork.orgId = myHelper.getLoginAPI().org_id
+                    eWork.siteId = myHelper.getMachineSettings().siteId
                     eWork.operatorId = myHelper.getOperatorAPI().id
                     eWork.stopTime = System.currentTimeMillis()
                     eWork.totalTime = System.currentTimeMillis() - startTime
@@ -140,7 +151,7 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                     eWork.workActionType = 2
                     eWork.loadingGPSLocation = gpsLocation
                     eWork.loadingGPSLocationString = myHelper.getGPSLocationToString(eWork.loadingGPSLocation)
-                    val insertID = db.insertSideCasting(eWork)
+                    val insertID = myDataPushSave.insertEWork(eWork)
                     eWorkID = insertID.toInt()
                     myHelper.log("insertID:$insertID")
                     myHelper.log("eWorkId:$eWorkID")
@@ -159,7 +170,7 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                         eWork.orgId = myHelper.getLoginAPI().org_id
                         eWork.operatorId = myHelper.getOperatorAPI().id
                         eWork.loadingGPSLocation = gpsLocation
-                        val insertedID = db.insertEWorkOffLoad(eWork)
+                        val insertedID = myDataPushSave.insertEWorkOffLoad(eWork)
                         if (insertedID > 0) {
                             myHelper.toast("Load Saved Successfully.")
 
@@ -168,14 +179,12 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                                 eoff_rv.visibility = View.VISIBLE
                                 val aa = EOffLoadingAdapter(this@EOffLoadingActivity, offLoads)
                                 val layoutManager1 =
-                                        LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+                                    LinearLayoutManager(this, RecyclerView.VERTICAL, false)
                                 eoff_rv.layoutManager = layoutManager1
                                 eoff_rv!!.adapter = aa
                             } else {
                                 eoff_rv.visibility = View.INVISIBLE
                             }
-
-
                         } else {
                             myHelper.toast("Load Not Saved. Please Try again.")
 

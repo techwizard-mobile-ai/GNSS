@@ -36,6 +36,32 @@
             </LinearLayout>
 
             <LinearLayout
+                style="@style/load_history_row_item">
+
+                <TextView
+                    style="@style/load_history_text"
+                    android:text="@string/operating_site" />
+
+                <TextView
+                    android:id="@+id/lhr_site"
+                    style="@style/load_history_desc"
+                    android:text="@string/list_row_eload_history_lhr_record_number_text" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/load_history_row_item">
+
+                <TextView
+                    style="@style/load_history_text"
+                    android:text="@string/operator" />
+
+                <TextView
+                    android:id="@+id/lhr_operator"
+                    style="@style/load_history_desc"
+                    android:text="@string/list_row_eload_history_lhr_record_number_text" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/lhr_loading_machine_layout"
                 style="@style/load_history_row_item">
 
@@ -55,7 +81,7 @@
 
                 <TextView
                     style="@style/load_history_text"
-                    android:text="Loaded Machine" />
+                    android:text="@string/loaded_machine" />
 
                 <TextView
                     style="@style/load_history_desc"
@@ -68,7 +94,7 @@
 
                 <TextView
                     style="@style/load_history_text"
-                    android:text="Material" />
+                    android:text="@string/material" />
 
                 <TextView
                     android:id="@+id/lhr_loaded_material"
@@ -82,7 +108,7 @@
 
                 <TextView
                     style="@style/load_history_text"
-                    android:text="Location" />
+                    android:text="@string/location" />
 
                 <TextView
                     android:id="@+id/lhr_loading_location"
@@ -110,7 +136,7 @@
 
                 <TextView
                     style="@style/load_history_text"
-                    android:text="Weight" />
+                    android:text="@string/weight" />
 
                 <TextView
                     android:id="@+id/lhr_loading_weight"
@@ -124,7 +150,7 @@
 
                 <TextView
                     style="@style/load_history_text"
-                    android:text="Loading Time" />
+                    android:text="@string/loading_time" />
 
                 <TextView
                     android:id="@+id/lhr_time"
@@ -136,10 +162,22 @@
 
                 <TextView
                     style="@style/load_history_text"
-                    android:text="Work Mode" />
+                    android:text="@string/work_mode" />
 
                 <TextView
                     android:id="@+id/lhr_workmode"
+                    style="@style/load_history_desc"
+                    android:text="@string/list_row_eload_history_lhr_workmode_text" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/load_history_row_item">
+
+                <TextView
+                    style="@style/load_history_text"
+                    android:text="@string/server_sync" />
+
+                <TextView
+                    android:id="@+id/lhr_is_sync"
                     style="@style/load_history_desc"
                     android:text="@string/list_row_eload_history_lhr_workmode_text" />
             </LinearLayout>

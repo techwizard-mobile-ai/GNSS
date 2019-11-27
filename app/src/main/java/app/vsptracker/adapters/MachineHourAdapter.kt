@@ -59,7 +59,11 @@ class MachineHourAdapter(
         holder.itemView.mh_start_hours.text = ":  ${eWork.startHours} Hrs"
         holder.itemView.mh_total_hours.text = ":  ${eWork.totalHours} Hrs"
 
-        holder.itemView.eth_mode.text = ":  ${eWork.workMode}"
+        when {
+            eWork.isDayWorks > 0 -> { holder.itemView.eth_mode.text = context.getString(R.string.day_works_text) }
+            else -> holder.itemView.eth_mode.text = context.getString(R.string.standard_mode_text)
+        }
+
 
         holder.itemView.mh_gps_loading.text =
             ": ${myHelper.getRoundedDecimal(eWork.loadingGPSLocation.latitude)} / ${myHelper.getRoundedDecimal(

@@ -96,7 +96,7 @@ class MyData : Serializable {
 
     @SerializedName("is_days_work")
     @Expose
-    var isDaysWork: Int = 0
+    var isDayWorks: Int = 0
 
 
     @SerializedName("loading_machine_id")
@@ -207,7 +207,10 @@ class MyData : Serializable {
 //    eWorkActionType 2 = Off Loading
     var eWorkActionType: Int = 0
 
-    var workMode: String = ""
+//    @SerializedName("is_days_work")
+//    @Expose
+//    var isDayWork : Int = 0
+//    var workMode: String = ""
 
     // nextAction 0 = Do Loading
     // nextAction 1 = Do Unloading
@@ -255,19 +258,12 @@ class MyData : Serializable {
         return "MyData(" +
                 "siteId=$siteId, " +
                 "machineTypeId=$machineTypeId, " +
+                "loading_machine_id=$loading_machine_id, " +
+                "loading_material_id=$loading_material_id, " +
+                "loading_location_id=$loading_location_id, " +
                 "machineId=$machineId, " +
-                "machineStoppedReason='$machineStoppedReason', " +
-                "startTime='$startTime', " +
-                "stopTime=$stopTime" +
-                "totalTime=$totalTime" +
-                "time=$time" +
-                "date=$date" +
-                "getWorkMode=$workMode" +
-                "totalTime=$totalTime" +
-
-                "loadingGPSLocation=$loadingGPSLocation" +
-                "unloadingGPSLocation=$unloadingGPSLocation" +
-                "userID=$operatorId" +
+                "isDayWorks=$isDayWorks" +
+                "operatorId=$operatorId" +
                 "isSync=$isSync" +
                 ")"
     }

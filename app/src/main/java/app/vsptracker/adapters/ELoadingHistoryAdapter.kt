@@ -6,9 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import app.vsptracker.others.MyHelper
 import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
+import app.vsptracker.database.DatabaseAdapter
+import app.vsptracker.others.MyHelper
 import kotlinx.android.synthetic.main.list_row_eload_history.view.*
 
 class ELoadingHistoryAdapter(
@@ -19,6 +20,7 @@ class ELoadingHistoryAdapter(
 
     private val tag = this::class.java.simpleName
     private lateinit var myHelper: MyHelper
+    lateinit var db: DatabaseAdapter
 
     override fun onCreateViewHolder(
             parent: ViewGroup,
@@ -29,6 +31,7 @@ class ELoadingHistoryAdapter(
         val v = LayoutInflater.from(parent.context)
                 .inflate(R.layout.list_row_eload_history, parent, false)
         myHelper = MyHelper(tag, context)
+        db = DatabaseAdapter(context)
         return ViewHolder(v)
     }
 
@@ -37,17 +40,33 @@ class ELoadingHistoryAdapter(
 
         val myData = myDataList[position]
 
-        if (myData.recordID < 1) {
-            holder.itemView.lhr_record_number_layout.visibility = View.VISIBLE
-//            holder.itemView.lhr_record_number.setText(":  "+myData.recordID)
-            holder.itemView.lhr_record_number.text = ":  " + (myDataList.size - position)
-        } else {
-            holder.itemView.lhr_record_number_layout.visibility = View.GONE
+        myHelper.log("$myData")
+//        if (myData.recordID < 1) {
+//            holder.itemView.lhr_record_number_layout.visibility = View.VISIBLE
+////            holder.itemView.lhr_record_number.setText(":  "+myData.recordID)
+//            holder.itemView.lhr_record_number.text = ":  " + (myDataList.size - position)
+//        } else {
+//            holder.itemView.lhr_record_number_layout.visibility = View.GONE
+//        }
+
+        holder.itemView.lhr_record_number.text = ":  ${myData.id}"
+        holder.itemView.lhr_site.text = ":  ${db.getSiteByID(myData.siteId).name}"
+        val operatorName = db.getOperatorByID(myData.operatorId).name
+        holder.itemView.lhr_operator.text = ":  $operatorName"
+        when (myData.isSync) {
+            1 -> holder.itemView.lhr_is_sync.text = ":  Yes"
+            else -> holder.itemView.lhr_is_sync.text = ":  No"
         }
 
-        if (!myData.loadingMachine.isBlank()) {
+        when (myData.isDayWorks) {
+            1 -> holder.itemView.lhr_workmode.text = ":  Day Works"
+            else -> holder.itemView.lhr_workmode.text = ":  Standard Mode"
+        }
+
+
+        if (myData.machineId > 0) {
             holder.itemView.lhr_loading_machine_layout.visibility = View.VISIBLE
-            holder.itemView.lhr_loading_machine.text = ":  " + myData.loadingMachine
+            holder.itemView.lhr_loading_machine.text = ":  ${db.getMachineByID(myData.machineId).number}"
         } else {
             holder.itemView.lhr_loading_machine_layout.visibility = View.GONE
         }
@@ -59,16 +78,16 @@ class ELoadingHistoryAdapter(
 //            holder.itemView.lhr_loaded_machine_layout.visibility = View.GONE
 //        }
 
-        if (!myData.loadingMaterial.isBlank()) {
+        if (myData.loading_material_id > 0) {
             holder.itemView.lhr_loaded_material_layout.visibility = View.VISIBLE
-            holder.itemView.lhr_loaded_material.text = ":  " + myData.loadingMaterial
+            holder.itemView.lhr_loaded_material.text = ":  ${db.getMaterialByID(myData.loading_material_id).name}"
         } else {
             holder.itemView.lhr_loaded_material_layout.visibility = View.GONE
         }
 
-        if (!myData.loadingLocation.isBlank()) {
+        if (myData.loading_location_id > 0) {
             holder.itemView.lhr_loading_location_layout.visibility = View.VISIBLE
-            holder.itemView.lhr_loading_location.text = ":  " + myData.loadingLocation
+            holder.itemView.lhr_loading_location.text = ":  ${db.getLocationByID(myData.loading_location_id).name}"
         } else {
             holder.itemView.lhr_loading_location_layout.visibility = View.GONE
         }
@@ -92,7 +111,6 @@ class ELoadingHistoryAdapter(
                         myData.loadingGPSLocation.longitude
                 )} "
 
-        holder.itemView.lhr_workmode.text = ": ${myData.workMode}"
         holder.itemView.lhr_gps_loading_layout.setOnClickListener {
             myHelper.showOnMap(myData.loadingGPSLocation, "Excavator Loading (${myData.loadingLocation})")
         }
