@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.list_row_eload_history.view.*
 
 class ELoadingHistoryAdapter(
     val context: Activity,
-    private val myDataList: MutableList<MyData>
+    private val myDataList: ArrayList<MyData>
 ) : RecyclerView.Adapter<ELoadingHistoryAdapter
 .ViewHolder>() {
 

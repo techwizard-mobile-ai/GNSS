@@ -60,7 +60,7 @@ class EDiggingHistoryFragment : Fragment() {
             3 -> e_digging_f_title.text = getString(R.string.scraper_trimming)
         }
         val mAdapter = ETHistoryAdapter(
-            context as Activity, diggingHistory,
+            context as Activity, diggingHistory as ArrayList<EWork>,
                 FRAGMENT_TAG, workType
         )
         root!!.edh_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)

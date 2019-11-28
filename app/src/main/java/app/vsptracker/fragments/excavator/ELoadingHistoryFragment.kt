@@ -56,7 +56,7 @@ class ELoadingHistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val mAdapter = ELoadingHistoryAdapter(context as Activity, loadingHistory)
+        val mAdapter = ELoadingHistoryAdapter(context as Activity, loadingHistory as ArrayList<MyData>)
         root!!.elh_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
         root!!.elh_rv!!.adapter = mAdapter
     }

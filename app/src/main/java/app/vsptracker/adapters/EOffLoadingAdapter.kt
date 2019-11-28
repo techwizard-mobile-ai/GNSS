@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.list_row_eloading.view.*
 
 class EOffLoadingAdapter(
     val context: Activity,
-    private val dataList: MutableList<EWork>
+    private val dataList: ArrayList<EWork>
 ) : RecyclerView
 .Adapter<EOffLoadingAdapter
 .ViewHolder>() {

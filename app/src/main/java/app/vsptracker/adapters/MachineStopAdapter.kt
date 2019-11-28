@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.list_row_machine_stop.view.*
 
 class MachineStopAdapter(
     val context: Activity,
-    private val dataList: MutableList<MyData>
+    private val dataList: ArrayList<MyData>
 ) : RecyclerView.Adapter<MachineStopAdapter
 .ViewHolder>() {
 

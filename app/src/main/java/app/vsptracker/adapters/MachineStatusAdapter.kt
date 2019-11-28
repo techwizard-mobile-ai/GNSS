@@ -14,7 +14,7 @@ import app.vsptracker.others.MyHelper
 import kotlinx.android.synthetic.main.list_row_machine_status.view.*
 class MachineStatusAdapter(
     private val myContext: Activity,
-    private val dataList: MutableList<Material>
+    private val dataList: ArrayList<Material>
 ) : RecyclerView.Adapter<MachineStatusAdapter
 .ViewHolder>() {
 

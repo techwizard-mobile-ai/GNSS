@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.list_row_eloading.view.*
 
 class ELoadingAdapter(
     val context: Activity,
-    private val myDataList: MutableList<MyData>
+    private val myDataList: ArrayList<MyData>
 ) : RecyclerView.Adapter<ELoadingAdapter
 .ViewHolder>() {
 

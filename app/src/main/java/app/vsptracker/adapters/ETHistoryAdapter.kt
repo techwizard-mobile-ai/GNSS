@@ -14,7 +14,7 @@ import app.vsptracker.others.MyHelper
 import kotlinx.android.synthetic.main.list_row_et_history.view.*
 class ETHistoryAdapter(
     val context: Activity,
-    private val dataList: MutableList<EWork>,
+    private val dataList: ArrayList<EWork>,
     private val FRAGMENT_TAG: String,
     val workType: Int
 ) : RecyclerView.Adapter<ETHistoryAdapter

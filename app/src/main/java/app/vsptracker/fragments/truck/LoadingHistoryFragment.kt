@@ -50,7 +50,7 @@ class LoadingHistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val mAdapter = LoadingHistoryAdapter(context as Activity, loadingHistory)
+        val mAdapter = LoadingHistoryAdapter(context as Activity, loadingHistory as ArrayList<MyData>)
         flh_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
         flh_rv!!.adapter = mAdapter
     }

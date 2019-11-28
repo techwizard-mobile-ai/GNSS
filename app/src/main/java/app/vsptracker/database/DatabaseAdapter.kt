@@ -1021,8 +1021,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return db.insert(TABLE_E_LOAD_HISTORY, null, cv)
     }
 
-    fun getOperatorsHours(): MutableList<MyData> {
-        val list: MutableList<MyData> = ArrayList()
+    fun getOperatorsHours(): ArrayList<MyData> {
+        val list: ArrayList<MyData> = ArrayList()
         val db = this.readableDatabase
         val query = "Select * from $TABLE_OPERATORS_HOURS  ORDER BY $COL_ID DESC"
         val result = db.rawQuery(query, null)
@@ -1702,9 +1702,9 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return list
     }
 
-    fun getWaits(): MutableList<EWork> {
+    fun getWaits(): ArrayList<EWork> {
 
-        val list: MutableList<EWork> = ArrayList()
+        val list: ArrayList<EWork> = ArrayList()
         val db = this.readableDatabase
 
 //        val query = "Select * from $TABLE_DELAY  WHERE $COL_MACHINE_TYPE_ID = ${myHelper.getMachineTypeID()} ORDER BY $COL_ID DESC"
@@ -1751,9 +1751,9 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return list
     }
 
-    fun getEWorksOffLoads(eWorkID: Int): MutableList<EWork> {
+    fun getEWorksOffLoads(eWorkID: Int): ArrayList<EWork> {
 
-        val list: MutableList<EWork> = ArrayList()
+        val list: ArrayList<EWork> = ArrayList()
         val db = this.readableDatabase
 
         val query =
@@ -1799,9 +1799,9 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
     // eWorkType 3 = Scraper Trimming
     // eWorkActionType 1 = Side Casting
     // eWorkActionType 2 = Off Loading
-    fun getEWorks(workType: Int): MutableList<EWork> {
+    fun getEWorks(workType: Int): ArrayList<EWork> {
 
-        val list: MutableList<EWork> = ArrayList()
+        val list: ArrayList<EWork> = ArrayList()
         val db = this.readableDatabase
 
         val query =
@@ -1847,9 +1847,9 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return list
     }
 
-    fun getELoadHistory(): MutableList<MyData> {
+    fun getELoadHistory(): ArrayList<MyData> {
 
-        val list: MutableList<MyData> = ArrayList()
+        val list: ArrayList<MyData> = ArrayList()
         val db = this.readableDatabase
 
         val query =
@@ -1960,9 +1960,9 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return datum
     }
 
-    fun getTrips(): MutableList<MyData> {
+    fun getTrips(): ArrayList<MyData> {
 
-        val list: MutableList<MyData> = ArrayList()
+        val list: ArrayList<MyData> = ArrayList()
         val db = this.readableDatabase
 //        val query = "Select * from $TABLE_TRIP  WHERE $COL_MACHINE_TYPE_ID = ${myHelper.getMachineTypeID()} ORDER BY $COL_ID DESC"
         val query = "Select * from $TABLE_TRIP  ORDER BY $COL_ID DESC"
@@ -2025,9 +2025,9 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return list
     }
 
-    fun getTripsByTypes(type: Int): MutableList<MyData> {
+    fun getTripsByTypes(type: Int): ArrayList<MyData> {
 
-        val list: MutableList<MyData> = ArrayList()
+        val list: ArrayList<MyData> = ArrayList()
         val db = this.readableDatabase
 //        val query = "Select * from $TABLE_TRIP  WHERE $COL_MACHINE_TYPE_ID = ${myHelper.getMachineTypeID()} ORDER BY $COL_ID DESC"
         val query = "Select * from $TABLE_TRIP   WHERE $COL_MACHINE_TYPE_ID = $type ORDER BY $COL_ID DESC"
@@ -2092,7 +2092,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
 
     fun getMachineStopByID(id: Long = 0): MyData {
 
-//        var list: MutableList<MyData> = ArrayList()
+//        var list: ArrayList<MyData> = ArrayList()
         val db = this.readableDatabase
 
         val query = "Select * from $TABLE_MACHINE_STATUS  WHERE $COL_ID = $id ORDER BY $COL_ID DESC"

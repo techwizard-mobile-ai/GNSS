@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.list_row_operator_hour.view.*
 
 class OperatorHourAdapter(
     val context: Activity,
-    private val dataList: MutableList<MyData>
+    private val dataList: ArrayList<MyData>
 ) : RecyclerView.Adapter<OperatorHourAdapter
 .ViewHolder>() {
 

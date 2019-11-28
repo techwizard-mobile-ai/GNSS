@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.list_row_delay_history.view.*
 
 class DelayHistoryAdapter(
     val context: Activity,
-    private val dataList: MutableList<EWork>
+    private val dataList: ArrayList<EWork>
 ) : RecyclerView.Adapter<DelayHistoryAdapter
 .ViewHolder>() {
 

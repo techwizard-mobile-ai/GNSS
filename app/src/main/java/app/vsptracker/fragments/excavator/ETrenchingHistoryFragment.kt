@@ -59,7 +59,7 @@ class ETrenchingHistoryFragment : Fragment() {
 
         val workType = 2
         val mAdapter = ETHistoryAdapter(
-            context as Activity, trenchingHistory,
+            context as Activity, trenchingHistory as ArrayList<EWork>,
                 FRAGMENT_TAG, workType
         )
         root!!.eth_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
