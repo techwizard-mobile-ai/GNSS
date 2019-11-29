@@ -17,7 +17,9 @@ import kotlinx.android.synthetic.main.activity_server_sync.*
 
 class ServerSyncActivity : BaseActivity(), View.OnClickListener {
 
-    private val serverSyncList = ArrayList<ServerSyncModel>()
+    private val adapterList = ArrayList<ServerSyncModel>()
+    private val serverSyncMyDataList = ArrayList<MyData>()
+    private val serverSyncEWorkList = ArrayList<EWork>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,11 +39,12 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
         addToList("Machines Hours", db.getMachinesHours())
         addToList("Operators Waiting", db.getWaits())
 
-        if (serverSyncList.size > 0) {
-            val mAdapter = ServerSyncAdapter(this, serverSyncList)
+        if (adapterList.size > 0) {
+            val mAdapter = ServerSyncAdapter(this, adapterList)
             ss_rv.layoutManager = LinearLayoutManager(this as Activity, RecyclerView.VERTICAL, false)
             ss_rv.adapter = mAdapter
         }
+        server_sync_upload.setOnClickListener(this)
     }
 
     /**
@@ -52,76 +55,86 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
     private fun addToList(name: String, list: ArrayList<MyData>) {
         val total = list.size
         val synced = list.filter { it.isSync == 1 }.size
-        val remaining = list.filter { it.isSync == 0 }.size
-        myHelper.log("$name:$total, isSynced:$synced, isRemaining:$remaining")
-        if (remaining > 0) {
-            serverSyncList.add(ServerSyncModel(name, total, synced, remaining))
+        val remaining = list.filter { it.isSync == 0 }
+        myHelper.log("$name:$total, isSynced:$synced, isRemaining:${remaining.size}")
+        if (remaining.isNotEmpty()) {
+            adapterList.add(ServerSyncModel(name, total, synced, remaining.size))
+            serverSyncMyDataList.addAll(remaining)
         }
     }
+
     @JvmName("MyData")
     private fun addToList(name: String, list: ArrayList<EWork>) {
         val total = list.size
         val synced = list.filter { it.isSync == 1 }.size
-        val remaining = list.filter { it.isSync == 0 }.size
-        myHelper.log("$name:$total, isSynced:$synced, isRemaining:$remaining")
-        if (remaining > 0) {
-            serverSyncList.add(ServerSyncModel(name, total, synced, remaining))
+        val remaining = list.filter { it.isSync == 0 }
+        myHelper.log("$name:$total, isSynced:$synced, isRemaining:${remaining.size}")
+        if (remaining.isNotEmpty()) {
+            adapterList.add(ServerSyncModel(name, total, synced, remaining.size))
+            serverSyncEWorkList.addAll(remaining)
         }
     }
-/*
-//        Scraper Trips
-        val st = db.getTripsByTypes(2)
-        val stTotal = st.size
-        val stIsSynced = st.filter{ it.isSync == 1}.size
-        val stRemaining = st.filter{ it.isSync == 0}.size
+
+    /*
+    //        Scraper Trips
+            val st = db.getTripsByTypes(2)
+            val stTotal = st.size
+            val stIsSynced = st.filter{ it.isSync == 1}.size
+            val stRemaining = st.filter{ it.isSync == 0}.size
 
 
 
-//        Scraper Trimming
-        val str = db.getEWorks(3)
-        val strTotal = str.size
-        val strIsSynced = str.filter{ it.isSync == 1}.size
-        val strRemaining = str.filter{ it.isSync == 0}.size
-        if(ttRemaining > 0){
-            ss_truck_trips.visibility = View.VISIBLE
-            ss_truck_total_trips.text = ":  $ttTotal"
-            ss_truck_total_trips_synced.text = ":  $ttIsSynced"
-            ss_trucks_total_trips_remaining.text = ":  $ttRemaining"
-        }else{
-            ss_truck_trips.visibility = View.GONE
-        }
-        if(stRemaining > 0){
-            ss_scraper_trips.visibility = View.VISIBLE
-            ss_scraper_total_trips.text = ":  $stTotal"
-            ss_scraper_total_trips_synced.text = ":  $stIsSynced"
-            ss_scraper_total_trips_remaining.text = ":  $stRemaining"
-        }else{
-            ss_scraper_trips.visibility = View.VISIBLE
-        }
-        private fun getTrips() {
-            //        Truck Trips
-    //        val tt = db.getTripsByTypes(3)
-    //        val ttTotal = tt.size
-    //        val ttIsSynced = tt.filter { it.isSync == 1 }.size
-    //        val ttRemaining = tt.filter { it.isSync == 0 }.size
-    //        myHelper.log("Truck Trips:$ttTotal, isSynced:$ttIsSynced, isRemaining:$ttRemaining")
-    //        if (ttRemaining > 0) {
-    //            serverSyncList.add(ServerSyncModel("Truck Trips", ttTotal, ttIsSynced, ttRemaining))
-    //        }
-    //        addToList("Operators Hours", db.getOperatorsHours())
-    //        addToList("Truck Trips", db.getTripsByTypes(3))
-    //        addToList("Scraper Trips", db.getTripsByTypes(2))
+    //        Scraper Trimming
+            val str = db.getEWorks(3)
+            val strTotal = str.size
+            val strIsSynced = str.filter{ it.isSync == 1}.size
+            val strRemaining = str.filter{ it.isSync == 0}.size
+            if(ttRemaining > 0){
+                ss_truck_trips.visibility = View.VISIBLE
+                ss_truck_total_trips.text = ":  $ttTotal"
+                ss_truck_total_trips_synced.text = ":  $ttIsSynced"
+                ss_trucks_total_trips_remaining.text = ":  $ttRemaining"
+            }else{
+                ss_truck_trips.visibility = View.GONE
+            }
+            if(stRemaining > 0){
+                ss_scraper_trips.visibility = View.VISIBLE
+                ss_scraper_total_trips.text = ":  $stTotal"
+                ss_scraper_total_trips_synced.text = ":  $stIsSynced"
+                ss_scraper_total_trips_remaining.text = ":  $stRemaining"
+            }else{
+                ss_scraper_trips.visibility = View.VISIBLE
+            }
+            private fun getTrips() {
+                //        Truck Trips
+        //        val tt = db.getTripsByTypes(3)
+        //        val ttTotal = tt.size
+        //        val ttIsSynced = tt.filter { it.isSync == 1 }.size
+        //        val ttRemaining = tt.filter { it.isSync == 0 }.size
+        //        myHelper.log("Truck Trips:$ttTotal, isSynced:$ttIsSynced, isRemaining:$ttRemaining")
+        //        if (ttRemaining > 0) {
+        //            serverSyncList.add(ServerSyncModel("Truck Trips", ttTotal, ttIsSynced, ttRemaining))
+        //        }
+        //        addToList("Operators Hours", db.getOperatorsHours())
+        //        addToList("Truck Trips", db.getTripsByTypes(3))
+        //        addToList("Scraper Trips", db.getTripsByTypes(2))
 
-            //        Scraper Trips
-    //        val st = db.getTripsByTypes(2)
-    //        val stTotal = st.size
-    //        val stIsSynced = st.filter { it.isSync == 1 }.size
-    //        val stRemaining = st.filter { it.isSync == 0 }.size
-    //        myHelper.log("Scraper Trips:$stTotal, isSynced:$stIsSynced, isRemaining:$stRemaining")
-    //        if (ttRemaining > 0) {
-    //            serverSyncList.add(ServerSyncModel("Scraper Trips", stTotal, stIsSynced, stRemaining))
-    //        }
-        }*/
+                //        Scraper Trips
+        //        val st = db.getTripsByTypes(2)
+        //        val stTotal = st.size
+        //        val stIsSynced = st.filter { it.isSync == 1 }.size
+        //        val stRemaining = st.filter { it.isSync == 0 }.size
+        //        myHelper.log("Scraper Trips:$stTotal, isSynced:$stIsSynced, isRemaining:$stRemaining")
+        //        if (ttRemaining > 0) {
+        //            serverSyncList.add(ServerSyncModel("Scraper Trips", stTotal, stIsSynced, stRemaining))
+        //        }
+            }*/
     override fun onClick(view: View?) {
+        when (view!!.id) {
+            R.id.server_sync_upload -> {
+                myHelper.log("serverSyncMyData:$serverSyncMyDataList")
+                myHelper.log("serverSyncEWork:$serverSyncEWorkList")
+            }
+        }
     }
 }

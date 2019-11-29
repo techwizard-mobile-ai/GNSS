@@ -16,20 +16,20 @@ interface RetrofitAPI {
         const val ORGS_MACHINES = "orgsmachines/list"
         const val ORGS_MATERIALS = "orgsmaterials/list"
         const val ORGS_STOP_REASONS = "orgsmachinesstopsreasons/list"
-        const val ORGS_DELAY = "orgsdelays/store"
-        const val ORGS_TRIP = "orgstrips/store"
-        const val ORGS_MACHINE_STOPS = "orgsmachinesstops/store"
         const val ORGS_OPERATORS = "orgsoperators/list"
         const val ADMIN_ORGS_SITES = "adminorgssites/list"
         const val ADMIN_MACHINE_TYPES = "adminmachinestypes/get"
         const val ADMIN_MACHINE_BRANDS = "adminmachinesbrands/get"
         const val ORGS_MACHINES_PLANTS = "orgsplants/list"
         const val ORGS_MACHINES_TASKS = "orgstasks/list"
+
+        const val ORGS_MACHINE_STOPS = "orgsmachinesstops/store"
+        const val ORGS_DELAY = "orgsdelays/store"
+        const val ORGS_TRIP = "orgstrips/store"
         const val ORGS_SIDECASTINGS = "orgssidecastings/store"
         const val ORGS_LOADS = "orgsloads/store"
 
-//        This is replaced with ORGS_MACHINE_MAX_HOUR.
-//        This is replaced with max_hours to get Max Total Hours for a Machine in Single Entry
+//        ORGS_MACHINE_MAX_HOUR is replaced with max_hours to get Max Total Hours for a Machine in Single Entry
 //        const val ORGS_MACHINES_HOURS = "orgsmachineshours/list"
         const val ORGS_MACHINES_HOURS = "orgsmachineshours/max_hours"
         const val ORGS_PUSH_MACHINES_HOURS = "orgsmachineshours/store"

@@ -1837,7 +1837,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 )
                 datum.operatorId = result.getInt(result.getColumnIndex(COL_USER_ID))
                 datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
-                myHelper.log("getEWorks:$datum")
+//                myHelper.log("getEWorks:$datum")
                 list.add(datum)
             } while (result.moveToNext())
         }
