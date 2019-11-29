@@ -1037,18 +1037,20 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
                 datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
                 datum.time = myHelper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
-                datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+                datum.date = result.getString(result.getColumnIndex(COL_TIME))
                 datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
                 datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
                     result.getString(
                         result.getColumnIndex(COL_LOADING_GPS_LOCATION)
                     )
                 )
+                datum.loadingGPSLocationString = result.getString(result.getColumnIndex(COL_LOADING_GPS_LOCATION))
                 datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
                     result.getString(
                         result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
                     )
                 )
+                datum.unloadingGPSLocationString = result.getString(result.getColumnIndex(COL_UNLOADING_GPS_LOCATION))
                 datum.operatorId = result.getInt(result.getColumnIndex(COL_USER_ID))
                 datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
                 list.add(datum)

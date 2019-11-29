@@ -3,6 +3,8 @@ import app.vsptracker.apis.delay.EWork
 import app.vsptracker.apis.delay.EWorkResponse
 import app.vsptracker.apis.login.LoginResponse
 import app.vsptracker.apis.operators.OperatorResponse
+import app.vsptracker.apis.serverSync.ServerSyncDataAPI
+import app.vsptracker.apis.serverSync.ServerSyncResponse
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.apis.trip.MyDataListResponse
 import app.vsptracker.apis.trip.MyDataResponse
@@ -37,8 +39,16 @@ interface RetrofitAPI {
         const val ORGS_MACHINES_AUTO_LOGOUTS = "orgsmachinesautologouts/list"
         const val ORGS_PUSH_OPERATORS_HOURS = "orgsoperatorshours/store"
         const val ORGS_MACHINE_MAX_HOUR ="orgsmachineshours/machine_max_hour"
+        const val ORGS_SERVER_SYNC = "orgsserversync/store"
     }
+    
 
+    
+    @POST(ORGS_SERVER_SYNC)
+    fun pushServerSync(
+        @Body serverSyncDataAPI: ServerSyncDataAPI
+    ): Call<ServerSyncResponse>
+    
     /**
      * This API call will be Made in Start Hour Meter and this Total Hours will be compared with App Machine Max Hour
      * Greater value will be placed in Hour Meter And Operator will see Max Hour for Start of Machine.

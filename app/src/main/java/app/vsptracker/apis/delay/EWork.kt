@@ -96,30 +96,41 @@ class EWork() : Serializable {
     @SerializedName("work_type")
     @Expose
     var workType = 0
-
-
+    
     // eWorkActionType 1 = Side Casting
     // eWorkActionType 2 = Off Loading
     @SerializedName("work_action_type")
     @Expose
     var workActionType = 0
 
-
-
-
 //    var machineTypeId = 0
     var machineNumber = ""
-
-
-
+    
 // isSync 0 = Not Uploaded to Server
 // isSync 1 = Uploaded to Server
 // isSync 2 = Uploaded to Server by Export
     var isSync: Int = 0
-
+    
     override fun toString(): String {
-        return "EWork(orgId=$orgId, siteId=$siteId, operatorId=$operatorId, machineTypeId=$machineTypeId, materialId=$materialId, machineId=$machineId, loadingGPSLocationString='$loadingGPSLocationString', loadingGPSLocation=$loadingGPSLocation, unloadingGPSLocationString='$unloadingGPSLocationString', unloadingGPSLocation=$unloadingGPSLocation, startTime=$startTime, stopTime=$stopTime, totalTime=$totalTime, time='$time', date='$date', isDaysWork=$isDayWorks, id=$id, eWorkId=$eWorkId, workType=$workType, workActionType=$workActionType, machineNumber='$machineNumber', isSync=$isSync)"
+        return "\nEWork(" +
+                "id=$id, " +
+                "orgId=$orgId, " +
+                "siteId=$siteId, " +
+                "operatorId=$operatorId, " +
+                "machineTypeId=$machineTypeId, " +
+                "machineId=$machineId, " +
+                "materialId=$materialId, " +
+                "totalLoads=$totalLoads, " +
+                "startTime=$startTime, " +
+                "stopTime=$stopTime, " +
+                "startHours='$startHours', " +
+                "totalHours='$totalHours', " +
+                "totalTime=$totalTime, " +
+                "time='$time', " +
+                "isDayWorks=$isDayWorks, " +
+                "isSync=$isSync" +
+                ")"
     }
-
-
+    
+    
 }

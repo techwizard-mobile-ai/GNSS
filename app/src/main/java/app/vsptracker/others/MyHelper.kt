@@ -7,7 +7,6 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
-import android.os.Build
 import android.text.TextUtils
 import android.util.Log
 import android.view.Gravity
@@ -33,8 +32,10 @@ import app.vsptracker.activities.truck.TUnloadAfterActivity
 import app.vsptracker.apis.RetrofitAPI
 import app.vsptracker.apis.login.AppAPI
 import app.vsptracker.apis.login.LoginAPI
+import app.vsptracker.apis.serverSync.ServerSyncAPI
+import app.vsptracker.apis.serverSync.ServerSyncDataAPI
 import app.vsptracker.apis.trip.MyData
-import app.vsptracker.apis.trip.MyDataResponse
+import app.vsptracker.classes.DeviceDetails
 import app.vsptracker.classes.GPSLocation
 import app.vsptracker.classes.Material
 import app.vsptracker.classes.Meter
@@ -43,7 +44,6 @@ import com.google.gson.GsonBuilder
 import okhttp3.*
 import org.json.JSONObject
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -58,31 +58,32 @@ class MyHelper(private var TAG: String, val context: Context) {
     private val gson = Gson()
     private lateinit var retrofit: Retrofit
     private lateinit var retrofitAPI: RetrofitAPI
-
+    
     fun isNavEnabled() = sessionManager.getNav()
     fun setIsNavEnabled(status: Boolean) = sessionManager.setNav(status)
-
+    
     fun getMachineSettings() = sessionManager.getMachineSettings()
     fun setMachineSettings(material: Material) {
         sessionManager.setMachineSettings(material)
     }
-
+    
     fun getMachineID() = sessionManager.getMachineID()
     fun setMachineID(id: Int) {
         sessionManager.setMachineID(id)
     }
-
+    
     fun getOperatorAPI() = sessionManager.getOperatorAPI()
     fun setOperatorAPI(loginAPI: MyData) {
         sessionManager.setOperatorAPI(loginAPI)
     }
-
+    
     fun getLoginAPI() = sessionManager.getLoginAPI()
     fun setLoginAPI(loginAPI: LoginAPI) {
         sessionManager.setLoginAPI(loginAPI)
     }
-
+    
     fun refreshToken() {
+        log(getDeviceDetailsString())
         val client = OkHttpClient()
         val formBody = FormBody.Builder()
             .add("email", getLoginAPI().email)
@@ -94,15 +95,9 @@ class MyHelper(private var TAG: String, val context: Context) {
             .url("https://vsptracker.app/api/v1/org/users/login1")
             .post(formBody)
             .build()
-
-        val versionCode = BuildConfig.VERSION_CODE
-        val device = Build.DEVICE
-        val build = Build.BRAND
-        val manufacturer = Build.MANUFACTURER
-        val model = Build.MODEL
-
-        log("VersionCode#$versionCode--device:$device--build:$build--manufacturer:$manufacturer--model:$model")
-
+//        val deviceDetails = getDeviceDetails()
+//        log(deviceDetails)
+        
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
                 val responseString = response.body()!!.string()
@@ -113,10 +108,10 @@ class MyHelper(private var TAG: String, val context: Context) {
                     val gson = GsonBuilder().create()
                     val loginAPI = gson.fromJson(responseJObject.getString("data"), LoginAPI::class.java)
                     loginAPI.pass = getLoginAPI().pass
-
+                    
                     val app = gson.fromJson(responseJObject.getString("app"), AppAPI::class.java)
                     log("app:$app")
-
+                    
                     val appVersionCode = BuildConfig.VERSION_CODE
                     @Suppress("ConstantConditionIf")
                     if (app.version_code > appVersionCode && app.is_critical > 0) {
@@ -131,13 +126,26 @@ class MyHelper(private var TAG: String, val context: Context) {
                     context.startActivity(intent)
                 }
             }
-
+            
             override fun onFailure(call: Call, e: IOException) {
                 log("Failed to execute request ${e.printStackTrace()}")
             }
         })
     }
-
+    
+    //        TODO To be Implemented
+    fun getServerSyncDataAPIString(serverSyncList: ArrayList<ServerSyncAPI>): String {
+        val serverSyncDataAPI = ServerSyncDataAPI()
+        serverSyncDataAPI.data = serverSyncList
+        return gson.toJson(serverSyncDataAPI, ServerSyncDataAPI::class.java)
+    }
+    
+    fun getDeviceDetailsString(): String {
+        return gson.toJson(DeviceDetails(), DeviceDetails::class.java)
+//        return ("AppVersionCode:$versionCode--Device:$device--Build:$build--Manufacturer:$manufacturer--Model:$model--AndroidOS:$andoridOS")
+    }
+/*
+    
     fun pushIsMachineRunning(isRunning: Int, machinesStopsDbID: Int) {
 
         this.retrofit = Retrofit.Builder()
@@ -173,28 +181,29 @@ class MyHelper(private var TAG: String, val context: Context) {
             }
         })
     }
-
+*/
+    
     fun getIsMapOpened() = sessionManager.getLastJourney().isMapOpened
     fun setIsMapOpened(isMapOpened: Boolean) {
         val lastJourney = sessionManager.getLastJourney()
         lastJourney.isMapOpened = isMapOpened
         sessionManager.setLastJourney(lastJourney)
     }
-
+    
     fun getUserID() = getOperatorAPI().id
     fun getStringToGPSLocation(stringGPSLocation: String): GPSLocation {
 //        log("getStringToGPSLocation:$stringGPSLocation")
-         return if (stringGPSLocation == null)
+        return if (stringGPSLocation == null)
             GPSLocation()
         else gson.fromJson(stringGPSLocation, GPSLocation::class.java)
-
-
+        
+        
     }
-
+    
     fun getGPSLocationToString(gpsMaterial: GPSLocation): String {
         return gson.toJson(gpsMaterial)
     }
-
+    
     fun showOnMap(gpsLocation: GPSLocation, title: String) {
 //        val lat = gpsLocation.latitude
 //        val longg = gpsLocation.longitude
@@ -202,16 +211,16 @@ class MyHelper(private var TAG: String, val context: Context) {
 //        val mapIntent = Intent(Intent.ACTION_VIEW, Uri.parse(geoUri))
 //        mapIntent.setPackage("com.google.android.apps.maps")
 //        context.startActivity(mapIntent)
-
-
+        
+        
         setIsMapOpened(true)
         val intent = Intent(context, Map1Activity::class.java)
         gpsLocation.locationName = title
         intent.putExtra("gpsLocation", gpsLocation)
         context.startActivity(intent)
-
+        
     }
-
+    
     // nextAction 0 = Do Loading
     // nextAction 1 = Do Unloading
     // nextAction 2 = Do Back Loading
@@ -221,7 +230,7 @@ class MyHelper(private var TAG: String, val context: Context) {
         data.nextAction = nextAction
         setLastJourney(data)
     }
-
+    
     fun getNextAction() = getLastJourney().nextAction
     fun setToDoLayout(view: com.google.android.material.floatingactionbutton.FloatingActionButton) {
         val width = context.resources.getDimensionPixelSize(R.dimen._120sdp)
@@ -229,7 +238,7 @@ class MyHelper(private var TAG: String, val context: Context) {
         val layoutParams = FrameLayout.LayoutParams(width, height)
         view.layoutParams = layoutParams
     }
-
+    
     fun getWorkMode(): String {
         return if (isDailyModeStarted()) {
             "Day Works"
@@ -237,7 +246,7 @@ class MyHelper(private var TAG: String, val context: Context) {
             "Standard Mode"
         }
     }
-
+    
     fun stopDelay(gpsMaterial: GPSLocation) {
         val meter = getMeter()
         log("MeterStopBefore:$meter")
@@ -249,7 +258,7 @@ class MyHelper(private var TAG: String, val context: Context) {
         setMeter(meter)
 //            toast("Delay Stopped.\nStart Time: ${getTime(getMeter().dailyModeStartTime)}Hrs.\nTotal Time: ${getFormattedTime(meter.delayTotalTime)}")
     }
-
+    
     fun stopDailyMode() {
         val currentTime = System.currentTimeMillis()
         if (isDailyModeStarted()) {
@@ -272,7 +281,7 @@ class MyHelper(private var TAG: String, val context: Context) {
 //            )
 //        }
     }
-
+    
     fun startDelay(gpsMaterial: GPSLocation) {
         val currentTime = System.currentTimeMillis()
         if (!isDelayStarted()) {
@@ -288,9 +297,9 @@ class MyHelper(private var TAG: String, val context: Context) {
             toast("Waiting is already Started.")
         }
     }
-
+    
     fun startDailyMode() {
-
+        
         val currentTime = System.currentTimeMillis()
         if (!isDailyModeStarted()) {
             val meter = getMeter()
@@ -310,9 +319,9 @@ class MyHelper(private var TAG: String, val context: Context) {
                         "\nTotal Time: ${getMinutesFromMillisec(totalTime)}"
             )
         }
-
+        
     }
-
+    
     fun isDelayStarted() = sessionManager.getMeter().isDelayStarted
     fun isDailyModeStarted() = sessionManager.getMeter().isDailyModeStarted
     fun showStopMessage(startTime: Long) {
@@ -322,25 +331,25 @@ class MyHelper(private var TAG: String, val context: Context) {
                     "Work Duration : ${getTotalTimeMinutes(startTime)} (Minutes)"
         )
     }
-
+    
     fun getFormattedTime(millis: Long): String {
-
+        
         return String.format(
             "%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
             TimeUnit.MILLISECONDS.toMinutes(millis) % TimeUnit.HOURS.toMinutes(1),
             TimeUnit.MILLISECONDS.toSeconds(millis) % TimeUnit.MINUTES.toSeconds(1)
         )
     }
-
+    
     private fun getMinutesFromMillisec(totalTime: Long): Long {
         return (totalTime / 1000 / 60)
     }
-
+    
     fun getTotalTimeVSP(startTime: Long): String {
         val minutes = getTotalTimeMinutes(startTime)
         return getRoundedDecimal(minutes / 60.0).toString()
     }
-
+    
     fun getTotalTimeMinutes(startTime: Long): Long {
         val currentTime = System.currentTimeMillis()
         val oNTime = currentTime - startTime
@@ -348,61 +357,65 @@ class MyHelper(private var TAG: String, val context: Context) {
         log("StartTime: $startTime, CurrentTime:$currentTime, TotalMinutes: $minutes")
         return minutes
     }
-
+    
     fun getDateTime(s: Long): String {
         return try {
             val sdf = SimpleDateFormat("dd MMM yyyy HH:mm")
             //            val sdf = SimpleDateFormat("HH:mm")
             val netDate = Date(s)
             sdf.format(netDate)
-        } catch (e: Exception) {
+        }
+        catch (e: Exception) {
             log("getDatetime:${e}")
             s.toString()
         }
     }
-
+    
     fun getTime(s: Long): String {
-
+        
         return if (s > 0) {
             try {
                 //            val sdf = SimpleDateFormat("dd MMM yyyy HH:mm")
                 val sdf = SimpleDateFormat("HH:mm")
                 val netDate = Date(s)
                 sdf.format(netDate)
-            } catch (e: Exception) {
+            }
+            catch (e: Exception) {
                 log("getDatetime:${e}")
                 s.toString()
             }
         } else {
             ""
         }
-
+        
     }
-
+    
     fun getDate(s: String): String {
         return try {
             //            val sdf = SimpleDateFormat("MM/dd/yy")
             val sdf = SimpleDateFormat("dd MMM yyyy")
             val netDate = Date(s.toLong())
             sdf.format(netDate)
-        } catch (e: Exception) {
+        }
+        catch (e: Exception) {
             log("getDateString:${e}")
             s
         }
     }
-
+    
     fun getDate(s: Long): String {
         return try {
             //            val sdf = SimpleDateFormat("MM/dd/yy")
             val sdf = SimpleDateFormat("dd MMM yyyy")
             val netDate = Date(s)
             sdf.format(netDate)
-        } catch (e: Exception) {
+        }
+        catch (e: Exception) {
             log("getDate:${e}")
             s.toString()
         }
     }
-
+    
     fun getLastJourney() = sessionManager.getLastJourney()
     fun setLastJourney(myData: MyData) = sessionManager.setLastJourney(myData)
     fun getRoundedDecimal(minutes: Double): Double {
@@ -410,24 +423,24 @@ class MyHelper(private var TAG: String, val context: Context) {
         val number2digits: Double = (number3digits * 100.0).roundToLong() / 100.0
         return (number2digits * 10.0).roundToLong() / 10.0
     }
-
+    
     fun getRoundedInt(minutes: Double): Long {
         return getRoundedDecimal(minutes).roundToLong()
     }
-
+    
     fun getMeter() = sessionManager.getMeter()
     fun setMeter(meter: Meter) {
         log("setMeter:$meter")
         sessionManager.setMeter(meter)
     }
-
+    
     fun getMeterTimeForFinish(): String {
         val meterONTime = getMachineTotalTime() + getMachineStartTime()
         return getRoundedDecimal(meterONTime / 60.0).toString()
     }
-
+    
     fun getMeterTimeForFinishCustom(startHours2: String): String {
-
+        
         val startHours1: String = when {
             startHours2.isEmpty() -> "0"
             else -> startHours2
@@ -437,23 +450,23 @@ class MyHelper(private var TAG: String, val context: Context) {
         val meterONTime = startMinutes + getMachineStartTime()
         return getRoundedDecimal(meterONTime / 60.0).toString()
     }
-
+    
     fun getMeterTimeForStart(): String {
         return getRoundedDecimal(getMachineTotalTime() / 60.0).toString()
     }
-
+    
     private fun getMachineTotalTime() = sessionManager.getMeter().machineTotalTime
     fun setMachineTotalTime(time: Long) {
         val meter = sessionManager.getMeter()
         meter.machineTotalTime = time
         sessionManager.setMeter(meter)
     }
-
+    
     private fun getMachineStartTime(): Long {
         val meter = sessionManager.getMeter()
-
+        
         log("meter:$meter")
-
+        
         return if (meter.isMachineStopped) {
             0
         } else {
@@ -463,9 +476,9 @@ class MyHelper(private var TAG: String, val context: Context) {
             val minutes = (onTime / 1000 / 60)
             minutes
         }
-
+        
     }
-
+    
     /**
      * Starting Calculating this time and When Machine will be started this time will be stopped.
      * This will be total Time of Machine Stopped. This time will be pushed to Database and Portal
@@ -479,13 +492,13 @@ class MyHelper(private var TAG: String, val context: Context) {
      */
     fun stopMachine(insertID: Long, material: Material) {
         setIsMachineStopped(true, material.name, material.id)
-
+        
         val meter = sessionManager.getMeter()
         val meterONTime = getMachineTotalTime() + getMachineStartTime()
         meter.machineTotalTime = meterONTime
         meter.isMachineStopped = true
         meter.machineDbID = insertID
-
+        
         sessionManager.setMeter(meter)
         stopDailyMode()
         val data = MyData()
@@ -493,7 +506,7 @@ class MyHelper(private var TAG: String, val context: Context) {
 //            toast("Machine is Stopped.\n Machine Total Time : $meterONTime (mins)")
 //        toast("Machine is Stopped.")
     }
-
+    
     fun startMachine() {
         val currentTime = System.currentTimeMillis()
         val meter = sessionManager.getMeter()
@@ -502,37 +515,37 @@ class MyHelper(private var TAG: String, val context: Context) {
         meter.machineDbID = 0
         sessionManager.setMeter(meter)
     }
-
+    
     fun isNightMode() = sessionManager.isNightMode()
     fun setNightMode(mode: Boolean) {
         sessionManager.setNightMode(mode)
     }
-
+    
     fun getMachineStoppedReasonID() = sessionManager.getMachineStoppedReasonID()
     fun getIsMachineStopped() = sessionManager.getIsMachineStopped()
     fun setIsMachineStopped(status: Boolean, reason: String, id: Int) {
         sessionManager.setMachineStopped(status, reason, id)
     }
-
+    
     fun getMachineStoppedReason() = sessionManager.getMachineStoppedReason()
     fun getMachineNumber() = sessionManager.getMachineNumber()
     fun setMachineNumber(number: String) {
         sessionManager.setMachineNumber(number)
     }
-
+    
     //    machineTypeId = 1 excavator
     //    machineTypeId = 2 scrapper
     //    machineTypeId = 3 truck
     fun getMachineTypeID() = sessionManager.getMachineTypeID()
-
+    
     fun setMachineTypeID(type: Int) {
         sessionManager.setMachineTypeID(type)
     }
-
+    
     fun isOnline(): Boolean {
         return this.isNetworkAvailable()!!
     }
-
+    
     @Suppress("DEPRECATION")
     private fun isNetworkAvailable(): Boolean? {
         val connectivityManager =
@@ -540,14 +553,14 @@ class MyHelper(private var TAG: String, val context: Context) {
         val activeNetworkInfo = connectivityManager.activeNetworkInfo
         return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting
     }
-
+    
     fun hideKeyboardOnClick(view: View) {
         view.setOnTouchListener { _, _ ->
             hideKeyboard(view)
             false
         }
     }
-
+    
     fun hideKeyboard(view: View) {
         val inputManager =
             context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -556,24 +569,25 @@ class MyHelper(private var TAG: String, val context: Context) {
             InputMethodManager.HIDE_NOT_ALWAYS
         )
     }
-
+    
     fun showProgressBar() {
         if (progressBar!!.visibility == View.GONE && progressBar != null)
             progressBar!!.visibility = View.VISIBLE
     }
-
+    
     @Suppress("SENSELESS_COMPARISON")
     fun hideProgressBar() {
         try {
             if (progressBar!!.visibility == View.VISIBLE)
                 progressBar!!.visibility = View.GONE
-        } catch (e: java.lang.Exception) {
+        }
+        catch (e: java.lang.Exception) {
             log("hideProgressBarExp:${e.message}")
         }
-
-
+        
+        
     }
-
+    
     fun toast(message: String) {
         val toast = Toast.makeText(context, message, Toast.LENGTH_LONG)
         val v = toast.view.findViewById(android.R.id.message) as TextView
@@ -581,11 +595,11 @@ class MyHelper(private var TAG: String, val context: Context) {
 //            toast.setGravity(Gravity.CENTER,0,0)
         toast.show()
     }
-
+    
     fun log(message: String) {
         Log.e(TAG, message)
     }
-
+    
     fun isValidEmail(target: String): Boolean {
         return if (TextUtils.isEmpty(target)) {
             false
@@ -593,15 +607,15 @@ class MyHelper(private var TAG: String, val context: Context) {
             android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches()
         }
     }
-
+    
     fun setTag(tag: String) {
         this.TAG = tag
     }
-
+    
     fun setProgressBar(progressBar: ProgressBar?) {
         this.progressBar = progressBar!!
     }
-
+    
     fun startHistoryByType() {
         when (getMachineTypeID()) {
             1 -> {
@@ -618,7 +632,7 @@ class MyHelper(private var TAG: String, val context: Context) {
             }
         }
     }
-
+    
     //    machineTypeId = 1 excavator
     //    machineTypeId = 2 scrapper
     //    machineTypeId = 3 truck
@@ -638,13 +652,13 @@ class MyHelper(private var TAG: String, val context: Context) {
                 val intent = Intent(context, THomeActivity::class.java)
 //                intent.putExtra("myData", myData)
                 context.startActivity(intent)
-
+                
             }
         }
     }
-
+    
     fun startLoadAfterActivityByType(myData: MyData) {
-
+        
         when (getMachineTypeID()) {
             1 -> {
                 val intent = Intent(context, EHomeActivity::class.java)
@@ -660,27 +674,29 @@ class MyHelper(private var TAG: String, val context: Context) {
                 val intent = Intent(context, TUnloadAfterActivity::class.java)
                 intent.putExtra("myData", myData)
                 context.startActivity(intent)
-
+                
             }
         }
     }
-
+    
     fun logout(activity: Activity) {
         val intent = Intent(activity, HourMeterStopActivity::class.java)
         activity.startActivity(intent)
     }
-
+    
     fun hideDialog() {
         if (dialog!!.isShowing)
             dialog!!.dismiss()
     }
+    
     fun showDialog() {
         try {
             dialog = ProgressDialog.show(
-                context, "", "Fetching Machine Total Hours. Please wait...", true, true
+                context, "", "VSP Tracker. Loading Please wait...", true, true
             )
-
-        } catch (exception: Exception) {
+            
+        }
+        catch (exception: Exception) {
             log("showDialogException:$exception")
         }
     }

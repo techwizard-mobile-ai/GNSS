@@ -8,13 +8,20 @@ import app.vsptracker.apis.delay.EWork
 import app.vsptracker.apis.delay.EWorkResponse
 import app.vsptracker.apis.operators.OperatorAPI
 import app.vsptracker.apis.operators.OperatorResponse
+import app.vsptracker.apis.serverSync.ServerSyncAPI
+import app.vsptracker.apis.serverSync.ServerSyncDataAPI
+import app.vsptracker.apis.serverSync.ServerSyncResponse
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.apis.trip.MyDataListResponse
 import app.vsptracker.apis.trip.MyDataResponse
 import app.vsptracker.classes.Material
 import app.vsptracker.database.DatabaseAdapter
+import com.google.gson.GsonBuilder
+import okhttp3.*
+import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
 
 /**
  * This class will be used for All APIs Calls and Database Actions. It will do following Actions.
@@ -39,7 +46,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 private const val REQUEST_ACCESS_FINE_LOCATION = 1
 
 class MyDataPushSave(private val context: Context) {
-    private val  noInternetMessage = "No Internet Connection.\nData Not Uploaded to Server but Saved in App."
+    private val noInternetMessage = "No Internet Connection.\nData Not Uploaded to Server but Saved in App."
     private val tag = this::class.java.simpleName
     private val myHelper = MyHelper(tag, context)
     private val db = DatabaseAdapter(context)
@@ -49,7 +56,7 @@ class MyDataPushSave(private val context: Context) {
         .build()
     private val retrofitAPI = retrofit.create(RetrofitAPI::class.java)
     var isBackgroundCall = true
-
+    
     /**
      * All Company Data will be fetched from Server using API Calls by this Class only.
      * Old data will be replaced with new one.
@@ -57,7 +64,7 @@ class MyDataPushSave(private val context: Context) {
     fun fetchOrgData() {
         fetchMachinesAutoLogouts()
     }
-
+    
     /**
      * Fetch Machines Logout Times and Save in Database.
      * This Logout Time is different for each Site and each Machine Type.
@@ -84,14 +91,14 @@ class MyDataPushSave(private val context: Context) {
                     myHelper.toast(responseBody.message)
                 }
             }
-
+            
             override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
                 myHelper.hideProgressBar()
                 myHelper.log("Failure" + t.message)
             }
         })
     }
-
+    
     /**
      * No Need to Sync this data as It will not work properly when Operator don't have Internet connection
      * on Login ang Logout and data will not be Synced with Server.
@@ -118,14 +125,14 @@ class MyDataPushSave(private val context: Context) {
                     myHelper.toast(responseBody.message)
                 }
             }
-
+            
             override fun onFailure(call: retrofit2.Call<MyDataListResponse>, t: Throwable) {
                 myHelper.hideProgressBar()
                 myHelper.log("Failure" + t.message)
             }
         })
     }
-
+    
     private fun fetchMachinesTasks() {
         val call = this.retrofitAPI.getMachinesTasks(
             myHelper.getLoginAPI().org_id,
@@ -148,7 +155,7 @@ class MyDataPushSave(private val context: Context) {
                     }
                 }
             }
-
+            
             override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
                 myHelper.run {
                     hideProgressBar()
@@ -157,7 +164,7 @@ class MyDataPushSave(private val context: Context) {
             }
         })
     }
-
+    
     private fun fetchMaterials() {
         val call = this.retrofitAPI.getMaterials(
             myHelper.getLoginAPI().org_id,
@@ -180,7 +187,7 @@ class MyDataPushSave(private val context: Context) {
                     }
                 }
             }
-
+            
             override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
                 myHelper.run {
                     hideProgressBar()
@@ -189,7 +196,7 @@ class MyDataPushSave(private val context: Context) {
             }
         })
     }
-
+    
     private fun fetchLocations() {
         val call = this.retrofitAPI.getLocations(
             myHelper.getLoginAPI().org_id,
@@ -200,7 +207,7 @@ class MyDataPushSave(private val context: Context) {
                 call: retrofit2.Call<OperatorResponse>,
                 response: retrofit2.Response<OperatorResponse>
             ) {
-
+                
                 myHelper.log("Response:$response")
                 val responseBody = response.body()
                 if (responseBody!!.success && responseBody.data != null) {
@@ -211,7 +218,7 @@ class MyDataPushSave(private val context: Context) {
                     myHelper.toast(responseBody.message)
                 }
             }
-
+            
             override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
                 myHelper.run {
                     hideProgressBar()
@@ -220,7 +227,7 @@ class MyDataPushSave(private val context: Context) {
             }
         })
     }
-
+    
     private fun fetchMachines() {
         val call = this.retrofitAPI.getMachines(
             myHelper.getLoginAPI().org_id,
@@ -231,7 +238,7 @@ class MyDataPushSave(private val context: Context) {
                 call: retrofit2.Call<OperatorResponse>,
                 response: retrofit2.Response<OperatorResponse>
             ) {
-
+                
                 myHelper.log("Response:$response")
                 val responseBody = response.body()
                 if (responseBody!!.success && responseBody.data != null) {
@@ -244,7 +251,7 @@ class MyDataPushSave(private val context: Context) {
                     }
                 }
             }
-
+            
             override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
                 myHelper.run {
                     hideProgressBar()
@@ -253,7 +260,7 @@ class MyDataPushSave(private val context: Context) {
             }
         })
     }
-
+    
     private fun fetchStopReasons() {
         val call = this.retrofitAPI.getStopReasons(
             myHelper.getLoginAPI().org_id,
@@ -264,7 +271,7 @@ class MyDataPushSave(private val context: Context) {
                 call: retrofit2.Call<OperatorResponse>,
                 response: retrofit2.Response<OperatorResponse>
             ) {
-
+                
                 myHelper.log("Response:$response")
                 val responseBody = response.body()
                 if (responseBody!!.success && responseBody.data != null) {
@@ -277,7 +284,7 @@ class MyDataPushSave(private val context: Context) {
                     }
                 }
             }
-
+            
             override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
                 myHelper.run {
                     hideProgressBar()
@@ -286,9 +293,9 @@ class MyDataPushSave(private val context: Context) {
             }
         })
     }
-
+    
     private fun fetchMachinesPlants() {
-
+        
         val call = this.retrofitAPI.getMachinesPlants(
             myHelper.getLoginAPI().org_id,
             myHelper.getLoginAPI().auth_token
@@ -307,7 +314,7 @@ class MyDataPushSave(private val context: Context) {
                     }
                 }
             }
-
+            
             override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
                 myHelper.run {
                     hideProgressBar()
@@ -317,9 +324,9 @@ class MyDataPushSave(private val context: Context) {
             }
         })
     }
-
+    
     private fun fetchMachinesBrands() {
-
+        
         val call = this.retrofitAPI.getMachinesBrands(
             myHelper.getLoginAPI().auth_token
         )
@@ -337,7 +344,7 @@ class MyDataPushSave(private val context: Context) {
                     }
                 }
             }
-
+            
             override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
                 myHelper.run {
                     hideProgressBar()
@@ -347,9 +354,9 @@ class MyDataPushSave(private val context: Context) {
             }
         })
     }
-
+    
     private fun fetchMachinesTypes() {
-
+        
         val call = this.retrofitAPI.getMachinesTypes(
             myHelper.getLoginAPI().auth_token
         )
@@ -367,7 +374,7 @@ class MyDataPushSave(private val context: Context) {
                     }
                 }
             }
-
+            
             override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
                 myHelper.run {
                     hideProgressBar()
@@ -377,9 +384,9 @@ class MyDataPushSave(private val context: Context) {
             }
         })
     }
-
+    
     private fun fetchSites() {
-
+        
         val call = this.retrofitAPI.getSites(
             myHelper.getLoginAPI().org_id,
             myHelper.getLoginAPI().auth_token
@@ -399,7 +406,7 @@ class MyDataPushSave(private val context: Context) {
                     }
                 }
             }
-
+            
             override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
                 myHelper.run {
                     hideProgressBar()
@@ -409,9 +416,9 @@ class MyDataPushSave(private val context: Context) {
             }
         })
     }
-
+    
     private fun fetchOperators() {
-
+        
         val call = this.retrofitAPI.getOperators(
             myHelper.getLoginAPI().org_id,
             myHelper.getLoginAPI().auth_token
@@ -428,7 +435,7 @@ class MyDataPushSave(private val context: Context) {
                             context.startActivity(intent)
                         }
                     }
-
+                    
                 } else {
                     myHelper.run {
                         hideProgressBar()
@@ -436,7 +443,7 @@ class MyDataPushSave(private val context: Context) {
                     }
                 }
             }
-
+            
             override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
                 myHelper.run {
                     hideProgressBar()
@@ -446,7 +453,7 @@ class MyDataPushSave(private val context: Context) {
             }
         })
     }
-
+    
     fun pushInsertDelay(eWork: EWork) {
         when {
             myHelper.isOnline() -> pushDelay(eWork)
@@ -456,7 +463,7 @@ class MyDataPushSave(private val context: Context) {
             }
         }
     }
-
+    
     private fun pushDelay(eWork: EWork) {
         val call = this.retrofitAPI.pushDelay(myHelper.getLoginAPI().auth_token, eWork)
         call.enqueue(object : retrofit2.Callback<EWorkResponse> {
@@ -483,7 +490,7 @@ class MyDataPushSave(private val context: Context) {
                 }
                 insertDelay(eWork)
             }
-
+            
             override fun onFailure(call: retrofit2.Call<EWorkResponse>, t: Throwable) {
                 insertDelay(eWork)
                 myHelper.run {
@@ -493,12 +500,12 @@ class MyDataPushSave(private val context: Context) {
             }
         })
     }
-
+    
     private fun insertDelay(eWork: EWork) {
         val insertID = db.insertDelay(eWork)
         myHelper.log("saveDelayID: $insertID")
     }
-
+    
     fun pushInsertMachineHour(myData: MyData) {
         myHelper.log("pushInsertMachineHour:$myData")
         when {
@@ -509,9 +516,9 @@ class MyDataPushSave(private val context: Context) {
             }
         }
     }
-
+    
     private fun pushMachineHour(myData: MyData) {
-
+        
         val call = this.retrofitAPI.pushMachinesHours(
             myHelper.getLoginAPI().auth_token,
             myData
@@ -538,7 +545,7 @@ class MyDataPushSave(private val context: Context) {
                 }
                 insertMachineHour(myData)
             }
-
+            
             override fun onFailure(call: retrofit2.Call<MyDataResponse>, t: Throwable) {
                 insertMachineHour(myData)
                 myHelper.run {
@@ -548,11 +555,11 @@ class MyDataPushSave(private val context: Context) {
             }
         })
     }
-
+    
     private fun insertMachineHour(myData: MyData) {
         db.insertMachineHours(myData)
     }
-
+    
     fun pushInsertOperatorHour(myData: MyData) {
         myHelper.log("pushInsertOperatorHour:$myData")
         when {
@@ -563,9 +570,9 @@ class MyDataPushSave(private val context: Context) {
             }
         }
     }
-
+    
     private fun pushOperatorHour(myData: MyData) {
-
+        
         val call = this.retrofitAPI.pushOperatorHour(
             myHelper.getLoginAPI().auth_token,
             myData
@@ -592,7 +599,7 @@ class MyDataPushSave(private val context: Context) {
                 }
                 insertOperatorHour(myData)
             }
-
+            
             override fun onFailure(call: retrofit2.Call<MyDataResponse>, t: Throwable) {
                 insertOperatorHour(myData)
                 myHelper.run {
@@ -602,11 +609,11 @@ class MyDataPushSave(private val context: Context) {
             }
         })
     }
-
+    
     private fun insertOperatorHour(myData: MyData) {
         db.insertOperatorHour(myData)
     }
-
+    
     /**
      * Machine Stop Entry is Pushed when Machine is Started Again.
      * When Machine is Started, Entry will be pushed to Portal and then
@@ -622,9 +629,9 @@ class MyDataPushSave(private val context: Context) {
             }
         }
     }
-
+    
     private fun pushMachinesStop(machineData: MyData) {
-
+        
         val call = this.retrofitAPI.pushMachinesStops(
             myHelper.getLoginAPI().auth_token,
             machineData
@@ -641,7 +648,7 @@ class MyDataPushSave(private val context: Context) {
                     machineData.isSync = 1
 //                    myHelper.pushIsMachineRunning(1, responseBody.data.id)
 //                    pushIsMachineRunning(machineData)
-
+                
                 } else {
 //                    pushIsMachineRunning(machineData)
                     if (responseBody.message == "Token has expired") {
@@ -655,9 +662,9 @@ class MyDataPushSave(private val context: Context) {
                 }
                 updateMachineStop(machineData)
             }
-
+            
             override fun onFailure(call: retrofit2.Call<MyDataResponse>, t: Throwable) {
-
+                
                 updateMachineStop(machineData)
                 myHelper.run {
                     toast(t.message.toString())
@@ -666,13 +673,13 @@ class MyDataPushSave(private val context: Context) {
             }
         })
     }
-
+    
     private fun updateMachineStop(machineData: MyData): Int {
         val updateID = db.updateMachineStop(machineData)
         myHelper.log("updateMachineStopID:$updateID")
         return updateID
     }
-
+    
     /**
      * This method is called when a machine is stopped and saved in database.
      * When machine is started again this database entry is updated (by method updateMachineStop) and same data is
@@ -687,14 +694,14 @@ class MyDataPushSave(private val context: Context) {
         myData.date = myHelper.getDate(currentTime.toString())
         myData.loadedMachineType = myHelper.getMachineTypeID()
         myData.loadedMachineNumber = myHelper.getMachineNumber()
-
+        
         val insertID = db.insertMachineStop(myData)
         myHelper.log("insertMachineStopID:$insertID")
         if (insertID > 0) myHelper.toast("Machine Stopped due to " + material.name) else myHelper.toast("Machine Stop Entry not Saved in Database.")
         myHelper.stopMachine(insertID, material)
         return insertID
     }
-
+    
     /**
      * This method is called when Loading is done on RLoadActivity. Load data is saved in database but not
      * pushed to server. When Unloading is done, this data is first retrieved from database and updated
@@ -705,7 +712,7 @@ class MyDataPushSave(private val context: Context) {
         myHelper.log("insertTripID:$insertID")
         return insertID
     }
-
+    
     fun pushUpdateTrip(myData: MyData) {
         when {
             myHelper.isOnline() -> pushTrip(myData)
@@ -715,10 +722,10 @@ class MyDataPushSave(private val context: Context) {
             }
         }
     }
-
+    
     private fun pushTrip(myData: MyData) {
         myHelper.log("pushTrip:$myData")
-
+        
         val call = this.retrofitAPI.pushTrip(
             myHelper.getLoginAPI().auth_token,
             myData
@@ -734,7 +741,7 @@ class MyDataPushSave(private val context: Context) {
                 if (responseBody!!.success) {
                     myData.isSync = 1
                     updateTrip(myData)
-
+                    
                 } else {
                     updateTrip(myData)
                     if (responseBody.message == "Token has expired") {
@@ -745,7 +752,7 @@ class MyDataPushSave(private val context: Context) {
                     }
                 }
             }
-
+            
             override fun onFailure(call: retrofit2.Call<MyDataResponse>, t: Throwable) {
 //                myHelper.hideDialog()
 //                saveTrip(myData)
@@ -754,22 +761,22 @@ class MyDataPushSave(private val context: Context) {
             }
         })
     }
-
+    
     private fun updateTrip(myData: MyData): Int {
         val updateID = db.updateTrip(myData)
         myHelper.log("updateTripID:$updateID")
         return updateID
     }
-
+    
     fun pushInsertSideCasting(eWork: EWork) {
-
+        
         eWork.siteId = myHelper.getMachineSettings().siteId
         eWork.machineId = myHelper.getMachineID()
         eWork.orgId = myHelper.getLoginAPI().org_id
         eWork.operatorId = myHelper.getOperatorAPI().id
         eWork.machineTypeId = myHelper.getMachineTypeID()
         eWork.unloadingGPSLocationString = myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
-
+        
         when {
             myHelper.isOnline() -> pushSideCasting(eWork)
             else -> {
@@ -778,7 +785,7 @@ class MyDataPushSave(private val context: Context) {
             }
         }
     }
-
+    
     private fun pushSideCasting(eWork: EWork) {
         val call = this.retrofitAPI.pushSideCastings(
             myHelper.getLoginAPI().auth_token,
@@ -806,7 +813,7 @@ class MyDataPushSave(private val context: Context) {
                 }
                 insertEWork(eWork)
             }
-
+            
             override fun onFailure(call: retrofit2.Call<EWorkResponse>, t: Throwable) {
                 insertEWork(eWork)
                 myHelper.run {
@@ -816,13 +823,13 @@ class MyDataPushSave(private val context: Context) {
             }
         })
     }
-
+    
     fun insertEWork(eWork: EWork): Long {
         val insertID = db.insertEWork(eWork)
         myHelper.log("insertID:$insertID")
         return insertID
     }
-
+    
     fun pushUpdateEWork(eWork: EWork): Int {
         when {
             myHelper.isOnline() -> pushEWork(eWork)
@@ -833,9 +840,9 @@ class MyDataPushSave(private val context: Context) {
         }
         return 1
     }
-
+    
     private fun pushEWork(eWork: EWork) {
-
+        
         myHelper.log("pushSideCastings:$eWork")
         val call = this.retrofitAPI.pushSideCastings(
             myHelper.getLoginAPI().auth_token,
@@ -861,7 +868,7 @@ class MyDataPushSave(private val context: Context) {
                 }
                 updateEWork(eWork)
             }
-
+            
             override fun onFailure(call: retrofit2.Call<EWorkResponse>, t: Throwable) {
                 updateEWork(eWork)
                 myHelper.toast(t.message.toString())
@@ -869,21 +876,124 @@ class MyDataPushSave(private val context: Context) {
             }
         })
     }
-
-    private fun updateEWork(eWork: EWork){
+    
+    private fun updateEWork(eWork: EWork) {
         val updatedID = db.updateEWork(eWork)
         myHelper.log("updateEworkID:$updatedID")
     }
-
+    
     fun insertELoad(myData: MyData): Long {
         val insertID = db.insertELoad(myData)
         myHelper.log("insertELoadID:$insertID")
         return insertID
     }
-
+    
     fun insertEWorkOffLoad(eWork: EWork): Long {
         val insertID = db.insertEWorkOffLoad(eWork)
         myHelper.log("insertEWorkOffLoadID:$insertID")
         return insertID
+    }
+    
+    fun pushUpdateServerSync(serverSyncList: ArrayList<ServerSyncAPI>) {
+        myHelper.showDialog()
+        val client = OkHttpClient()
+        val formBody = FormBody.Builder()
+            .add("token", myHelper.getLoginAPI().auth_token)
+            .add("operator_id", myHelper.getOperatorAPI().id.toString())
+            .add("device_details", myHelper.getDeviceDetailsString())
+            .add("data", myHelper.getServerSyncDataAPIString(serverSyncList))
+            .build()
+        
+        val request = Request.Builder()
+            .url("https://vsptracker.app/api/v1/orgsserversync/store")
+            .post(formBody)
+            .build()
+        
+        client.newCall(request).enqueue(object : Callback {
+            override fun onResponse(call: Call, response: Response) {
+                myHelper.hideDialog()
+                val responseString = response.body()!!.string()
+                val responseJObject = JSONObject(responseString)
+                val success = responseJObject.getBoolean("success")
+//                if (success) {
+                    val gson = GsonBuilder().create()
+                    val data = responseJObject.getString("data")
+                    val dataObj = JSONObject(data)
+                    val dataArray = dataObj.getJSONArray("data")
+                    val serverSyncAPIList = gson.fromJson(dataArray.toString(), Array<ServerSyncAPI>::class.java).toList()
+                    myHelper.log("serverSyncAPIList:${serverSyncAPIList}")
+                    
+/*                    val Model= gson.fromJson(serverSyncAPIListJSONArray,Array<ServerSyncAPI>::class.java)
+                    val serverSyncAPI = gson.fromJson(serverSyncAPIListJSONArray.getJSONObject(0), ServerSyncDataAPI::class.java)
+                    myHelper.log("serverSyncAPI:$serverSyncAPI")
+
+                    val app = gson.fromJson(responseJObject.getString("app"), AppAPI::class.java)
+                    log("app:$app")
+
+                    val appVersionCode = BuildConfig.VERSION_CODE
+                    @Suppress("ConstantConditionIf")
+                    if (app.version_code > appVersionCode && app.is_critical > 0) {
+                        log("Update App")
+                        val appRater = AppRater()
+                        appRater.rateNow(context)
+                    } else {
+                        setLoginAPI(loginAPI)
+                    }*/
+//                } else {
+//                    val intent = Intent(context, LoginActivity::class.java)
+//                    context.startActivity(intent)
+//                }
+            }
+            
+            override fun onFailure(call: Call, e: IOException) {
+                myHelper.hideDialog()
+                myHelper.log("Exception: ${e.printStackTrace()}")
+            }
+        })
+    }
+    
+    fun pushUpdateServerSync1(serverSyncList: ArrayList<ServerSyncAPI>) {
+//        myHelper.log("pushUpdateServerSync:$serverSyncList")
+//        myHelper.log("Device--${myHelper.getDeviceDetailsString()}")
+        myHelper.showDialog()
+        val serverSyncDataAPI = ServerSyncDataAPI()
+        serverSyncDataAPI.token = myHelper.getLoginAPI().auth_token
+        serverSyncDataAPI.operator_id = myHelper.getOperatorAPI().id
+        serverSyncDataAPI.device_details = myHelper.getDeviceDetailsString()
+        serverSyncDataAPI.data = serverSyncList
+        
+        myHelper.log("serverSyncDataAPI:$serverSyncDataAPI")
+        val call = this.retrofitAPI.pushServerSync(serverSyncDataAPI)
+        call.enqueue(object : retrofit2.Callback<ServerSyncResponse> {
+            override fun onResponse(
+                call: retrofit2.Call<ServerSyncResponse>,
+                response: retrofit2.Response<ServerSyncResponse>
+            ) {
+                myHelper.run {
+                    hideDialog()
+                    log("$response")
+                }
+                val responseBody = response.body()
+                myHelper.log("pushUpdateServerSync:$responseBody")
+//                if (responseBody!!.success) {
+//                    eWork.isSync = 1
+//                } else {
+//                    if (responseBody.message == "Token has expired") {
+//                        myHelper.log("Token Expired:$response")
+//                        myHelper.refreshToken()
+//                    } else {
+//                        myHelper.toast(responseBody.message)
+//                    }
+//                }
+            }
+            
+            override fun onFailure(call: retrofit2.Call<ServerSyncResponse>, t: Throwable) {
+                myHelper.run {
+                    hideDialog()
+                    toast(t.message.toString())
+                    log("Failure" + t.message)
+                }
+            }
+        })
     }
 }
