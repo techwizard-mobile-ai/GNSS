@@ -44,6 +44,7 @@ class MachineStatusAdapter(
             val data = MyData()
             data.machineStoppedReason = material.name
             data.loadingGPSLocation = (myContext as MachineStatusActivity).gpsLocation
+            
 //            val insertID = db.insertMachineStop(data)
             myContext.myDataPushSave.insertMachineStop(data, material)
 //            if (insertID > 0) {

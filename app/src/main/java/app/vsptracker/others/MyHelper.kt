@@ -122,6 +122,7 @@ class MyHelper(private var TAG: String, val context: Context) {
                         setLoginAPI(loginAPI)
                     }
                 } else {
+                    toast(responseJObject.getString("message"))
                     val intent = Intent(context, LoginActivity::class.java)
                     context.startActivity(intent)
                 }
@@ -692,7 +693,7 @@ class MyHelper(private var TAG: String, val context: Context) {
     fun showDialog() {
         try {
             dialog = ProgressDialog.show(
-                context, "", "VSP Tracker. Loading Please wait...", true, true
+                context, "", "VSP Tracker. Loading Please wait...", true, false
             )
             
         }

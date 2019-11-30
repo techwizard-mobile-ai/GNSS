@@ -691,6 +691,13 @@ class MyDataPushSave(private val context: Context) {
 
 //        val time = System.currentTimeMillis()
         myData.time = currentTime.toString()
+    
+        myData.orgId = myHelper.getLoginAPI().org_id
+        myData.siteId = myHelper.getMachineSettings().siteId
+        myData.operatorId = myHelper.getOperatorAPI().id
+        myData.machineTypeId = myHelper.getMachineTypeID()
+        myData.machineId = myHelper.getMachineID()
+        myData.machine_stop_reason_id = material.id
         myData.date = myHelper.getDate(currentTime.toString())
         myData.loadedMachineType = myHelper.getMachineTypeID()
         myData.loadedMachineNumber = myHelper.getMachineNumber()
@@ -915,39 +922,79 @@ class MyDataPushSave(private val context: Context) {
                 val responseString = response.body()!!.string()
                 val responseJObject = JSONObject(responseString)
                 val success = responseJObject.getBoolean("success")
-//                if (success) {
-                    val gson = GsonBuilder().create()
-                    val data = responseJObject.getString("data")
-                    val dataObj = JSONObject(data)
-                    val dataArray = dataObj.getJSONArray("data")
-                    val serverSyncAPIList = gson.fromJson(dataArray.toString(), Array<ServerSyncAPI>::class.java).toList()
-                    myHelper.log("serverSyncAPIList:${serverSyncAPIList}")
-                    
-/*                    val Model= gson.fromJson(serverSyncAPIListJSONArray,Array<ServerSyncAPI>::class.java)
-                    val serverSyncAPI = gson.fromJson(serverSyncAPIListJSONArray.getJSONObject(0), ServerSyncDataAPI::class.java)
-                    myHelper.log("serverSyncAPI:$serverSyncAPI")
-
-                    val app = gson.fromJson(responseJObject.getString("app"), AppAPI::class.java)
-                    log("app:$app")
-
-                    val appVersionCode = BuildConfig.VERSION_CODE
-                    @Suppress("ConstantConditionIf")
-                    if (app.version_code > appVersionCode && app.is_critical > 0) {
-                        log("Update App")
-                        val appRater = AppRater()
-                        appRater.rateNow(context)
+                try {
+                    if (success) {
+                        val gson = GsonBuilder().create()
+//                      this data is used for convert data arraylist into object to convert in gson
+//                      here converting back
+                        val data1 = responseJObject.getString("data")
+//                      this is complete data sent to server
+//                      val dataArray = dataObj.getJSONArray("data")
+//                      val dataArray = JSONArray(data1)
+                        val data = gson.fromJson(data1, Array<ServerSyncAPI>::class.java).toList()
+                        myHelper.log("data:${data}")
+//                      here I am getting complete list of data with type. Now I have to update each entry in
+//                      App Database and change their status from isSync 0 to 1 as these entries are successfully updated in Portal Database.
+                        data.forEach { serverSyncAPI ->
+                            when (serverSyncAPI.type) {
+                                1 -> {
+                                    myHelper.log("Operators Hours")
+                                    db.updateOperatorsHours(serverSyncAPI.myDataList)
+                                }
+                                2 -> {
+                                    myHelper.log("Trucks Trips")
+                                    db.updateTrips(serverSyncAPI.myDataList)
+                                }
+                                3 -> {
+                                    myHelper.log("Scrapers Trips")
+                                    db.updateTrips(serverSyncAPI.myDataList)
+                                }
+                                4 -> {
+                                    myHelper.log("Scrapers Trimming")
+                                }
+                                5 -> {
+                                    myHelper.log("Excavators Loadings")
+                                }
+                                6 -> {
+                                    myHelper.log("Excavators Trenching")
+                                }
+                                7 -> {
+                                    myHelper.log("Excavators Digging")
+                                }
+                                8 -> {
+                                    myHelper.log("Machines Stops")
+                                    db.updateMachinesStops(serverSyncAPI.myDataList)
+                                }
+                                9 -> {
+                                    myHelper.log("Machines Hours")
+                                    db.updateMachinesHours(serverSyncAPI.myDataList)
+                                }
+                                10 -> {
+                                    myHelper.log("Operators Waiting")
+                                    db.updateWaits(serverSyncAPI.myEWorkList)
+                                }
+                            }
+                        }
                     } else {
-                        setLoginAPI(loginAPI)
-                    }*/
-//                } else {
-//                    val intent = Intent(context, LoginActivity::class.java)
-//                    context.startActivity(intent)
-//                }
+                        if (responseJObject.getString("message ") == "Token has expired") {
+                            myHelper.log("Token Expired:$responseJObject")
+                            myHelper.refreshToken()
+                        } else {
+                            myHelper.toast(responseJObject.getString("message "))
+                        }
+                    }
+                }
+                catch (e: Exception) {
+                    myHelper.log("${e.message}")
+                }
             }
             
             override fun onFailure(call: Call, e: IOException) {
-                myHelper.hideDialog()
-                myHelper.log("Exception: ${e.printStackTrace()}")
+                myHelper.run {
+                    hideDialog()
+                    toast(e.message.toString())
+                    log("Exception: ${e.printStackTrace()}")
+                }
             }
         })
     }
