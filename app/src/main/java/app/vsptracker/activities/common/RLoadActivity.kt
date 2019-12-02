@@ -55,14 +55,14 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
             2, 3 ->{
                 when (myData.nextAction) {
                     0 -> {
-                        trload_machine.text = myData.loadingMachine
-                        trload_material.text = myData.loadingMaterial
-                        trload_location.text = myData.loadingLocation
+                        trload_machine.text = db.getMachineByID(myData.loading_machine_id).number
+                        trload_material.text = db.getMaterialByID(myData.loading_material_id).name
+                        trload_location.text = db.getLocationByID(myData.loading_location_id).name
                     }
                     2 -> {
-                        trload_machine.text = myData.backLoadingMachine
-                        trload_material.text = myData.backLoadingMaterial
-                        trload_location.text = myData.backLoadingLocation
+                        trload_machine.text = db.getMachineByID(myData.back_loading_machine_id).number
+                        trload_material.text = db.getMaterialByID(myData.back_loading_material_id).name
+                        trload_location.text = db.getLocationByID(myData.back_loading_location_id).name
                     }
                 }
             }
@@ -238,23 +238,27 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
 
                 if (myHelper.getMachineTypeID() == 2) {
                     trload_machine.visibility = View.GONE
-                    trload_material.text = myData.loadingMaterial
-                    trload_location.text = myData.loadingLocation
+                    trload_material.text = db.getMaterialByID(myData.loading_material_id).name
+                    trload_location.text = db.getLocationByID(myData.loading_location_id).name
 //                    trload_weight.text = "Tonnes (" + myData.unloadingWeight + ")"
-                    trload_weight.text = getString(R.string.weight_tonnes_message, myData.unloadingWeight )
+                    try{
+                        trload_weight.text = getString(R.string.weight_tonnes_message, myData.unloadingWeight )
+                    }catch (e : Exception){
+                        myHelper.log(e.message.toString())
+                    }
                 } else {
 
                     trload_machine.visibility = View.VISIBLE
                     when (myData.nextAction) {
                         0 -> {
-                            trload_machine.text = myData.loadingMachine
-                            trload_material.text = myData.loadingMaterial
-                            trload_location.text = myData.loadingLocation
+                            trload_machine.text = db.getMachineByID(myData.loading_machine_id).number
+                            trload_material.text = db.getMaterialByID(myData.loading_material_id).name
+                            trload_location.text = db.getLocationByID(myData.loading_location_id).name
                         }
                         2 -> {
-                            trload_machine.text = myData.backLoadingMachine
-                            trload_material.text = myData.backLoadingMaterial
-                            trload_location.text = myData.backLoadingLocation
+                            trload_machine.text = db.getMachineByID(myData.back_loading_machine_id).number
+                            trload_material.text = db.getMaterialByID(myData.back_loading_material_id).name
+                            trload_location.text = db.getLocationByID(myData.back_loading_location_id).name
                         }
                     }
                 }

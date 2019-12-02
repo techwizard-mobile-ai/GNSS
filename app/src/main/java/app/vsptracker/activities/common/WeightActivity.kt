@@ -96,9 +96,9 @@ class WeightActivity : BaseActivity(), View.OnClickListener {
             //                            myHelper.log("$myData")
 
                                 val data1 = myHelper.getLastJourney()
-                                data1.loadingMachine = myData.loadingMachine
-                                data1.loadingMaterial = myData.loadingMaterial
-                                data1.loadingLocation = myData.loadingLocation
+                                data1.loading_machine_id = myData.loading_machine_id
+                                data1.loading_material_id = myData.loading_material_id
+                                data1.loading_location_id = myData.loading_location_id
                                 data1.unloadingWeight = myData.unloadingWeight
                                 myHelper.setLastJourney(data1)
 
@@ -110,9 +110,9 @@ class WeightActivity : BaseActivity(), View.OnClickListener {
 
 
                                 val data1 = myHelper.getLastJourney()
-                                data1.loadingMachine = myData.loadingMachine
-                                data1.loadingMaterial = myData.loadingMaterial
-                                data1.loadingLocation = myData.loadingLocation
+                                data1.loading_machine_id = myData.loading_machine_id
+                                data1.loading_material_id = myData.loading_material_id
+                                data1.loading_location_id = myData.loading_location_id
                                 data1.unloadingWeight = myData.unloadingWeight
                                 myHelper.setLastJourney(data1)
 

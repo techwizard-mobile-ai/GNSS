@@ -87,11 +87,12 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
                     eWork.operatorId = myHelper.getOperatorAPI().id
                     eWork.unloadingGPSLocation = gpsLocation
 
-                    val time = System.currentTimeMillis()
-                    eWork.time = time.toString()
-                    eWork.stopTime = time
+                    val currentTime = System.currentTimeMillis()
+                    eWork.time = currentTime.toString()
+                    eWork.stopTime = currentTime
                     eWork.totalTime = eWork.stopTime - eWork.startTime
-
+                    eWork.date = myHelper.getDate(currentTime)
+                    
                     if (myHelper.isDailyModeStarted()) {
                         eWork.isDayWorks = 1
                     } else {

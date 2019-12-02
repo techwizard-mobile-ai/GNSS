@@ -38,19 +38,19 @@ class DelayHistoryAdapter(
 
         val eWork = dataList[position]
         myHelper.log("waiting:$eWork")
-        when (eWork.machineTypeId) {
-            1 -> {
-                holder.itemView.eth_machine_type.text = ":  Excavator"
-            }
-            2 -> {
-                holder.itemView.eth_machine_type.text = ":  Scraper"
-            }
-            3 -> {
-                holder.itemView.eth_machine_type.text = ":  Truck"
-            }
-        }
-
-
+//        when (eWork.machineTypeId) {
+//            1 -> {
+//                holder.itemView.eth_machine_type.text = ":  Excavator"
+//            }
+//            2 -> {
+//                holder.itemView.eth_machine_type.text = ":  Scraper"
+//            }
+//            3 -> {
+//                holder.itemView.eth_machine_type.text = ":  Truck"
+//            }
+//        }
+    
+        holder.itemView.eth_machine_type.text = ":  ${db.getMachineTypeByID(eWork.machineTypeId).name}"
 
         holder.itemView.eth_sync.text = ": ${if(eWork.isSync == 1) "Yes" else "No"}"
         holder.itemView.eth_record_number.text = ":  " + (eWork.id)
@@ -59,7 +59,7 @@ class DelayHistoryAdapter(
         val operatorName =  (db.getOperatorByID(eWork.operatorId)).name
         holder.itemView.eth_operator.text = ":  $operatorName"
 
-        holder.itemView.eth_machine_number.text = ":  " + eWork.machineNumber
+        holder.itemView.eth_machine_number.text = ":  ${db.getMachineByID(eWork.materialId).number}"
         holder.itemView.eth_start_time.text = ":  " + myHelper.getTime(eWork.startTime) + " Hrs"
         holder.itemView.eth_end_time.text = ":  " + myHelper.getTime(eWork.stopTime) + " Hrs"
         holder.itemView.eth_duration.text = ":  " + myHelper.getFormattedTime(eWork.totalTime) + " Hrs"

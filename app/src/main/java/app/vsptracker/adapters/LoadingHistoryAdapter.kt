@@ -59,7 +59,7 @@ class LoadingHistoryAdapter(
         holder.itemView.lhr_operator.text = ": $operatorName"
         holder.itemView.lhr_sync.text = ": ${if(myData.isSync == 1) "Yes" else "No"}"
 
-        when (myData.loadedMachineType) {
+        when (myData.machineTypeId) {
             2 -> {
                 holder.itemView.lhr_loading_machine_layout.visibility = View.GONE
                 holder.itemView.lhr_task_layout.visibility = View.GONE
@@ -74,12 +74,14 @@ class LoadingHistoryAdapter(
         val machineNumber = db.getMachineByID(myData.machineId).number
         holder.itemView.lhr_machine_number.text = ":  $machineNumber"
 
-        holder.itemView.lhr_loading_machine.text = ":  " + myData.loadingMachine
+        holder.itemView.lhr_loading_machine.text = ":  ${db.getMachineByID(myData.loading_machine_id).number}"
 
-        holder.itemView.lhr_loaded_material.text = ":  ${myData.loadingMaterial} / ${myData.unloadingMaterial}"
-        holder.itemView.lhr_loading_location.text = ":  ${myData.loadingLocation} / ${myData.unloadingLocation}"
+        holder.itemView.lhr_loaded_material.text = ":  ${db.getMaterialByID(myData.loading_material_id).name} / ${db.getMaterialByID(myData.unloading_material_id).name}"
+        val loadingLocation = db.getLocationByID(myData.loading_location_id).name
+        val unloadingLocation = db.getLocationByID(myData.unloading_location_id).name
+        holder.itemView.lhr_loading_location.text = ":  $loadingLocation / $unloadingLocation"
         holder.itemView.lhr_loading_weight.text = ":  " + myData.unloadingWeight
-        holder.itemView.lhr_task.text = ":  " + myData.unloadingTask
+        holder.itemView.lhr_task.text = ":  ${db.getTaskByID(myData.unloading_task_id).name}"
 
         holder.itemView.lhr_time.text = ": ${myHelper.getTime(myData.startTime)} / ${myHelper.getTime(
             myData.stopTime
@@ -105,10 +107,10 @@ class LoadingHistoryAdapter(
         holder.itemView.lhr_gps_loading_layout.setOnClickListener {
             when (myData.tripType) {
                 0 -> {
-                    myHelper.showOnMap(myData.loadingGPSLocation, "$machineNumber, $operatorName, Loading Location (${myData.loadingLocation})")
+                    myHelper.showOnMap(myData.loadingGPSLocation, "$machineNumber, $operatorName, Loading Location ($loadingLocation)")
                 }
                 1 -> {
-                    myHelper.showOnMap(myData.loadingGPSLocation, "$machineNumber, $operatorName, Back Loading Location (${myData.loadingLocation})")
+                    myHelper.showOnMap(myData.loadingGPSLocation, "$machineNumber, $operatorName, Back Loading Location ($unloadingLocation)")
                 }
             }
 
@@ -116,10 +118,10 @@ class LoadingHistoryAdapter(
         holder.itemView.lhr_gps_unloading_layout.setOnClickListener {
             when (myData.tripType) {
                 0 -> {
-                    myHelper.showOnMap(myData.unloadingGPSLocation, "$machineNumber, $operatorName, Unloading Location (${myData.unloadingLocation})")
+                    myHelper.showOnMap(myData.unloadingGPSLocation, "$machineNumber, $operatorName, Unloading Location ($loadingLocation)")
                 }
                 1 -> {
-                    myHelper.showOnMap(myData.unloadingGPSLocation, "$machineNumber, $operatorName, Back Unloading Location (${myData.unloadingLocation})")
+                    myHelper.showOnMap(myData.unloadingGPSLocation, "$machineNumber, $operatorName, Back Unloading Location ($unloadingLocation)")
                 }
             }
 

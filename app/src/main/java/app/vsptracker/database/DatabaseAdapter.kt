@@ -14,12 +14,12 @@ const val DATABASE_NAME = "vsptracker"
 const val TABLE_E_LOAD_HISTORY = "e_load_history"
 const val TABLE_E_WORK = "ework"
 const val TABLE_E_WORK_ACTION_OFFLOADING = "ework_action_loading"
-const val TABLE_DELAY = "t_wait"
+const val TABLE_WAITS = "t_wait"
 const val TABLE_TRIP = "ttrip_simple"
 const val TABLE_LOCATIONS = "locations"
 const val TABLE_MACHINES = "machines"
 const val TABLE_MATERIALS = "materials"
-const val TABLE_MACHINE_STATUS = "machine_status"
+const val TABLE_MACHINES_STOPS = "machine_status"
 const val TABLE_STOP_REASONS = "stop_reasons"
 const val TABLE_OPERATORS = "operators"
 const val TABLE_SITES = "sites"
@@ -33,28 +33,28 @@ const val TABLE_OPERATORS_HOURS = "operators_hours"
 
 const val COL_TIME = "time"
 const val COL_DATE = "date"
-const val COL_LOADED_MACHINE = "loaded_machine"
+//const val COL_LOADED_MACHINE = "loaded_machine"
 
-const val COL_LOADING_MACHINE = "loading_machine"
+//const val COL_LOADING_MACHINE = "loading_machine"
 const val COL_LOADING_MACHINE_ID = "loading_machine_id"
 
-const val COL_LOADING_MATERIAL = "loading_material"
+//const val COL_LOADING_MATERIAL = "loading_material"
 const val COL_LOADING_MATERIAL_ID = "loading_material_id"
 
-const val COL_LOADING_LOCATION = "loading_location"
+//const val COL_LOADING_LOCATION = "loading_location"
 const val COL_LOADING_LOCATION_ID = "loading_location_id"
 
 const val COL_UNLOADING_WEIGHT = "loading_weight"
 
-const val COL_UNLOADING_TASK = "unloading_task"
+//const val COL_UNLOADING_TASK = "unloading_task"
 const val COL_UNLOADING_TASK_ID = "unloading_task_id"
 
-const val COL_UNLOADING_MATERIAL = "unloading_material"
+//const val COL_UNLOADING_MATERIAL = "unloading_material"
 const val COL_UNLOADING_MATERIAL_ID = "unloading_material_id"
 
 const val COL_UNLOADING_MACHINE = "unloading_machine"
 
-const val COL_UNLOADING_LOCATION = "unloading_location"
+//const val COL_UNLOADING_LOCATION = "unloading_location"
 const val COL_UNLOADING_LOCATION_ID = "unloading_location_id"
 
 const val COL_MACHINE_TYPE_ID = "machine_type_id"
@@ -83,9 +83,8 @@ const val COL_EWORK_ID = "ework_id"
 // tripType 1 = Trip For Back Load
 const val COL_TRIP_TYPE = "trip_type"
 const val COL_TRIP0_ID = "trip0_id"
-// TODO change Text to Boolean OR Int
 //const val COL_WORK_MODE = "work_mode"
-const val COL_MACHINE_NUMBER = "machine_number"
+//const val COL_MACHINE_NUMBER = "machine_number"
 const val COL_MACHINE_ID = "machine_id"
 const val COL_MACHINE_STOPPED_REASON = "machine_stop_reason"
 
@@ -119,7 +118,7 @@ const val DROP_TABLE_MATERIALS = "DROP TABLE IF EXISTS $TABLE_MATERIALS"
 const val DROP_TABLE_MACHINES = "DROP TABLE IF EXISTS $TABLE_MACHINES"
 const val DROP_TABLE_LOCATIONS = "DROP TABLE IF EXISTS $TABLE_LOCATIONS"
 const val DROP_TABLE_TRIP = "DROP TABLE IF EXISTS $TABLE_TRIP"
-const val DROP_TABLE_WAIT = "DROP TABLE IF EXISTS $TABLE_DELAY"
+const val DROP_TABLE_WAIT = "DROP TABLE IF EXISTS $TABLE_WAITS"
 const val DROP_TABLE_E_WORK_ACTION_OFFLOADING = "DROP TABLE IF EXISTS $TABLE_E_WORK_ACTION_OFFLOADING"
 const val DROP_TABLE_E_WORK = "DROP TABLE IF EXISTS $TABLE_E_WORK"
 const val DROP_TABLE_E_LOAD_HISTORY = "DROP TABLE IF EXISTS $TABLE_E_LOAD_HISTORY"
@@ -144,7 +143,6 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 "$COL_SITE_ID INTEGER, " +
                 "$COL_MACHINE_TYPE_ID  INTEGER," +
                 "$COL_MACHINE_ID  INTEGER," +
-                "$COL_MACHINE_NUMBER TEXT, " +
                 "$COL_LOADING_GPS_LOCATION  TEXT," +
                 "$COL_UNLOADING_GPS_LOCATION  TEXT," +
                 "$COL_USER_ID  TEXT," +
@@ -242,12 +240,12 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 " )"
         
         
-        val createMachineStatusTable = "CREATE TABLE IF NOT EXISTS  $TABLE_MACHINE_STATUS (" +
+        val createMachinesStopsTable = "CREATE TABLE IF NOT EXISTS  $TABLE_MACHINES_STOPS (" +
                 "$COL_ID  INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "$COL_ORG_ID INTEGER, " +
                 "$COL_SITE_ID INTEGER, " +
                 "$COL_MACHINE_TYPE_ID  INTEGER," +
-                "$COL_MACHINE_NUMBER TEXT, " +
+                "$COL_MACHINE_ID  INTEGER," +
                 "$COL_MACHINE_STOPPED_REASON TEXT, " +
                 "$COL_LOADING_GPS_LOCATION  TEXT," +
                 "$COL_UNLOADING_GPS_LOCATION  TEXT," +
@@ -270,24 +268,15 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 "$COL_TRIP0_ID  TEXT," +
                 "$COL_MACHINE_TYPE_ID  INTEGER," +
                 "$COL_MACHINE_ID INTEGER," +
-                "$COL_MACHINE_NUMBER TEXT, " +
-                "$COL_LOADING_MACHINE  TEXT," +
                 "$COL_LOADING_MACHINE_ID  INTEGER," +
-                "$COL_LOADED_MACHINE  TEXT," +
-                "$COL_LOADING_MATERIAL  TEXT," +
                 "$COL_LOADING_MATERIAL_ID  INTEGER," +
-                "$COL_LOADING_LOCATION  TEXT," +
                 "$COL_LOADING_LOCATION_ID  INTEGER," +
                 "$COL_LOADING_GPS_LOCATION  TEXT," +
                 "$COL_UNLOADING_GPS_LOCATION  TEXT," +
                 "$COL_USER_ID  TEXT," +
                 "$COL_START_TIME  INTEGER," +
-                "$COL_UNLOADING_TASK TEXT," +
                 "$COL_UNLOADING_TASK_ID INTEGER," +
-                "$COL_UNLOADING_MATERIAL TEXT," +
                 "$COL_UNLOADING_MATERIAL_ID INTEGER," +
-                "$COL_UNLOADING_MACHINE TEXT," +
-                "$COL_UNLOADING_LOCATION TEXT," +
                 "$COL_UNLOADING_LOCATION_ID INTEGER," +
                 "$COL_UNLOADING_WEIGHT  REAL," +
                 "$COL_END_TIME INTEGER," +
@@ -298,12 +287,12 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 "$COL_IS_DAY_WORKS  INTEGER" +
                 ")"
         
-        val createTWaitTable = "CREATE TABLE IF NOT EXISTS $TABLE_DELAY ( " +
+        val createWaitsTable = "CREATE TABLE IF NOT EXISTS $TABLE_WAITS ( " +
                 "$COL_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "$COL_ORG_ID INTEGER, " +
                 "$COL_SITE_ID INTEGER, " +
                 "$COL_MACHINE_TYPE_ID INTEGER, " +
-                "$COL_MACHINE_NUMBER TEXT, " +
+                "$COL_MACHINE_ID INTEGER," +
                 "$COL_START_TIME INTEGER, " +
                 "$COL_END_TIME INTEGER, " +
                 "$COL_LOADING_GPS_LOCATION  TEXT," +
@@ -320,6 +309,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 "$COL_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "$COL_ORG_ID INTEGER, " +
                 "$COL_SITE_ID INTEGER, " +
+                "$COL_MACHINE_TYPE_ID INTEGER, " +
+                "$COL_MACHINE_ID INTEGER," +
                 "$COL_EWORK_ID INTEGER, " +
                 "$COL_DATE TEXT, " +
                 "$COL_TIME INTEGER," +
@@ -334,6 +325,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 "$COL_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "$COL_ORG_ID INTEGER, " +
                 "$COL_SITE_ID INTEGER, " +
+                "$COL_MACHINE_TYPE_ID  INTEGER," +
+                "$COL_MACHINE_ID  INTEGER," +
                 "$COL_EWORK_TYPE INTEGER, " +
                 "$COL_EWORK_ACTION_TYPE INTEGER, " +
                 "$COL_START_TIME INTEGER, " +
@@ -355,7 +348,6 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 "$COL_SITE_ID INTEGER, " +
                 "$COL_MACHINE_TYPE_ID  INTEGER," +
                 "$COL_MACHINE_ID  INTEGER," +
-//                "$COL_LOADED_MACHINE  TEXT," +
                 "$COL_LOADING_MATERIAL_ID  INTEGER," +
                 "$COL_LOADING_LOCATION_ID  INTEGER," +
                 "$COL_UNLOADING_WEIGHT  REAL," +
@@ -422,9 +414,9 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         db?.execSQL(createMaterialsTable)
         db?.execSQL(createMachinesTable)
         db?.execSQL(createLocationsTable)
-        db?.execSQL(createMachineStatusTable)
+        db?.execSQL(createMachinesStopsTable)
         db?.execSQL(createTripTable)
-        db?.execSQL(createTWaitTable)
+        db?.execSQL(createWaitsTable)
         db?.execSQL(createEWorkActionOffloadingTable)
         db?.execSQL(createEWorkTable)
         db?.execSQL(createLoadHistoryTable)
@@ -511,7 +503,6 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         cv.put(COL_SITE_ID, datum.siteId)
         cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
         cv.put(COL_MACHINE_ID, datum.machineId)
-        cv.put(COL_MACHINE_NUMBER, datum.loadedMachineNumber)
         cv.put(COL_START_TIME, datum.startTime)
         cv.put(COL_END_TIME, datum.stopTime)
         cv.put(COL_START_HOURS, datum.startHours)
@@ -542,7 +533,6 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_SITE_ID, datum.siteId)
             cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
             cv.put(COL_MACHINE_ID, datum.machineId)
-            cv.put(COL_MACHINE_NUMBER, datum.loadedMachineNumber)
             cv.put(COL_START_TIME, datum.startTime)
             cv.put(COL_END_TIME, datum.stopTime)
             
@@ -761,22 +751,13 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
     fun insertMachineStop(myData: MyData): Long {
         
         myHelper.log("insertMachineStop:$myData")
-//        val currentTime = System.currentTimeMillis()
-//        myData.startTime = currentTime
-//
-//        val time = System.currentTimeMillis()
-//        myData.time = time.toString()
-//        myData.date = myHelper.getDate(time.toString())
-//        myData.loadedMachineType = myHelper.getMachineTypeID()
-//        myData.loadedMachineNumber = myHelper.getMachineNumber()
         
         val db = this.writableDatabase
         val cv = ContentValues()
         cv.put(COL_ORG_ID, myData.orgId)
         cv.put(COL_SITE_ID, myData.siteId)
-//        TODO Add Machine ID Column
-        cv.put(COL_MACHINE_TYPE_ID, myData.loadedMachineType)
-        cv.put(COL_MACHINE_NUMBER, myData.loadedMachineNumber)
+        cv.put(COL_MACHINE_TYPE_ID, myData.machineTypeId)
+        cv.put(COL_MACHINE_ID, myData.machineId)
         cv.put(COL_MACHINE_STOPPED_REASON, myData.machineStoppedReason)
         
         cv.put(COL_START_TIME, myData.startTime)
@@ -798,7 +779,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         
         
         // myHelper.log("insertID:$insertID")
-        return db.insert(TABLE_MACHINE_STATUS, null, cv)
+        return db.insert(TABLE_MACHINES_STOPS, null, cv)
     }
     
     fun insertTrip(myData: MyData): Long {
@@ -815,8 +796,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val time = System.currentTimeMillis()
         myData.time = time.toString()
         myData.date = myHelper.getDate(time.toString())
-        myData.loadedMachineType = myHelper.getMachineTypeID()
-        myData.loadedMachineNumber = myHelper.getMachineNumber()
+        myData.machineTypeId = myHelper.getMachineTypeID()
+        myData.machineId = myHelper.getMachineID()
         
         
         val db = this.writableDatabase
@@ -825,36 +806,25 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         cv.put(COL_SITE_ID, myData.siteId)
         cv.put(COL_TRIP_TYPE, myData.tripType)
         cv.put(COL_TRIP0_ID, myData.trip0ID)
-        cv.put(COL_MACHINE_TYPE_ID, myData.loadedMachineType)
-        cv.put(COL_MACHINE_NUMBER, myData.loadedMachineNumber)
-        cv.put(COL_LOADED_MACHINE, myData.loadedMachine)
+        cv.put(COL_MACHINE_TYPE_ID, myData.machineTypeId)
+        cv.put(COL_MACHINE_ID, myData.machineId)
 
 //        Back Load saving as Loading item with Trip 0 ID
         if (myData.nextAction == 2) {
-            cv.put(COL_LOADING_MACHINE, myData.backLoadingMachine)
             cv.put(COL_LOADING_MACHINE_ID, myData.back_loading_machine_id)
             
-            cv.put(COL_LOADING_MATERIAL, myData.backLoadingMaterial)
             cv.put(COL_LOADING_MATERIAL_ID, myData.back_loading_material_id)
             
-            cv.put(COL_LOADING_LOCATION, myData.backLoadingLocation)
             cv.put(COL_LOADING_LOCATION_ID, myData.back_loading_location_id)
             
         } else {
-            cv.put(COL_LOADING_MACHINE, myData.loadingMachine)
             cv.put(COL_LOADING_MACHINE_ID, myData.loading_machine_id)
             
-            cv.put(COL_LOADING_MATERIAL, myData.loadingMaterial)
             cv.put(COL_LOADING_MATERIAL_ID, myData.loading_material_id)
             
-            cv.put(COL_LOADING_LOCATION, myData.loadingLocation)
             cv.put(COL_LOADING_LOCATION_ID, myData.loading_location_id)
         }
         
-        
-        cv.put(COL_UNLOADING_TASK, myData.unloadingTask)
-        cv.put(COL_UNLOADING_MATERIAL, myData.unloadingMaterial)
-        cv.put(COL_UNLOADING_LOCATION, myData.unloadingLocation)
         cv.put(COL_UNLOADING_WEIGHT, myData.unloadingWeight)
         
         cv.put(COL_START_TIME, myData.startTime)
@@ -895,7 +865,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         cv.put(COL_ORG_ID, eWork.orgId)
         cv.put(COL_SITE_ID, eWork.siteId)
         cv.put(COL_MACHINE_TYPE_ID, eWork.machineTypeId)
-        cv.put(COL_MACHINE_NUMBER, myHelper.getMachineNumber())
+        cv.put(COL_MACHINE_ID, eWork.machineId)
         cv.put(COL_START_TIME, eWork.startTime)
         cv.put(COL_END_TIME, eWork.stopTime)
         cv.put(COL_TOTAL_TIME, eWork.totalTime)
@@ -913,7 +883,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         
         myHelper.log("delayInsert:$eWork")
         // myHelper.log("insertID:$insertID")
-        return db.insert(TABLE_DELAY, null, cv)
+        return db.insert(TABLE_WAITS, null, cv)
     }
     
     fun insertEWorkOffLoad(eWork: EWork): Long {
@@ -925,6 +895,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val cv = ContentValues()
         cv.put(COL_ORG_ID, eWork.orgId)
         cv.put(COL_SITE_ID, eWork.siteId)
+        cv.put(COL_MACHINE_TYPE_ID, eWork.machineTypeId)
+        cv.put(COL_MACHINE_ID, eWork.machineId)
         cv.put(COL_EWORK_ID, eWork.eWorkId)
         cv.put(COL_TIME, eWork.time.toLong())
         cv.put(COL_DATE, eWork.date)
@@ -951,17 +923,13 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
      */
     fun insertEWork(eWork: EWork): Long {
         
-        val currentTime = System.currentTimeMillis()
-        myHelper.log("insertEWork:$eWork")
-        eWork.stopTime = currentTime
-        eWork.totalTime = currentTime - eWork.startTime
-        eWork.time = currentTime.toString()
-        eWork.date = myHelper.getDate(currentTime)
         
         val db = this.writableDatabase
         val cv = ContentValues()
         cv.put(COL_ORG_ID, eWork.orgId)
         cv.put(COL_SITE_ID, eWork.siteId)
+        cv.put(COL_MACHINE_TYPE_ID, eWork.machineTypeId)
+        cv.put(COL_MACHINE_ID, eWork.machineId)
         cv.put(COL_EWORK_TYPE, eWork.workType)
         cv.put(COL_EWORK_ACTION_TYPE, eWork.workActionType)
         cv.put(COL_START_TIME, eWork.startTime)
@@ -999,8 +967,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         cv.put(COL_ORG_ID, myData.orgId)
         cv.put(COL_SITE_ID, myData.siteId)
         cv.put(COL_MACHINE_ID, myData.machineId)
-        cv.put(COL_MACHINE_TYPE_ID, myData.loadedMachineType)
-//        cv.put(COL_LOADED_MACHINE, myData.loadedMachine)
+        cv.put(COL_MACHINE_TYPE_ID, myData.machineTypeId)
         cv.put(COL_LOADING_MATERIAL_ID, myData.loading_material_id)
         cv.put(COL_LOADING_LOCATION_ID, myData.loading_location_id)
         cv.put(COL_UNLOADING_WEIGHT, myData.unloadingWeight)
@@ -1136,7 +1103,6 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             
             datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
             datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
-            datum.machineNumber = result.getString(result.getColumnIndex(COL_MACHINE_NUMBER))
             
             datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
             datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
@@ -1195,7 +1161,6 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 
                 datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
                 datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
-                datum.machineNumber = result.getString(result.getColumnIndex(COL_MACHINE_NUMBER))
                 
                 datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
                 datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
@@ -1219,14 +1184,12 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
 //                myHelper.log("loadingGPS:$loadingGPS")
 //                if(loadingGPS == null)
 //                    loadingGPS = GPSLocation()
-                if (datum.loadingGPSLocationString != null)
-                    datum.loadingGPSLocation = myHelper.getStringToGPSLocation(datum.loadingGPSLocationString)
+                datum.loadingGPSLocation = myHelper.getStringToGPSLocation(datum.loadingGPSLocationString)
                 
                 datum.unloadingGPSLocationString = result.getString(
                     result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
                 )
-                if (datum.unloadingGPSLocationString != null)
-                    datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(datum.unloadingGPSLocationString)
+                datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(datum.unloadingGPSLocationString)
                 
                 datum.operatorId = result.getInt(result.getColumnIndex(COL_USER_ID))
                 datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
@@ -1240,7 +1203,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return list
     }
     
-    fun getMachinesTasks(): ArrayList<OperatorAPI> {
+    fun getTasks(): ArrayList<OperatorAPI> {
         
         val list: ArrayList<OperatorAPI> = ArrayList()
         val db = this.readableDatabase
@@ -1267,6 +1230,34 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         result.close()
         db.close()
         return list
+    }
+    
+    fun getTaskByID(id: Int): OperatorAPI {
+        
+        val db = this.readableDatabase
+        
+        val query =
+            "Select * from $TABLE_MACHINES_TASKS WHERE $COL_ID = $id ORDER BY $COL_ID DESC"
+        val result = db.rawQuery(query, null)
+    
+        val datum = OperatorAPI()
+        if (result.moveToFirst()) {
+//            do {
+                datum.id = result.getInt(result.getColumnIndex(COL_ID))
+                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+                datum.machineTaskId = result.getInt(result.getColumnIndex(COL_MACHINE_TASK_ID))
+                datum.name = result.getString(result.getColumnIndex(COL_NAME))
+                datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+                
+//            } while (result.moveToNext())
+        }
+        
+        result.close()
+        db.close()
+        return datum
     }
     
     @SuppressWarnings("unused")
@@ -1710,7 +1701,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val db = this.readableDatabase
 
 //        val query = "Select * from $TABLE_DELAY  WHERE $COL_MACHINE_TYPE_ID = ${myHelper.getMachineTypeID()} ORDER BY $COL_ID DESC"
-        val query = "Select * from $TABLE_DELAY  ORDER BY $COL_ID $orderBy"
+        val query = "Select * from $TABLE_WAITS  ORDER BY $COL_ID $orderBy"
         val result = db.rawQuery(query, null)
         
         
@@ -1721,7 +1712,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
                 datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
                 datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-                datum.machineNumber = result.getString(result.getColumnIndex(COL_MACHINE_NUMBER))
+                datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
                 
                 datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
                 datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
@@ -1737,8 +1728,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                     )
                 )
                 datum.loadingGPSLocationString = result.getString(
-                        result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                    )
+                    result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+                )
                 
                 datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
                     result.getString(
@@ -1746,8 +1737,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                     )
                 )
                 datum.unloadingGPSLocationString = result.getString(
-                        result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                    )
+                    result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+                )
                 
                 datum.operatorId = result.getInt(result.getColumnIndex(COL_USER_ID))
                 datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
@@ -1777,6 +1768,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.id = result.getInt(result.getColumnIndex(COL_ID))
                 datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
                 datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+                datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
                 datum.eWorkId = result.getInt(result.getColumnIndex(COL_EWORK_ID))
                 
                 datum.time = myHelper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
@@ -1809,13 +1802,13 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
     // eWorkType 3 = Scraper Trimming
     // eWorkActionType 1 = Side Casting
     // eWorkActionType 2 = Off Loading
-    fun getEWorks(workType: Int): ArrayList<EWork> {
+    fun getEWorks(workType: Int, orderBy: String = "DESC"): ArrayList<EWork> {
         
         val list: ArrayList<EWork> = ArrayList()
         val db = this.readableDatabase
         
         val query =
-            "Select * from $TABLE_E_WORK WHERE $COL_EWORK_TYPE = $workType ORDER BY $COL_ID DESC"
+            "Select * from $TABLE_E_WORK WHERE $COL_EWORK_TYPE = $workType ORDER BY $COL_ID $orderBy"
         val result = db.rawQuery(query, null)
         
         
@@ -1825,6 +1818,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.id = result.getInt(result.getColumnIndex(COL_ID))
                 datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
                 datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+                datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
                 datum.workType = result.getInt(result.getColumnIndex(COL_EWORK_TYPE))
                 datum.workActionType = result.getInt(result.getColumnIndex(COL_EWORK_ACTION_TYPE))
                 datum.materialId = result.getInt(result.getColumnIndex(COL_LOADING_MATERIAL_ID))
@@ -1840,10 +1835,16 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                         result.getColumnIndex(COL_LOADING_GPS_LOCATION)
                     )
                 )
+                datum.loadingGPSLocationString = result.getString(
+                    result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+                )
                 datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
                     result.getString(
                         result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
                     )
+                )
+                datum.unloadingGPSLocationString = result.getString(
+                    result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
                 )
                 datum.operatorId = result.getInt(result.getColumnIndex(COL_USER_ID))
                 datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
@@ -1857,14 +1858,14 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return list
     }
     
-    fun getELoadHistory(): ArrayList<MyData> {
+    fun getELoadHistory(orderBy: String = "DESC"): ArrayList<MyData> {
         
         val list: ArrayList<MyData> = ArrayList()
         val db = this.readableDatabase
         
         val query =
 //            "Select * from $TABLE_E_LOAD_HISTORY WHERE $COL_MACHINE_TYPE_ID = ${myHelper.getMachineTypeID()} ORDER BY $COL_ID DESC"
-            "Select * from $TABLE_E_LOAD_HISTORY ORDER BY $COL_ID DESC"
+            "Select * from $TABLE_E_LOAD_HISTORY ORDER BY $COL_ID $orderBy"
         val result = db.rawQuery(query, null)
         
         if (result.moveToFirst()) {
@@ -1890,10 +1891,16 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                         result.getColumnIndex(COL_LOADING_GPS_LOCATION)
                     )
                 )
+                datum.loadingGPSLocationString = result.getString(
+                    result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+                )
                 datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
                     result.getString(
                         result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
                     )
+                )
+                datum.unloadingGPSLocationString = result.getString(
+                    result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
                 )
                 datum.operatorId = result.getInt(result.getColumnIndex(COL_USER_ID))
                 datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
@@ -1919,28 +1926,20 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             datum.recordID = result.getLong(result.getColumnIndex(COL_ID))
             datum.tripType = result.getInt(result.getColumnIndex(COL_TRIP_TYPE))
             datum.trip0ID = result.getString(result.getColumnIndex(COL_TRIP0_ID))
-            datum.loadedMachineType = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-            datum.loadedMachineNumber =
-                result.getString(result.getColumnIndex(COL_MACHINE_NUMBER))
-            datum.loadedMachine = result.getString(result.getColumnIndex(COL_LOADED_MACHINE))
-            datum.loadingMachine = result.getString(result.getColumnIndex(COL_LOADING_MACHINE))
+            datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+            datum.machineId =
+                result.getInt(result.getColumnIndex(COL_MACHINE_ID))
             
             datum.loading_machine_id = result.getInt(result.getColumnIndex(COL_LOADING_MACHINE_ID))
-            
-            datum.loadingMaterial = result.getString(result.getColumnIndex(COL_LOADING_MATERIAL))
             datum.loading_material_id = result.getInt(result.getColumnIndex(COL_LOADING_MATERIAL_ID))
             
-            datum.loadingLocation = result.getString(result.getColumnIndex(COL_LOADING_LOCATION))
             datum.loading_location_id = result.getInt(result.getColumnIndex(COL_LOADING_LOCATION_ID))
             
             datum.unloadingWeight = result.getDouble(result.getColumnIndex(COL_UNLOADING_WEIGHT))
-            datum.unloadingTask = result.getString(result.getColumnIndex(COL_UNLOADING_TASK))
             datum.unloading_task_id = result.getInt(result.getColumnIndex(COL_UNLOADING_TASK_ID))
             
-            datum.unloadingMaterial = result.getString(result.getColumnIndex(COL_UNLOADING_MATERIAL))
             datum.unloading_material_id = result.getInt(result.getColumnIndex(COL_UNLOADING_MATERIAL_ID))
             
-            datum.unloadingLocation = result.getString(result.getColumnIndex(COL_UNLOADING_LOCATION))
             datum.unloading_location_id = result.getInt(result.getColumnIndex(COL_UNLOADING_LOCATION_ID))
             
             datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
@@ -1989,22 +1988,14 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.recordID = result.getLong(result.getColumnIndex(COL_ID))
                 datum.tripType = result.getInt(result.getColumnIndex(COL_TRIP_TYPE))
                 datum.trip0ID = result.getString(result.getColumnIndex(COL_TRIP0_ID))
-                datum.loadedMachineType = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-                datum.loadedMachineNumber =
-                    result.getString(result.getColumnIndex(COL_MACHINE_NUMBER))
-                datum.loadedMachine = result.getString(result.getColumnIndex(COL_LOADED_MACHINE))
-                datum.loadingMachine = result.getString(result.getColumnIndex(COL_LOADING_MACHINE))
-                datum.loadingMaterial =
-                    result.getString(result.getColumnIndex(COL_LOADING_MATERIAL))
-                datum.loadingLocation =
-                    result.getString(result.getColumnIndex(COL_LOADING_LOCATION))
+                datum.loading_machine_id = result.getInt(result.getColumnIndex(COL_LOADING_MACHINE_ID))
+                datum.loading_material_id = result.getInt(result.getColumnIndex(COL_LOADING_MATERIAL_ID))
+                datum.loading_location_id = result.getInt(result.getColumnIndex(COL_LOADING_LOCATION_ID))
                 datum.unloadingWeight =
                     result.getDouble(result.getColumnIndex(COL_UNLOADING_WEIGHT))
-                datum.unloadingTask = result.getString(result.getColumnIndex(COL_UNLOADING_TASK))
-                datum.unloadingMaterial =
-                    result.getString(result.getColumnIndex(COL_UNLOADING_MATERIAL))
-                datum.unloadingLocation =
-                    result.getString(result.getColumnIndex(COL_UNLOADING_LOCATION))
+                datum.unloading_task_id = result.getInt(result.getColumnIndex(COL_UNLOADING_TASK_ID))
+                datum.unloading_material_id = result.getInt(result.getColumnIndex(COL_UNLOADING_MATERIAL_ID))
+                datum.unloading_location_id = result.getInt(result.getColumnIndex(COL_UNLOADING_LOCATION_ID))
                 
                 datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
                 datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
@@ -2054,22 +2045,18 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.recordID = result.getLong(result.getColumnIndex(COL_ID))
                 datum.tripType = result.getInt(result.getColumnIndex(COL_TRIP_TYPE))
                 datum.trip0ID = result.getString(result.getColumnIndex(COL_TRIP0_ID))
-                datum.loadedMachineType = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-                datum.loadedMachineNumber =
-                    result.getString(result.getColumnIndex(COL_MACHINE_NUMBER))
-                datum.loadedMachine = result.getString(result.getColumnIndex(COL_LOADED_MACHINE))
-                datum.loadingMachine = result.getString(result.getColumnIndex(COL_LOADING_MACHINE))
-                datum.loadingMaterial =
-                    result.getString(result.getColumnIndex(COL_LOADING_MATERIAL))
-                datum.loadingLocation =
-                    result.getString(result.getColumnIndex(COL_LOADING_LOCATION))
+                
+                datum.loading_machine_id = result.getInt(result.getColumnIndex(COL_LOADING_MACHINE_ID))
+                
+                datum.loading_material_id = result.getInt(result.getColumnIndex(COL_LOADING_MATERIAL_ID))
+                
+                datum.loading_location_id = result.getInt(result.getColumnIndex(COL_LOADING_LOCATION_ID))
+                
                 datum.unloadingWeight =
                     result.getDouble(result.getColumnIndex(COL_UNLOADING_WEIGHT))
-                datum.unloadingTask = result.getString(result.getColumnIndex(COL_UNLOADING_TASK))
-                datum.unloadingMaterial =
-                    result.getString(result.getColumnIndex(COL_UNLOADING_MATERIAL))
-                datum.unloadingLocation =
-                    result.getString(result.getColumnIndex(COL_UNLOADING_LOCATION))
+                datum.unloading_task_id = result.getInt(result.getColumnIndex(COL_UNLOADING_TASK_ID))
+                datum.unloading_material_id = result.getInt(result.getColumnIndex(COL_UNLOADING_MATERIAL_ID))
+                datum.unloading_location_id = result.getInt(result.getColumnIndex(COL_UNLOADING_LOCATION_ID))
                 
                 datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
                 datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
@@ -2084,10 +2071,17 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                         result.getColumnIndex(COL_LOADING_GPS_LOCATION)
                     )
                 )
+                datum.loadingGPSLocationString = result.getString(
+                    result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+                )
+                
                 datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
                     result.getString(
                         result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
                     )
+                )
+                datum.unloadingGPSLocationString = result.getString(
+                    result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
                 )
                 datum.operatorId = result.getInt(result.getColumnIndex(COL_USER_ID))
                 datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
@@ -2105,7 +2099,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
 //        var list: ArrayList<MyData> = ArrayList()
         val db = this.readableDatabase
         
-        val query = "Select * from $TABLE_MACHINE_STATUS  WHERE $COL_ID = $id ORDER BY $COL_ID DESC"
+        val query = "Select * from $TABLE_MACHINES_STOPS  WHERE $COL_ID = $id ORDER BY $COL_ID DESC"
         val result = db.rawQuery(query, null)
         
         val datum = MyData()
@@ -2115,8 +2109,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
             datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
             datum.recordID = result.getLong(result.getColumnIndex(COL_ID))
-            datum.loadedMachineType = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-            datum.loadedMachineNumber = result.getString(result.getColumnIndex(COL_MACHINE_NUMBER))
+            datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+            datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
             datum.machineStoppedReason =
                 result.getString(result.getColumnIndex(COL_MACHINE_STOPPED_REASON))
             
@@ -2155,7 +2149,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val list = ArrayList<MyData>()
         val db = this.readableDatabase
         
-        val query = "Select * from $TABLE_MACHINE_STATUS  ORDER BY $COL_ID $orderBy"
+        val query = "Select * from $TABLE_MACHINES_STOPS  ORDER BY $COL_ID $orderBy"
         val result = db.rawQuery(query, null)
         
         if (result.moveToFirst()) {
@@ -2165,8 +2159,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
                 datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
                 datum.recordID = result.getLong(result.getColumnIndex(COL_ID))
-                datum.loadedMachineType = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-                datum.loadedMachineNumber = result.getString(result.getColumnIndex(COL_MACHINE_NUMBER))
+                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+                datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
                 datum.machineStoppedReason =
                     result.getString(result.getColumnIndex(COL_MACHINE_STOPPED_REASON))
                 
@@ -2183,10 +2177,16 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                         result.getColumnIndex(COL_LOADING_GPS_LOCATION)
                     )
                 )
+                datum.loadingGPSLocationString = result.getString(
+                    result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+                )
                 datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
                     result.getString(
                         result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
                     )
+                )
+                datum.unloadingGPSLocationString = result.getString(
+                    result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
                 )
                 datum.operatorId = result.getInt(result.getColumnIndex(COL_USER_ID))
                 datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
@@ -2205,7 +2205,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val cv = ContentValues()
         cv.put(COL_IS_SYNC, eWork.isSync)
         // myHelper.log("updatedID :$updatedID ")
-        return db.update(TABLE_DELAY, cv, "$COL_ID = ${eWork.id}", null)
+        return db.update(TABLE_WAITS, cv, "$COL_ID = ${eWork.id}", null)
     }
     
     fun updateEWork(eWork: EWork): Int {
@@ -2257,22 +2257,12 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
 
 //        back unloading
         if (myData.nextAction == 3) {
-            cv.put(COL_UNLOADING_TASK, myData.backUnloadingTask)
             cv.put(COL_UNLOADING_TASK_ID, myData.back_unloading_task_id)
-            
-            cv.put(COL_UNLOADING_MATERIAL, myData.backUnloadingMaterial)
             cv.put(COL_UNLOADING_MATERIAL_ID, myData.back_unloading_material_id)
-            
-            cv.put(COL_UNLOADING_LOCATION, myData.backUnloadingLocation)
             cv.put(COL_UNLOADING_LOCATION_ID, myData.back_unloading_location_id)
         } else {
-            cv.put(COL_UNLOADING_TASK, myData.unloadingTask)
             cv.put(COL_UNLOADING_TASK_ID, myData.unloading_task_id)
-            
-            cv.put(COL_UNLOADING_MATERIAL, myData.unloadingMaterial)
             cv.put(COL_UNLOADING_MATERIAL_ID, myData.unloading_material_id)
-            
-            cv.put(COL_UNLOADING_LOCATION, myData.unloadingLocation)
             cv.put(COL_UNLOADING_LOCATION_ID, myData.unloading_location_id)
         }
         
@@ -2320,7 +2310,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         cv.put(COL_IS_SYNC, myData.isSync)
         
         // myHelper.log("updatedID :$updatedID ")
-        return db.update(TABLE_MACHINE_STATUS, cv, "$COL_ID = ${myData.recordID}", null)
+        return db.update(TABLE_MACHINES_STOPS, cv, "$COL_ID = ${myData.recordID}", null)
         
     }
     
@@ -2340,7 +2330,6 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         cv.put(COL_SITE_ID, datum.siteId)
         cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
         cv.put(COL_MACHINE_ID, datum.machineId)
-        cv.put(COL_MACHINE_NUMBER, datum.loadedMachineNumber)
         
         cv.put(COL_START_TIME, datum.startTime)
         cv.put(COL_END_TIME, datum.stopTime)
@@ -2381,11 +2370,11 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         }
     }
     
-    fun updateTrips(data : ArrayList<MyData>){
-    
+    fun updateTrips(data: ArrayList<MyData>) {
+        
         val db = this.writableDatabase
         val cv = ContentValues()
-    
+        
         for (datum in data) {
             cv.put(COL_IS_SYNC, datum.isSync)
             val updatedID = db.update(TABLE_TRIP, cv, "$COL_ID = ${datum.id}", null)
@@ -2393,23 +2382,23 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         }
     }
     
-    fun updateWaits(data : ArrayList<EWork>){
-    
+    fun updateWaits(data: ArrayList<EWork>) {
+        
         val db = this.writableDatabase
         val cv = ContentValues()
-    
+        
         for (datum in data) {
             cv.put(COL_IS_SYNC, datum.isSync)
-            val updatedID = db.update(TABLE_DELAY, cv, "$COL_ID = ${datum.id}", null)
+            val updatedID = db.update(TABLE_WAITS, cv, "$COL_ID = ${datum.id}", null)
             myHelper.log("updateWaits:updateID:$updatedID")
         }
     }
     
-    fun updateMachinesHours(data : ArrayList<MyData>){
-    
+    fun updateMachinesHours(data: ArrayList<MyData>) {
+        
         val db = this.writableDatabase
         val cv = ContentValues()
-    
+        
         for (datum in data) {
             cv.put(COL_IS_SYNC, datum.isSync)
             val updatedID = db.update(TABLE_MACHINES_HOURS, cv, "$COL_ID = ${datum.id}", null)
@@ -2417,15 +2406,27 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         }
     }
     
-    fun updateMachinesStops(data : ArrayList<MyData>){
-    
+    fun updateMachinesStops(data: ArrayList<MyData>) {
+        
         val db = this.writableDatabase
         val cv = ContentValues()
-    
+        
         for (datum in data) {
             cv.put(COL_IS_SYNC, datum.isSync)
-            val updatedID = db.update(TABLE_MACHINE_STATUS, cv, "$COL_ID = ${datum.id}", null)
+            val updatedID = db.update(TABLE_MACHINES_STOPS, cv, "$COL_ID = ${datum.id}", null)
             myHelper.log("updateMachinesStops:updateID:$updatedID")
+        }
+    }
+    
+    fun updateEWorks(data: ArrayList<EWork>) {
+        
+        val db = this.writableDatabase
+        val cv = ContentValues()
+        
+        for (datum in data) {
+            cv.put(COL_IS_SYNC, datum.isSync)
+            val updatedID = db.update(TABLE_E_WORK, cv, "$COL_ID = ${datum.id}", null)
+            myHelper.log("updateEWorks:updateID:$updatedID")
         }
     }
 }

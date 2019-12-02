@@ -62,7 +62,6 @@ class LocationActivity : BaseActivity(), View.OnClickListener {
             when {
                 myData.isForLoadResult -> {
                     val intent = intent
-                    myData.loadingLocation = locations[position].name
                     myData.loading_location_id = locations[position].id
                     intent.putExtra("myData", myData)
                     setResult(Activity.RESULT_OK, intent)
@@ -70,7 +69,6 @@ class LocationActivity : BaseActivity(), View.OnClickListener {
                 }
                 myData.isForUnloadResult -> {
                     val intent = intent
-                    myData.unloadingLocation = locations[position].name
                     myData.unloading_location_id= locations[position].id
                     intent.putExtra("myData", myData)
                     setResult(Activity.RESULT_OK, intent)
@@ -78,7 +76,6 @@ class LocationActivity : BaseActivity(), View.OnClickListener {
                 }
                 myData.isForBackLoadResult -> {
                     val intent = intent
-                    myData.backLoadingLocation = locations[position].name
                     myData.back_loading_location_id = locations[position].id
                     intent.putExtra("myData", myData)
                     setResult(Activity.RESULT_OK, intent)
@@ -86,7 +83,6 @@ class LocationActivity : BaseActivity(), View.OnClickListener {
                 }
                 myData.isForBackUnloadResult -> {
                     val intent = intent
-                    myData.backUnloadingLocation = locations[position].name
                     myData.back_unloading_location_id= locations[position].id
                     intent.putExtra("myData", myData)
                     setResult(Activity.RESULT_OK, intent)
@@ -98,7 +94,6 @@ class LocationActivity : BaseActivity(), View.OnClickListener {
                     when (myHelper.getMachineTypeID()) {
                         1 -> {
                             val intent = Intent(this, MaterialActivity::class.java)
-                            myData.loadingLocation = locations[position].name
                             myData.loading_location_id = locations[position].id
                             intent.putExtra("myData", myData)
                             startActivity(intent)
@@ -107,7 +102,6 @@ class LocationActivity : BaseActivity(), View.OnClickListener {
                         2, 3 -> {
                             when (myData.nextAction) {
                                 0 -> {
-                                    myData.loadingLocation = locations[position].name
                                     myData.loading_location_id = locations[position].id
 
                                     myHelper.setLastJourney(myData)
@@ -116,10 +110,7 @@ class LocationActivity : BaseActivity(), View.OnClickListener {
                                     startActivity(intent)
                                 }
                                 1 -> {
-                                    myData.unloadingLocation = locations[position].name
                                     myData.unloading_location_id= locations[position].id
-
-                                    myData.unloadingMaterial = myData.loadingMaterial
                                     myData.unloading_material_id = myData.loading_material_id
 
                                     myHelper.setLastJourney(myData)
@@ -128,7 +119,6 @@ class LocationActivity : BaseActivity(), View.OnClickListener {
                                     startActivity(intent)
                                 }
                                 2 -> {
-                                    myData.backLoadingLocation = locations[position].name
                                     myData.back_loading_location_id = locations[position].id
                                     myHelper.setLastJourney(myData)
 
@@ -136,9 +126,7 @@ class LocationActivity : BaseActivity(), View.OnClickListener {
                                     startActivity(intent)
                                 }
                                 3 -> {
-                                    myData.backUnloadingLocation = locations[position].name
                                     myData.back_unloading_location_id= locations[position].id
-                                    myData.backUnloadingMaterial = myData.backLoadingMaterial
                                     myData.back_unloading_material_id= myData.back_loading_material_id
                                     myHelper.setLastJourney(myData)
 

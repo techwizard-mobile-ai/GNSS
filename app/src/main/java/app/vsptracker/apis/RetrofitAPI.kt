@@ -61,10 +61,16 @@ interface RetrofitAPI {
 
     @POST(ORGS_PUSH_OPERATORS_HOURS)
     fun pushOperatorHour(@Query("token") token: String?, @Body myData: MyData): Call<MyDataResponse>
-
+    
+    /**
+     * Operator Device details are saved in Portal. This will be helpful if there is any GPS issue for any Device.
+     */
     @GET(ORGS_MACHINES_AUTO_LOGOUTS)
     fun getMachinesAutoLogouts(
-        @Query("org_id") org_id: Int?, @Query("token") token: String?
+        @Query("org_id") org_id: Int?,
+        @Query("token") token: String?,
+        @Query("operator_id") id: Int,
+        @Query("device_details")deviceDetailsString: String
     ): Call<OperatorResponse>
 
     @PUT(ORGS_MACHINES_UPDATE)

@@ -42,6 +42,8 @@ class MachineStopAdapter(
 
         val siteName = db.getSiteByID(datum.siteId).name
         holder.itemView.oh_site.text = ":  $siteName"
+        holder.itemView.oh_machine_type.text = ":  ${db.getMachineTypeByID(datum.machineTypeId).name}"
+        holder.itemView.oh_machine_number.text = ":  ${db.getMachineByID(datum.machineId).number}"
         holder.itemView.eth_sync.text = ": ${if (datum.isSync == 1) "Yes" else "No"}"
         holder.itemView.eth_record_number.text = ":  " + (datum.id)
         val operatorName = db.getOperatorByID(datum.operatorId).name

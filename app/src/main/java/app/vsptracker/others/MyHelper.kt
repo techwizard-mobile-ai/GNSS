@@ -49,9 +49,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToLong
-
 @SuppressLint("SimpleDateFormat")
 class MyHelper(private var TAG: String, val context: Context) {
+    @Suppress("DEPRECATION")
     private var dialog: ProgressDialog? = null
     private var progressBar: ProgressBar? = null
     private var sessionManager: SessionManager = SessionManager(context)
@@ -134,7 +134,6 @@ class MyHelper(private var TAG: String, val context: Context) {
         })
     }
     
-    //        TODO To be Implemented
     fun getServerSyncDataAPIString(serverSyncList: ArrayList<ServerSyncAPI>): String {
         val serverSyncDataAPI = ServerSyncDataAPI()
         serverSyncDataAPI.data = serverSyncList
@@ -192,7 +191,7 @@ class MyHelper(private var TAG: String, val context: Context) {
     }
     
     fun getUserID() = getOperatorAPI().id
-    fun getStringToGPSLocation(stringGPSLocation: String): GPSLocation {
+    fun getStringToGPSLocation(stringGPSLocation: String?): GPSLocation {
 //        log("getStringToGPSLocation:$stringGPSLocation")
         return if (stringGPSLocation == null)
             GPSLocation()
@@ -418,7 +417,10 @@ class MyHelper(private var TAG: String, val context: Context) {
     }
     
     fun getLastJourney() = sessionManager.getLastJourney()
-    fun setLastJourney(myData: MyData) = sessionManager.setLastJourney(myData)
+    fun setLastJourney(myData: MyData) {
+        sessionManager.setLastJourney(myData)
+    }
+    
     fun getRoundedDecimal(minutes: Double): Double {
         val number3digits: Double = (minutes * 1000.0).roundToLong() / 1000.0
         val number2digits: Double = (number3digits * 100.0).roundToLong() / 100.0
@@ -590,11 +592,15 @@ class MyHelper(private var TAG: String, val context: Context) {
     }
     
     fun toast(message: String) {
-        val toast = Toast.makeText(context, message, Toast.LENGTH_LONG)
-        val v = toast.view.findViewById(android.R.id.message) as TextView
-        v.gravity = Gravity.CENTER
-//            toast.setGravity(Gravity.CENTER,0,0)
-        toast.show()
+        try {
+            val toast = Toast.makeText(context, message, Toast.LENGTH_LONG)
+            val v = toast.view.findViewById(android.R.id.message) as TextView
+            v.gravity = Gravity.CENTER
+            toast.show()
+        }catch (e :Exception){
+            log("toastException:${e.message}")
+        }
+        
     }
     
     fun log(message: String) {
@@ -690,6 +696,7 @@ class MyHelper(private var TAG: String, val context: Context) {
             dialog!!.dismiss()
     }
     
+    @Suppress("DEPRECATION")
     fun showDialog() {
         try {
             dialog = ProgressDialog.show(
@@ -803,6 +810,7 @@ class MyHelper(private var TAG: String, val context: Context) {
 */
 
 }
+
 
 
 

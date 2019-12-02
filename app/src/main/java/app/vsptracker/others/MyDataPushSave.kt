@@ -9,8 +9,6 @@ import app.vsptracker.apis.delay.EWorkResponse
 import app.vsptracker.apis.operators.OperatorAPI
 import app.vsptracker.apis.operators.OperatorResponse
 import app.vsptracker.apis.serverSync.ServerSyncAPI
-import app.vsptracker.apis.serverSync.ServerSyncDataAPI
-import app.vsptracker.apis.serverSync.ServerSyncResponse
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.apis.trip.MyDataListResponse
 import app.vsptracker.apis.trip.MyDataResponse
@@ -73,7 +71,9 @@ class MyDataPushSave(private val context: Context) {
     private fun fetchMachinesAutoLogouts() {
         val call = this.retrofitAPI.getMachinesAutoLogouts(
             myHelper.getLoginAPI().org_id,
-            myHelper.getLoginAPI().auth_token
+            myHelper.getLoginAPI().auth_token,
+            myHelper.getOperatorAPI().id,
+            myHelper.getDeviceDetailsString()
         )
         call.enqueue(object : retrofit2.Callback<OperatorResponse> {
             override fun onResponse(
@@ -699,8 +699,7 @@ class MyDataPushSave(private val context: Context) {
         myData.machineId = myHelper.getMachineID()
         myData.machine_stop_reason_id = material.id
         myData.date = myHelper.getDate(currentTime.toString())
-        myData.loadedMachineType = myHelper.getMachineTypeID()
-        myData.loadedMachineNumber = myHelper.getMachineNumber()
+        myData.machineId= myHelper.getMachineID()
         
         val insertID = db.insertMachineStop(myData)
         myHelper.log("insertMachineStopID:$insertID")
@@ -784,6 +783,7 @@ class MyDataPushSave(private val context: Context) {
         eWork.machineTypeId = myHelper.getMachineTypeID()
         eWork.unloadingGPSLocationString = myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
         
+        myHelper.log("pushInsertSideCasting:$eWork")
         when {
             myHelper.isOnline() -> pushSideCasting(eWork)
             else -> {
@@ -832,12 +832,15 @@ class MyDataPushSave(private val context: Context) {
     }
     
     fun insertEWork(eWork: EWork): Long {
+        eWork.machineTypeId = myHelper.getMachineTypeID()
+        eWork.machineId = myHelper.getMachineID()
         val insertID = db.insertEWork(eWork)
         myHelper.log("insertID:$insertID")
         return insertID
     }
     
     fun pushUpdateEWork(eWork: EWork): Int {
+        
         when {
             myHelper.isOnline() -> pushEWork(eWork)
             else -> {
@@ -896,6 +899,12 @@ class MyDataPushSave(private val context: Context) {
     }
     
     fun insertEWorkOffLoad(eWork: EWork): Long {
+    
+        eWork.orgId = myHelper.getLoginAPI().org_id
+        eWork.operatorId = myHelper.getOperatorAPI().id
+        eWork.machineTypeId = myHelper.getMachineTypeID()
+        eWork.machineId = myHelper.getMachineID()
+        
         val insertID = db.insertEWorkOffLoad(eWork)
         myHelper.log("insertEWorkOffLoadID:$insertID")
         return insertID
@@ -951,15 +960,16 @@ class MyDataPushSave(private val context: Context) {
                                 }
                                 4 -> {
                                     myHelper.log("Scrapers Trimming")
+                                    db.updateEWorks(serverSyncAPI.myEWorkList)
                                 }
                                 5 -> {
-                                    myHelper.log("Excavators Loadings")
+                                    myHelper.log("Excavators Production Digging")
                                 }
                                 6 -> {
                                     myHelper.log("Excavators Trenching")
                                 }
                                 7 -> {
-                                    myHelper.log("Excavators Digging")
+                                    myHelper.log("Excavators General Digging")
                                 }
                                 8 -> {
                                     myHelper.log("Machines Stops")
@@ -998,7 +1008,7 @@ class MyDataPushSave(private val context: Context) {
             }
         })
     }
-    
+/*
     fun pushUpdateServerSync1(serverSyncList: ArrayList<ServerSyncAPI>) {
 //        myHelper.log("pushUpdateServerSync:$serverSyncList")
 //        myHelper.log("Device--${myHelper.getDeviceDetailsString()}")
@@ -1043,4 +1053,53 @@ class MyDataPushSave(private val context: Context) {
             }
         })
     }
+    
+    fun pushUpdateELoad(myData: MyData) {
+        
+        when {
+            myHelper.isOnline() -> pushELoad(myData)
+            else -> {
+                myHelper.toast(noInternetMessage)
+                insertELoad(myData)
+            }
+        }
+    }
+    
+    private fun pushELoad(myData: MyData) {
+        
+        myHelper.log("pushELoad:$myData")
+        
+        val call = this.retrofitAPI.pushLoads(
+            myHelper.getLoginAPI().auth_token,
+            myData
+        )
+        call.enqueue(object : retrofit2.Callback<MyDataResponse> {
+            override fun onResponse(
+                call: retrofit2.Call<MyDataResponse>,
+                response: retrofit2.Response<MyDataResponse>
+            ) {
+                myHelper.log(response.toString())
+                val responseBody = response.body()
+                myHelper.log("EWorkResponse:$responseBody")
+                if (responseBody!!.success) {
+                    myHelper.toast("Load Pushed to Server Successfully.")
+                    myData.isSync = 1
+                } else {
+                    if (responseBody.message == "Token has expired") {
+                        myHelper.log("Token Expired:$responseBody")
+                        myHelper.refreshToken()
+                    } else {
+                        myHelper.toast(responseBody.message)
+                    }
+                }
+                insertELoad(myData)
+            }
+            
+            override fun onFailure(call: retrofit2.Call<MyDataResponse>, t: Throwable) {
+                insertELoad(myData)
+                myHelper.toast("Failure" + t.message)
+            }
+        })
+    }*/
+    
 }

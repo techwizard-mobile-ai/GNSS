@@ -56,7 +56,6 @@ class LMachineActivity : BaseActivity(), View.OnClickListener {
             when {
                 myData.isForLoadResult -> {
                     val intent = intent
-                    myData.loadingMachine = machines[position].number
                     myData.loading_machine_id = machines[position].id
                     intent.putExtra("myData", myData)
                     setResult(Activity.RESULT_OK, intent)
@@ -64,7 +63,6 @@ class LMachineActivity : BaseActivity(), View.OnClickListener {
                 }
                 myData.isForBackLoadResult -> {
                     val intent = intent
-                    myData.backLoadingMachine = machines[position].number
                     myData.back_loading_machine_id = machines[position].id
                     intent.putExtra("myData", myData)
                     setResult(Activity.RESULT_OK, intent)
@@ -73,14 +71,12 @@ class LMachineActivity : BaseActivity(), View.OnClickListener {
                 else -> when (myData.nextAction) {
                     0 -> {
                         val intent = Intent(this, MaterialActivity::class.java)
-                        myData.loadingMachine = machines[position].number
                         myData.loading_machine_id = machines[position].id
                         intent.putExtra("myData", myData)
                         startActivity(intent)
                     }
                     2 -> {
                         val intent = Intent(this, MaterialActivity::class.java)
-                        myData.backLoadingMachine = machines[position].number
                         myData.back_loading_machine_id = machines[position].id
                         intent.putExtra("myData", myData)
                         startActivity(intent)

@@ -141,6 +141,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/eth_meterial_layout"
                 style="@style/load_history_row_item">
 
                 <TextView

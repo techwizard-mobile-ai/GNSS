@@ -179,8 +179,8 @@ class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
                         stopDelay()
                         val eWork = EWork()
                         eWork.eWorkId = eWorkID
-                        eWork.orgId = myHelper.getLoginAPI().org_id
-                        eWork.operatorId = myHelper.getOperatorAPI().id
+//                        eWork.orgId = myHelper.getLoginAPI().org_id
+//                        eWork.operatorId = myHelper.getOperatorAPI().id
                         eWork.loadingGPSLocation = gpsLocation
                         val insertedID = myDataPushSave.insertEWorkOffLoad(eWork)
                         if (insertedID > 0) {
@@ -237,7 +237,7 @@ class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
             if (bundle != null) {
                 myData = bundle.getSerializable("myData") as MyData
                 myHelper.log("myData:$myData")
-                et_offload_material.text = myData.loadingMaterial
+                et_offload_material.text = db.getMaterialByID(myData.loading_material_id).name
                 eWork.materialId = myData.loading_material_id
 
             }

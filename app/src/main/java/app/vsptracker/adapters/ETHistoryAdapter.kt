@@ -43,9 +43,11 @@ class ETHistoryAdapter(
             when(eWork.workType){
                 3 -> {
                     holder.itemView.eth_action.text = ":  Trimming"
+                    holder.itemView.eth_meterial_layout.visibility = View.GONE
                 }
                 else -> {
                     holder.itemView.eth_action.text = ":  Side Casting"
+                    holder.itemView.eth_meterial_layout.visibility = View.VISIBLE
                 }
             }
 //            holder.itemView.eth_action.setText(":  Side Casting")

@@ -37,8 +37,9 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
 
 
         myData = myHelper.getLastJourney()
-        eload_material.text = myData.loadingMaterial
-        eload_location.text = myData.loadingLocation
+        myHelper.log("$myData")
+        eload_material.text = db.getMaterialByID(myData.loading_material_id).name
+        eload_location.text = db.getLocationByID(myData.loading_location_id).name
 
 
         load_truck_load.setOnClickListener(this)
@@ -71,8 +72,6 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
         when (view!!.id) {
             R.id.load_truck_load -> {
                 stopDelay()
-                myData.loadingMachine = myHelper.getMachineNumber()
-                myData.loadedMachine = getString(R.string.load)
 
                 myData.loadingGPSLocation = gpsLocation
                 myData.loadTypeId = 1
@@ -99,8 +98,9 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
                 myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
                 myData.time = currentTime.toString()
                 myData.date = myHelper.getDate(currentTime)
+                myData.isSync = 0
 
-                myData.loadedMachineType = myHelper.getMachineTypeID()
+                myData.machineTypeId = myHelper.getMachineTypeID()
 
                 pushInsertELoad(myData)
                 stopDelay()
@@ -237,8 +237,6 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
                 elh_rv.visibility = View.INVISIBLE
             }
         }
-
-
         return insertID
     }
 
@@ -250,10 +248,9 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
             if (bundle != null) {
                 myData = bundle.getSerializable("myData") as MyData
                 myHelper.log("myData:$myData")
-
-
-                eload_material.text = myData.loadingMaterial
-                eload_location.text = myData.loadingLocation
+                
+                eload_material.text = db.getMaterialByID(myData.loading_material_id).name
+                eload_location.text = db.getLocationByID(myData.loading_location_id).name
 
                 myData.isForUnloadResult = false
                 myData.isForLoadResult = false

@@ -67,7 +67,6 @@ class MaterialActivity : BaseActivity(), View.OnClickListener {
             when {
                 myData.isForLoadResult -> {
                     val intent = intent
-                    myData.loadingMaterial = materials[position].name
                     myData.loading_material_id= materials[position].id
                     intent.putExtra("myData", myData)
                     setResult(Activity.RESULT_OK, intent)
@@ -75,7 +74,6 @@ class MaterialActivity : BaseActivity(), View.OnClickListener {
                 }
                 myData.isForUnloadResult -> {
                     val intent = intent
-                    myData.unloadingMaterial = materials[position].name
                     myData.unloading_material_id= materials[position].id
                     intent.putExtra("myData", myData)
                     setResult(Activity.RESULT_OK, intent)
@@ -83,7 +81,6 @@ class MaterialActivity : BaseActivity(), View.OnClickListener {
                 }
                 myData.isForBackLoadResult -> {
                     val intent = intent
-                    myData.backLoadingMaterial = materials[position].name
                     myData.back_loading_material_id= materials[position].id
                     intent.putExtra("myData", myData)
                     setResult(Activity.RESULT_OK, intent)
@@ -91,7 +88,6 @@ class MaterialActivity : BaseActivity(), View.OnClickListener {
                 }
                 myData.isForBackUnloadResult -> {
                     val intent = intent
-                    myData.backUnloadingMaterial = materials[position].name
                     myData.back_unloading_material_id= materials[position].id
                     intent.putExtra("myData", myData)
                     setResult(Activity.RESULT_OK, intent)
@@ -100,7 +96,6 @@ class MaterialActivity : BaseActivity(), View.OnClickListener {
                 else -> when (myHelper.getMachineTypeID()) {
                     1 -> {
                         val intent = Intent(this, ELoadActivity::class.java)
-                        myData.loadingMaterial = materials[position].name
                         myData.loading_material_id= materials[position].id
 
                         myHelper.setLastJourney(myData)
@@ -111,28 +106,24 @@ class MaterialActivity : BaseActivity(), View.OnClickListener {
                         when (myData.nextAction) {
                             0 -> {
                                 val intent = Intent(this, LocationActivity::class.java)
-                                myData.loadingMaterial = materials[position].name
                                 myData.loading_material_id= materials[position].id
                                 intent.putExtra("myData", myData)
                                 startActivity(intent)
                             }
                             1 -> {
                                 val intent = Intent(this, LocationActivity::class.java)
-                                myData.unloadingMaterial = materials[position].name
                                 myData.unloading_material_id= materials[position].id
                                 intent.putExtra("myData", myData)
                                 startActivity(intent)
                             }
                             2 -> {
                                 val intent = Intent(this, LocationActivity::class.java)
-                                myData.backLoadingMaterial = materials[position].name
                                 myData.back_loading_material_id= materials[position].id
                                 intent.putExtra("myData", myData)
                                 startActivity(intent)
                             }
                             3 -> {
                                 val intent = Intent(this, LocationActivity::class.java)
-                                myData.backUnloadingMaterial = materials[position].name
                                 myData.back_unloading_material_id= materials[position].id
                                 intent.putExtra("myData", myData)
                                 startActivity(intent)

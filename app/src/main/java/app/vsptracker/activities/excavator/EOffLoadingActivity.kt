@@ -167,8 +167,6 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                         stopDelay()
                         val eWork = EWork()
                         eWork.eWorkId = eWorkID
-                        eWork.orgId = myHelper.getLoginAPI().org_id
-                        eWork.operatorId = myHelper.getOperatorAPI().id
                         eWork.loadingGPSLocation = gpsLocation
                         val insertedID = myDataPushSave.insertEWorkOffLoad(eWork)
                         if (insertedID > 0) {

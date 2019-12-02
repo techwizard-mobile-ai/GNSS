@@ -60,7 +60,7 @@ class MyData : Serializable {
     @Expose
     var stopTime = 0L
 
-    var machineNumber = ""
+//    var machineNumber = ""
 
     @SerializedName("start_hours")
     @Expose
@@ -165,35 +165,35 @@ class MyData : Serializable {
     //    machineTypeId = 1 excavator
     //    machineTypeId = 2 scrapper
     //    machineTypeId = 3 truck
-    var loadedMachineType: Int = 0
+//    var loadedMachineTypeId: Int = 0
 
-    var loadedMachineNumber: String = ""
+//    var loadedMachineNumber: String = ""
     var isForBackLoadResult: Boolean = false
     var isForBackUnloadResult: Boolean = false
 
-    var loadingMachine: String = ""
-    var backLoadingMachine: String = ""
+//    var loadingMachine: String = ""
+//    var backLoadingMachine: String = ""
 
-    var loadingMaterial: String = ""
-    var backLoadingMaterial: String = ""
+//    var loadingMaterial: String = ""
+//    var backLoadingMaterial: String = ""
 
-    var loadingLocation: String = ""
-    var backLoadingLocation: String = ""
+//    var loadingLocation: String = ""
+//    var backLoadingLocation: String = ""
 
-    var unloadingTask: String = ""
-    var backUnloadingTask: String = ""
+//    var unloadingTask: String = ""
+//    var backUnloadingTask: String = ""
 
-    var unloadingMachine: String = ""
+//    var unloadingMachine: String = ""
     //    var unloadingMachine: String = ""
 
-    var unloadingMaterial: String = ""
-    var backUnloadingMaterial: String = ""
+//    var unloadingMaterial: String = ""
+//    var backUnloadingMaterial: String = ""
 
-    var unloadingLocation: String = ""
-    var backUnloadingLocation: String = ""
+//    var unloadingLocation: String = ""
+//    var backUnloadingLocation: String = ""
 
     //    var unloadingWeight: Double = 0.0
-    var loadedMachine: String = ""
+//    var loadedMachine: String = ""
 //    var loadedMachine: String = ""
 //    var time: String = ""
 //    var date: String = ""
@@ -255,22 +255,7 @@ class MyData : Serializable {
 
     var isMapOpened: Boolean = false
     override fun toString(): String {
-        return "\nMyData(" +
-                "id=$id, " +
-                "orgId=$orgId, " +
-                "siteId=$siteId, " +
-                "operatorId=$operatorId, " +
-                "startTime='$startTime', " +
-                "stopTime='$stopTime', " +
-                "totalTime='$totalTime', " +
-                "time='$time', " +
-                "isDayWorks=$isDayWorks, " +
-                "loadingGPSLocationString=$loadingGPSLocationString, " +
-                "unloadingGPSLocationString=$unloadingGPSLocationString, " +
-                "time=$time," +
-                "date=$date," +
-                "isSync=$isSync" +
-                ")"
+        return "MyData(orgId=$orgId, siteId=$siteId, operatorId=$operatorId, machineTypeId=$machineTypeId, machineId=$machineId, loadingGPSLocationString='$loadingGPSLocationString', unloadingGPSLocationString='$unloadingGPSLocationString', startTime=$startTime, stopTime=$stopTime, isDayWorks=$isDayWorks, back_loading_machine_id=$back_loading_machine_id, loading_material_id=$loading_material_id, back_loading_material_id=$back_loading_material_id, loading_location_id=$loading_location_id, back_loading_location_id=$back_loading_location_id, eWorkType=$eWorkType, eWorkActionType=$eWorkActionType), isSync=$isSync)"
     }
     
     

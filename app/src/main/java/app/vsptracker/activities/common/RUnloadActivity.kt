@@ -32,18 +32,18 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
 
         when (myData.nextAction) {
             1 -> {
-                trul_task.text = myData.unloadingTask
-                trul_material.text = myData.unloadingMaterial
-                trul_location.text = myData.unloadingLocation
+                trul_task.text = db.getTaskByID(myData.unloading_task_id).name
+                trul_material.text = db.getMaterialByID(myData.unloading_material_id).name
+                trul_location.text = db.getLocationByID(myData.unloading_location_id).name
 //                trul_weight.text = "Tonnes (" + myData.unloadingWeight + ")"
                 trul_weight.text = "0.0"
 //                trunload_unload.text = "Unload"
                 trunload_unload.text = getString(R.string.unload)
             }
             3 -> {
-                trul_task.text = myData.backUnloadingTask
-                trul_material.text = myData.backUnloadingMaterial
-                trul_location.text = myData.backUnloadingLocation
+                trul_task.text = db.getTaskByID(myData.back_unloading_task_id).name
+                trul_material.text = db.getMaterialByID(myData.back_unloading_material_id).name
+                trul_location.text = db.getLocationByID(myData.back_unloading_location_id).name
 //                trul_weight.text = "Tonnes (" + myData.unloadingWeight + ")"
                 trul_weight.text = "0.0"
 //                trunload_unload.text = "Back Unload"
@@ -127,7 +127,6 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                 myData.machineTypeId = myHelper.getMachineTypeID()
                 myData.machineId = myHelper.getMachineID()
 
-                myData.backUnloadingMaterial = myData.backLoadingMaterial
                 myData.back_unloading_material_id = myData.back_loading_material_id
 
                 val currentTime = System.currentTimeMillis()
@@ -144,36 +143,26 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
 
 
                 if(myData.tripType == 1) {
-
-                    myData.loadingMachine = myData.backLoadingMachine
+                    saveTrip(myData)
                     myData.loading_machine_id = myData.back_loading_machine_id
-
-                    myData.loadingMaterial = myData.backLoadingMaterial
                     myData.loading_material_id = myData.back_loading_material_id
-
-                    myData.loadingLocation = myData.backLoadingLocation
                     myData.loading_location_id = myData.back_loading_location_id
-
-                    myData.unloadingTask = myData.backUnloadingTask
                     myData.unloading_task_id = myData.back_unloading_task_id
-
-                    myData.unloadingMaterial = myData.backUnloadingMaterial
                     myData.unloading_material_id = myData.back_unloading_material_id
-
-                    myData.unloadingLocation = myData.backUnloadingLocation
                     myData.unloading_location_id= myData.back_unloading_location_id
-
 //                    myData.loadingGPSLocation = myData.backLoadingGPSLocation
 //                    myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
 //
 //                    myData.unloadingGPSLocation = myData.backUnloadingGPSLocation
 //                    myData.unloadingGPSLocationString = myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
+                }else{
+                    saveTrip(myData)
                 }
 
 
                 myData.unloadingWeight = trul_weight.text.toString().toDouble()
                 myDataPushSave.pushUpdateTrip(myData)
-                saveTrip(myData)
+                
                 stopDelay()
 //                if(myHelper.isOnline()){
 //                    pushTrip(myData)
@@ -285,14 +274,14 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
 
                 when(myData.nextAction ) {
                     1 ->{
-                        trul_task.text = myData.unloadingTask
-                        trul_material.text = myData.unloadingMaterial
-                        trul_location.text = myData.unloadingLocation
+                        trul_task.text = db.getTaskByID(myData.unloading_task_id).name
+                        trul_material.text = db.getMaterialByID(myData.unloading_material_id).name
+                        trul_location.text = db.getLocationByID(myData.unloading_location_id).name
                     }
                     3 ->{
-                        trul_task.text = myData.backUnloadingTask
-                        trul_material.text = myData.backUnloadingMaterial
-                        trul_location.text = myData.backUnloadingLocation
+                        trul_task.text = db.getTaskByID(myData.back_unloading_task_id).name
+                        trul_material.text = db.getMaterialByID(myData.back_unloading_material_id).name
+                        trul_location.text = db.getLocationByID(myData.back_unloading_location_id).name
                     }
 
                 }

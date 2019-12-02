@@ -112,16 +112,13 @@ class ELoadingHistoryAdapter(
                 )} "
 
         holder.itemView.lhr_gps_loading_layout.setOnClickListener {
-            myHelper.showOnMap(myData.loadingGPSLocation, "Excavator Loading (${myData.loadingLocation})")
+            myHelper.showOnMap(myData.loadingGPSLocation, "Excavator Loading (${db.getLocationByID(myData.loading_location_id).name})")
         }
     }
-
-
+    
     override fun getItemCount(): Int {
         return myDataList.size
     }
-
-
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
 }

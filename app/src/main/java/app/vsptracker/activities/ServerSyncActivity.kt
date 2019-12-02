@@ -31,16 +31,15 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
         navigationView.menu.getItem(9).isChecked = true
 
         addToList(1, "Operators Hours", db.getOperatorsHours("ASC"))
-        // TODO Remaining
         addToList(2, "Trucks Trips", db.getTripsByTypes(3, "ASC"))
         addToList(3, "Scrapers Trips", db.getTripsByTypes(2, "ASC"))
-//        addToList(4, "Scrapers Trimmings", db.getEWorks(3))
-//        addToList(5, "Excavators Loadings", db.getELoadHistory())
+        addToList(4, "Scrapers Trimmings", db.getEWorks(3, "ASC"))
+        addToList(5, "Excavators Production Digging", db.getELoadHistory("ASC"))
 //        addToList(6, "Excavators Trenching", db.getEWorks(2))
-//        addToList(7, "Excavators Digging", db.getEWorks(1))
-        addToList(8, "Machines Stops", db.getMachinesStops("ASC"))
-        addToList(9, "Machines Hours", db.getMachinesHours("ASC"))
-        addToList(10, "Operators Waiting", db.getWaits("ASC"))
+//        addToList(7, "Excavators General Digging", db.getEWorks(1))
+//        addToList(8, "Machines Stops", db.getMachinesStops("ASC"))
+//        addToList(9, "Machines Hours", db.getMachinesHours("ASC"))
+//        addToList(10, "Operators Waiting", db.getWaits("ASC"))
 
         if (adapterList.size > 0) {
             val mAdapter = ServerSyncAdapter(this, adapterList)

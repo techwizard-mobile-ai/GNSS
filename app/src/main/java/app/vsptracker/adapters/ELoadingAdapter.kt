@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
+import app.vsptracker.database.DatabaseAdapter
 import kotlinx.android.synthetic.main.list_row_eloading.view.*
 
 class ELoadingAdapter(
@@ -17,8 +18,10 @@ class ELoadingAdapter(
 .ViewHolder>() {
 
     private val tag1 = this::class.java.simpleName
+    private lateinit var db: DatabaseAdapter
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
+    
+        db = DatabaseAdapter(context)
         val v =
                 LayoutInflater.from(parent.context).inflate(R.layout.list_row_eloading, parent, false)
         return ViewHolder(v)
@@ -30,7 +33,7 @@ class ELoadingAdapter(
         val myData = myDataList[position]
 
         holder.itemView.elhr_number.text = "Load # " + (myDataList.size - position)
-        holder.itemView.elhr_material.text = myData.loadingMaterial
+        holder.itemView.elhr_material.text = db.getMaterialByID(myData.loading_material_id).name
         holder.itemView.elhr_time.text = "${myData.time} Hrs"
     }
 
