@@ -153,7 +153,9 @@ class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
                     eWork.siteId = myHelper.getMachineSettings().siteId
                     eWork.stopTime = System.currentTimeMillis()
                     eWork.totalTime = System.currentTimeMillis() - startTime
+                    eWork.time = startTime.toString()
                     eWork.workType = myData.eWorkType
+                    eWork.isSync = 0
                     if (myHelper.isDailyModeStarted()) {
                         eWork.isDayWorks = 1
                     } else {

@@ -744,6 +744,20 @@
         android:layout_width="match_parent"
         android:layout_marginBottom="@dimen/_10sdp"
         android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/no_server_sync_data"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/no_offline_data_to_sync_to_server"
+        android:visibility="gone"
+        style="@style/avenirnext_fontstyle"
+        android:textColor="@color/gray_dark"
+        android:gravity="center"
+        android:textSize="@dimen/_16sdp"
+        android:textStyle="bold"
+        />
     <Button
         android:id="@+id/server_sync_upload"
         android:layout_alignParentBottom="true"

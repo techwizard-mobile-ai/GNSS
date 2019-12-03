@@ -4,7 +4,7 @@
     <item
         android:id="@+id/navf_loading"
         android:icon="@drawable/ic_action_save_alt"
-        android:title="@string/loading" />
+        android:title="@string/prod_dig" />
 
     <item
         android:id="@+id/navf_trenching"
@@ -14,7 +14,7 @@
     <item
         android:id="@+id/navf_digging"
         android:icon="@drawable/ic_action_panorama_horizontal"
-        android:title="@string/digging" />
+        android:title="@string/gen_dig" />
 
     <item
         android:id="@+id/navf_delay"

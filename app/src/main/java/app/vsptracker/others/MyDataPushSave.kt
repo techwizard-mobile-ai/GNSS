@@ -8,18 +8,12 @@ import app.vsptracker.apis.delay.EWork
 import app.vsptracker.apis.delay.EWorkResponse
 import app.vsptracker.apis.operators.OperatorAPI
 import app.vsptracker.apis.operators.OperatorResponse
-import app.vsptracker.apis.serverSync.ServerSyncAPI
 import app.vsptracker.apis.trip.MyData
-import app.vsptracker.apis.trip.MyDataListResponse
 import app.vsptracker.apis.trip.MyDataResponse
 import app.vsptracker.classes.Material
 import app.vsptracker.database.DatabaseAdapter
-import com.google.gson.GsonBuilder
-import okhttp3.*
-import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.io.IOException
 
 /**
  * This class will be used for All APIs Calls and Database Actions. It will do following Actions.
@@ -105,7 +99,7 @@ class MyDataPushSave(private val context: Context) {
      * Secondly this data can be corrected by Operator on Login/Logout by matching it with Machine Odometer.
      * Thirdly this data will only be used for Machine Inspection nothing more.
      */
-    private fun fetchMachinesHours() {
+/*    private fun fetchMachinesHours() {
         val call = this.retrofitAPI.getMachinesHours(
             myHelper.getLoginAPI().org_id,
             myHelper.getLoginAPI().auth_token
@@ -131,7 +125,7 @@ class MyDataPushSave(private val context: Context) {
                 myHelper.log("Failure" + t.message)
             }
         })
-    }
+    }*/
     
     private fun fetchMachinesTasks() {
         val call = this.retrofitAPI.getMachinesTasks(
@@ -869,6 +863,7 @@ class MyDataPushSave(private val context: Context) {
                 if (responseBody!!.success) {
                     eWork.isSync = 1
                 } else {
+                    eWork.isSync = 0
                     if (responseBody.message == "Token has expired") {
                         myHelper.log("Token Expired:$response")
                         myHelper.refreshToken()
@@ -910,104 +905,6 @@ class MyDataPushSave(private val context: Context) {
         return insertID
     }
     
-    fun pushUpdateServerSync(serverSyncList: ArrayList<ServerSyncAPI>) {
-        myHelper.showDialog()
-        val client = OkHttpClient()
-        val formBody = FormBody.Builder()
-            .add("token", myHelper.getLoginAPI().auth_token)
-            .add("operator_id", myHelper.getOperatorAPI().id.toString())
-            .add("device_details", myHelper.getDeviceDetailsString())
-            .add("data", myHelper.getServerSyncDataAPIString(serverSyncList))
-            .build()
-        
-        val request = Request.Builder()
-            .url("https://vsptracker.app/api/v1/orgsserversync/store")
-            .post(formBody)
-            .build()
-        
-        client.newCall(request).enqueue(object : Callback {
-            override fun onResponse(call: Call, response: Response) {
-                myHelper.hideDialog()
-                val responseString = response.body()!!.string()
-                val responseJObject = JSONObject(responseString)
-                val success = responseJObject.getBoolean("success")
-                try {
-                    if (success) {
-                        val gson = GsonBuilder().create()
-//                      this data is used for convert data arraylist into object to convert in gson
-//                      here converting back
-                        val data1 = responseJObject.getString("data")
-//                      this is complete data sent to server
-//                      val dataArray = dataObj.getJSONArray("data")
-//                      val dataArray = JSONArray(data1)
-                        val data = gson.fromJson(data1, Array<ServerSyncAPI>::class.java).toList()
-                        myHelper.log("data:${data}")
-//                      here I am getting complete list of data with type. Now I have to update each entry in
-//                      App Database and change their status from isSync 0 to 1 as these entries are successfully updated in Portal Database.
-                        data.forEach { serverSyncAPI ->
-                            when (serverSyncAPI.type) {
-                                1 -> {
-                                    myHelper.log("Operators Hours")
-                                    db.updateOperatorsHours(serverSyncAPI.myDataList)
-                                }
-                                2 -> {
-                                    myHelper.log("Trucks Trips")
-                                    db.updateTrips(serverSyncAPI.myDataList)
-                                }
-                                3 -> {
-                                    myHelper.log("Scrapers Trips")
-                                    db.updateTrips(serverSyncAPI.myDataList)
-                                }
-                                4 -> {
-                                    myHelper.log("Scrapers Trimming")
-                                    db.updateEWorks(serverSyncAPI.myEWorkList)
-                                }
-                                5 -> {
-                                    myHelper.log("Excavators Production Digging")
-                                }
-                                6 -> {
-                                    myHelper.log("Excavators Trenching")
-                                }
-                                7 -> {
-                                    myHelper.log("Excavators General Digging")
-                                }
-                                8 -> {
-                                    myHelper.log("Machines Stops")
-                                    db.updateMachinesStops(serverSyncAPI.myDataList)
-                                }
-                                9 -> {
-                                    myHelper.log("Machines Hours")
-                                    db.updateMachinesHours(serverSyncAPI.myDataList)
-                                }
-                                10 -> {
-                                    myHelper.log("Operators Waiting")
-                                    db.updateWaits(serverSyncAPI.myEWorkList)
-                                }
-                            }
-                        }
-                    } else {
-                        if (responseJObject.getString("message ") == "Token has expired") {
-                            myHelper.log("Token Expired:$responseJObject")
-                            myHelper.refreshToken()
-                        } else {
-                            myHelper.toast(responseJObject.getString("message "))
-                        }
-                    }
-                }
-                catch (e: Exception) {
-                    myHelper.log("${e.message}")
-                }
-            }
-            
-            override fun onFailure(call: Call, e: IOException) {
-                myHelper.run {
-                    hideDialog()
-                    toast(e.message.toString())
-                    log("Exception: ${e.printStackTrace()}")
-                }
-            }
-        })
-    }
 /*
     fun pushUpdateServerSync1(serverSyncList: ArrayList<ServerSyncAPI>) {
 //        myHelper.log("pushUpdateServerSync:$serverSyncList")

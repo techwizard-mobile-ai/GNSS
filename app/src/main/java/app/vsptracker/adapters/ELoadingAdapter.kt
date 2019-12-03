@@ -34,7 +34,7 @@ class ELoadingAdapter(
 
         holder.itemView.elhr_number.text = "Load # " + (myDataList.size - position)
         holder.itemView.elhr_material.text = db.getMaterialByID(myData.loading_material_id).name
-        holder.itemView.elhr_time.text = "${myData.time} Hrs"
+        holder.itemView.elhr_time.text = "${myData.date} Hrs"
     }
 
 

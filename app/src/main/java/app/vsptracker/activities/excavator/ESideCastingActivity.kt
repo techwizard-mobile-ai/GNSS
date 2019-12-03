@@ -92,6 +92,7 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
                     eWork.stopTime = currentTime
                     eWork.totalTime = eWork.stopTime - eWork.startTime
                     eWork.date = myHelper.getDate(currentTime)
+                    eWork.isSync = 0
                     
                     if (myHelper.isDailyModeStarted()) {
                         eWork.isDayWorks = 1

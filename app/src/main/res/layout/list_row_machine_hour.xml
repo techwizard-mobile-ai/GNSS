@@ -171,14 +171,13 @@
                     android:text="@string/list_row_delay_history_eth_duration_text" />
             </LinearLayout>
             <LinearLayout
-                android:visibility="gone"
                 style="@style/load_history_row_item">
                 <TextView
                     style="@style/load_history_text"
-                    android:text="@string/date" />
+                    android:text="@string/remarks" />
 
                 <TextView
-                    android:id="@+id/eth_date"
+                    android:id="@+id/eth_remarks"
                     style="@style/load_history_desc"
                     android:text="@string/list_row_delay_history_eth_date_text" />
             </LinearLayout>

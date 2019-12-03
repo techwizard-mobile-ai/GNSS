@@ -43,17 +43,18 @@ class ETHistoryAdapter(
             when(eWork.workType){
                 3 -> {
                     holder.itemView.eth_action.text = ":  Trimming"
-                    holder.itemView.eth_meterial_layout.visibility = View.GONE
+                    holder.itemView.eth_meterial_layout.visibility = View.VISIBLE
                 }
                 else -> {
                     holder.itemView.eth_action.text = ":  Side Casting"
-                    holder.itemView.eth_meterial_layout.visibility = View.VISIBLE
+                    holder.itemView.eth_meterial_layout.visibility = View.GONE
                 }
             }
 //            holder.itemView.eth_action.setText(":  Side Casting")
             holder.itemView.eth_totalloads_layout.visibility = View.GONE
         } else {
             holder.itemView.eth_action.text = ":  Loading"
+            holder.itemView.eth_meterial_layout.visibility = View.GONE
             holder.itemView.eth_totalloads_layout.visibility = View.VISIBLE
             holder.itemView.eth_totalloads.text =
                     ":  " + db.getEWorksOffLoads(eWork.id).size.toString()

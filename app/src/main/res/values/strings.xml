@@ -250,5 +250,11 @@
     <string name="machines_hours">:  Machines Hours</string>
     <string name="operators_hours1">:  Operators Hours</string>
     <string name="machines_stops">:  Machines Stops</string>
+    <string name="prod_dig">Prod. Dig</string>
+    <string name="gen_dig">Gen. Dig</string>
+    <string name="no_offline_data_to_sync_to_server">No Offline Data to Sync.</string>
+    <string name="stop_reason">Stop Reason</string>
+    <string name="remarks">Remarks</string>
+    <string name="production_digging_history">Production Digging History</string>
 
 </resources>

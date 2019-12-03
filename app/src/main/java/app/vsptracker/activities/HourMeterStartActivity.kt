@@ -139,7 +139,12 @@ class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
                 val responseBody = response.body()
                 myHelper.log("responseBody:$responseBody")
                 if (responseBody!!.success && responseBody.data != null) {
-                    ms_reading.setText(responseBody.data!![0].totalHours)
+                    try {
+                        ms_reading.setText(responseBody.data!![0].totalHours)
+                    }catch (e : Exception){
+                        myHelper.log(e.message.toString())
+                    }
+                    
                 } else {
                     myHelper.hideProgressBar()
                     myHelper.toast(responseBody.message)

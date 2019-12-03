@@ -12,7 +12,7 @@
 
         <TextView
             style="@style/activity_title"
-            android:text="@string/loading_history" />
+            android:text="@string/production_digging_history" />
 
         <androidx.recyclerview.widget.RecyclerView
 

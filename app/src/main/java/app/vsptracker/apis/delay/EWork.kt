@@ -5,7 +5,7 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-class EWork() : Serializable {
+class EWork : Serializable {
     
     
     @SerializedName("org_id")
@@ -104,7 +104,7 @@ class EWork() : Serializable {
     var workActionType = 0
     
     //    var machineTypeId = 0
-    var machineNumber = ""
+//    var machineNumber = ""
     
     // isSync 0 = Not Uploaded to Server
 // isSync 1 = Uploaded to Server

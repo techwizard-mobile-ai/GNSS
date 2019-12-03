@@ -42,7 +42,7 @@ class MachineStatusAdapter(
 //            myHelper.toast("Machine Stopped due to : " + material.name)
 
             val data = MyData()
-            data.machineStoppedReason = material.name
+            data.machine_stop_reason_id = material.id
             data.loadingGPSLocation = (myContext as MachineStatusActivity).gpsLocation
             
 //            val insertID = db.insertMachineStop(data)

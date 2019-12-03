@@ -77,7 +77,7 @@ class MachineBreakdownActivity : BaseActivity(), View.OnClickListener {
                 val stoppedReasons = db.getStopReasons()
                 // First Reason for Machine Stops is Breakdown for All Companies
                 val material = stoppedReasons[0]
-                data.machineStoppedReason = material.name
+                data.machine_stop_reason_id = material.id
                 data.loadingGPSLocation = gpsLocation
                 data.siteId = myHelper.getMachineSettings().siteId
 

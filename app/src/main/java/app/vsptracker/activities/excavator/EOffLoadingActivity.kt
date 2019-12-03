@@ -147,6 +147,9 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                     eWork.operatorId = myHelper.getOperatorAPI().id
                     eWork.stopTime = System.currentTimeMillis()
                     eWork.totalTime = System.currentTimeMillis() - startTime
+                    eWork.isSync = 0
+    
+                    eWork.time = startTime.toString()
                     eWork.workType = myData.eWorkType
                     eWork.workActionType = 2
                     eWork.loadingGPSLocation = gpsLocation

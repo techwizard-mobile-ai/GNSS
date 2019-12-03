@@ -55,7 +55,18 @@ class MachineHourAdapter(
         if(eWork.stopTime > 0)
         holder.itemView.eth_end_time.text = ":  " + myHelper.getDateTime(eWork.stopTime) + " Hrs"
         holder.itemView.eth_duration.text = ":  " + myHelper.getFormattedTime(eWork.totalTime) + " Hrs"
-        holder.itemView.eth_date.text = ":  " + myHelper.getDateTime(eWork.stopTime) + " Hrs"
+        
+        when(eWork.machine_stop_reason_id){
+            -2 -> {holder.itemView.eth_remarks.text = ":  Machine Changed" }
+            -1 -> {holder.itemView.eth_remarks.text = ":  Logout" }
+            else -> {
+                if(eWork.machine_stop_reason_id > 0)
+                holder.itemView.eth_remarks.text = ":  ${db.getStopReasonByID(eWork.machine_stop_reason_id)}"
+                else holder.itemView.eth_remarks.text = ":  Unknown"
+            }
+        }
+        
+        
         holder.itemView.mh_start_hours.text = ":  ${eWork.startHours} Hrs"
         holder.itemView.mh_total_hours.text = ":  ${eWork.totalHours} Hrs"
 

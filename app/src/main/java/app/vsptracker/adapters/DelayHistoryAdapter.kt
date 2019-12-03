@@ -59,7 +59,8 @@ class DelayHistoryAdapter(
         val operatorName =  (db.getOperatorByID(eWork.operatorId)).name
         holder.itemView.eth_operator.text = ":  $operatorName"
 
-        holder.itemView.eth_machine_number.text = ":  ${db.getMachineByID(eWork.materialId).number}"
+        val machineNumber = db.getMachineByID(eWork.machineId).number
+        holder.itemView.eth_machine_number.text = ":  $machineNumber"
         holder.itemView.eth_start_time.text = ":  " + myHelper.getTime(eWork.startTime) + " Hrs"
         holder.itemView.eth_end_time.text = ":  " + myHelper.getTime(eWork.stopTime) + " Hrs"
         holder.itemView.eth_duration.text = ":  " + myHelper.getFormattedTime(eWork.totalTime) + " Hrs"
@@ -82,10 +83,10 @@ class DelayHistoryAdapter(
                 )} "
 
         holder.itemView.lhr_gps_loading_layout.setOnClickListener {
-            myHelper.showOnMap(eWork.loadingGPSLocation, "$operatorName using Machine ${eWork.machineNumber } Started Waiting")
+            myHelper.showOnMap(eWork.loadingGPSLocation, "$operatorName using Machine $machineNumber Started Waiting")
         }
         holder.itemView.lhr_gps_unloading_layout.setOnClickListener {
-            myHelper.showOnMap(eWork.unloadingGPSLocation, "$operatorName using Machine ${eWork.machineNumber } Stopped Waiting")
+            myHelper.showOnMap(eWork.unloadingGPSLocation, "$operatorName using Machine $machineNumber Stopped Waiting")
         }
 
     }

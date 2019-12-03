@@ -83,6 +83,18 @@
                     android:text="@string/list_row_delay_history_eth_record_number_text" />
             </LinearLayout>
 
+            <LinearLayout style="@style/load_history_row_item">
+
+                <TextView
+                    style="@style/load_history_text"
+                    android:text="@string/stop_reason" />
+
+                <TextView
+                    android:id="@+id/eth_stop_reason"
+                    style="@style/load_history_desc"
+                    android:text="@string/list_row_delay_history_eth_record_number_text" />
+            </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/lhr_loading_machine_layout"
                 style="@style/load_history_row_item">

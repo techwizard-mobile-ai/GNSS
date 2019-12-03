@@ -34,8 +34,11 @@ class MyData : Serializable {
     @SerializedName("machine_type_id")
     @Expose
     var machineTypeId: Int = 0
-
-
+    
+    /**
+     * This ID will be useful when we are saving different loads in OrgsLoads Table.
+     * Like we can save Each Load Detail for Trimming, Production Digging, Trenching Loads, General Digging Loads
+     */
     @SerializedName("load_type_id")
     @Expose
     var loadTypeId: Int = 0
@@ -251,11 +254,11 @@ class MyData : Serializable {
     @Expose
     var isSync: Int = 0
 
-    var machineStoppedReason = ""
+//    var machineStoppedReason = ""
 
     var isMapOpened: Boolean = false
     override fun toString(): String {
-        return "MyData(orgId=$orgId, siteId=$siteId, operatorId=$operatorId, machineTypeId=$machineTypeId, machineId=$machineId, loadingGPSLocationString='$loadingGPSLocationString', unloadingGPSLocationString='$unloadingGPSLocationString', startTime=$startTime, stopTime=$stopTime, isDayWorks=$isDayWorks, back_loading_machine_id=$back_loading_machine_id, loading_material_id=$loading_material_id, back_loading_material_id=$back_loading_material_id, loading_location_id=$loading_location_id, back_loading_location_id=$back_loading_location_id, eWorkType=$eWorkType, eWorkActionType=$eWorkActionType), isSync=$isSync)"
+        return "MyData(orgId=$orgId, siteId=$siteId, operatorId=$operatorId, machineTypeId=$machineTypeId, machineId=$machineId, loadingGPSLocationString='$loadingGPSLocationString', unloadingGPSLocationString='$unloadingGPSLocationString', startTime=$startTime, stopTime=$stopTime, isDayWorks=$isDayWorks, back_loading_machine_id=$back_loading_machine_id, loading_material_id=$loading_material_id, back_loading_material_id=$back_loading_material_id, loading_location_id=$loading_location_id, back_loading_location_id=$back_loading_location_id, eWorkType=$eWorkType, eWorkActionType=$eWorkActionType), isSync=$isSync, stopReasonID=$machine_stop_reason_id)"
     }
     
     
