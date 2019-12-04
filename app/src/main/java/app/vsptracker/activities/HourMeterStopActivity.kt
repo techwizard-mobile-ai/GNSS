@@ -57,7 +57,6 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
         when (view!!.id) {
 
             R.id.hm_stop_summary -> {
-
             }
 
             R.id.sfinish_minus -> {

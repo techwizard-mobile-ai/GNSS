@@ -456,17 +456,16 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         myData.machineTypeId = myHelper.getMachineTypeID()
         myData.machineId = myHelper.getMachineID()
         if(myHelper.isDailyModeStarted()) myData.isDayWorks = 1 else myData.isDayWorks = 0
-        myData.stopTime = System.currentTimeMillis()
-
+        val currentTime = System.currentTimeMillis()
+        myData.stopTime = currentTime
+        myData.totalTime = myData.stopTime - myData.startTime
         myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
         myData.unloadingGPSLocation = gpsLocation
 
         myData.unloadingGPSLocationString = myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
 
-        val time = System.currentTimeMillis()
-        myData.stopTime = time
-        myData.time = time.toString()
-        myData.date = myHelper.getDate(time.toString())
+        myData.time = currentTime.toString()
+        myData.date = myHelper.getDate(currentTime.toString())
 
 //        if (myHelper.isOnline()) {
 //            pushMachineHour(myData)

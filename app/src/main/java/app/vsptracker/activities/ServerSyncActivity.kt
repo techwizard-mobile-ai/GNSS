@@ -1,9 +1,13 @@
 package app.vsptracker.activities
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.vsptracker.BaseActivity
@@ -16,6 +20,7 @@ import app.vsptracker.classes.ServerSyncModel
 import com.google.android.material.navigation.NavigationView
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_server_sync.*
+import kotlinx.android.synthetic.main.ss_updated_notification.view.*
 import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
@@ -35,7 +40,7 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
         layoutInflater.inflate(R.layout.activity_server_sync, contentFrameLayout)
         val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
         navigationView.menu.getItem(9).isChecked = true
-
+    
         addToList(1, "Operators Hours", db.getOperatorsHours("ASC"))
         addToList(2, "Trucks Trips", db.getTripsByTypes(3, "ASC"))
         addToList(3, "Scrapers Trips", db.getTripsByTypes(2, "ASC"))
@@ -52,6 +57,8 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
         server_sync_upload.setOnClickListener(this)
     }
     fun refreshData(){
+        
+        myHelper.log("adapterListSize:${adapterList.size}")
         if (adapterList.size > 0) {
             mAdapter = ServerSyncAdapter(this, adapterList)
             ss_rv.layoutManager = LinearLayoutManager(this as Activity, RecyclerView.VERTICAL, false)
@@ -113,7 +120,7 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
                 if (adapterList.size > 0) {
                     if (myHelper.isOnline()) pushUpdateServerSync(serverSyncList)
                     else myHelper.toast("No Internet Connection. Please Connect to Internet and Try Again.")
-                }else myHelper.toast("No Offline Data to Sync.")
+                }else  myHelper.toast("No Offline Data to Sync.")
                 
             }
         }
@@ -153,55 +160,14 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
                         myHelper.log("data:${data}")
 //                      here I am getting complete list of data with type. Now I have to update each entry in
 //                      App Database and change their status from isSync 0 to 1 as these entries are successfully updated in Portal Database.
-                        data.forEach { serverSyncAPI ->
-                            when (serverSyncAPI.type) {
-                                1 -> {
-                                    myHelper.log("Operators Hours")
-                                    db.updateOperatorsHours(serverSyncAPI.myDataList)
-                                }
-                                2 -> {
-                                    myHelper.log("Trucks Trips")
-                                    db.updateTrips(serverSyncAPI.myDataList)
-                                }
-                                3 -> {
-                                    myHelper.log("Scrapers Trips")
-                                    db.updateTrips(serverSyncAPI.myDataList)
-                                }
-                                4 -> {
-                                    myHelper.log("Scrapers Trimming")
-                                    db.updateEWorks(serverSyncAPI.myEWorkList)
-                                }
-                                5 -> {
-                                    myHelper.log("Excavators Production Digging")
-                                    db.updateELoads(serverSyncAPI.myDataList)
-                                }
-                                6 -> {
-                                    myHelper.log("Excavators Trenching")
-                                    db.updateEWorks(serverSyncAPI.myEWorkList)
-                                }
-                                7 -> {
-                                    myHelper.log("Excavators General Digging")
-                                    db.updateEWorks(serverSyncAPI.myEWorkList)
-                                }
-                                8 -> {
-                                    myHelper.log("Machines Stops")
-                                    db.updateMachinesStops(serverSyncAPI.myDataList)
-                                }
-                                9 -> {
-                                    myHelper.log("Machines Hours")
-                                    db.updateMachinesHours(serverSyncAPI.myDataList)
-                                }
-                                10 -> {
-                                    myHelper.log("Operators Waiting")
-                                    db.updateWaits(serverSyncAPI.myEWorkList)
-                                }
+                        if(updateServerSync(data)){
+                            runOnUiThread {
+//                                myHelper.toast("All Data Uploaded to Server Successfully.")
+                                mAdapter.notifyDataSetChanged()
+                                updatedNotification()
                             }
-                            
                         }
-                        runOnUiThread {
-                            myHelper.toast("All Data Uploaded to Server Successfully.")
-                        }
-                        myHelper.startHomeActivityByType(MyData())
+                        
                     } else {
                         if (responseJObject.getString("message ") == "Token has expired") {
                             myHelper.log("Token Expired:$responseJObject")
@@ -224,5 +190,89 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
                 }
             }
         })
+    }
+    
+    private fun updateServerSync(data: List<ServerSyncAPI>): Boolean {
+        data.forEach { serverSyncAPI ->
+            when (serverSyncAPI.type) {
+                1 -> {
+                    myHelper.log("Operators Hours")
+                    db.updateOperatorsHours(serverSyncAPI.myDataList)
+                }
+                2 -> {
+                    myHelper.log("Trucks Trips")
+                    db.updateTrips(serverSyncAPI.myDataList)
+                }
+                3 -> {
+                    myHelper.log("Scrapers Trips")
+                    db.updateTrips(serverSyncAPI.myDataList)
+                }
+                4 -> {
+                    myHelper.log("Scrapers Trimming")
+                    db.updateEWorks(serverSyncAPI.myEWorkList)
+                }
+                5 -> {
+                    myHelper.log("Excavators Production Digging")
+                    db.updateELoads(serverSyncAPI.myDataList)
+                }
+                6 -> {
+                    myHelper.log("Excavators Trenching")
+                    db.updateEWorks(serverSyncAPI.myEWorkList)
+                }
+                7 -> {
+                    myHelper.log("Excavators General Digging")
+                    db.updateEWorks(serverSyncAPI.myEWorkList)
+                }
+                8 -> {
+                    myHelper.log("Machines Stops")
+                    db.updateMachinesStops(serverSyncAPI.myDataList)
+                }
+                9 -> {
+                    myHelper.log("Machines Hours")
+                    db.updateMachinesHours(serverSyncAPI.myDataList)
+                }
+                10 -> {
+                    myHelper.log("Operators Waiting")
+                    db.updateWaits(serverSyncAPI.myEWorkList)
+                }
+            }
+        }
+        return true
+    }
+    
+    
+    @SuppressLint("InflateParams")
+    private fun updatedNotification() {
+        
+        
+        val mDialogView = LayoutInflater.from(this).inflate(R.layout.ss_updated_notification, null)
+        val mBuilder = AlertDialog.Builder(this)
+            .setView(mDialogView)
+        val  mAlertDialog = mBuilder.show()
+        mAlertDialog.setCancelable(false)
+        
+        val window = mAlertDialog.window
+        val wlp = window!!.attributes
+        
+        wlp.gravity = Gravity.CENTER
+//        wlp.flags = wlp.flags and WindowManager.LayoutParams.FLAG_DIM_BEHIND.inv()
+        window.attributes = wlp
+        
+        
+        mDialogView.delete_conversation_yes.setOnClickListener {
+            mAlertDialog.dismiss()
+//            finish()
+//            startActivity(intent)
+//            recreate()
+            myHelper.startHomeActivityByType(MyData())
+        }
+        mDialogView.delete_conversation_cancel.setOnClickListener {
+            mAlertDialog.dismiss()
+//            finish()
+//            startActivity(intent)
+//            recreate()
+            myHelper.startHomeActivityByType(MyData())
+        }
+        
     }
 }

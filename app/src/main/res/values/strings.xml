@@ -256,5 +256,7 @@
     <string name="stop_reason">Stop Reason</string>
     <string name="remarks">Remarks</string>
     <string name="production_digging_history">Production Digging History</string>
+    <string name="all_data_synced_successfully">All Data Synced Successfully.</string>
+    <string name="ok">OK</string>
 
 </resources>

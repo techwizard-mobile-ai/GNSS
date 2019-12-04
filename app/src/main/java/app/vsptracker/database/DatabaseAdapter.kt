@@ -134,6 +134,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 "$COL_USER_ID  TEXT," +
                 "$COL_START_TIME  INTEGER," +
                 "$COL_END_TIME INTEGER," +
+                "$COL_TOTAL_TIME INTEGER," +
                 "$COL_START_HOURS TEXT," +
                 "$COL_IS_START_HOURS_CUSTOM INTEGER," +
                 "$COL_TOTAL_HOURS TEXT," +
@@ -497,6 +498,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         cv.put(COL_MACHINE_STOP_REASON_ID, datum.machine_stop_reason_id)
         cv.put(COL_START_TIME, datum.startTime)
         cv.put(COL_END_TIME, datum.stopTime)
+        cv.put(COL_TOTAL_TIME, datum.totalTime)
         cv.put(COL_START_HOURS, datum.startHours)
         cv.put(COL_IS_START_HOURS_CUSTOM, datum.isStartHoursCustom)
         cv.put(COL_TOTAL_HOURS, datum.totalHours)
@@ -1104,6 +1106,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             
             datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
             datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
+            datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
 //                // myHelper.log("DB_startTime:${result.getLong(result.getColumnIndex(COL_START_TIME))}")
 //                // myHelper.log("DB_StartHour:${result.getString(result.getColumnIndex(COL_START_HOURS))}")
             if (result.getString(result.getColumnIndex(COL_START_HOURS)) != null)
@@ -1162,6 +1165,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.machine_stop_reason_id = result.getInt(result.getColumnIndex(COL_MACHINE_STOP_REASON_ID))
                 datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
                 datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
+                datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
                 
                 if (result.getString(result.getColumnIndex(COL_START_HOURS)) != null)
                     datum.startHours = result.getString(result.getColumnIndex(COL_START_HOURS))

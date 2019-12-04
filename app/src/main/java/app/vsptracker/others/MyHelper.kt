@@ -708,6 +708,7 @@ class MyHelper(private var TAG: String, val context: Context) {
             log("showDialogException:$exception")
         }
     }
+ 
 
 /*
     fun imageLoadFromURL(url: String, imageView: ImageView, myContext: Context) {
