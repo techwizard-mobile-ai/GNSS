@@ -74,10 +74,8 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
         machine_status_back.setOnClickListener(this)
         sfinish_minus.setOnClickListener(this)
         sfinish_plus.setOnClickListener(this)
-
     }
-
-
+    
     override fun onClick(view: View?) {
         when (view!!.id) {
             R.id.sfinish_minus -> {

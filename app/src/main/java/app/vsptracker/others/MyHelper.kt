@@ -50,7 +50,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToLong
 @SuppressLint("SimpleDateFormat")
-class MyHelper(private var TAG: String, val context: Context) {
+class MyHelper(var TAG: String, val context: Context) {
     @Suppress("DEPRECATION")
     private var dialog: ProgressDialog? = null
     private var progressBar: ProgressBar? = null

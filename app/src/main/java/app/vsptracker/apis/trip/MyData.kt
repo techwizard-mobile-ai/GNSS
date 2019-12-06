@@ -258,7 +258,28 @@ class MyData : Serializable {
 
     var isMapOpened: Boolean = false
     override fun toString(): String {
-        return "MyData(orgId=$orgId, siteId=$siteId, operatorId=$operatorId, machineTypeId=$machineTypeId, machineId=$machineId, loadingGPSLocationString='$loadingGPSLocationString', unloadingGPSLocationString='$unloadingGPSLocationString', startTime=$startTime, stopTime=$stopTime, isDayWorks=$isDayWorks, back_loading_machine_id=$back_loading_machine_id, loading_material_id=$loading_material_id, back_loading_material_id=$back_loading_material_id, loading_location_id=$loading_location_id, back_loading_location_id=$back_loading_location_id, eWorkType=$eWorkType, eWorkActionType=$eWorkActionType), isSync=$isSync, stopReasonID=$machine_stop_reason_id)"
+        return "\nMyData(" +
+                "id=$id, " +
+                "orgId=$orgId, " +
+                "siteId=$siteId, " +
+                "operatorId=$operatorId, " +
+                "isRunning=$isRunning, " +
+                "machineId=$machineId, " +
+                "startTime=$startTime, " +
+                "stopTime=$stopTime, " +
+                "startHours='$startHours', " +
+                "totalHours='$totalHours', " +
+                "isStartHoursCustom=$isStartHoursCustom, " +
+                "isTotalHoursCustom=$isTotalHoursCustom, " +
+                "totalTime=$totalTime, " +
+                "isDayWorks=$isDayWorks, " +
+                "machine_stop_reason_id=$machine_stop_reason_id, " +
+                "recordID=$recordID, " +
+                "isStartMachine=$isStartMachine, " +
+                "isSync=$isSync, " +
+                "loadingGPSLocationString='$loadingGPSLocationString', " +
+                "unloadingGPSLocationString='$unloadingGPSLocationString' " +
+                ")"
     }
     
     

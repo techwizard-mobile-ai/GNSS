@@ -11,7 +11,6 @@ import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.apis.trip.MyDataListResponse
 import app.vsptracker.database.DatabaseAdapter
-import app.vsptracker.others.MyHelper
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_hour_meter_start.*
@@ -43,7 +42,8 @@ class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
 //        if(myHelper.getIsMachineStopped()){
             drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
 //        }
-        myHelper = MyHelper(tag, this)
+//        myHelper = MyHelper(tag, this)
+        myHelper.TAG = tag
 
 
 //        myHelper.setTag(tag)
@@ -120,8 +120,7 @@ class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
             }
         }
     }
-
-
+    
     private fun fetchMachineMaxHours() {
         myHelper.showDialog()
         val call = this.retrofitAPI.getMachineMaxHour(
@@ -140,7 +139,12 @@ class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
                 myHelper.log("responseBody:$responseBody")
                 if (responseBody!!.success && responseBody.data != null) {
                     try {
-                        ms_reading.setText(responseBody.data!![0].totalHours)
+                        if(responseBody.data!![0].totalHours.isNotBlank()){
+                            startReading = responseBody.data!![0].totalHours
+                            myHelper.log("startReading:$startReading")
+                            ms_reading.setText(startReading)
+                        }
+                        
                     }catch (e : Exception){
                         myHelper.log(e.message.toString())
                     }

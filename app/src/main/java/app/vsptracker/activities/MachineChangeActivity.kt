@@ -156,6 +156,9 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
                                 
                                 val meter = myHelper.getMeter()
 //                                myData.startTime = meter.hourStartTime
+                                if(meter.isMachineStartTimeCustom)
+                                    myData.isStartHoursCustom = 1
+                                
                                 myData.loadingGPSLocation = meter.hourStartGPSLocation
                                 myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
                                 myData.unloadingGPSLocation = gpsLocation
@@ -166,6 +169,9 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
                                 myData.startHours = meter.startHours
                                 if (myHelper.isDailyModeStarted()) myData.isDayWorks = 1 else myData.isDayWorks = 0
                                 myData.startTime = meter.machineStartTime
+                                
+                                myData.totalTime = myData.stopTime - myData.startTime
+                                
                                 myData.machineTypeId = myHelper.getMachineTypeID()
                                 myData.totalHours = myHelper.getMeterTimeForFinishCustom(myData.startHours)
                                 
