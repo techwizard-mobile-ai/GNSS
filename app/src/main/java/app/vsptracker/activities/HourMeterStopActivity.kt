@@ -1,5 +1,6 @@
 package app.vsptracker.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
@@ -12,53 +13,53 @@ import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_hour_meter_stop.*
 
 class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
-
+    
     private val tag = this::class.java.simpleName
-
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        
         val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
         layoutInflater.inflate(R.layout.activity_hour_meter_stop, contentFrameLayout)
         val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
         navigationView.menu.getItem(10).isChecked = true
-
+        
         myHelper.setTag(tag)
-
-        if(myHelper.getIsMachineStopped()){
+        
+        if (myHelper.getIsMachineStopped()) {
             drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
             hm_layout.visibility = View.GONE
-        }else{
+        } else {
             hm_layout.visibility = View.VISIBLE
         }
-
+        
         myData = MyData()
-
+        
         val meter = myHelper.getMeter()
-        if(meter.isMachineStartTimeCustom)
-        myData.isStartHoursCustom = 1
+        if (meter.isMachineStartTimeCustom)
+            myData.isStartHoursCustom = 1
         myData.startHours = myHelper.getMeterTimeForFinish()
-
+        
         myData.startTime = meter.machineStartTime
-
+        
         myData.loadingGPSLocation = meter.hourStartGPSLocation
-
+        
         sfinish_reading.setText(myHelper.getMeterTimeForFinish())
-
+        
         myHelper.log("onCreate:$myData")
-
+        
         sfinish_minus.setOnClickListener(this)
         sfinish_plus.setOnClickListener(this)
         hm_stop_logout.setOnClickListener(this)
         hm_stop_summary.setOnClickListener(this)
     }
-
+    
     override fun onClick(view: View?) {
         when (view!!.id) {
-
+            
             R.id.hm_stop_summary -> {
             }
-
+            
             R.id.sfinish_minus -> {
                 val value = sfinish_reading.text.toString().toFloat()
                 if (value > 0) {
@@ -66,13 +67,13 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
                     sfinish_reading.setText(myHelper.getRoundedDecimal(newValue).toString())
                 }
             }
-
+            
             R.id.sfinish_plus -> {
                 val value = sfinish_reading.text.toString().toFloat()
                 val newValue = value + 0.1
                 sfinish_reading.setText(myHelper.getRoundedDecimal(newValue).toString())
             }
-
+            
             R.id.hm_stop_logout -> {
                 if (!myHelper.getMeterTimeForFinish().equals(sfinish_reading.text.toString(), true)) {
                     val meter = myHelper.getMeter()
@@ -96,25 +97,35 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
                 myHelper.setMachineTotalTime(newMinutes)
                 myData.totalHours = sfinish_reading.text.toString()
                 myHelper.log("Before saveMachineHour:$myData")
-
+                
                 val operatorAPI = myHelper.getOperatorAPI()
                 operatorAPI.unloadingGPSLocation = gpsLocation
                 operatorAPI.orgId = myHelper.getLoginAPI().org_id
                 operatorAPI.siteId = myHelper.getMachineSettings().siteId
                 operatorAPI.operatorId = operatorAPI.id
-                when{
+                when {
                     myHelper.isDailyModeStarted() -> operatorAPI.isDayWorks = 1
                     else -> operatorAPI.isDayWorks = 0
                 }
-//                operatorAPI.isDaysWork = myHelper.isDailyModeStarted()
                 operatorAPI.stopTime = System.currentTimeMillis()
                 operatorAPI.totalTime = operatorAPI.stopTime - operatorAPI.startTime
                 operatorAPI.loadingGPSLocationString = myHelper.getGPSLocationToString(operatorAPI.loadingGPSLocation)
                 operatorAPI.unloadingGPSLocationString = myHelper.getGPSLocationToString(operatorAPI.unloadingGPSLocation)
                 myDataPushSave.pushInsertOperatorHour(operatorAPI)
-
+                
                 myData.machine_stop_reason_id = -1
-                saveMachineHour(myData)
+    
+                myData.unloadingGPSLocation = gpsLocation
+                
+                if(myDataPushSave.pushInsertMachineHour(myData)){
+                    myHelper.setOperatorAPI(MyData())
+                    val data = MyData()
+                    myHelper.setLastJourney(data)
+    
+                    val intent = Intent(this, OperatorLoginActivity::class.java)
+                    startActivity(intent)
+                    finishAffinity()
+                }
 
 //                myHelper.stopDelay(gpsLocation)
 //                myHelper.stopDailyMode()

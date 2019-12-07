@@ -11,10 +11,12 @@ import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.Material
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyHelper
+import kotlinx.android.synthetic.main.activity_machine_status.*
 import kotlinx.android.synthetic.main.list_row_machine_status.view.*
 class MachineStatusAdapter(
     private val myContext: Activity,
-    private val dataList: ArrayList<Material>
+    private val dataList: ArrayList<Material>,
+    private val startReading: String
 ) : RecyclerView.Adapter<MachineStatusAdapter
 .ViewHolder>() {
 
@@ -44,18 +46,22 @@ class MachineStatusAdapter(
             val data = MyData()
             data.machine_stop_reason_id = material.id
             data.loadingGPSLocation = (myContext as MachineStatusActivity).gpsLocation
+            data.totalHours = myContext.sfinish_reading.text.toString()
             
+            if (!startReading.equals(myContext.sfinish_reading.text.toString(), true)) {
+                data.isTotalHoursCustom = 1
+                myHelper.log("Custom Time : True, Original reading:${myHelper.getMeterTimeForStart()}, New Reading: ${myContext.sfinish_reading.text}")
+            } else {
+                data.isTotalHoursCustom = 0
+                myHelper.log("Custom Time : False, Original reading:${myHelper.getMeterTimeForStart()}, New Reading: ${myContext.sfinish_reading.text}")
+            }
+            
+            myHelper.log("totalHours:${data.totalHours}")
 //            val insertID = db.insertMachineStop(data)
+            myContext.myDataPushSave.pushInsertMachineHour(data)
             myContext.myDataPushSave.insertMachineStop(data, material)
-//            if (insertID > 0) {
-//                myHelper.toast("Record Saved in Database Successfully.")
-//                myHelper.stopMachine(insertID, material)
-//                myHelper.setIsMachineStopped(true, material.name, material.id)
                 myHelper.logout(myContext)
                 myContext.finishAffinity()
-//            } else {
-//                myHelper.toast("Machine Not Stopped. Please try again.")
-//            }
         }
     }
 

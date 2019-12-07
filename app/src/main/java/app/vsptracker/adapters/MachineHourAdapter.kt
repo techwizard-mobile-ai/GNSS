@@ -67,7 +67,7 @@ class MachineHourAdapter(
             }
             else -> {
                 if (eWork.machine_stop_reason_id > 0)
-                    holder.itemView.eth_remarks.text = ":  ${db.getStopReasonByID(eWork.machine_stop_reason_id)}"
+                    holder.itemView.eth_remarks.text = ":  ${db.getStopReasonByID(eWork.machine_stop_reason_id).name}"
                 else holder.itemView.eth_remarks.text = ":  Unknown"
             }
         }

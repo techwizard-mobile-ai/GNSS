@@ -18,19 +18,19 @@ import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_machine_status.*
 
 class MachineStatusActivity : BaseActivity(), View.OnClickListener {
-
+    
     private val tag = this::class.java.simpleName
-
+    private var startReading = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        
         val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
         layoutInflater.inflate(R.layout.activity_machine_status, contentFrameLayout)
         val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
         navigationView.menu.getItem(2).isChecked = true
-
+        
         myHelper.setTag(tag)
-
+        
         if (myHelper.getIsMachineStopped()) {
             machine_status_title.text = getString(R.string.machine_stopped_reason)
             machine_start_layout.visibility = View.VISIBLE
@@ -41,34 +41,37 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
             machine_start_layout.visibility = View.GONE
             machine_status_rv.visibility = View.VISIBLE
         }
-
-        if(myHelper.getIsMachineStopped()){
+        
+        myData = MyData()
+        if (myHelper.getIsMachineStopped()) {
             machine_status_logout.visibility = View.VISIBLE
             drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
             machine_status_back.visibility = View.GONE
-        }else{
+            startReading = db.getMachineHours(myHelper.getMachineID()).totalHours
+//            sfinish_reading.setText()
+        
+        } else {
             machine_status_logout.visibility = View.GONE
             machine_status_back.visibility = View.VISIBLE
+            
+            val meter = myHelper.getMeter()
+            if (meter.isMachineStartTimeCustom)
+                myData.isStartHoursCustom = 1
+            myData.startHours = myHelper.getMeterTimeForFinish()
+            myData.startTime = meter.machineStartTime
+            myData.loadingGPSLocation = meter.hourStartGPSLocation
+            startReading = myHelper.getMeterTimeForFinish()
         }
-
-        myData = MyData()
-
-        val meter = myHelper.getMeter()
-        if(meter.isMachineStartTimeCustom)
-            myData.isStartHoursCustom = 1
-        myData.startHours = myHelper.getMeterTimeForFinish()
-        myData.startTime = meter.machineStartTime
-        myData.loadingGPSLocation = meter.hourStartGPSLocation
-        sfinish_reading.setText(myHelper.getMeterTimeForFinish())
-
+        sfinish_reading.setText(startReading)
+        
         val stoppedReasons = db.getStopReasons()
         myHelper.log("MachineStops:$stoppedReasons")
         stoppedReasons.removeAt(0)
-
-        val mAdapter = MachineStatusAdapter(this, stoppedReasons)
+        
+        val mAdapter = MachineStatusAdapter(this, stoppedReasons, startReading)
         machine_status_rv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         machine_status_rv.adapter = mAdapter
-
+        
         machine_status_start.setOnClickListener(this)
         machine_status_logout.setOnClickListener(this)
         machine_status_back.setOnClickListener(this)
@@ -85,16 +88,18 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
                     sfinish_reading.setText(myHelper.getRoundedDecimal(newValue).toString())
                 }
             }
-
+            
             R.id.sfinish_plus -> {
                 val value = sfinish_reading.text.toString().toFloat()
                 val newValue = value + 0.1
                 sfinish_reading.setText(myHelper.getRoundedDecimal(newValue).toString())
             }
-
-            R.id.machine_status_back ->{ finish()}
+            
+            R.id.machine_status_back -> {
+                finish()
+            }
             R.id.machine_status_logout -> {
-                if(myHelper.getIsMachineStopped()){
+                if (myHelper.getIsMachineStopped()) {
                     val operatorAPI = myHelper.getOperatorAPI()
                     operatorAPI.unloadingGPSLocation = gpsLocation
                     operatorAPI.stopTime = System.currentTimeMillis()
@@ -102,22 +107,22 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
                     operatorAPI.loadingGPSLocationString = myHelper.getGPSLocationToString(operatorAPI.loadingGPSLocation)
                     operatorAPI.unloadingGPSLocationString = myHelper.getGPSLocationToString(operatorAPI.unloadingGPSLocation)
                     myDataPushSave.pushInsertOperatorHour(operatorAPI)
-
+                    
                     myHelper.stopDelay(gpsLocation)
                     myHelper.stopDailyMode()
                     myHelper.setOperatorAPI(MyData())
-
+                    
                     val data = MyData()
                     myHelper.setLastJourney(data)
-
+                    
                     val intent = Intent(this, OperatorLoginActivity::class.java)
                     startActivity(intent)
                     finishAffinity()
-                }else{
+                } else {
                     myHelper.logout(this)
                 }
             }
-
+            
             R.id.machine_status_start -> {
 
 //                val machineData = MyData()
@@ -127,23 +132,23 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
                 machineData.totalTime = currentTime - machineData.startTime
                 machineData.time = currentTime.toString()
                 machineData.date = myHelper.getDate(currentTime)
-
+                
                 machineData.recordID = myHelper.getMeter().machineDbID
                 machineData.unloadingGPSLocation = gpsLocation
-
+                
                 machineData.loadingGPSLocationString = myHelper.getGPSLocationToString(machineData.loadingGPSLocation)
                 machineData.unloadingGPSLocationString = myHelper.getGPSLocationToString(machineData.unloadingGPSLocation)
-
+                
                 machineData.orgId = myHelper.getLoginAPI().org_id
                 machineData.siteId = myHelper.getMachineSettings().siteId
                 machineData.operatorId = myHelper.getOperatorAPI().id
                 machineData.machineTypeId = myHelper.getMachineTypeID()
                 machineData.machineId = myHelper.getMachineID()
                 machineData.machine_stop_reason_id = myHelper.getMachineStoppedReasonID()
-
-                if(myHelper.isDailyModeStarted()){
+                
+                if (myHelper.isDailyModeStarted()) {
                     machineData.isDayWorks = 1
-                }else {
+                } else {
                     machineData.isDayWorks = 0
                 }
 
@@ -151,8 +156,29 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
 //                    pushMachinesStops(machineData)
 //                }
                 myDataPushSave.pushUpdateMachineStop(machineData)
+                
+                val meter = myHelper.getMeter()
+                meter.hourStartGPSLocation = gpsLocation
+                meter.hourStartTime = currentTime
+                meter.machineStartTime = currentTime
+                meter.startHours = sfinish_reading.text.toString()
+                
+                if (!startReading.equals(sfinish_reading.text.toString(), true)) {
+                    meter.isMachineStartTimeCustom = true
+                    myHelper.log("Custom Time : True, Original reading:${myHelper.getMeterTimeForStart()}, New Reading: ${sfinish_reading.text}")
+                } else {
+                    meter.isMachineStartTimeCustom = false
+                    myHelper.log("Custom Time : False, Original reading:${myHelper.getMeterTimeForStart()}, New Reading: ${sfinish_reading.text}")
+                }
+                
+                myHelper.setMeter(meter)
+                val value = sfinish_reading.text.toString().toDouble()
+                val minutes = value * 60
+                val newMinutes = myHelper.getRoundedInt(minutes)
+                myHelper.log("Minutes: $newMinutes")
+                myHelper.setMachineTotalTime(newMinutes)
                 updateMachineStatus()
-
+                
             }
         }
     }
@@ -195,16 +221,16 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
             }
         })
     }*/
-
-
+    
     private fun updateMachineStatus() {
 //        db.updateMachineStop(machineData)
         myHelper.toast("Machine Started Successfully")
         myHelper.setIsMachineStopped(false, "", 0)
-        if(myHelper.getIsMachineStopped()){
+        myHelper.startMachine()
+        if (myHelper.getIsMachineStopped()) {
             val intent = Intent(this, HourMeterStartActivity::class.java)
             startActivity(intent)
-        }else{
+        } else {
             myHelper.startHomeActivityByType(MyData())
         }
     }

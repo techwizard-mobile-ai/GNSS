@@ -500,7 +500,50 @@ class MyDataPushSave(private val context: Context) {
         myHelper.log("saveDelayID: $insertID")
     }
     
-    fun pushInsertMachineHour(myData: MyData) {
+    /**
+     * This method will do following actions.
+     * 1. Save Machine Hours as Machine is Stopped.
+     * 2. Push Machine Hours To Server.
+     * 3. Insert Machine Hours in Database.
+     * 4. Stop Waiting (Delay) if Started.
+     * 5. Stop Daily Mode if Started.
+     */
+    fun pushInsertMachineHour(myData: MyData): Boolean {
+    
+        
+        
+        val currentTime = System.currentTimeMillis()
+    
+        val meter = myHelper.getMeter()
+        if (meter.isMachineStartTimeCustom)
+            myData.isStartHoursCustom = 1
+        myData.loadingGPSLocation = meter.hourStartGPSLocation
+        myData.startHours = meter.startHours
+        myData.startTime = meter.machineStartTime
+    
+        myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
+        
+        myData.unloadingGPSLocationString = myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
+//        myData.machine_stop_reason_id = -2
+        if (myHelper.isDailyModeStarted()) myData.isDayWorks = 1 else myData.isDayWorks = 0
+        
+        
+//        myData.totalHours = myHelper.getMeterTimeForFinishCustom(myData.startHours)
+    
+        myData.time = currentTime.toString()
+        myData.date = myHelper.getDate(currentTime.toString())
+        
+        myData.siteId = myHelper.getMachineSettings().siteId
+        myData.machineId = myHelper.getMachineID()
+        myData.orgId = myHelper.getLoginAPI().org_id
+        myData.operatorId = myHelper.getOperatorAPI().id
+        myData.machineTypeId = myHelper.getMachineTypeID()
+        myData.machineId = myHelper.getMachineID()
+        
+        myData.stopTime = currentTime
+        myData.totalTime = myData.stopTime - myData.startTime
+//        myData.unloadingGPSLocation = gpsLocation
+        
         myHelper.log("pushInsertMachineHour:$myData")
         when {
             myHelper.isOnline() -> pushMachineHour(myData)
@@ -509,6 +552,10 @@ class MyDataPushSave(private val context: Context) {
                 insertMachineHour(myData)
             }
         }
+        myHelper.stopDelay(myData.unloadingGPSLocation)
+        myHelper.stopDailyMode()
+        
+        return true
     }
     
     private fun pushMachineHour(myData: MyData) {
@@ -678,8 +725,9 @@ class MyDataPushSave(private val context: Context) {
      * This method is called when a machine is stopped and saved in database.
      * When machine is started again this database entry is updated (by method updateMachineStop) and same data is
      * being pushed to Server.
+     * If Machine is Breakdown then reset Last Journey and break loop otherwise Don't reset Last Journey
      */
-    fun insertMachineStop(myData: MyData, material: Material): Long {
+    fun insertMachineStop(myData: MyData, material: Material, resetJourney: Boolean = false): Long {
         val currentTime = System.currentTimeMillis()
         myData.startTime = currentTime
 
@@ -698,7 +746,7 @@ class MyDataPushSave(private val context: Context) {
         val insertID = db.insertMachineStop(myData)
         myHelper.log("insertMachineStopID:$insertID")
         if (insertID > 0) myHelper.toast("Machine Stopped due to " + material.name) else myHelper.toast("Machine Stop Entry not Saved in Database.")
-        myHelper.stopMachine(insertID, material)
+        myHelper.stopMachine(insertID, material, resetJourney)
         return insertID
     }
     

@@ -1,8 +1,6 @@
 package app.vsptracker.activities
 
 import android.content.Intent
-import android.location.Location
-import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -17,7 +15,6 @@ import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.Material
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_machine_change.*
-import retrofit2.Retrofit
 import java.util.*
 
 private const val REQUEST_ACCESS_FINE_LOCATION = 1
@@ -30,17 +27,6 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
     private var selectedMachineLocation = Material(0, "Select Machine Location")
     private var selectedMachineNumber = Material(0, "Select Machine Number")
     private val tag = this::class.java.simpleName
-//    private lateinit var db: DatabaseAdapter
-//    private lateinit var myHelper: MyHelper
-//    lateinit var gpsLocation: GPSLocation
-//    var latitude: Double = 0.0
-//    var longitude: Double = 0.0
-    
-    private lateinit var location: Location
-    private var locationManager: LocationManager? = null
-    private lateinit var retrofit: Retrofit
-//    private lateinit var retrofitAPI: RetrofitAPI
-//    private lateinit var myDataPushSave: MyDataPushSave
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -144,8 +130,6 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
                             selectedMachineNumber.id != myHelper.getMachineID() -> {
                                 
                                 val myData = MyData()
-//                                saveMachineHour1(myData)
-                                
                                 myData.siteId = myHelper.getMachineSettings().siteId
                                 myData.machineId = myHelper.getMachineID()
                                 myData.orgId = myHelper.getLoginAPI().org_id
@@ -155,26 +139,22 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
                                 myData.stopTime = currentTime
                                 
                                 val meter = myHelper.getMeter()
-//                                myData.startTime = meter.hourStartTime
-                                if(meter.isMachineStartTimeCustom)
+                                if (meter.isMachineStartTimeCustom)
                                     myData.isStartHoursCustom = 1
-                                
                                 myData.loadingGPSLocation = meter.hourStartGPSLocation
+                                myData.startHours = meter.startHours
+                                myData.startTime = meter.machineStartTime
+                                
                                 myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
                                 myData.unloadingGPSLocation = gpsLocation
                                 myData.unloadingGPSLocationString = myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
                                 myData.machine_stop_reason_id = -2
-                                if (meter.isMachineStartTimeCustom)
-                                    myData.isStartHoursCustom = 1
-                                myData.startHours = meter.startHours
                                 if (myHelper.isDailyModeStarted()) myData.isDayWorks = 1 else myData.isDayWorks = 0
-                                myData.startTime = meter.machineStartTime
                                 
                                 myData.totalTime = myData.stopTime - myData.startTime
                                 
                                 myData.machineTypeId = myHelper.getMachineTypeID()
                                 myData.totalHours = myHelper.getMeterTimeForFinishCustom(myData.startHours)
-                                
                                 
                                 myData.time = currentTime.toString()
                                 myData.date = myHelper.getDate(currentTime.toString())
@@ -182,12 +162,9 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
                                 if (myData.machineId > 0)
                                     myDataPushSave.pushInsertMachineHour(myData)
                                 
-                                
                                 myHelper.setMachineTypeID(selectedMachineType.id)
                                 myHelper.setMachineNumber(selectedMachineNumber.number)
                                 myHelper.setMachineID(selectedMachineNumber.id)
-//                                TODO Check this
-//                                myHelper.setIsMachineStopped(true, "Machine Changed", -2)
                                 myHelper.setIsNavEnabled(false)
                                 val data = MyData()
                                 myHelper.setLastJourney(data)
@@ -195,102 +172,13 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
                                 startActivity(intent)
                                 
                             }
-//                            else -> {
-//
-//                                myHelper.setMachineTypeID(selectedMachineType.id)
-//                                myHelper.setMachineNumber(selectedMachineNumber.number)
-//                                myHelper.setMachineID(selectedMachineNumber.id)
-//
-//                            }
                         }
-                        
-                        
                     }
                 }
             }
         }
     }
-/*
-    private fun saveMachineHour1(myData: MyData) {
-
-        myData.siteId = myHelper.getMachineSettings().siteId
-        myData.machineId = myHelper.getMachineID()
-        myData.orgId = myHelper.getLoginAPI().org_id
-        myData.operatorId = myHelper.getOperatorAPI().id
-        myData.machineId = myHelper.getMachineID()
-        myData.stopTime = System.currentTimeMillis()
-
-        myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
-        myData.unloadingGPSLocation = gpsLocation
-        myData.unloadingGPSLocationString = myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
-        myData.machine_stop_reason_id = -2
-
-        if (myHelper.getMeter().isMachineStartTimeCustom)
-            myData.isStartHoursCustom = 1
-
-        myData.startHours = myHelper.getMeter().startHours
-        myData.machineTypeId = myHelper.getMachineTypeID()
-
-        myData.totalHours = myHelper.getMeterTimeForFinishCustom(myData.startHours)
-
-        val meter = myHelper.getMeter()
-        myData.startTime = meter.hourStartTime
-        myData.stopTime = System.currentTimeMillis()
-
-        myData.loadingGPSLocation = meter.hourStartGPSLocation
-        myData.unloadingGPSLocation = gpsLocation
-
-
-//        val time = System.currentTimeMillis()
-//        myData.time = time.toString()
-//        myData.date = myHelper.getDate(time.toString())
-
-        myDataPushSave.pushInsertMachineHour(myData)
-//        if (myHelper.isOnline()){
-//            pushMachineHour(myData)
-//        }else{
-//            db.insertMachineHours(myData)
-//        }
-    }*/
     
-    /*
-        private fun pushMachineHour(myData: MyData){
-
-            val call = this.retrofitAPI.pushMachinesHours(
-                myHelper.getLoginAPI().auth_token,
-                myData
-            )
-            call.enqueue(object : retrofit2.Callback<MyDataResponse> {
-                override fun onResponse(
-                    call: retrofit2.Call<MyDataResponse>,
-                    response: retrofit2.Response<MyDataResponse>
-                ) {
-                    val responseBody = response.body()
-                    myHelper.log("pushMachinesHours:$response")
-                    if (responseBody!!.success) {
-                        myData.isSync = 1
-                        db.insertMachineHours(myData)
-
-                    } else {
-                        db.insertMachineHours(myData)
-
-                        if (responseBody.message == "Token has expired") {
-                            myHelper.log("Token Expired:$responseBody")
-                            myHelper.refreshToken()
-                        } else {
-                            myHelper.toast(responseBody.message)
-                        }
-                    }
-                }
-
-                override fun onFailure(call: retrofit2.Call<MyDataResponse>, t: Throwable) {
-                    db.insertMachineHours(myData)
-
-                    myHelper.toast(t.message.toString())
-                    myHelper.log("Failure" + t.message)
-                }
-            })
-        }*/
     private fun selectMachineSite() {
         val machineTypes = db.getSites()
         machineTypes.add(0, Material(0, "Select Site"))
@@ -420,174 +308,4 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
             }
         }
     }
-/*
-    private fun startGPS() {
-
-        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
-        try {
-            myHelper.log("Permission Granted.")
-            locationManager?.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER,
-                1000,
-                0f,
-                locationListener
-            )
-
-        } catch (ex: SecurityException) {
-            myHelper.log("No Location Available:${ex.message}")
-            requestPermission()
-        }
-
-    }
-
-    private fun requestPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            // Permission is not granted
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(
-                    this,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                )
-            ) {
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    REQUEST_ACCESS_FINE_LOCATION
-                )
-
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    REQUEST_ACCESS_FINE_LOCATION
-                )
-
-            }
-
-
-        } else {
-            // Permission has already been granted
-
-            if (locationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                //                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListener);
-                locationManager!!.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER,
-                    1000,
-                    0f,
-                    locationListener
-                )
-            } else {
-                showGPSDisabledAlertToUser()
-            }
-        }
-    }
-
-    private fun showGPSDisabledAlertToUser() {
-        val alertDialogBuilder = AlertDialog.Builder(this, R.style.ThemeOverlay_AppCompat_Dialog)
-        alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
-            .setCancelable(false)
-            .setPositiveButton(
-                "Goto Settings Page\nTo Enable GPS"
-            ) { _, _ ->
-                val callGPSSettingIntent = Intent(
-                    Settings.ACTION_LOCATION_SOURCE_SETTINGS
-                )
-                startActivity(callGPSSettingIntent)
-            }
-        alertDialogBuilder.setNegativeButton(
-            "Cancel"
-        ) { dialog, _ -> dialog.cancel() }
-        val alert = alertDialogBuilder.create()
-        alert.show()
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        when (requestCode) {
-            REQUEST_ACCESS_FINE_LOCATION -> {
-                // If request is cancelled, the result arrays are empty.
-                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    startGPS()
-                } else {
-                    myHelper.log("GPS Permission Permanently Denied.")
-                    showSettings()
-                }
-                return
-            }
-
-            // Add other 'when' lines to check for other
-            // permissions this app might request.
-            else -> {
-                // Ignore all other requests.
-            }
-        }
-    }
-
-    private fun showSettings() {
-        val snackbar = Snackbar.make(
-            findViewById(android.R.id.content),
-            "You have previously declined GPS permission.\n" + "You must approve this permission in \"Permissions\" in the app settings on your device.",
-            Snackbar.LENGTH_LONG
-        ).setAction(
-            "Settings"
-        ) {
-            startActivity(
-                Intent(
-                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                    Uri.parse("package:" + BuildConfig.APPLICATION_ID)
-                )
-            )
-        }
-        val snackbarView = snackbar.view
-        val textView =
-            snackbarView.findViewById(R.id.snackbar_text) as TextView
-        textView.maxLines = 5  //Or as much as you need
-        snackbar.show()
-    }
-
-    private val locationListener: LocationListener = object : LocationListener {
-        override fun onLocationChanged(location: Location?) {
-            makeUseOfLocation(location)
-        }
-
-        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
-            myHelper.log("Status Changed.")
-        }
-
-        override fun onProviderEnabled(provider: String) {
-            myHelper.log("Location Enabled.")
-        }
-
-        override fun onProviderDisabled(provider: String) {
-            myHelper.log("Location Disabled.")
-            showGPSDisabledAlertToUser()
-        }
-    }
-
-    private fun makeUseOfLocation(location1: Location?) {
-        latitude = location1!!.latitude
-        longitude = location1.longitude
-        location = location1
-
-        gpsLocation.latitude = location1.latitude
-        gpsLocation.longitude = location1.longitude
-        gpsLocation.altitude = location1.altitude
-
-        gpsLocation.accuracy = location1.accuracy
-        gpsLocation.bearing = location1.bearing
-        gpsLocation.speed = location1.speed
-
-        gpsLocation.provider = location1.provider
-        gpsLocation.elapsedRealtimeNanos = location1.elapsedRealtimeNanos
-//        gpsLocation.extras = location1.extras
-        gpsLocation.time = location1.time
-
-    }*/
 }

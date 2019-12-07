@@ -9,7 +9,6 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.view.Menu
@@ -31,9 +30,7 @@ import app.vsptracker.activities.common.MachineBreakdownActivity
 import app.vsptracker.activities.common.MachineStatusActivity
 import app.vsptracker.apis.RetrofitAPI
 import app.vsptracker.apis.delay.EWork
-import app.vsptracker.apis.delay.EWorkResponse
 import app.vsptracker.apis.trip.MyData
-import app.vsptracker.apis.trip.MyDataResponse
 import app.vsptracker.classes.GPSLocation
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyDataPushSave
@@ -51,7 +48,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 private const val REQUEST_ACCESS_FINE_LOCATION = 1
 
 open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
-
+    
     private lateinit var r: Runnable
     private lateinit var handler: Handler
     private lateinit var menu: Menu
@@ -71,29 +68,29 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        
         Utils.onActivityCreateSetTheme(this)
-
+        
         setContentView(R.layout.activity_base)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-
+        
         myHelper = MyHelper(tag1, this)
         if (myHelper.getIsMachineStopped() || myHelper.getMachineID() < 1) {
             drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         }
-
+        
         gpsLocation = GPSLocation()
         db = DatabaseAdapter(this)
-
+        
         this.retrofit = Retrofit.Builder()
             .baseUrl(RetrofitAPI.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         this.retrofitAPI = retrofit.create(RetrofitAPI::class.java)
-
+        
         myDataPushSave = MyDataPushSave(this)
-
+        
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.base_nav_view)
         val toggle = ActionBarDrawerToggle(
@@ -106,7 +103,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         navView.setNavigationItemSelectedListener(this)
-
+        
         when (myHelper.getMachineTypeID()) {
             1 -> {
                 toolbar_title.text = "Excavator # ${myHelper.getMachineNumber()} : ${myHelper.getOperatorAPI().name}"
@@ -118,22 +115,22 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 toolbar_title.text = "Truck # ${myHelper.getMachineNumber()} :  ${myHelper.getOperatorAPI().name}"
             }
         }
-
+        
         base_machine_status.setOnClickListener {
             val intent = Intent(this@BaseActivity, MachineStatusActivity::class.java)
             startActivity(intent)
         }
-
+        
         base_daily_mode.setOnClickListener {
             val intent = Intent(this@BaseActivity, DayWorksActivity::class.java)
             startActivity(intent)
         }
-
+        
         myHelper.hideKeyboardOnClick(base_content_frame)
-
+        
         bottomNavigation = findViewById(R.id.base_navigationView)
         bottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-
+        
         menu = bottomNavigation.menu
         menu[0].isCheckable = false
 
@@ -176,38 +173,38 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 //        myHelper.log("AutoLogout:$autoLogout")
 //        handler.postDelayed(r, (autoLogout.autoLogoutTime!!.toLong() *60 * 1000)) //for 30 sec
     }*/
-
+    
     private val mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
-
-            if(myHelper.isNavEnabled())
-            when (item.itemId) {
-                R.id.navb_map -> {
-                    if (!myHelper.getIsMapOpened()) {
-                        myHelper.setIsMapOpened(true)
-                        val intent = Intent(this, Map1Activity::class.java)
-                        startActivity(intent)
-                    } else {
-                        myHelper.toast("Map is Already Opened.")
+            
+            if (myHelper.isNavEnabled())
+                when (item.itemId) {
+                    R.id.navb_map -> {
+                        if (!myHelper.getIsMapOpened()) {
+                            myHelper.setIsMapOpened(true)
+                            val intent = Intent(this, Map1Activity::class.java)
+                            startActivity(intent)
+                        } else {
+                            myHelper.toast("Map is Already Opened.")
+                        }
                     }
-                }
-                R.id.navb_delay -> {
-                    when {
-                        myHelper.getIsMachineStopped() -> myHelper.toast("Please Start Machine First.")
-                        myHelper.getMachineID() < 1 -> myHelper.toast("Please Select Machine First.")
-                        else -> toggleDelay()
+                    R.id.navb_delay -> {
+                        when {
+                            myHelper.getIsMachineStopped() -> myHelper.toast("Please Start Machine First.")
+                            myHelper.getMachineID() < 1 -> myHelper.toast("Please Select Machine First.")
+                            else -> toggleDelay()
+                        }
                     }
+                    
                 }
-
-            }
             false
         }
-
+    
     override fun onResume() {
         super.onResume()
         startGPS()
 //        If Navigation is Disabled Lock Side Menu
-        if( !myHelper.isNavEnabled()){
+        if (!myHelper.isNavEnabled()) {
             drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         }
 //        base_nav_view.setCheckedItem(base_nav_view.checkedItem.itemId)
@@ -217,11 +214,11 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 //        if(this::class.java.simpleName == "THomeActivity"){
 //            onNavigationItemSelected(base_nav_view.menu.getItem(0));
 //        }
-
-
+        
+        
         if (myHelper.getIsMachineStopped()) {
             base_machine_status_layout.visibility = View.VISIBLE
-
+            
             when (myHelper.getMachineStoppedReason()) {
                 "Weather" -> {
                     Glide.with(this).load(ContextCompat.getDrawable(this, R.drawable.ic_action_beach_access))
@@ -243,11 +240,11 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             base_machine_status.text = HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_LEGACY)
             myHelper.log("Is Machine Stopped: ${myHelper.getIsMachineStopped()}")
             myHelper.log("Machine Stopped Reason: ${myHelper.getMachineStoppedReason()}")
-
+            
         } else {
             base_machine_status_layout.visibility = View.GONE
         }
-
+        
         if (myHelper.isDailyModeStarted()) {
             val text =
                 "<font color=#FF382A>Day Works is ON. </font><font color=#106d14><u>Switch Standard Mode</u>.</font>"
@@ -256,20 +253,20 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         } else {
             base_daily_mode.visibility = View.GONE
         }
-
+        
         if (myHelper.isDelayStarted()) {
             menu.findItem(R.id.navb_delay).title = "Stop Waiting"
             menu.findItem(R.id.navb_delay).icon = getDrawable(R.drawable.ic_started)
             menu.findItem(R.id.navb_delay).isChecked = true
-
+            
         } else {
             menu.findItem(R.id.navb_delay).title = "Start Waiting"
             menu.findItem(R.id.navb_delay).icon = getDrawable(R.drawable.ic_stopped)
             menu.findItem(R.id.navb_map).isChecked = true
         }
-
+        
     }
-
+    
     override fun onBackPressed() {
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -279,9 +276,9 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 //            super.onBackPressed()
         }
     }
-
+    
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-
+        
         when (item.itemId) {
             R.id.nav_home -> {
                 val data = MyData()
@@ -289,13 +286,13 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 myHelper.setIsMapOpened(false)
             }
             R.id.nav_day_works -> {
-
+                
                 val intent = Intent(this, DayWorksActivity::class.java)
                 startActivity(intent)
                 myHelper.setIsMapOpened(false)
             }
             R.id.nav_machine_breakdown -> {
-
+                
                 val intent = Intent(this, MachineBreakdownActivity::class.java)
                 startActivity(intent)
                 myHelper.setIsMapOpened(false)
@@ -305,13 +302,13 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 myHelper.setIsMapOpened(false)
             }
             R.id.nav_stop_machine -> {
-
+                
                 val intent = Intent(this, MachineStatusActivity::class.java)
                 startActivity(intent)
                 myHelper.setIsMapOpened(false)
             }
             R.id.nav_night_mode -> {
-
+                
                 myHelper.log("theme:" + applicationContext.theme)
                 myHelper.log("theme1:$theme")
                 if (myHelper.isNightMode()) {
@@ -327,7 +324,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 startActivity(intent)
                 myHelper.setIsMapOpened(false)
             }
-
+            
             R.id.nav_load_history -> {
                 myHelper.startHistoryByType()
                 myHelper.setIsMapOpened(false)
@@ -336,19 +333,19 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 doEmail()
                 myHelper.setIsMapOpened(false)
             }
-
+            
             R.id.nav_delay -> {
                 val intent = Intent(this, DelayActivity::class.java)
                 startActivity(intent)
                 myHelper.setIsMapOpened(false)
             }
-
-            R.id.nav_hours_reporting-> {
+            
+            R.id.nav_hours_reporting -> {
                 val intent = Intent(this, HoursReportingActivity::class.java)
                 startActivity(intent)
                 myHelper.setIsMapOpened(false)
             }
-            R.id.nav_server_sync-> {
+            R.id.nav_server_sync -> {
                 val intent = Intent(this, ServerSyncActivity::class.java)
                 startActivity(intent)
                 myHelper.setIsMapOpened(false)
@@ -358,7 +355,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
-
+    
     private fun toggleDelay() {
         if (myHelper.isDelayStarted()) {
             stopDelay()
@@ -366,12 +363,12 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             startDelay()
         }
     }
-
+    
     override fun onPause() {
         super.onPause()
         stopGPS()
     }
-
+    
     private fun startDelay() {
         if (!myHelper.isDelayStarted()) {
             myHelper.toast("Waiting Started.")
@@ -383,13 +380,13 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             startActivity(intent)
         }
     }
-
+    
     fun stopDelay() {
-
+        
         if (myHelper.isDelayStarted()) {
             val gpslocation = gpsLocation
             myHelper.stopDelay(gpslocation)
-
+            
             val meter = myHelper.getMeter()
             val eWork = EWork()
             eWork.startTime = meter.delayStartTime
@@ -397,11 +394,11 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             eWork.totalTime = meter.delayTotalTime
             eWork.loadingGPSLocation = meter.delayStartGPSLocation
             eWork.unloadingGPSLocation = meter.delayStopGPSLocation
-
+            
             menu.findItem(R.id.navb_delay).icon = getDrawable(R.drawable.ic_stopped)
             menu.findItem(R.id.navb_delay).title = "Start Waiting"
             menu.findItem(R.id.navb_map).isChecked = true
-
+            
             eWork.machineId = myHelper.getMachineID()
             eWork.orgId = myHelper.getLoginAPI().org_id
             eWork.siteId = myHelper.getMachineSettings().siteId
@@ -409,12 +406,12 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             eWork.machineTypeId = myHelper.getMachineTypeID()
             val time = System.currentTimeMillis()
             eWork.time = time.toString()
-
+            
             when {
                 myHelper.isDailyModeStarted() -> eWork.isDayWorks = 1
                 else -> eWork.isDayWorks = 0
             }
-
+            
             eWork.loadingGPSLocationString = myHelper.getGPSLocationToString(eWork.loadingGPSLocation)
             eWork.unloadingGPSLocationString = myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
             myDataPushSave.pushInsertDelay(eWork)
@@ -435,7 +432,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 //            saveDelay(eWork)
         }
     }
-
+    
     /**
      * This method will do following actions.
      * 1. Save Machine Hours as Machine is Stopped.
@@ -443,91 +440,85 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
      * 3. Insert Machine Hours in Database.
      * 4. Stop Waiting (Delay) if Started.
      * 5. Stop Daily Mode if Started.
-     * 6. Clear Operator Login Credentials and Make Operator Logout.
-     * 7. Reset Last Journey.
-     * 8. Redirect to Operator Login Screen.
      */
-    fun saveMachineHour(myData: MyData) {
-
+/*    fun saveMachineHour(myData: MyData): Boolean {
+        
         myData.siteId = myHelper.getMachineSettings().siteId
         myData.machineId = myHelper.getMachineID()
         myData.orgId = myHelper.getLoginAPI().org_id
         myData.operatorId = myHelper.getOperatorAPI().id
         myData.machineTypeId = myHelper.getMachineTypeID()
         myData.machineId = myHelper.getMachineID()
-        if(myHelper.isDailyModeStarted()) myData.isDayWorks = 1 else myData.isDayWorks = 0
+        if (myHelper.isDailyModeStarted()) myData.isDayWorks = 1 else myData.isDayWorks = 0
         val currentTime = System.currentTimeMillis()
         myData.stopTime = currentTime
         myData.totalTime = myData.stopTime - myData.startTime
         myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
         myData.unloadingGPSLocation = gpsLocation
-
+        
         myData.unloadingGPSLocationString = myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
-
+        
         myData.time = currentTime.toString()
         myData.date = myHelper.getDate(currentTime.toString())
-
-//        if (myHelper.isOnline()) {
-//            pushMachineHour(myData)
-//        } else {
-//            db.insertMachineHours(myData)
-//        }
+        
         myDataPushSave.pushInsertMachineHour(myData)
-
+        
         myHelper.stopDelay(gpsLocation)
         myHelper.stopDailyMode()
-        myHelper.setOperatorAPI(MyData())
-
-        val data = MyData()
-        myHelper.setLastJourney(data)
-
-        val intent = Intent(this, OperatorLoginActivity::class.java)
-        startActivity(intent)
-        finishAffinity()
-
-    }
-
-    /*    private fun pushMachineHour(myData: MyData) {
-
-            val call = this.retrofitAPI.pushMachinesHours(
-                myHelper.getLoginAPI().auth_token,
-                myData
-            )
-            call.enqueue(object : retrofit2.Callback<MyDataResponse> {
-                override fun onResponse(
-                    call: retrofit2.Call<MyDataResponse>,
-                    response: retrofit2.Response<MyDataResponse>
-                ) {
-                    val responseBody = response.body()
-                    myHelper.log("pushSideCastings:$responseBody")
-                    if (responseBody!!.success) {
-                        myData.isSync = 1
-    //                    saveDelay(eWork)
-                        db.insertMachineHours(myData)
-
+        
+        return true
+        
+//        myHelper.setOperatorAPI(MyData())
+//        val data = MyData()
+//        myHelper.setLastJourney(data)
+//
+//        val intent = Intent(this, OperatorLoginActivity::class.java)
+//        startActivity(intent)
+//        finishAffinity()
+        
+    }*/
+/*
+    private fun pushMachineHour(myData: MyData) {
+        
+        val call = this.retrofitAPI.pushMachinesHours(
+            myHelper.getLoginAPI().auth_token,
+            myData
+        )
+        call.enqueue(object : retrofit2.Callback<MyDataResponse> {
+            override fun onResponse(
+                call: retrofit2.Call<MyDataResponse>,
+                response: retrofit2.Response<MyDataResponse>
+            ) {
+                val responseBody = response.body()
+                myHelper.log("pushSideCastings:$responseBody")
+                if (responseBody!!.success) {
+                    myData.isSync = 1
+                    //                    saveDelay(eWork)
+                    db.insertMachineHours(myData)
+                    
+                } else {
+                    db.insertMachineHours(myData)
+                    
+                    if (responseBody.message == "Token has expired") {
+                        myHelper.log("Token Expired:$response")
+                        myHelper.refreshToken()
                     } else {
-                        db.insertMachineHours(myData)
-
-                        if (responseBody.message == "Token has expired") {
-                            myHelper.log("Token Expired:$response")
-                            myHelper.refreshToken()
-                        } else {
-                            myHelper.toast(responseBody.message)
-                        }
+                        myHelper.toast(responseBody.message)
                     }
                 }
-
-                override fun onFailure(call: retrofit2.Call<MyDataResponse>, t: Throwable) {
-                    db.insertMachineHours(myData)
-
-                    myHelper.toast(t.message.toString())
-                    myHelper.log("Failure" + t.message)
-                }
-            })
-        }*/
-
+            }
+            
+            override fun onFailure(call: retrofit2.Call<MyDataResponse>, t: Throwable) {
+                db.insertMachineHours(myData)
+                
+                myHelper.toast(t.message.toString())
+                myHelper.log("Failure" + t.message)
+            }
+        })
+    }
+    
     fun pushSideCasting(eWork: EWork) {
-
+        
         eWork.siteId = myHelper.getMachineSettings().siteId
         eWork.machineId = myHelper.getMachineID()
         eWork.orgId = myHelper.getLoginAPI().org_id
@@ -536,7 +527,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
 //        eWork.loadingGPSLocationString = myHelper.getGPSLocationToString(eWork.loadingGPSLocation)
         eWork.unloadingGPSLocationString = myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
-
+        
         myHelper.log("pushSideCastings:$eWork")
         val call = this.retrofitAPI.pushSideCastings(
             myHelper.getLoginAPI().auth_token,
@@ -552,7 +543,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 if (responseBody!!.success) {
                     eWork.isSync = 1
 //                    saveDelay(eWork)
-
+                
                 } else {
 //                    saveDelay(eWork)
                     if (responseBody.message == "Token has expired") {
@@ -563,7 +554,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                     }
                 }
             }
-
+            
             override fun onFailure(call: retrofit2.Call<EWorkResponse>, t: Throwable) {
 //                saveDelay(eWork)
                 myHelper.toast(t.message.toString())
@@ -571,8 +562,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             }
         })
     }
-
-    /*
+    
     private fun pushDelay(eWork: EWork) {
         myHelper.log("pushDelay:$eWork")
         val call = this.retrofitAPI.pushDelay(
@@ -590,7 +580,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 if (responseBody!!.success) {
                     eWork.isSync = 1
 //                    saveDelay(eWork)
-
+                
                 } else {
 //                    saveDelay(eWork)
                     if (responseBody.message == "Token has expired") {
@@ -601,7 +591,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                     }
                 }
             }
-
+            
             override fun onFailure(call: retrofit2.Call<EWorkResponse>, t: Throwable) {
 //                myHelper.hideDialog()
 //                saveDelay(eWork)
@@ -610,11 +600,12 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             }
         })
     }
+    
     private fun saveDelay(eWork: EWork) {
-
+        
         val insertID = db.insertDelay(eWork)
         if (insertID > 0) {
-
+            
             val meter = myHelper.getMeter()
             myHelper.toast("Waiting Stopped.\nStart Time: ${myHelper.getTime(meter.delayStartTime)}Hrs.\nTotal Time: ${myHelper.getFormattedTime(meter.delayTotalTime)}")
             var dataNew = MyData()
@@ -627,16 +618,17 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         } else {
             myHelper.toast("Waiting Not Stopped.")
         }
-    }*/
+    }
+    
     fun pushELoad(myData: MyData) {
-
+        
         myData.loadingGPSLocation = gpsLocation
         myData.orgId = myHelper.getLoginAPI().org_id
         myData.siteId = myHelper.getMachineSettings().siteId
         myData.operatorId = myHelper.getOperatorAPI().id
         myData.machineTypeId = myHelper.getMachineTypeID()
         myData.machineId = myHelper.getMachineID()
-
+        
         stopDelay()
         val currentTime = System.currentTimeMillis()
         myData.startTime = currentTime
@@ -650,9 +642,9 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
         myData.time = currentTime.toString()
         myData.date = myHelper.getDate(currentTime)
-
+        
         myHelper.log("pushLoads:$myData")
-
+        
         val call = this.retrofitAPI.pushLoads(
             myHelper.getLoginAPI().auth_token,
             myData
@@ -675,25 +667,18 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                     }
                 }
             }
-
+            
             override fun onFailure(call: retrofit2.Call<MyDataResponse>, t: Throwable) {
                 myHelper.toast("Failure" + t.message)
             }
         })
     }
-
+    */
     private fun doEmail() {
-
-        val versionCode = BuildConfig.VERSION_CODE
-        val device = Build.DEVICE
-        val build = Build.BRAND
-        val manufacturer = Build.MANUFACTURER
-        val model = Build.MODEL
-        val andoridOS = Build.VERSION.SDK_INT.toString()
-
-        val details =
-            "App_version:$versionCode--Device:$device--Build:$build--Manufacturer:$manufacturer--Model:$model--AndroidOS:$andoridOS"
-
+        
+        
+        val details = myHelper.getDeviceDetailsString()
+        
         val email = "support@vsptracker.com"
         val addressees: Array<String> = arrayOf(email)
         val intent = Intent(Intent.ACTION_SENDTO).apply {
@@ -710,9 +695,9 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             startActivity(intent)
         }
     }
-
+    
     private fun startGPS() {
-
+        
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
         try {
 //            myHelper.log("Permission Granted.")
@@ -722,24 +707,25 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 0f,
                 locationListener
             )
-
-        } catch (ex: SecurityException) {
+            
+        }
+        catch (ex: SecurityException) {
             myHelper.log("No Location Available:${ex.message}")
             requestPermission()
         }
-
+        
     }
-
+    
     private fun stopGPS() {
         locationManager?.removeUpdates(locationListener)
     }
-
+    
     private fun requestPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED
         ) {
             // Permission is not granted
-
+            
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(
                     this,
@@ -749,13 +735,13 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
-
+                
                 ActivityCompat.requestPermissions(
                     this,
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                     REQUEST_ACCESS_FINE_LOCATION
                 )
-
+                
             } else {
                 // No explanation needed, we can request the permission.
                 ActivityCompat.requestPermissions(
@@ -763,13 +749,13 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                     REQUEST_ACCESS_FINE_LOCATION
                 )
-
+                
             }
-
-
+            
+            
         } else {
             // Permission has already been granted
-
+            
             if (locationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 //                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListener);
                 locationManager!!.requestLocationUpdates(
@@ -783,7 +769,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             }
         }
     }
-
+    
     private fun showGPSDisabledAlertToUser() {
         val alertDialogBuilder = AlertDialog.Builder(this, R.style.ThemeOverlay_AppCompat_Dialog)
         alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
@@ -802,7 +788,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         val alert = alertDialogBuilder.create()
         alert.show()
     }
-
+    
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             REQUEST_ACCESS_FINE_LOCATION -> {
@@ -815,7 +801,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 }
                 return
             }
-
+            
             // Add other 'when' lines to check for other
             // permissions this app might request.
             else -> {
@@ -823,7 +809,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             }
         }
     }
-
+    
     private fun showSettings() {
         val snackbar = Snackbar.make(
             findViewById(android.R.id.content),
@@ -845,44 +831,44 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         textView.maxLines = 5  //Or as much as you need
         snackbar.show()
     }
-
+    
     private val locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location?) {
             makeUseOfLocation(location)
         }
-
+        
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
             myHelper.log("Status Changed.")
         }
-
+        
         override fun onProviderEnabled(provider: String) {
             myHelper.log("Location Enabled.")
         }
-
+        
         override fun onProviderDisabled(provider: String) {
             myHelper.log("Location Disabled.")
             showGPSDisabledAlertToUser()
         }
     }
-
+    
     private fun makeUseOfLocation(location1: Location?) {
         latitude = location1!!.latitude
         longitude = location1.longitude
         location = location1
-
+        
         gpsLocation.latitude = location1.latitude
         gpsLocation.longitude = location1.longitude
         gpsLocation.altitude = location1.altitude
-
+        
         gpsLocation.accuracy = location1.accuracy
         gpsLocation.bearing = location1.bearing
         gpsLocation.speed = location1.speed
-
+        
         gpsLocation.provider = location1.provider
         gpsLocation.elapsedRealtimeNanos = location1.elapsedRealtimeNanos
 //        gpsLocation.extras = location1.extras
         gpsLocation.time = location1.time
-
+        
     }
 }
 

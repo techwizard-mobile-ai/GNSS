@@ -49,6 +49,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToLong
+
 @SuppressLint("SimpleDateFormat")
 class MyHelper(var TAG: String, val context: Context) {
     @Suppress("DEPRECATION")
@@ -493,7 +494,7 @@ class MyHelper(var TAG: String, val context: Context) {
      * 4. Save Machine Stops.
      * 5. Push Machine Status and Save Machine Stop ID.
      */
-    fun stopMachine(insertID: Long, material: Material) {
+    fun stopMachine(insertID: Long, material: Material, resetJourney: Boolean) {
         setIsMachineStopped(true, material.name, material.id)
         
         val meter = sessionManager.getMeter()
@@ -504,8 +505,12 @@ class MyHelper(var TAG: String, val context: Context) {
         
         sessionManager.setMeter(meter)
         stopDailyMode()
-        val data = MyData()
-        setLastJourney(data)
+//        If Machine is Breakdown Reset Journey otherwise Don't Reset Journey
+        if(resetJourney){
+            val data = MyData()
+            setLastJourney(data)
+        }
+        
 //            toast("Machine is Stopped.\n Machine Total Time : $meterONTime (mins)")
 //        toast("Machine is Stopped.")
     }
@@ -597,7 +602,8 @@ class MyHelper(var TAG: String, val context: Context) {
             val v = toast.view.findViewById(android.R.id.message) as TextView
             v.gravity = Gravity.CENTER
             toast.show()
-        }catch (e :Exception){
+        }
+        catch (e: Exception) {
             log("toastException:${e.message}")
         }
         
@@ -708,7 +714,7 @@ class MyHelper(var TAG: String, val context: Context) {
             log("showDialogException:$exception")
         }
     }
- 
+
 
 /*
     fun imageLoadFromURL(url: String, imageView: ImageView, myContext: Context) {
