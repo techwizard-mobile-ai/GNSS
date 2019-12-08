@@ -72,6 +72,7 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
         machine_status_rv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         machine_status_rv.adapter = mAdapter
         
+        
         machine_status_start.setOnClickListener(this)
         machine_status_logout.setOnClickListener(this)
         machine_status_back.setOnClickListener(this)

@@ -114,6 +114,14 @@
         <item name="android:background">#9f9e9e</item>
     </style>
 
+
+
+    <style name="next_button_single" parent="next_button">
+        <item name="android:layout_width">@dimen/_160sdp</item>
+        <item name="android:text">@string/logout</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_marginBottom">@dimen/_40sdp</item>
+    </style>
     <style name="next_button" parent="avenirnext_fontstyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -122,14 +130,6 @@
         <item name="android:layout_marginStart">@dimen/_33sdp</item>
         <item name="android:layout_marginEnd">@dimen/_33sdp</item>
         <item name="android:textSize">18sp</item>
-    </style>
-
-
-    <style name="next_button_single" parent="next_button">
-        <item name="android:layout_width">@dimen/_160sdp</item>
-        <item name="android:text">@string/logout</item>
-        <item name="android:layout_centerHorizontal">true</item>
-        <item name="android:layout_marginBottom">@dimen/_40sdp</item>
     </style>
 
     <style name="back_button" parent="avenirnext_fontstyle">
@@ -156,8 +156,8 @@
         <item name="android:textSize">@dimen/_18sdp</item>
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:layout_gravity">center_horizontal</item>
-        <item name="android:layout_marginBottom">@dimen/_20sdp</item>
-        <item name="android:layout_marginTop">@dimen/_15sdp</item>
+        <item name="android:layout_marginBottom">@dimen/_10sdp</item>
+        <item name="android:layout_marginTop">@dimen/_10sdp</item>
     </style>
 
 

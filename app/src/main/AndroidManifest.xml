@@ -64,7 +64,10 @@
         <activity android:name=".activities.common.RUnloadActivity" />
         <activity android:name=".activities.common.RLoadActivity" />
         <activity android:name=".activities.common.UnloadTaskActivity" />
-        <activity android:name=".activities.common.MachineStatusActivity" />
+<!--        Hide Keyboard by default on Activity Launch-->
+        <activity android:name=".activities.common.MachineStatusActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            />
         <activity android:name=".activities.common.WeightActivity" />
         <activity android:name=".activities.common.LMachineActivity" />
         <activity android:name=".activities.common.LocationActivity" />

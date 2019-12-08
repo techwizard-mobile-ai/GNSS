@@ -258,5 +258,8 @@
     <string name="production_digging_history">Production Digging History</string>
     <string name="all_data_synced_successfully">All Data Synced Successfully.</string>
     <string name="ok">OK</string>
+    <string name="add_0_1_to_hour_meter">Add 0.1 to Hour Meter</string>
+    <string name="subtract_0_1_to_hour_meter">Subtract 0.1 to Hour Meter</string>
+    <string name="machine_is_breakdown">Machine is Breakdown</string>
 
 </resources>

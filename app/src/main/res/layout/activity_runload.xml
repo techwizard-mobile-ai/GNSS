@@ -21,7 +21,7 @@
 
         <TextView
             style="@style/activity_title"
-            android:text="Repeat Journey"
+            android:text="@string/repeat_journey"
             android:visibility="gone" />
 
         <TextView
@@ -51,8 +51,10 @@
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_below="@id/trul_top"
+        android:layout_above="@id/runload_bottom"
         android:layout_centerInParent="true"
-        android:layout_marginTop="@dimen/_60sdp"
+        android:layout_marginTop="@dimen/_40sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
         android:layout_height="wrap_content">
         <Button
             android:id="@+id/trunload_unload"
@@ -63,6 +65,7 @@
 
 
     <LinearLayout
+        android:id="@+id/runload_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
