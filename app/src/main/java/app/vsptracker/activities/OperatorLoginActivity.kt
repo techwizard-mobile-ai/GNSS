@@ -102,11 +102,12 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
          * If Internet is Available Fetch Company Data and Replace Old Data.
          * Call launchHomeForLoggedIn() method.
          */
+        // Fetch Company Data when App is Launched, This will be useful when App will be updated and Operator Data will be erased.
+        when {
+            myHelper.isOnline() -> fetchOrgData()
+        }
         when {
             myHelper.getOperatorAPI().id > 0 -> {
-                when {
-                    myHelper.isOnline() -> fetchOrgData()
-                }
                 launchHomeForLoggedIn()
             }
         }

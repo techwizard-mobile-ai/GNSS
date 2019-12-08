@@ -21,6 +21,8 @@ import app.vsptracker.R
 import app.vsptracker.activities.HourMeterStopActivity
 import app.vsptracker.activities.LoginActivity
 import app.vsptracker.activities.Map1Activity
+import app.vsptracker.activities.common.RLoadActivity
+import app.vsptracker.activities.common.RUnloadActivity
 import app.vsptracker.activities.excavator.EHistoryActivity
 import app.vsptracker.activities.excavator.EHomeActivity
 import app.vsptracker.activities.scrapper.SHistoryActivity
@@ -650,20 +652,50 @@ class MyHelper(var TAG: String, val context: Context) {
     //    machineTypeId = 2 scrapper
     //    machineTypeId = 3 truck
     fun startHomeActivityByType(myData: MyData) {
+        val lastJourney = getLastJourney()
+        log("lastJourney:$lastJourney")
         when (getMachineTypeID()) {
             1 -> {
                 val intent = Intent(context, EHomeActivity::class.java)
                 intent.putExtra("myData", myData)
                 context.startActivity(intent)
             }
+    
+            // Last Journey was saved and Machine was Stopped, Now Machine is Started so Last Journey should be continued
+            // nextAction 0 = Do Loading
+            // nextAction 1 = Do Unloading
+            // nextAction 2 = Do Back Loading
+            // nextAction 3 = Do Back Unloading
+    
+            //    repeatJourney 0 = No Repeat Journey
+            //    repeatJourney 1 = Repeat Journey without Back Load
+            //    repeatJourney 2 = Repeat Journey with Back Load
+            
             2 -> {
-                val intent = Intent(context, SHomeActivity::class.java)
-//                intent.putExtra("myData", myData)
+                val intent : Intent = if(lastJourney.repeatJourney >0 && (lastJourney.nextAction == 0 || lastJourney.nextAction == 2)){
+                    // Launch Load Screen
+                    Intent(context, RLoadActivity::class.java)
+                }else if (lastJourney.repeatJourney >0 && (lastJourney.nextAction == 1 || lastJourney.nextAction == 3)){
+                    // Launch Unload Screen
+                    Intent(context, RUnloadActivity::class.java)
+                }else{
+                    // No settings so Start Home Activity
+                    Intent(context, SHomeActivity::class.java)
+                }
                 context.startActivity(intent)
             }
             3 -> {
-                val intent = Intent(context, THomeActivity::class.java)
-//                intent.putExtra("myData", myData)
+//                val intent = Intent(context, THomeActivity::class.java)
+                val intent : Intent = if(lastJourney.repeatJourney >0 && (lastJourney.nextAction == 0 || lastJourney.nextAction == 2)){
+                    // Launch Load Screen
+                    Intent(context, RLoadActivity::class.java)
+                }else if (lastJourney.repeatJourney >0 && (lastJourney.nextAction == 1 || lastJourney.nextAction == 3)){
+                    // Launch Unload Screen
+                    Intent(context, RUnloadActivity::class.java)
+                }else{
+                    // No settings so Start Home Activity
+                    Intent(context, THomeActivity::class.java)
+                }
                 context.startActivity(intent)
                 
             }

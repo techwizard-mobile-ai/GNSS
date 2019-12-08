@@ -231,7 +231,30 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
             val intent = Intent(this, HourMeterStartActivity::class.java)
             startActivity(intent)
         } else {
-            myHelper.startHomeActivityByType(MyData())
+            val lastJourney = myHelper.getLastJourney()
+            myHelper.log("lastJourney:$lastJourney")
+            // Last Journey was saved and Machine was Stopped, Now Machine is Started so Last Journey should be continued
+            // nextAction 0 = Do Loading
+            // nextAction 1 = Do Unloading
+            // nextAction 2 = Do Back Loading
+            // nextAction 3 = Do Back Unloading
+            
+            //    repeatJourney 0 = No Repeat Journey
+            //    repeatJourney 1 = Repeat Journey without Back Load
+            //    repeatJourney 2 = Repeat Journey with Back Load
+//            if(lastJourney.repeatJourney >0 && (lastJourney.nextAction == 0 || lastJourney.nextAction == 2)){
+//                // Launch Load Screen
+//                val intent = Intent(this, RLoadActivity::class.java)
+//                startActivity(intent)
+//            }else if (lastJourney.repeatJourney >0 && (lastJourney.nextAction == 1 || lastJourney.nextAction == 3)){
+//                // Launch Unload Screen
+//                val intent = Intent(this, RUnloadActivity::class.java)
+//                startActivity(intent)
+//            }else{
+                // No settings so Start Home Activity
+                myHelper.startHomeActivityByType(MyData())
+//            }
+            
         }
     }
 }

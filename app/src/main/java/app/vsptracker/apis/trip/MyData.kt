@@ -200,27 +200,11 @@ class MyData : Serializable {
     override fun toString(): String {
         return "\nMyData(" +
                 "id=$id, " +
-                "orgId=$orgId, " +
-                "siteId=$siteId, " +
-                "operatorId=$operatorId, " +
-                "isRunning=$isRunning, " +
                 "machineId=$machineId, " +
-                "startTime=$startTime, " +
-                "stopTime=$stopTime, " +
-                "startHours='$startHours', " +
-                "totalHours='$totalHours', " +
-                "isStartHoursCustom=$isStartHoursCustom, " +
-                "isTotalHoursCustom=$isTotalHoursCustom, " +
-                "totalTime=$totalTime, " +
-                "isDayWorks=$isDayWorks, " +
-                "machine_stop_reason_id=$machine_stop_reason_id, " +
-                "recordID=$recordID, " +
-                "isStartMachine=$isStartMachine, " +
-                "isSync=$isSync, " +
-                "loadingGPSLocationString='$loadingGPSLocationString', " +
-                "unloadingGPSLocationString='$unloadingGPSLocationString' " +
+                "nextAction=$nextAction, " +
+                "repeatJourney=$repeatJourney, " +
+                "tripType=$tripType, " +
+                "trip0ID='$trip0ID'" +
                 ")"
     }
-    
-    
 }
