@@ -147,44 +147,6 @@ class MyHelper(var TAG: String, val context: Context) {
         return gson.toJson(DeviceDetails(), DeviceDetails::class.java)
 //        return ("AppVersionCode:$versionCode--Device:$device--Build:$build--Manufacturer:$manufacturer--Model:$model--AndroidOS:$andoridOS")
     }
-/*
-    
-    fun pushIsMachineRunning(isRunning: Int, machinesStopsDbID: Int) {
-
-        this.retrofit = Retrofit.Builder()
-            .baseUrl(RetrofitAPI.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        this.retrofitAPI = retrofit.create(RetrofitAPI::class.java)
-
-        val call = this.retrofitAPI.pushIsMachineRunning(getLoginAPI().auth_token, getMachineID(), isRunning, machinesStopsDbID)
-        call.enqueue(object : retrofit2.Callback<MyDataResponse> {
-
-            override fun onResponse(call: retrofit2.Call<MyDataResponse>, response: retrofit2.Response<MyDataResponse>) {
-                log("updateMachineStatus:$response")
-                val loginResponse = response.body()
-                log("updatebody:$loginResponse")
-//                if(loginResponse!!.success){
-//                    log("SendReponse:${loginResponse.data}.")
-//                    setLoginAPI(loginResponse.data)
-//                    val intent = Intent(context, context.javaClass)
-//                    intent.putExtra("myData", MyData())
-//                    context.startActivity(intent)
-//                    toast("Please Try Again.")
-//                }else{
-//                    toast(loginResponse.message)
-//                    val intent = Intent(context, LoginActivity::class.java)
-//                    context.startActivity(intent)
-//                }
-//                myHelper.setLoginAPI(loginResponse.data)
-            }
-
-            override fun onFailure(call: retrofit2.Call<MyDataResponse>, t: Throwable) {
-                log("API Failure:$t")
-            }
-        })
-    }
-*/
     
     fun getIsMapOpened() = sessionManager.getLastJourney().isMapOpened
     fun setIsMapOpened(isMapOpened: Boolean) {
@@ -508,11 +470,11 @@ class MyHelper(var TAG: String, val context: Context) {
         sessionManager.setMeter(meter)
         stopDailyMode()
 //        If Machine is Breakdown Reset Journey otherwise Don't Reset Journey
-        if(resetJourney){
+        if (resetJourney) {
             val data = MyData()
             setLastJourney(data)
         }
-        
+
 //            toast("Machine is Stopped.\n Machine Total Time : $meterONTime (mins)")
 //        toast("Machine is Stopped.")
     }
@@ -660,25 +622,25 @@ class MyHelper(var TAG: String, val context: Context) {
                 intent.putExtra("myData", myData)
                 context.startActivity(intent)
             }
-    
+            
             // Last Journey was saved and Machine was Stopped, Now Machine is Started so Last Journey should be continued
             // nextAction 0 = Do Loading
             // nextAction 1 = Do Unloading
             // nextAction 2 = Do Back Loading
             // nextAction 3 = Do Back Unloading
-    
+            
             //    repeatJourney 0 = No Repeat Journey
             //    repeatJourney 1 = Repeat Journey without Back Load
             //    repeatJourney 2 = Repeat Journey with Back Load
             
             2 -> {
-                val intent : Intent = if(lastJourney.repeatJourney >0 && (lastJourney.nextAction == 0 || lastJourney.nextAction == 2)){
+                val intent: Intent = if (lastJourney.repeatJourney > 0 && (lastJourney.nextAction == 0 || lastJourney.nextAction == 2)) {
                     // Launch Load Screen
                     Intent(context, RLoadActivity::class.java)
-                }else if (lastJourney.repeatJourney >0 && (lastJourney.nextAction == 1 || lastJourney.nextAction == 3)){
+                } else if (lastJourney.repeatJourney > 0 && (lastJourney.nextAction == 1 || lastJourney.nextAction == 3)) {
                     // Launch Unload Screen
                     Intent(context, RUnloadActivity::class.java)
-                }else{
+                } else {
                     // No settings so Start Home Activity
                     Intent(context, SHomeActivity::class.java)
                 }
@@ -686,13 +648,13 @@ class MyHelper(var TAG: String, val context: Context) {
             }
             3 -> {
 //                val intent = Intent(context, THomeActivity::class.java)
-                val intent : Intent = if(lastJourney.repeatJourney >0 && (lastJourney.nextAction == 0 || lastJourney.nextAction == 2)){
+                val intent: Intent = if (lastJourney.repeatJourney > 0 && (lastJourney.nextAction == 0 || lastJourney.nextAction == 2)) {
                     // Launch Load Screen
                     Intent(context, RLoadActivity::class.java)
-                }else if (lastJourney.repeatJourney >0 && (lastJourney.nextAction == 1 || lastJourney.nextAction == 3)){
+                } else if (lastJourney.repeatJourney > 0 && (lastJourney.nextAction == 1 || lastJourney.nextAction == 3)) {
                     // Launch Unload Screen
                     Intent(context, RUnloadActivity::class.java)
-                }else{
+                } else {
                     // No settings so Start Home Activity
                     Intent(context, THomeActivity::class.java)
                 }

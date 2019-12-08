@@ -7,6 +7,7 @@ import java.io.Serializable
 class DeviceDetails : Serializable {
     
     val VSPT_VERSION_CODE = BuildConfig.VERSION_CODE
+    val VSPT_VERSION_NAME = BuildConfig.VERSION_NAME
     val MANUFACTURER: String = Build.MANUFACTURER
     val DEVICE: String = Build.DEVICE
     val BRAND: String = Build.BRAND
@@ -15,6 +16,7 @@ class DeviceDetails : Serializable {
     override fun toString(): String {
         return "DeviceDetails(" +
                 "VSPT_VERSION_CODE=$VSPT_VERSION_CODE, " +
+                "VSPT_VERSION_NAME=$VSPT_VERSION_NAME, " +
                 "MANUFACTURER='$MANUFACTURER', " +
                 "DEVICE='$DEVICE', " +
                 "BRAND='$BRAND', " +

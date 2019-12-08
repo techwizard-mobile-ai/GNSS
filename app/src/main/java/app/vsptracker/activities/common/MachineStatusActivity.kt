@@ -124,8 +124,6 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
             }
             
             R.id.machine_status_start -> {
-
-//                val machineData = MyData()
                 val machineData = db.getMachineStopByID(myHelper.getMeter().machineDbID)
                 val currentTime = System.currentTimeMillis()
                 machineData.stopTime = currentTime
@@ -152,9 +150,6 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
                     machineData.isDayWorks = 0
                 }
 
-//                if(myHelper.isOnline()){
-//                    pushMachinesStops(machineData)
-//                }
                 myDataPushSave.pushUpdateMachineStop(machineData)
                 
                 val meter = myHelper.getMeter()
@@ -182,48 +177,8 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
             }
         }
     }
-/*
-    private fun pushMachinesStops(machineData: MyData){
-
-        val call = this.retrofitAPI.pushMachinesStops(
-            myHelper.getLoginAPI().auth_token,
-            machineData
-        )
-        call.enqueue(object : retrofit2.Callback<MyDataResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<MyDataResponse>,
-                response: retrofit2.Response<MyDataResponse>
-            ) {
-                myHelper.log("pushMachinesStops:$response")
-                val responseBody = response.body()
-                myHelper.log("pushMachinesStopsData:${responseBody}")
-                if (responseBody!!.success) {
-                    machineData.isSync = 1
-                    myHelper.pushIsMachineRunning(1, responseBody.data.id)
-//                    pushIsMachineRunning(machineData)
-
-                } else {
-//                    pushIsMachineRunning(machineData)
-                    if (responseBody.message == "Token has expired") {
-                        myHelper.log("Token Expired:$response")
-                        myHelper.refreshToken()
-                    } else {
-                        myHelper.toast(responseBody.message)
-                    }
-                }
-            }
-
-            override fun onFailure(call: retrofit2.Call<MyDataResponse>, t: Throwable) {
-
-//                pushIsMachineRunning(machineData)
-                myHelper.toast(t.message.toString())
-                myHelper.log("Failure" + t.message)
-            }
-        })
-    }*/
     
     private fun updateMachineStatus() {
-//        db.updateMachineStop(machineData)
         myHelper.toast("Machine Started Successfully")
         myHelper.setIsMachineStopped(false, "", 0)
         myHelper.startMachine()
@@ -233,27 +188,7 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
         } else {
             val lastJourney = myHelper.getLastJourney()
             myHelper.log("lastJourney:$lastJourney")
-            // Last Journey was saved and Machine was Stopped, Now Machine is Started so Last Journey should be continued
-            // nextAction 0 = Do Loading
-            // nextAction 1 = Do Unloading
-            // nextAction 2 = Do Back Loading
-            // nextAction 3 = Do Back Unloading
-            
-            //    repeatJourney 0 = No Repeat Journey
-            //    repeatJourney 1 = Repeat Journey without Back Load
-            //    repeatJourney 2 = Repeat Journey with Back Load
-//            if(lastJourney.repeatJourney >0 && (lastJourney.nextAction == 0 || lastJourney.nextAction == 2)){
-//                // Launch Load Screen
-//                val intent = Intent(this, RLoadActivity::class.java)
-//                startActivity(intent)
-//            }else if (lastJourney.repeatJourney >0 && (lastJourney.nextAction == 1 || lastJourney.nextAction == 3)){
-//                // Launch Unload Screen
-//                val intent = Intent(this, RUnloadActivity::class.java)
-//                startActivity(intent)
-//            }else{
-                // No settings so Start Home Activity
-                myHelper.startHomeActivityByType(MyData())
-//            }
+            myHelper.startHomeActivityByType(MyData())
             
         }
     }

@@ -31,6 +31,7 @@ import app.vsptracker.activities.common.MachineStatusActivity
 import app.vsptracker.apis.RetrofitAPI
 import app.vsptracker.apis.delay.EWork
 import app.vsptracker.apis.trip.MyData
+import app.vsptracker.classes.DeviceDetails
 import app.vsptracker.classes.GPSLocation
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyDataPushSave
@@ -103,6 +104,9 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         navView.setNavigationItemSelectedListener(this)
+    
+    
+        
         
         when (myHelper.getMachineTypeID()) {
             1 -> {
@@ -133,7 +137,23 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         
         menu = bottomNavigation.menu
         menu[0].isCheckable = false
-
+    
+        val navigationView : NavigationView  = findViewById(R.id.base_nav_view)
+        val headerView : View = navigationView.getHeaderView(0)
+        val nav_header_device_details : TextView = headerView.findViewById(R.id.nav_header_device_details)
+        val navTitle : TextView = headerView.findViewById(R.id.nav_header_title)
+        val navSubTitle : TextView = headerView.findViewById(R.id.nav_header_sub_title)
+    
+        val deviceDetails = DeviceDetails()
+        nav_header_device_details.text = "VSPT_VERSION: ${deviceDetails.VSPT_VERSION_NAME} (${deviceDetails.VSPT_VERSION_CODE})\n" +
+                "Mfr. : ${deviceDetails.MANUFACTURER}\n" +
+                "DEVICE : ${deviceDetails.DEVICE}\n" +
+                "MODEL : ${deviceDetails.MODEL}\n" +
+                "ANDROID_API : ${deviceDetails.ANDROID_SDK_API}\n"
+//        navTitle.text = "VSP Tracker (${BuildConfig.VERSION_CODE})"
+//        navSubTitle.text = "Test just"
+        
+        
 //        handler = Handler()
 //        r = Runnable {
 //            myHelper.toast("User is Inacitve for 1 minute.")
