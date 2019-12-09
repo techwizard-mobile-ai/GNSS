@@ -111,9 +111,9 @@ const val DROP_TABLE_E_LOAD_HISTORY = "DROP TABLE IF EXISTS $TABLE_E_LOAD_HISTOR
 const val DROP_TABLE_MACHINES_AUTO_LOGOUTS = "DROP TABLE IF EXISTS $TABLE_MACHINES_AUTO_LOGOUTS"
 const val DROP_TABLE_OPERATORS_HOURS = "DROP TABLE IF EXISTS $TABLE_OPERATORS_HOURS"
 
-// Database Version Code 6
-// App Version Code 6
-class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 6) {
+// Database Version Code 11
+// App Version Code 7
+class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 7) {
     
     val tag = "DatabaseAdapter"
     private var myHelper: MyHelper
@@ -417,25 +417,25 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
     }
     
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-//        db?.execSQL(DROP_TABLE_OPERATORS_HOURS)
-//        db?.execSQL(DROP_TABLE_MACHINES_AUTO_LOGOUTS)
-//        db?.execSQL(DROP_TABLE_MACHINES_HOURS)
-//        db?.execSQL(DROP_TABLE_MACHINES_TASKS)
-//        db?.execSQL(DROP_TABLE_MACHINES_PLANTS)
-//        db?.execSQL(DROP_TABLE_MACHINES_BRANDS)
-//        db?.execSQL(DROP_TABLE_MACHINES_TYPES)
-//        db?.execSQL(DROP_TABLE_SITES)
-//        db?.execSQL(DROP_TABLE_OPERATORS)
-//        db?.execSQL(DROP_TABLE_STOP_REASONS)
-//        db?.execSQL(DROP_TABLE_MATERIALS)
-//        db?.execSQL(DROP_TABLE_MACHINES)
-//        db?.execSQL(DROP_TABLE_LOCATIONS)
-//        db?.execSQL(DROP_TABLE_TRIP)
-//        db?.execSQL(DROP_TABLE_WAIT)
-//        db?.execSQL(DROP_TABLE_E_WORK_ACTION_OFFLOADING)
-//        db?.execSQL(DROP_TABLE_E_WORK)
-//        db?.execSQL(DROP_TABLE_E_LOAD_HISTORY)
-//        onCreate(db)
+        db?.execSQL(DROP_TABLE_OPERATORS_HOURS)
+        db?.execSQL(DROP_TABLE_MACHINES_AUTO_LOGOUTS)
+        db?.execSQL(DROP_TABLE_MACHINES_HOURS)
+        db?.execSQL(DROP_TABLE_MACHINES_TASKS)
+        db?.execSQL(DROP_TABLE_MACHINES_PLANTS)
+        db?.execSQL(DROP_TABLE_MACHINES_BRANDS)
+        db?.execSQL(DROP_TABLE_MACHINES_TYPES)
+        db?.execSQL(DROP_TABLE_SITES)
+        db?.execSQL(DROP_TABLE_OPERATORS)
+        db?.execSQL(DROP_TABLE_STOP_REASONS)
+        db?.execSQL(DROP_TABLE_MATERIALS)
+        db?.execSQL(DROP_TABLE_MACHINES)
+        db?.execSQL(DROP_TABLE_LOCATIONS)
+        db?.execSQL(DROP_TABLE_TRIP)
+        db?.execSQL(DROP_TABLE_WAIT)
+        db?.execSQL(DROP_TABLE_E_WORK_ACTION_OFFLOADING)
+        db?.execSQL(DROP_TABLE_E_WORK)
+        db?.execSQL(DROP_TABLE_E_LOAD_HISTORY)
+        onCreate(db)
     }
     
     fun insertOperatorHour(myData: MyData): Long {

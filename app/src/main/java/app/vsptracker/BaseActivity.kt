@@ -66,6 +66,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     private lateinit var retrofit: Retrofit
     internal lateinit var retrofitAPI: RetrofitAPI
     lateinit var myDataPushSave: MyDataPushSave
+    
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,8 +105,6 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
         navView.setNavigationItemSelectedListener(this)
-    
-    
         
         
         when (myHelper.getMachineTypeID()) {
@@ -137,23 +136,23 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         
         menu = bottomNavigation.menu
         menu[0].isCheckable = false
-    
-        val navigationView : NavigationView  = findViewById(R.id.base_nav_view)
-        val headerView : View = navigationView.getHeaderView(0)
-        val nav_header_device_details : TextView = headerView.findViewById(R.id.nav_header_device_details)
-        val navTitle : TextView = headerView.findViewById(R.id.nav_header_title)
-        val navSubTitle : TextView = headerView.findViewById(R.id.nav_header_sub_title)
-    
+        
+        val navigationView: NavigationView = findViewById(R.id.base_nav_view)
+        val headerView: View = navigationView.getHeaderView(0)
+        val navHeaderDeviceDetails: TextView = headerView.findViewById(R.id.nav_header_device_details)
+//        val navTitle : TextView = headerView.findViewById(R.id.nav_header_title)
+//        val navSubTitle : TextView = headerView.findViewById(R.id.nav_header_sub_title)
+        
         val deviceDetails = DeviceDetails()
-        nav_header_device_details.text = "VSPT_VERSION: ${deviceDetails.VSPT_VERSION_NAME} (${deviceDetails.VSPT_VERSION_CODE})\n" +
+        navHeaderDeviceDetails.text = "VSPT_VERSION: ${deviceDetails.VSPT_VERSION_NAME} (${deviceDetails.VSPT_VERSION_CODE})\n" +
                 "Mfr. : ${deviceDetails.MANUFACTURER}\n" +
                 "DEVICE : ${deviceDetails.DEVICE}\n" +
                 "MODEL : ${deviceDetails.MODEL}\n" +
                 "ANDROID_API : ${deviceDetails.ANDROID_SDK_API}\n"
 //        navTitle.text = "VSP Tracker (${BuildConfig.VERSION_CODE})"
 //        navSubTitle.text = "Test just"
-        
-        
+
+
 //        handler = Handler()
 //        r = Runnable {
 //            myHelper.toast("User is Inacitve for 1 minute.")
@@ -165,27 +164,28 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 //        }
 //        startHandler()
     }
-
+    
 /*
     override fun onUserInteraction() {
         super.onUserInteraction()
-        myHelper.log("--------------User Interacted")
+        myHelper.log("\nonUserInteraction")
 //        stopHandler()
 //        startHandler()
     }
-
+    
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
+        myHelper.log("\nonUserLeaveHint")
 //        stopHandler()
 //        startHandler()
     }
-
+    
     private fun stopHandler() {
         myHelper.log("stopHandler")
         handler.removeCallbacks(r)
         handler.removeCallbacksAndMessages(null)
     }
-
+    
     private fun startHandler() {
         myHelper.log("startHandler")
         handler.postDelayed(r, 1 * 60000) //for 1 minutes
@@ -215,7 +215,6 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                             else -> toggleDelay()
                         }
                     }
-                    
                 }
             false
         }
@@ -453,249 +452,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         }
     }
     
-    /**
-     * This method will do following actions.
-     * 1. Save Machine Hours as Machine is Stopped.
-     * 2. Push Machine Hours To Server.
-     * 3. Insert Machine Hours in Database.
-     * 4. Stop Waiting (Delay) if Started.
-     * 5. Stop Daily Mode if Started.
-     */
-/*    fun saveMachineHour(myData: MyData): Boolean {
-        
-        myData.siteId = myHelper.getMachineSettings().siteId
-        myData.machineId = myHelper.getMachineID()
-        myData.orgId = myHelper.getLoginAPI().org_id
-        myData.operatorId = myHelper.getOperatorAPI().id
-        myData.machineTypeId = myHelper.getMachineTypeID()
-        myData.machineId = myHelper.getMachineID()
-        if (myHelper.isDailyModeStarted()) myData.isDayWorks = 1 else myData.isDayWorks = 0
-        val currentTime = System.currentTimeMillis()
-        myData.stopTime = currentTime
-        myData.totalTime = myData.stopTime - myData.startTime
-        myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
-        myData.unloadingGPSLocation = gpsLocation
-        
-        myData.unloadingGPSLocationString = myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
-        
-        myData.time = currentTime.toString()
-        myData.date = myHelper.getDate(currentTime.toString())
-        
-        myDataPushSave.pushInsertMachineHour(myData)
-        
-        myHelper.stopDelay(gpsLocation)
-        myHelper.stopDailyMode()
-        
-        return true
-        
-//        myHelper.setOperatorAPI(MyData())
-//        val data = MyData()
-//        myHelper.setLastJourney(data)
-//
-//        val intent = Intent(this, OperatorLoginActivity::class.java)
-//        startActivity(intent)
-//        finishAffinity()
-        
-    }*/
-/*
-    private fun pushMachineHour(myData: MyData) {
-        
-        val call = this.retrofitAPI.pushMachinesHours(
-            myHelper.getLoginAPI().auth_token,
-            myData
-        )
-        call.enqueue(object : retrofit2.Callback<MyDataResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<MyDataResponse>,
-                response: retrofit2.Response<MyDataResponse>
-            ) {
-                val responseBody = response.body()
-                myHelper.log("pushSideCastings:$responseBody")
-                if (responseBody!!.success) {
-                    myData.isSync = 1
-                    //                    saveDelay(eWork)
-                    db.insertMachineHours(myData)
-                    
-                } else {
-                    db.insertMachineHours(myData)
-                    
-                    if (responseBody.message == "Token has expired") {
-                        myHelper.log("Token Expired:$response")
-                        myHelper.refreshToken()
-                    } else {
-                        myHelper.toast(responseBody.message)
-                    }
-                }
-            }
-            
-            override fun onFailure(call: retrofit2.Call<MyDataResponse>, t: Throwable) {
-                db.insertMachineHours(myData)
-                
-                myHelper.toast(t.message.toString())
-                myHelper.log("Failure" + t.message)
-            }
-        })
-    }
-    
-    fun pushSideCasting(eWork: EWork) {
-        
-        eWork.siteId = myHelper.getMachineSettings().siteId
-        eWork.machineId = myHelper.getMachineID()
-        eWork.orgId = myHelper.getLoginAPI().org_id
-        eWork.operatorId = myHelper.getOperatorAPI().id
-        eWork.machineTypeId = myHelper.getMachineTypeID()
-
-//        eWork.loadingGPSLocationString = myHelper.getGPSLocationToString(eWork.loadingGPSLocation)
-        eWork.unloadingGPSLocationString = myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
-        
-        myHelper.log("pushSideCastings:$eWork")
-        val call = this.retrofitAPI.pushSideCastings(
-            myHelper.getLoginAPI().auth_token,
-            eWork
-        )
-        call.enqueue(object : retrofit2.Callback<EWorkResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<EWorkResponse>,
-                response: retrofit2.Response<EWorkResponse>
-            ) {
-                val responseBody = response.body()
-                myHelper.log("pushSideCastings:$responseBody")
-                if (responseBody!!.success) {
-                    eWork.isSync = 1
-//                    saveDelay(eWork)
-                
-                } else {
-//                    saveDelay(eWork)
-                    if (responseBody.message == "Token has expired") {
-                        myHelper.log("Token Expired:$response")
-                        myHelper.refreshToken()
-                    } else {
-                        myHelper.toast(responseBody.message)
-                    }
-                }
-            }
-            
-            override fun onFailure(call: retrofit2.Call<EWorkResponse>, t: Throwable) {
-//                saveDelay(eWork)
-                myHelper.toast(t.message.toString())
-                myHelper.log("Failure" + t.message)
-            }
-        })
-    }
-    
-    private fun pushDelay(eWork: EWork) {
-        myHelper.log("pushDelay:$eWork")
-        val call = this.retrofitAPI.pushDelay(
-            myHelper.getLoginAPI().auth_token,
-            eWork
-        )
-        call.enqueue(object : retrofit2.Callback<EWorkResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<EWorkResponse>,
-                response: retrofit2.Response<EWorkResponse>
-            ) {
-//                myHelper.hideDialog()
-                val responseBody = response.body()
-                myHelper.log("EWorkResponse:$response")
-                if (responseBody!!.success) {
-                    eWork.isSync = 1
-//                    saveDelay(eWork)
-                
-                } else {
-//                    saveDelay(eWork)
-                    if (responseBody.message == "Token has expired") {
-                        myHelper.log("Token Expired:$response")
-                        myHelper.refreshToken()
-                    } else {
-                        myHelper.toast(responseBody.message)
-                    }
-                }
-            }
-            
-            override fun onFailure(call: retrofit2.Call<EWorkResponse>, t: Throwable) {
-//                myHelper.hideDialog()
-//                saveDelay(eWork)
-                myHelper.toast(t.message.toString())
-                myHelper.log("Failure" + t.message)
-            }
-        })
-    }
-    
-    private fun saveDelay(eWork: EWork) {
-        
-        val insertID = db.insertDelay(eWork)
-        if (insertID > 0) {
-            
-            val meter = myHelper.getMeter()
-            myHelper.toast("Waiting Stopped.\nStart Time: ${myHelper.getTime(meter.delayStartTime)}Hrs.\nTotal Time: ${myHelper.getFormattedTime(meter.delayTotalTime)}")
-            var dataNew = MyData()
-            val bundle: Bundle? = this.intent.extras
-            if (bundle != null) {
-                dataNew = bundle.getSerializable("myData") as MyData
-            }
-            intent.putExtra("myData", dataNew)
-            finishFromChild(DelayActivity())
-        } else {
-            myHelper.toast("Waiting Not Stopped.")
-        }
-    }
-    
-    fun pushELoad(myData: MyData) {
-        
-        myData.loadingGPSLocation = gpsLocation
-        myData.orgId = myHelper.getLoginAPI().org_id
-        myData.siteId = myHelper.getMachineSettings().siteId
-        myData.operatorId = myHelper.getOperatorAPI().id
-        myData.machineTypeId = myHelper.getMachineTypeID()
-        myData.machineId = myHelper.getMachineID()
-        
-        stopDelay()
-        val currentTime = System.currentTimeMillis()
-        myData.startTime = currentTime
-        myData.stopTime = currentTime
-        myData.totalTime = myData.stopTime - myData.startTime
-        if (myHelper.isDailyModeStarted()) {
-            myData.isDayWorks = 1
-        } else {
-            myData.isDayWorks = 0
-        }
-        myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
-        myData.time = currentTime.toString()
-        myData.date = myHelper.getDate(currentTime)
-        
-        myHelper.log("pushLoads:$myData")
-        
-        val call = this.retrofitAPI.pushLoads(
-            myHelper.getLoginAPI().auth_token,
-            myData
-        )
-        call.enqueue(object : retrofit2.Callback<MyDataResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<MyDataResponse>,
-                response: retrofit2.Response<MyDataResponse>
-            ) {
-                val responseBody = response.body()
-                myHelper.log("EWorkResponse:$response")
-                if (responseBody!!.success) {
-                    myHelper.toast("Load Pushed to Server Successfully.")
-                } else {
-                    if (responseBody.message == "Token has expired") {
-                        myHelper.log("Token Expired:$responseBody")
-                        myHelper.refreshToken()
-                    } else {
-                        myHelper.toast(responseBody.message)
-                    }
-                }
-            }
-            
-            override fun onFailure(call: retrofit2.Call<MyDataResponse>, t: Throwable) {
-                myHelper.toast("Failure" + t.message)
-            }
-        })
-    }
-    */
     private fun doEmail() {
-        
         
         val details = myHelper.getDeviceDetailsString()
         

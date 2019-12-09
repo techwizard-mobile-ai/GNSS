@@ -509,27 +509,26 @@ class MyDataPushSave(private val context: Context) {
      * 5. Stop Daily Mode if Started.
      */
     fun pushInsertMachineHour(myData: MyData): Boolean {
-    
         
         
         val currentTime = System.currentTimeMillis()
-    
+        
         val meter = myHelper.getMeter()
         if (meter.isMachineStartTimeCustom)
             myData.isStartHoursCustom = 1
         myData.loadingGPSLocation = meter.hourStartGPSLocation
         myData.startHours = meter.startHours
         myData.startTime = meter.machineStartTime
-    
+        
         myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
         
         myData.unloadingGPSLocationString = myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
 //        myData.machine_stop_reason_id = -2
         if (myHelper.isDailyModeStarted()) myData.isDayWorks = 1 else myData.isDayWorks = 0
-        
-        
+
+
 //        myData.totalHours = myHelper.getMeterTimeForFinishCustom(myData.startHours)
-    
+        
         myData.time = currentTime.toString()
         myData.date = myHelper.getDate(currentTime.toString())
         
@@ -733,7 +732,7 @@ class MyDataPushSave(private val context: Context) {
 
 //        val time = System.currentTimeMillis()
         myData.time = currentTime.toString()
-    
+        
         myData.orgId = myHelper.getLoginAPI().org_id
         myData.siteId = myHelper.getMachineSettings().siteId
         myData.operatorId = myHelper.getOperatorAPI().id
@@ -741,7 +740,7 @@ class MyDataPushSave(private val context: Context) {
         myData.machineId = myHelper.getMachineID()
         myData.machine_stop_reason_id = material.id
         myData.date = myHelper.getDate(currentTime.toString())
-        myData.machineId= myHelper.getMachineID()
+        myData.machineId = myHelper.getMachineID()
         
         val insertID = db.insertMachineStop(myData)
         myHelper.log("insertMachineStopID:$insertID")
@@ -942,7 +941,7 @@ class MyDataPushSave(private val context: Context) {
     }
     
     fun insertEWorkOffLoad(eWork: EWork): Long {
-    
+        
         eWork.orgId = myHelper.getLoginAPI().org_id
         eWork.operatorId = myHelper.getOperatorAPI().id
         eWork.machineTypeId = myHelper.getMachineTypeID()
@@ -952,7 +951,7 @@ class MyDataPushSave(private val context: Context) {
         myHelper.log("insertEWorkOffLoadID:$insertID")
         return insertID
     }
-    
+
 /*
     fun pushUpdateServerSync1(serverSyncList: ArrayList<ServerSyncAPI>) {
 //        myHelper.log("pushUpdateServerSync:$serverSyncList")
