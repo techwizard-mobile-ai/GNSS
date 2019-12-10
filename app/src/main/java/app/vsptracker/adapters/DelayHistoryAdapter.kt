@@ -38,21 +38,11 @@ class DelayHistoryAdapter(
 
         val eWork = dataList[position]
         myHelper.log("waiting:$eWork")
-//        when (eWork.machineTypeId) {
-//            1 -> {
-//                holder.itemView.eth_machine_type.text = ":  Excavator"
-//            }
-//            2 -> {
-//                holder.itemView.eth_machine_type.text = ":  Scraper"
-//            }
-//            3 -> {
-//                holder.itemView.eth_machine_type.text = ":  Truck"
-//            }
-//        }
-    
+
         holder.itemView.eth_machine_type.text = ":  ${db.getMachineTypeByID(eWork.machineTypeId).name}"
 
-        holder.itemView.eth_sync.text = ": ${if(eWork.isSync == 1) "Yes" else "No"}"
+        holder.itemView.eth_sync.text = if (eWork.isSync == 1) context.getString(R.string.yes) else context.getString(R.string.no)
+        
         holder.itemView.eth_record_number.text = ":  " + (eWork.id)
         holder.itemView.eth_site.text = ":  ${db.getSiteByID(eWork.siteId).name}"
 
@@ -71,8 +61,6 @@ class DelayHistoryAdapter(
             eWork.isDayWorks > 0 -> { holder.itemView.eth_mode.text = context.getString(R.string.day_works_text) }
             else -> holder.itemView.eth_mode.text = context.getString(R.string.standard_mode_text)
         }
-//        holder.itemView.eth_mode.text = ":  ${eWork.workMode}"
-
         holder.itemView.lhr_gps_loading.text =
                 ": ${myHelper.getRoundedDecimal(eWork.loadingGPSLocation.latitude)} / ${myHelper.getRoundedDecimal(
                         eWork.loadingGPSLocation.longitude

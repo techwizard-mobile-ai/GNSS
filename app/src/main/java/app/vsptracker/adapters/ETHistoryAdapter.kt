@@ -43,7 +43,7 @@ class ETHistoryAdapter(
             when(eWork.workType){
                 3 -> {
                     holder.itemView.eth_action.text = ":  Trimming"
-                    holder.itemView.eth_meterial_layout.visibility = View.VISIBLE
+                    holder.itemView.eth_meterial_layout.visibility = View.GONE
                 }
                 else -> {
                     holder.itemView.eth_action.text = ":  Side Casting"
@@ -54,16 +54,14 @@ class ETHistoryAdapter(
             holder.itemView.eth_totalloads_layout.visibility = View.GONE
         } else {
             holder.itemView.eth_action.text = ":  Loading"
-            holder.itemView.eth_meterial_layout.visibility = View.GONE
+            if(eWork.workType == 2)
+            holder.itemView.eth_meterial_layout.visibility = View.VISIBLE
             holder.itemView.eth_totalloads_layout.visibility = View.VISIBLE
             holder.itemView.eth_totalloads.text =
                     ":  " + db.getEWorksOffLoads(eWork.id).size.toString()
         }
 
-        when (eWork.isSync) {
-            1 -> holder.itemView.eth_is_sync.text = ":  Yes"
-            else -> holder.itemView.eth_is_sync.text = ":  No"
-        }
+        holder.itemView.eth_is_sync.text = if (eWork.isSync == 1) context.getString(R.string.yes) else context.getString(R.string.no)
 
         when (eWork.isDayWorks) {
             1 -> holder.itemView.eth_mode.text = context.getString(R.string.day_works_text)

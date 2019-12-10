@@ -57,8 +57,7 @@ class LoadingHistoryAdapter(
         holder.itemView.lhr_trip0_id.text = ": ${myData.trip0ID}"
         val operatorName = db.getOperatorByID(myData.operatorId).name
         holder.itemView.lhr_operator.text = ": $operatorName"
-        holder.itemView.lhr_sync.text = ": ${if(myData.isSync == 1) "Yes" else "No"}"
-
+        holder.itemView.lhr_sync.text = if (myData.isSync == 1) context.getString(R.string.yes) else context.getString(R.string.no)
         when (myData.machineTypeId) {
             2 -> {
                 holder.itemView.lhr_loading_machine_layout.visibility = View.GONE
@@ -93,8 +92,6 @@ class LoadingHistoryAdapter(
             1 -> holder.itemView.lhr_workmode.text = context.getString(R.string.day_works_text)
             else -> holder.itemView.lhr_workmode.text = context.getString(R.string.standard_mode_text)
         }
-//        holder.itemView.lhr_workmode.text = ": ${myData.workMode}"
-
         holder.itemView.lhr_gps_loading.text =
                 ": ${myHelper.getRoundedDecimal(myData.loadingGPSLocation.latitude)} / ${myHelper.getRoundedDecimal(
                         myData.loadingGPSLocation.longitude

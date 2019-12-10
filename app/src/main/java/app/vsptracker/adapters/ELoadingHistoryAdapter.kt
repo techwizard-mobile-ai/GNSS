@@ -41,28 +41,17 @@ class ELoadingHistoryAdapter(
         val myData = myDataList[position]
 
         myHelper.log("$myData")
-//        if (myData.recordID < 1) {
-//            holder.itemView.lhr_record_number_layout.visibility = View.VISIBLE
-////            holder.itemView.lhr_record_number.setText(":  "+myData.recordID)
-//            holder.itemView.lhr_record_number.text = ":  " + (myDataList.size - position)
-//        } else {
-//            holder.itemView.lhr_record_number_layout.visibility = View.GONE
-//        }
 
         holder.itemView.lhr_record_number.text = ":  ${myData.id}"
         holder.itemView.lhr_site.text = ":  ${db.getSiteByID(myData.siteId).name}"
         val operatorName = db.getOperatorByID(myData.operatorId).name
         holder.itemView.lhr_operator.text = ":  $operatorName"
-        when (myData.isSync) {
-            1 -> holder.itemView.lhr_is_sync.text = ":  Yes"
-            else -> holder.itemView.lhr_is_sync.text = ":  No"
-        }
+        holder.itemView.lhr_is_sync.text = if (myData.isSync == 1) context.getString(R.string.yes) else context.getString(R.string.no)
 
-        when (myData.isDayWorks) {
-            1 -> holder.itemView.lhr_workmode.text = ":  Day Works"
-            else -> holder.itemView.lhr_workmode.text = ":  Standard Mode"
+        when {
+            myData.isDayWorks > 0 -> { holder.itemView.lhr_workmode.text = context.getString(R.string.day_works_text) }
+            else -> holder.itemView.lhr_workmode.text = context.getString(R.string.standard_mode_text)
         }
-
 
         if (myData.machineId > 0) {
             holder.itemView.lhr_loading_machine_layout.visibility = View.VISIBLE

@@ -45,7 +45,6 @@ class MachineStatusAdapter(
 
             val data = MyData()
             data.machine_stop_reason_id = material.id
-            data.loadingGPSLocation = (myContext as MachineStatusActivity).gpsLocation
             data.totalHours = myContext.sfinish_reading.text.toString()
             
             if (!startReading.equals(myContext.sfinish_reading.text.toString(), true)) {
@@ -57,8 +56,10 @@ class MachineStatusAdapter(
             }
             
             myHelper.log("totalHours:${data.totalHours}")
-//            val insertID = db.insertMachineStop(data)
+            myHelper.log("data:$data")
+            data.unloadingGPSLocation = (myContext as MachineStatusActivity).gpsLocation
             myContext.myDataPushSave.pushInsertMachineHour(data)
+            data.loadingGPSLocation = (myContext as MachineStatusActivity).gpsLocation
             myContext.myDataPushSave.insertMachineStop(data, material)
                 myHelper.logout(myContext)
                 myContext.finishAffinity()

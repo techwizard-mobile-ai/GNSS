@@ -84,6 +84,7 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                     eWork.id = eWorkID
                     eWork.startTime = startTime
                     eWork.unloadingGPSLocation = gpsLocation
+                    eWork.unloadingGPSLocationString = myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
 
                     eWork.workType = myData.eWorkType
                     eWork.workActionType = 2
@@ -109,14 +110,6 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                     eWork.orgId = myHelper.getLoginAPI().org_id
                     eWork.operatorId = myHelper.getOperatorAPI().id
                     eWork.machineTypeId = myHelper.getMachineTypeID()
-
-//                    if (myHelper.isOnline()) {
-//                        pushSideCasting(eWork)
-//                    }
-//
-//                    val updatedID = db.updateEWork(eWork)
-//                    eWorkID = updatedID
-//                    myHelper.log("updatedID :$updatedID ")
 
                     if (myDataPushSave.pushUpdateEWork(eWork) > 0) {
                         myHelper.toast(

@@ -224,11 +224,11 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
                     db.updateEWorks(serverSyncAPI.myEWorkList)
                 }
                 8 -> {
-                    myHelper.log("Machines Stops")
+                    myHelper.log("Machines Stops:${serverSyncAPI.myDataList}")
                     db.updateMachinesStops(serverSyncAPI.myDataList)
                 }
                 9 -> {
-                    myHelper.log("Machines Hours")
+                    myHelper.log("Machines Hours:${serverSyncAPI.myDataList}")
                     db.updateMachinesHours(serverSyncAPI.myDataList)
                 }
                 10 -> {

@@ -82,7 +82,6 @@ class MachineBreakdownActivity : BaseActivity(), View.OnClickListener {
                 // First Reason for Machine Stops is Breakdown for All Companies
                 val material = stoppedReasons[0]
                 data.machine_stop_reason_id = material.id
-                data.loadingGPSLocation = gpsLocation
                 data.siteId = myHelper.getMachineSettings().siteId
                 data.unloadingGPSLocation = gpsLocation
 //                data.totalHours = myHelper.getMeterTimeForFinishCustom(myData.startHours)
@@ -97,7 +96,8 @@ class MachineBreakdownActivity : BaseActivity(), View.OnClickListener {
                 
                 data.totalHours = sfinish_reading.text.toString()
                 myDataPushSave.pushInsertMachineHour(data)
-                
+                // Location which is Machine Hour Stop GPS is same location which is Machine Stop Start GPS
+                data.loadingGPSLocation = gpsLocation
                 if (myDataPushSave.insertMachineStop(data, material, true) > 0) {
                     myHelper.toast("Record Saved in Database Successfully.")
                     myHelper.logout(this)

@@ -103,6 +103,7 @@ const val DROP_TABLE_STOP_REASONS = "DROP TABLE IF EXISTS $TABLE_STOP_REASONS"
 const val DROP_TABLE_MATERIALS = "DROP TABLE IF EXISTS $TABLE_MATERIALS"
 const val DROP_TABLE_MACHINES = "DROP TABLE IF EXISTS $TABLE_MACHINES"
 const val DROP_TABLE_LOCATIONS = "DROP TABLE IF EXISTS $TABLE_LOCATIONS"
+const val DROP_TABLE_MACHINES_STOPS = "DROP TABLE IF EXISTS $TABLE_MACHINES_STOPS"
 const val DROP_TABLE_TRIP = "DROP TABLE IF EXISTS $TABLE_TRIP"
 const val DROP_TABLE_WAIT = "DROP TABLE IF EXISTS $TABLE_WAITS"
 const val DROP_TABLE_E_WORK_ACTION_OFFLOADING = "DROP TABLE IF EXISTS $TABLE_E_WORK_ACTION_OFFLOADING"
@@ -111,9 +112,9 @@ const val DROP_TABLE_E_LOAD_HISTORY = "DROP TABLE IF EXISTS $TABLE_E_LOAD_HISTOR
 const val DROP_TABLE_MACHINES_AUTO_LOGOUTS = "DROP TABLE IF EXISTS $TABLE_MACHINES_AUTO_LOGOUTS"
 const val DROP_TABLE_OPERATORS_HOURS = "DROP TABLE IF EXISTS $TABLE_OPERATORS_HOURS"
 
-// Database Version Code 11
-// App Version Code 7
-class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 7) {
+// Database Version Code 12
+// App Version Code 8
+class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 8) {
     
     val tag = "DatabaseAdapter"
     private var myHelper: MyHelper
@@ -430,6 +431,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         db?.execSQL(DROP_TABLE_MATERIALS)
         db?.execSQL(DROP_TABLE_MACHINES)
         db?.execSQL(DROP_TABLE_LOCATIONS)
+        db?.execSQL(DROP_TABLE_MACHINES_STOPS)
         db?.execSQL(DROP_TABLE_TRIP)
         db?.execSQL(DROP_TABLE_WAIT)
         db?.execSQL(DROP_TABLE_E_WORK_ACTION_OFFLOADING)

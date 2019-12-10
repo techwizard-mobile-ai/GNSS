@@ -45,7 +45,7 @@ class MachineStopAdapter(
         holder.itemView.oh_machine_type.text = ":  ${db.getMachineTypeByID(datum.machineTypeId).name}"
         holder.itemView.eth_stop_reason.text = ":  ${db.getStopReasonByID(datum.machine_stop_reason_id).name}"
         holder.itemView.oh_machine_number.text = ":  ${db.getMachineByID(datum.machineId).number}"
-        holder.itemView.eth_sync.text = ": ${if (datum.isSync == 1) "Yes" else "No"}"
+        holder.itemView.eth_sync.text = if (datum.isSync == 1) context.getString(R.string.yes) else context.getString(R.string.no)
         holder.itemView.eth_record_number.text = ":  " + (datum.id)
         val operatorName = db.getOperatorByID(datum.operatorId).name
         holder.itemView.eth_operator.text = ":  $operatorName"
@@ -61,8 +61,6 @@ class MachineStopAdapter(
             1 -> holder.itemView.eth_mode.text = context.getString(R.string.day_works_text)
             else -> holder.itemView.eth_mode.text = context.getString(R.string.standard_mode_text)
         }
-
-//        holder.itemView.eth_mode.text = ":  "+ if(datum.isDayWorks>0) "Day Works" else "Standard Mode"
 
         holder.itemView.mh_gps_loading.text =
             ": ${myHelper.getRoundedDecimal(datum.loadingGPSLocation.latitude)} / ${myHelper.getRoundedDecimal(

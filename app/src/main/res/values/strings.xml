@@ -232,8 +232,10 @@
     <string name="weight">Weight</string>
     <string name="loading_time">Loading Time</string>
     <string name="work_mode">Work Mode</string>
-    <string name="standard_mode_text">:  Standard Mode</string>
-    <string name="day_works_text">:  Day Works</string>
+    <string name="yes">:&#160;&#160;Yes</string>
+    <string name="no">:&#160;&#160;No</string>
+    <string name="standard_mode_text">:&#160;&#160;Standard Mode</string>
+    <string name="day_works_text">:&#160;&#160;Day Works</string>
     <string name="upload_data">Upload Data</string>
     <string name="data_type">Data Type</string>
     <string name="trips">: Trips</string>
@@ -261,5 +263,7 @@
     <string name="add_0_1_to_hour_meter">Add 0.1 to Hour Meter</string>
     <string name="subtract_0_1_to_hour_meter">Subtract 0.1 to Hour Meter</string>
     <string name="machine_is_breakdown">Machine is Breakdown</string>
+    <string name="general_digging_side_casting">General Digging (Side Casting)</string>
+    <string name="trenching_side_casting">Trenching (Side Casting)</string>
 
 </resources>

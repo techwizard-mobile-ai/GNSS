@@ -38,10 +38,9 @@ class OperatorHourAdapter(
 
         val datum = dataList[position]
 
-//        myHelper.log(datum.toString())
         val siteName = db.getSiteByID(datum.siteId).name
         holder.itemView.oh_site.text = ":  $siteName"
-        holder.itemView.eth_sync.text = ": ${if (datum.isSync == 1) "Yes" else "No"}"
+        holder.itemView.eth_sync.text = if (datum.isSync == 1) context.getString(R.string.yes) else context.getString(R.string.no)
         holder.itemView.eth_record_number.text = ":  " + (datum.id)
         val operatorName = db.getOperatorByID(datum.operatorId).name
         holder.itemView.eth_operator.text = ":  $operatorName"
@@ -53,8 +52,13 @@ class OperatorHourAdapter(
         holder.itemView.eth_duration.text = ":  " + myHelper.getFormattedTime(datum.totalTime) + " Hrs"
         holder.itemView.eth_date.text = ":  " + myHelper.getDateTime(datum.stopTime) + " Hrs"
 
-        holder.itemView.eth_mode.text = ":  "+ if(datum.isDayWorks>0) "Day Works" else "Standard Mode"
-
+        when {
+            datum.isDayWorks > 0 -> {
+                holder.itemView.eth_mode.text = context.getString(R.string.day_works_text)
+            }
+            else -> holder.itemView.eth_mode.text = context.getString(R.string.standard_mode_text)
+        }
+        
         holder.itemView.mh_gps_loading.text =
             ": ${myHelper.getRoundedDecimal(datum.loadingGPSLocation.latitude)} / ${myHelper.getRoundedDecimal(
                 datum.loadingGPSLocation.longitude

@@ -82,7 +82,6 @@ class EWork : Serializable {
     @SerializedName("is_days_work")
     @Expose
     var isDayWorks: Int = 0
-//    var workMode = ""
     
     //    @SerializedName("id")
 //    @Expose
@@ -103,34 +102,20 @@ class EWork : Serializable {
     @Expose
     var workActionType = 0
     
-    //    var machineTypeId = 0
-//    var machineNumber = ""
-    
     // isSync 0 = Not Uploaded to Server
-// isSync 1 = Uploaded to Server
-// isSync 2 = Uploaded to Server by Export
+    // isSync 1 = Uploaded to Server
+    // isSync 2 = Uploaded to Server by Export
     @SerializedName("server_sync")
     @Expose
     var isSync: Int = 0
     
     override fun toString(): String {
         return "\nEWork(" +
-                "id=$id, " +
                 "orgId=$orgId, " +
-                "siteId=$siteId, " +
-                "operatorId=$operatorId, " +
-                "machineTypeId=$machineTypeId, " +
-                "machineId=$machineId, " +
-                "materialId=$materialId, " +
-                "totalLoads=$totalLoads, " +
-                "startTime=$startTime, " +
-                "stopTime=$stopTime, " +
-                "startHours='$startHours', " +
-                "totalHours='$totalHours', " +
-                "totalTime=$totalTime, " +
-                "time='$time', " +
-                "isDayWorks=$isDayWorks, " +
-                "isSync=$isSync" +
+                "loadingGPSLocationString='$loadingGPSLocationString', " +
+                "loadingGPSLocation=$loadingGPSLocation, " +
+                "unloadingGPSLocationString='$unloadingGPSLocationString', " +
+                "unloadingGPSLocation=$unloadingGPSLocation" +
                 ")"
     }
     

@@ -42,7 +42,7 @@ class MachineHourAdapter(
         
         holder.itemView.eth_site.text = ":  ${db.getSiteByID(eWork.siteId).name}"
         holder.itemView.eth_machine_type.text = ":  ${db.getMachineTypeByID(eWork.machineTypeId).name}"
-        holder.itemView.eth_sync.text = ": ${if (eWork.isSync == 1) "Yes" else "No"}"
+        holder.itemView.eth_sync.text = if (eWork.isSync == 1) context.getString(R.string.yes) else context.getString(R.string.no)
         holder.itemView.eth_record_number.text = ":  " + (dataList.size - position)
         val operatorName = db.getOperatorByID(eWork.operatorId).name
         holder.itemView.eth_operator.text = ":  $operatorName"
@@ -54,8 +54,6 @@ class MachineHourAdapter(
             holder.itemView.eth_start_time.text = ":  " + myHelper.getDateTime(eWork.startTime) + " Hrs"
         if (eWork.stopTime > 0)
             holder.itemView.eth_end_time.text = ":  " + myHelper.getDateTime(eWork.stopTime) + " Hrs"
-//        val totalTime = eWork.stopTime - eWork.startTime
-//        holder.itemView.eth_duration.text = ":  " + myHelper.getFormattedTime(totalTime) + " Hrs"
         holder.itemView.eth_duration.text = ":  " + myHelper.getFormattedTime(eWork.totalTime) + " Hrs"
         
         when (eWork.machine_stop_reason_id) {

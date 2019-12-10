@@ -42,13 +42,13 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
         myHelper.log("$myData")
         when (myData.eWorkType) {
             1 -> {
-                workTitle = "General Digging (Side Casting)"
+                workTitle = getString(R.string.general_digging_side_casting)
             }
             2 -> {
-                workTitle = "Trenching (Side Casting)"
+                workTitle = getString(R.string.trenching_side_casting)
             }
             3 -> {
-                workTitle = "Scraper Trimming"
+                workTitle = getString(R.string.scraper_trimming)
             }
         }
 
@@ -103,14 +103,6 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
                     myHelper.log("before$workTitle:$eWork")
                     myDataPushSave.pushInsertSideCasting(eWork)
 
-//                    if (myHelper.isOnline()) {
-//                        pushSideCasting(eWork)
-//                    }
-
-//                    val insertID = db.insertSideCasting(eWork)
-//                    myHelper.log("insertID:$insertID")
-
-//                    if (insertID > 0) {
                     myHelper.toast(
                         "$workTitle is Stopped.\n" +
                                 "Data Saved Successfully.\n" +
@@ -123,12 +115,7 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
                     ework_action_text.text = getString(R.string.start)
                     chronometer1.stop()
                     isWorking = false
-//                    } else {
-//                        myHelper.toast("MyData Not Saved.")
-//                        isWorking = false
-//                    }
-
-
+                    
                 } else {
                     startTime = System.currentTimeMillis()
                     myHelper.toast("$workTitle is Started.")

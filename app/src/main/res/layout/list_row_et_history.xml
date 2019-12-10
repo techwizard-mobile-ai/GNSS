@@ -142,6 +142,7 @@
 
             <LinearLayout
                 android:id="@+id/eth_meterial_layout"
+                android:visibility="gone"
                 style="@style/load_history_row_item">
 
                 <TextView
