@@ -850,12 +850,12 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
     
     fun insertDelay(eWork: EWork): Long {
         
-        val time = System.currentTimeMillis()
-//        eWork.time = time.toString()
-        
-        eWork.stopTime = time
-        eWork.totalTime = eWork.stopTime - eWork.startTime
-        eWork.date = myHelper.getDate(time)
+//        val time = System.currentTimeMillis()
+////        eWork.time = time.toString()
+//
+//        eWork.stopTime = time
+//        eWork.totalTime = eWork.stopTime - eWork.startTime
+//        eWork.date = myHelper.getDate(time)
         
         
         val db = this.writableDatabase

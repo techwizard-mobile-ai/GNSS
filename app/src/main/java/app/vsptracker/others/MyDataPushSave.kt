@@ -8,12 +8,17 @@ import app.vsptracker.apis.delay.EWork
 import app.vsptracker.apis.delay.EWorkResponse
 import app.vsptracker.apis.operators.OperatorAPI
 import app.vsptracker.apis.operators.OperatorResponse
+import app.vsptracker.apis.serverSync.ServerSyncAPI
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.apis.trip.MyDataResponse
 import app.vsptracker.classes.Material
 import app.vsptracker.database.DatabaseAdapter
+import com.google.gson.GsonBuilder
+import okhttp3.*
+import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
 
 /**
  * This class will be used for All APIs Calls and Database Actions. It will do following Actions.
@@ -48,6 +53,14 @@ class MyDataPushSave(private val context: Context) {
         .build()
     private val retrofitAPI = retrofit.create(RetrofitAPI::class.java)
     var isBackgroundCall = true
+    
+    /**
+     * These array will be populated if there is any ServerSync Data
+     * For Each time old data will be removed after server sync
+     */
+    private var myDataList = ArrayList<MyData>()
+    private var eWorkList = ArrayList<EWork>()
+    private var serverSyncList = ArrayList<ServerSyncAPI>()
     
     /**
      * All Company Data will be fetched from Server using API Calls by this Class only.
@@ -449,13 +462,13 @@ class MyDataPushSave(private val context: Context) {
     }
     
     fun pushInsertDelay(eWork: EWork) {
-        when {
-            myHelper.isOnline() -> pushDelay(eWork)
-            else -> {
-                myHelper.toast(noInternetMessage)
+//        when {
+//            myHelper.isOnline() -> pushDelay(eWork)
+//            else -> {
+//                myHelper.toast(noInternetMessage)
                 insertDelay(eWork)
-            }
-        }
+//            }
+//        }
     }
     
     private fun pushDelay(eWork: EWork) {
@@ -498,6 +511,8 @@ class MyDataPushSave(private val context: Context) {
     private fun insertDelay(eWork: EWork) {
         val insertID = db.insertDelay(eWork)
         myHelper.log("saveDelayID: $insertID")
+        if (insertID > 0 && myHelper.isOnline())
+            checkUpdateServerSyncData()
     }
     
     /**
@@ -544,13 +559,13 @@ class MyDataPushSave(private val context: Context) {
 //        myData.unloadingGPSLocation = gpsLocation
         
         myHelper.log("pushInsertMachineHour:$myData")
-        when {
-            myHelper.isOnline() -> pushMachineHour(myData)
-            else -> {
-                myHelper.toast(noInternetMessage)
+//        when {
+//            myHelper.isOnline() -> pushMachineHour(myData)
+//            else -> {
+//                myHelper.toast(noInternetMessage)
                 insertMachineHour(myData)
-            }
-        }
+//            }
+//        }
         myHelper.stopDelay(myData.unloadingGPSLocation)
         myHelper.stopDailyMode()
         
@@ -597,18 +612,20 @@ class MyDataPushSave(private val context: Context) {
     }
     
     private fun insertMachineHour(myData: MyData) {
-        db.insertMachineHours(myData)
+        val insertID = db.insertMachineHours(myData)
+        if (insertID > 0 && myHelper.isOnline())
+            checkUpdateServerSyncData()
     }
     
     fun pushInsertOperatorHour(myData: MyData) {
         myHelper.log("pushInsertOperatorHour:$myData")
-        when {
-            myHelper.isOnline() -> pushOperatorHour(myData)
-            else -> {
-                myHelper.toast(noInternetMessage)
+//        when {
+//            myHelper.isOnline() -> pushOperatorHour(myData)
+//            else -> {
+//                myHelper.toast(noInternetMessage)
                 insertOperatorHour(myData)
-            }
-        }
+//            }
+//        }
     }
     
     private fun pushOperatorHour(myData: MyData) {
@@ -651,7 +668,9 @@ class MyDataPushSave(private val context: Context) {
     }
     
     private fun insertOperatorHour(myData: MyData) {
-        db.insertOperatorHour(myData)
+        val insertID = db.insertOperatorHour(myData)
+        if (insertID > 0 && myHelper.isOnline())
+            checkUpdateServerSyncData()
     }
     
     /**
@@ -661,13 +680,13 @@ class MyDataPushSave(private val context: Context) {
      */
     fun pushUpdateMachineStop(myData: MyData) {
         myHelper.log("pushUpdateMachineStop:$myData")
-        when {
-            myHelper.isOnline() -> pushMachinesStop(myData)
-            else -> {
-                myHelper.toast(noInternetMessage)
+//        when {
+//            myHelper.isOnline() -> pushMachinesStop(myData)
+//            else -> {
+//                myHelper.toast(noInternetMessage)
                 updateMachineStop(myData)
-            }
-        }
+//            }
+//        }
     }
     
     private fun pushMachinesStop(machineData: MyData) {
@@ -714,10 +733,11 @@ class MyDataPushSave(private val context: Context) {
         })
     }
     
-    private fun updateMachineStop(machineData: MyData): Int {
+    private fun updateMachineStop(machineData: MyData){
         val updateID = db.updateMachineStop(machineData)
         myHelper.log("updateMachineStopID:$updateID")
-        return updateID
+        if (updateID > 0 && myHelper.isOnline())
+            checkUpdateServerSyncData()
     }
     
     /**
@@ -761,13 +781,13 @@ class MyDataPushSave(private val context: Context) {
     }
     
     fun pushUpdateTrip(myData: MyData) {
-        when {
-            myHelper.isOnline() -> pushTrip(myData)
-            else -> {
-                myHelper.toast(noInternetMessage)
+//        when {
+//            myHelper.isOnline() -> pushTrip(myData)
+//            else -> {
+//                myHelper.toast(noInternetMessage)
                 updateTrip(myData)
-            }
-        }
+//            }
+//        }
     }
     
     private fun pushTrip(myData: MyData) {
@@ -809,10 +829,12 @@ class MyDataPushSave(private val context: Context) {
         })
     }
     
-    private fun updateTrip(myData: MyData): Int {
+    private fun updateTrip(myData: MyData){
         val updateID = db.updateTrip(myData)
         myHelper.log("updateTripID:$updateID")
-        return updateID
+    
+        if (updateID > 0 && myHelper.isOnline())
+            checkUpdateServerSyncData()
     }
     
     fun pushInsertSideCasting(eWork: EWork) {
@@ -825,13 +847,13 @@ class MyDataPushSave(private val context: Context) {
         eWork.unloadingGPSLocationString = myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
         
         myHelper.log("pushInsertSideCasting:$eWork")
-        when {
-            myHelper.isOnline() -> pushSideCasting(eWork)
-            else -> {
-                myHelper.toast(noInternetMessage)
+//        when {
+//            myHelper.isOnline() -> pushSideCasting(eWork)
+//            else -> {
+//                myHelper.toast(noInternetMessage)
                 insertEWork(eWork)
-            }
-        }
+//            }
+//        }
     }
     
     private fun pushSideCasting(eWork: EWork) {
@@ -877,18 +899,21 @@ class MyDataPushSave(private val context: Context) {
         eWork.machineId = myHelper.getMachineID()
         val insertID = db.insertEWork(eWork)
         myHelper.log("insertID:$insertID")
+        
+        if (insertID > 0 && myHelper.isOnline())
+            checkUpdateServerSyncData()
         return insertID
     }
     
     fun pushUpdateEWork(eWork: EWork): Int {
         
-        when {
-            myHelper.isOnline() -> pushEWork(eWork)
-            else -> {
-                myHelper.toast(noInternetMessage)
+//        when {
+//            myHelper.isOnline() -> pushEWork(eWork)
+//            else -> {
+//                myHelper.toast(noInternetMessage)
                 updateEWork(eWork)
-            }
-        }
+//            }
+//        }
         return 1
     }
     
@@ -932,6 +957,9 @@ class MyDataPushSave(private val context: Context) {
     private fun updateEWork(eWork: EWork) {
         val updatedID = db.updateEWork(eWork)
         myHelper.log("updateEworkID:$updatedID")
+    
+        if (updatedID > 0 && myHelper.isOnline())
+            checkUpdateServerSyncData()
     }
     
     fun insertELoad(myData: MyData): Long {
@@ -951,7 +979,178 @@ class MyDataPushSave(private val context: Context) {
         myHelper.log("insertEWorkOffLoadID:$insertID")
         return insertID
     }
-
+    
+    private fun checkUpdateServerSyncData() {
+        // remove all previous data if any and make list empty
+        if (myDataList.size > 0)
+            myDataList.removeAll(ArrayList())
+        
+        if (eWorkList.size > 0)
+            eWorkList.removeAll(ArrayList())
+        
+        if (serverSyncList.size > 0)
+            serverSyncList.removeAll(ArrayList())
+        
+        addToList(1, "Operators Hours", db.getOperatorsHours("ASC"))
+        addToList(2, "Trucks Trips", db.getTripsByTypes(3, "ASC"))
+        addToList(3, "Scrapers Trips", db.getTripsByTypes(2, "ASC"))
+        addToList(4, "Scrapers Trimmings", db.getEWorks(3, "ASC"))
+        addToList(5, "Excavators Prod. Digging", db.getELoadHistory("ASC"))
+        addToList(6, "Excavators Trenching", db.getEWorks(2, "ASC"))
+        addToList(7, "Excavators Gen. Digging", db.getEWorks(1, "ASC"))
+        addToList(8, "Machines Stops", db.getMachinesStops("ASC"))
+        addToList(9, "Machines Hours", db.getMachinesHours("ASC"))
+        addToList(10, "Operators Waiting", db.getWaits("ASC"))
+        
+        if (serverSyncList.size > 0 && myHelper.isOnline()) {
+            pushUpdateServerSync()
+        }
+    }
+    
+    /**
+     * This method will check if there are any Remaining entries which are not Synced.
+     * If there are any remaining entries then it will add that data to List.
+     * This list will be added to RecyclerView to Display to User.
+     */
+    private fun addToList(type: Int, name: String, list: ArrayList<MyData>) {
+        val total = list.size
+        val synced = list.filter { it.isSync == 1 }.size
+        val remaining = list.filter { it.isSync == 0 }
+        myHelper.log("$name:$total, isSynced:$synced, isRemaining:${remaining.size}")
+        if (remaining.isNotEmpty()) {
+            myDataList.addAll(remaining)
+            
+            val serverSyncAPI = ServerSyncAPI()
+            serverSyncAPI.type = type
+            serverSyncAPI.name = name
+            serverSyncAPI.myDataList.addAll(remaining)
+            serverSyncList.add(serverSyncAPI)
+        }
+    }
+    
+    /**
+     * method addToList Over Riding
+     */
+    @JvmName("MyData")
+    private fun addToList(type: Int, name: String, list: ArrayList<EWork>) {
+        val total = list.size
+        val synced = list.filter { it.isSync == 1 }.size
+        val remaining = list.filter { it.isSync == 0 }
+        myHelper.log("$name:$total, isSynced:$synced, isRemaining:${remaining.size}")
+        if (remaining.isNotEmpty()) {
+            eWorkList.addAll(remaining)
+            
+            val serverSyncAPI = ServerSyncAPI()
+            serverSyncAPI.type = type
+            serverSyncAPI.name = name
+            serverSyncAPI.myEWorkList.addAll(remaining)
+            serverSyncList.add(serverSyncAPI)
+        }
+    }
+    
+    private fun pushUpdateServerSync() {
+        val client = OkHttpClient()
+        val formBody = FormBody.Builder()
+            .add("token", myHelper.getLoginAPI().auth_token)
+            .add("operator_id", myHelper.getOperatorAPI().id.toString())
+            .add("device_details", myHelper.getDeviceDetailsString())
+            .add("data", myHelper.getServerSyncDataAPIString(serverSyncList))
+            .build()
+        
+        val request = Request.Builder()
+            .url("https://vsptracker.app/api/v1/orgsserversync/store")
+            .post(formBody)
+            .build()
+        
+        client.newCall(request).enqueue(object : Callback {
+            override fun onResponse(call: Call, response: Response) {
+                val responseString = response.body()!!.string()
+                val responseJObject = JSONObject(responseString)
+                val success = responseJObject.getBoolean("success")
+                try {
+                    if (success) {
+                        val gson = GsonBuilder().create()
+//                      this data is used for convert data arraylist into object to convert in gson
+//                      here converting back
+                        val data1 = responseJObject.getString("data")
+//                      this is complete data sent to server
+//                      val dataArray = dataObj.getJSONArray("data")
+//                      val dataArray = JSONArray(data1)
+                        val data = gson.fromJson(data1, Array<ServerSyncAPI>::class.java).toList()
+                        myHelper.log("data:${data}")
+//                      here I am getting complete list of data with type. Now I have to update each entry in
+//                      App Database and change their status from isSync 0 to 1 as these entries are successfully updated in Portal Database.
+                        updateServerSync(data)
+                        
+                    } else {
+                        if (responseJObject.getString("message ") == "Token has expired") {
+                            myHelper.log("Token Expired:$responseJObject")
+                            myHelper.refreshToken()
+                        } else {
+                            myHelper.toast(responseJObject.getString("message "))
+                        }
+                    }
+                }
+                catch (e: Exception) {
+                    myHelper.log("${e.message}")
+                }
+            }
+            
+            override fun onFailure(call: Call, e: IOException) {
+                myHelper.run {
+                    toast(e.message.toString())
+                    log("Exception: ${e.printStackTrace()}")
+                }
+            }
+        })
+    }
+    
+    private fun updateServerSync(data: List<ServerSyncAPI>) {
+        data.forEach { serverSyncAPI ->
+            when (serverSyncAPI.type) {
+                1 -> {
+                    myHelper.log("Operators Hours")
+                    db.updateOperatorsHours(serverSyncAPI.myDataList)
+                }
+                2 -> {
+                    myHelper.log("Trucks Trips")
+                    db.updateTrips(serverSyncAPI.myDataList)
+                }
+                3 -> {
+                    myHelper.log("Scrapers Trips")
+                    db.updateTrips(serverSyncAPI.myDataList)
+                }
+                4 -> {
+                    myHelper.log("Scrapers Trimming")
+                    db.updateEWorks(serverSyncAPI.myEWorkList)
+                }
+                5 -> {
+                    myHelper.log("Excavators Production Digging")
+                    db.updateELoads(serverSyncAPI.myDataList)
+                }
+                6 -> {
+                    myHelper.log("Excavators Trenching")
+                    db.updateEWorks(serverSyncAPI.myEWorkList)
+                }
+                7 -> {
+                    myHelper.log("Excavators General Digging")
+                    db.updateEWorks(serverSyncAPI.myEWorkList)
+                }
+                8 -> {
+                    myHelper.log("Machines Stops:${serverSyncAPI.myDataList}")
+                    db.updateMachinesStops(serverSyncAPI.myDataList)
+                }
+                9 -> {
+                    myHelper.log("Machines Hours:${serverSyncAPI.myDataList}")
+                    db.updateMachinesHours(serverSyncAPI.myDataList)
+                }
+                10 -> {
+                    myHelper.log("Operators Waiting")
+                    db.updateWaits(serverSyncAPI.myEWorkList)
+                }
+            }
+        }
+    }
 /*
     fun pushUpdateServerSync1(serverSyncList: ArrayList<ServerSyncAPI>) {
 //        myHelper.log("pushUpdateServerSync:$serverSyncList")

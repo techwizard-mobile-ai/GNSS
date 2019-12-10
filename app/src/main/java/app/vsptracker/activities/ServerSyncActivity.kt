@@ -40,7 +40,7 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
         layoutInflater.inflate(R.layout.activity_server_sync, contentFrameLayout)
         val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
         navigationView.menu.getItem(9).isChecked = true
-    
+        
         addToList(1, "Operators Hours", db.getOperatorsHours("ASC"))
         addToList(2, "Trucks Trips", db.getTripsByTypes(3, "ASC"))
         addToList(3, "Scrapers Trips", db.getTripsByTypes(2, "ASC"))
@@ -56,7 +56,8 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
         
         server_sync_upload.setOnClickListener(this)
     }
-    fun refreshData(){
+    
+    fun refreshData() {
         
         myHelper.log("adapterListSize:${adapterList.size}")
         if (adapterList.size > 0) {
@@ -65,7 +66,7 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
             ss_rv.adapter = mAdapter
             no_server_sync_data.visibility = View.GONE
             ss_rv.visibility = View.VISIBLE
-        }else{
+        } else {
             no_server_sync_data.visibility = View.VISIBLE
             ss_rv.visibility = View.GONE
         }
@@ -120,8 +121,7 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
                 if (adapterList.size > 0) {
                     if (myHelper.isOnline()) pushUpdateServerSync(serverSyncList)
                     else myHelper.toast("No Internet Connection. Please Connect to Internet and Try Again.")
-                }else  myHelper.toast("No Offline Data to Sync.")
-                
+                } else myHelper.toast("No Offline Data to Sync.")
             }
         }
     }
@@ -160,9 +160,9 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
                         myHelper.log("data:${data}")
 //                      here I am getting complete list of data with type. Now I have to update each entry in
 //                      App Database and change their status from isSync 0 to 1 as these entries are successfully updated in Portal Database.
-                        if(updateServerSync(data)){
+                        if (updateServerSync(data)) {
                             runOnUiThread {
-//                                myHelper.toast("All Data Uploaded to Server Successfully.")
+                                //                                myHelper.toast("All Data Uploaded to Server Successfully.")
                                 mAdapter.notifyDataSetChanged()
                                 updatedNotification()
                             }
@@ -240,7 +240,6 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
         return true
     }
     
-    
     @SuppressLint("InflateParams")
     private fun updatedNotification() {
         
@@ -248,7 +247,7 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
         val mDialogView = LayoutInflater.from(this).inflate(R.layout.ss_updated_notification, null)
         val mBuilder = AlertDialog.Builder(this)
             .setView(mDialogView)
-        val  mAlertDialog = mBuilder.show()
+        val mAlertDialog = mBuilder.show()
         mAlertDialog.setCancelable(false)
         
         val window = mAlertDialog.window

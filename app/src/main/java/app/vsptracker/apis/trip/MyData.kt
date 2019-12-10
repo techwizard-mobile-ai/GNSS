@@ -163,10 +163,10 @@ class MyData : Serializable {
     //    eWorkActionType 2 = Off Loading
     var eWorkActionType: Int = 0
     
-    // nextAction 0 = Do Loading
-    // nextAction 1 = Do Unloading
-    // nextAction 2 = Do Back Loading
-    // nextAction 3 = Do Back Unloading
+    //    nextAction 0 = Do Loading
+    //    nextAction 1 = Do Unloading
+    //    nextAction 2 = Do Back Loading
+    //    nextAction 3 = Do Back Unloading
     var nextAction: Int = 0
     
     //    repeatJourney 0 = No Repeat Journey
