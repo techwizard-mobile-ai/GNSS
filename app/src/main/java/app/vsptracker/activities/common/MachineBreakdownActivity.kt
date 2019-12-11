@@ -99,7 +99,6 @@ class MachineBreakdownActivity : BaseActivity(), View.OnClickListener {
                 // Location which is Machine Hour Stop GPS is same location which is Machine Stop Start GPS
                 data.loadingGPSLocation = gpsLocation
                 if (myDataPushSave.insertMachineStop(data, material, true) > 0) {
-                    myHelper.toast("Record Saved in Database Successfully.")
                     myHelper.logout(this)
                     finishAffinity()
                 } else {

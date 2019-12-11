@@ -62,7 +62,7 @@ class MaterialActivity : BaseActivity(), View.OnClickListener {
 
         gv.adapter = adapter
         gv.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-            myHelper.toast("Selected Material: " + materials[position].name)
+//            myHelper.toast("Selected Material: " + materials[position].name)
 
             when {
                 myData.isForLoadResult -> {

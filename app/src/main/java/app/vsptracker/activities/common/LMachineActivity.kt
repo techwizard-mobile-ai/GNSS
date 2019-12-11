@@ -51,7 +51,7 @@ class LMachineActivity : BaseActivity(), View.OnClickListener {
 
         gv.adapter = adapter
         gv.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-            myHelper.toast("Selected Machine: " + machines[position].number)
+//            myHelper.toast("Selected Machine: " + machines[position].number)
 
             when {
                 myData.isForLoadResult -> {

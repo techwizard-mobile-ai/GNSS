@@ -124,7 +124,7 @@ class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
         when (view!!.id) {
             R.id.ultask_fill -> {
 
-                myHelper.toast("Selected Task: Fill")
+//                myHelper.toast("Selected Task: Fill")
                 when {
                     myData.isForUnloadResult -> {
                         val intent = intent
@@ -158,7 +158,7 @@ class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
 
             }
             R.id.ultask_off_site -> {
-                myHelper.toast("Selected Task: Off Site")
+//                myHelper.toast("Selected Task: Off Site")
                 when {
                     myData.isForUnloadResult -> {
                         val intent = intent
@@ -193,7 +193,7 @@ class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
             }
             R.id.ultask_respread -> {
 
-                myHelper.toast("Selected Task: Respread")
+//                myHelper.toast("Selected Task: Respread")
                 when {
                     myData.isForUnloadResult -> {
                         val intent = intent
@@ -228,7 +228,7 @@ class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
             }
             R.id.ultask_stockpile -> {
 
-                myHelper.toast("Selected Task: Stockpile")
+//                myHelper.toast("Selected Task: Stockpile")
                 when {
                     myData.isForUnloadResult -> {
                         val intent = intent

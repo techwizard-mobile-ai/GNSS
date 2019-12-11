@@ -60,12 +60,6 @@ class ELoadingHistoryAdapter(
             holder.itemView.lhr_loading_machine_layout.visibility = View.GONE
         }
 
-//        if(!myData.loadedMachine.isNullOrBlank()){
-//            holder.itemView.lhr_loaded_machine_layout.visibility = View.VISIBLE
-//            holder.itemView.lhr_loaded_machine.setText(":  "+myData.loadedMachine)
-//        }else{
-//            holder.itemView.lhr_loaded_machine_layout.visibility = View.GONE
-//        }
 
         if (myData.loading_material_id > 0) {
             holder.itemView.lhr_loaded_material_layout.visibility = View.VISIBLE

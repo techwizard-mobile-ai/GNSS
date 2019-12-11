@@ -243,7 +243,6 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
     @SuppressLint("InflateParams")
     private fun updatedNotification() {
         
-        
         val mDialogView = LayoutInflater.from(this).inflate(R.layout.ss_updated_notification, null)
         val mBuilder = AlertDialog.Builder(this)
             .setView(mDialogView)

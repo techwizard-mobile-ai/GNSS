@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+>
+        <TextView
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_internet_connection"
+                android:textColor="@color/gray_dark"
+                android:textSize="@dimen/_14sdp"
+                style="@style/avenirnext_fontstyle"
+                android:textStyle="bold"
+        />
+        <TextView
+                android:layout_marginTop="@dimen/_2sdp"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/gray_dark"
+                style="@style/avenirnext_fontstyle"
+                android:text="@string/without_internet_data_will_not_be_pushed_to_server"
+                android:textSize="@dimen/_11sdp"
+        />
+
+        <LinearLayout
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+            <View
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/light_white"
+            />
+
+            <TextView
+                    android:id="@+id/logout_ok_btn"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    android:text="@string/logout"
+                    android:textColor="@color/red"
+                    android:layout_width="wrap_content"
+                    android:textSize="@dimen/_16sdp"
+                    style="@style/avenirnext_fontstyle"
+                    android:layout_height="wrap_content" />
+
+            <View
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/light_white"
+            />
+            <TextView
+                    android:id="@+id/logout_cancel_btn"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginBottom="@dimen/_20sdp"
+                    android:text="@string/cancel"
+                    android:background="@android:color/transparent"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_width="match_parent"
+                    android:gravity="center_horizontal"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/_16sdp"
+                    style="@style/avenirnext_fontstyle"
+            />
+        </LinearLayout>
+    </LinearLayout>

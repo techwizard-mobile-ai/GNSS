@@ -19,15 +19,17 @@ import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
+import java.util.concurrent.TimeUnit
+
 
 /**
  * This class will be used for All APIs Calls and Database Actions. It will do following Actions.
- * 1. Insert / Update will be used for Inserting / Updating  data after API call in Database.
- * 2. Push will be used for sending data to Server.
+ * 1. Insert / Update will be used for Inserting / Updating  data before API call in Database.
+ * 2. checkUpdateServerSyncData will be used for sending data to Server.
  * 3. PushInsert will be used for interacting with others activities and this method will be protected.
  * 4. fetch will be used for Getting Data by APIs and Saving in Database.
  * 5. All Methods Parameters will be provided by calling Activity and this class will be used
- * only for APIs and Database Calls.
+ * only for APIs and Database Calls except few common parameter for multiple usage of one method.
  * 6. Internet Connection will be checked in this Class. All Actions for Database Save and API
  * Calls will be made only using this Class for Background Actions.
  * 7. Save Data in App Database.
@@ -43,7 +45,7 @@ import java.io.IOException
 private const val REQUEST_ACCESS_FINE_LOCATION = 1
 
 class MyDataPushSave(private val context: Context) {
-    private val noInternetMessage = "No Internet Connection.\nData Not Uploaded to Server but Saved in App."
+    val noInternetMessage = "No Internet Connection.\nData Not Uploaded to Server but Saved in App."
     private val tag = this::class.java.simpleName
     private val myHelper = MyHelper(tag, context)
     private val db = DatabaseAdapter(context)
@@ -466,9 +468,10 @@ class MyDataPushSave(private val context: Context) {
 //            myHelper.isOnline() -> pushDelay(eWork)
 //            else -> {
 //                myHelper.toast(noInternetMessage)
-                insertDelay(eWork)
+        insertDelay(eWork)
 //            }
 //        }
+    
     }
     
     private fun pushDelay(eWork: EWork) {
@@ -511,7 +514,7 @@ class MyDataPushSave(private val context: Context) {
     private fun insertDelay(eWork: EWork) {
         val insertID = db.insertDelay(eWork)
         myHelper.log("saveDelayID: $insertID")
-        if (insertID > 0 && myHelper.isOnline())
+        if (insertID > 0 )
             checkUpdateServerSyncData()
     }
     
@@ -523,7 +526,7 @@ class MyDataPushSave(private val context: Context) {
      * 4. Stop Waiting (Delay) if Started.
      * 5. Stop Daily Mode if Started.
      */
-    fun pushInsertMachineHour(myData: MyData): Boolean {
+    fun pushInsertMachineHour(myData: MyData, pushServerSync:Boolean = true): Boolean {
         
         
         val currentTime = System.currentTimeMillis()
@@ -563,7 +566,7 @@ class MyDataPushSave(private val context: Context) {
 //            myHelper.isOnline() -> pushMachineHour(myData)
 //            else -> {
 //                myHelper.toast(noInternetMessage)
-                insertMachineHour(myData)
+        insertMachineHour(myData, pushServerSync)
 //            }
 //        }
         myHelper.stopDelay(myData.unloadingGPSLocation)
@@ -611,9 +614,9 @@ class MyDataPushSave(private val context: Context) {
         })
     }
     
-    private fun insertMachineHour(myData: MyData) {
+    private fun insertMachineHour(myData: MyData, pushServerSync: Boolean = true) {
         val insertID = db.insertMachineHours(myData)
-        if (insertID > 0 && myHelper.isOnline())
+        if (insertID > 0 && pushServerSync)
             checkUpdateServerSyncData()
     }
     
@@ -623,7 +626,7 @@ class MyDataPushSave(private val context: Context) {
 //            myHelper.isOnline() -> pushOperatorHour(myData)
 //            else -> {
 //                myHelper.toast(noInternetMessage)
-                insertOperatorHour(myData)
+        insertOperatorHour(myData)
 //            }
 //        }
     }
@@ -669,7 +672,7 @@ class MyDataPushSave(private val context: Context) {
     
     private fun insertOperatorHour(myData: MyData) {
         val insertID = db.insertOperatorHour(myData)
-        if (insertID > 0 && myHelper.isOnline())
+        if (insertID > 0)
             checkUpdateServerSyncData()
     }
     
@@ -684,7 +687,7 @@ class MyDataPushSave(private val context: Context) {
 //            myHelper.isOnline() -> pushMachinesStop(myData)
 //            else -> {
 //                myHelper.toast(noInternetMessage)
-                updateMachineStop(myData)
+        updateMachineStop(myData)
 //            }
 //        }
     }
@@ -733,10 +736,10 @@ class MyDataPushSave(private val context: Context) {
         })
     }
     
-    private fun updateMachineStop(machineData: MyData){
+    private fun updateMachineStop(machineData: MyData) {
         val updateID = db.updateMachineStop(machineData)
         myHelper.log("updateMachineStopID:$updateID")
-        if (updateID > 0 && myHelper.isOnline())
+        if (updateID > 0 )
             checkUpdateServerSyncData()
     }
     
@@ -785,7 +788,7 @@ class MyDataPushSave(private val context: Context) {
 //            myHelper.isOnline() -> pushTrip(myData)
 //            else -> {
 //                myHelper.toast(noInternetMessage)
-                updateTrip(myData)
+        updateTrip(myData)
 //            }
 //        }
     }
@@ -829,11 +832,11 @@ class MyDataPushSave(private val context: Context) {
         })
     }
     
-    private fun updateTrip(myData: MyData){
+    private fun updateTrip(myData: MyData) {
         val updateID = db.updateTrip(myData)
         myHelper.log("updateTripID:$updateID")
-    
-        if (updateID > 0 && myHelper.isOnline())
+        
+        if (updateID > 0 )
             checkUpdateServerSyncData()
     }
     
@@ -851,7 +854,7 @@ class MyDataPushSave(private val context: Context) {
 //            myHelper.isOnline() -> pushSideCasting(eWork)
 //            else -> {
 //                myHelper.toast(noInternetMessage)
-                insertEWork(eWork)
+        insertEWork(eWork)
 //            }
 //        }
     }
@@ -900,18 +903,18 @@ class MyDataPushSave(private val context: Context) {
         val insertID = db.insertEWork(eWork)
         myHelper.log("insertID:$insertID")
         
-        if (insertID > 0 && myHelper.isOnline())
+        if (insertID > 0 )
             checkUpdateServerSyncData()
         return insertID
     }
     
     fun pushUpdateEWork(eWork: EWork): Int {
-        
+
 //        when {
 //            myHelper.isOnline() -> pushEWork(eWork)
 //            else -> {
 //                myHelper.toast(noInternetMessage)
-                updateEWork(eWork)
+        updateEWork(eWork)
 //            }
 //        }
         return 1
@@ -957,14 +960,16 @@ class MyDataPushSave(private val context: Context) {
     private fun updateEWork(eWork: EWork) {
         val updatedID = db.updateEWork(eWork)
         myHelper.log("updateEworkID:$updatedID")
-    
-        if (updatedID > 0 && myHelper.isOnline())
+        
+        if (updatedID > 0 )
             checkUpdateServerSyncData()
     }
     
     fun insertELoad(myData: MyData): Long {
         val insertID = db.insertELoad(myData)
         myHelper.log("insertELoadID:$insertID")
+        if(insertID > 0)
+            checkUpdateServerSyncData()
         return insertID
     }
     
@@ -1002,8 +1007,12 @@ class MyDataPushSave(private val context: Context) {
         addToList(9, "Machines Hours", db.getMachinesHours("ASC"))
         addToList(10, "Operators Waiting", db.getWaits("ASC"))
         
-        if (serverSyncList.size > 0 && myHelper.isOnline()) {
-            pushUpdateServerSync()
+        
+        if (myHelper.isOnline()) {
+            if (serverSyncList.size > 0)
+                pushUpdateServerSync()
+        } else {
+            myHelper.toast(noInternetMessage)
         }
     }
     
@@ -1049,7 +1058,19 @@ class MyDataPushSave(private val context: Context) {
     }
     
     private fun pushUpdateServerSync() {
-        val client = OkHttpClient()
+//        val client = OkHttpClient()
+        
+        val client = OkHttpClient.Builder()
+            .connectTimeout(2, TimeUnit.MINUTES)
+            .readTimeout(2, TimeUnit.MINUTES)
+            .writeTimeout(2, TimeUnit.MINUTES) //.sslSocketFactory(sslSocketFactory, trustManager)
+            .followRedirects(false)
+            .followSslRedirects(false)
+            .retryOnConnectionFailure(false)
+            .cache(null) //new Cache(sContext.getCacheDir(),10*1024*1024)
+            .build()
+        
+        
         val formBody = FormBody.Builder()
             .add("token", myHelper.getLoginAPI().auth_token)
             .add("operator_id", myHelper.getOperatorAPI().id.toString())
@@ -1061,6 +1082,8 @@ class MyDataPushSave(private val context: Context) {
             .url("https://vsptracker.app/api/v1/orgsserversync/store")
             .post(formBody)
             .build()
+    
+       
         
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
@@ -1151,98 +1174,5 @@ class MyDataPushSave(private val context: Context) {
             }
         }
     }
-/*
-    fun pushUpdateServerSync1(serverSyncList: ArrayList<ServerSyncAPI>) {
-//        myHelper.log("pushUpdateServerSync:$serverSyncList")
-//        myHelper.log("Device--${myHelper.getDeviceDetailsString()}")
-        myHelper.showDialog()
-        val serverSyncDataAPI = ServerSyncDataAPI()
-        serverSyncDataAPI.token = myHelper.getLoginAPI().auth_token
-        serverSyncDataAPI.operator_id = myHelper.getOperatorAPI().id
-        serverSyncDataAPI.device_details = myHelper.getDeviceDetailsString()
-        serverSyncDataAPI.data = serverSyncList
-        
-        myHelper.log("serverSyncDataAPI:$serverSyncDataAPI")
-        val call = this.retrofitAPI.pushServerSync(serverSyncDataAPI)
-        call.enqueue(object : retrofit2.Callback<ServerSyncResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<ServerSyncResponse>,
-                response: retrofit2.Response<ServerSyncResponse>
-            ) {
-                myHelper.run {
-                    hideDialog()
-                    log("$response")
-                }
-                val responseBody = response.body()
-                myHelper.log("pushUpdateServerSync:$responseBody")
-//                if (responseBody!!.success) {
-//                    eWork.isSync = 1
-//                } else {
-//                    if (responseBody.message == "Token has expired") {
-//                        myHelper.log("Token Expired:$response")
-//                        myHelper.refreshToken()
-//                    } else {
-//                        myHelper.toast(responseBody.message)
-//                    }
-//                }
-            }
-            
-            override fun onFailure(call: retrofit2.Call<ServerSyncResponse>, t: Throwable) {
-                myHelper.run {
-                    hideDialog()
-                    toast(t.message.toString())
-                    log("Failure" + t.message)
-                }
-            }
-        })
-    }
-    
-    fun pushUpdateELoad(myData: MyData) {
-        
-        when {
-            myHelper.isOnline() -> pushELoad(myData)
-            else -> {
-                myHelper.toast(noInternetMessage)
-                insertELoad(myData)
-            }
-        }
-    }
-    
-    private fun pushELoad(myData: MyData) {
-        
-        myHelper.log("pushELoad:$myData")
-        
-        val call = this.retrofitAPI.pushLoads(
-            myHelper.getLoginAPI().auth_token,
-            myData
-        )
-        call.enqueue(object : retrofit2.Callback<MyDataResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<MyDataResponse>,
-                response: retrofit2.Response<MyDataResponse>
-            ) {
-                myHelper.log(response.toString())
-                val responseBody = response.body()
-                myHelper.log("EWorkResponse:$responseBody")
-                if (responseBody!!.success) {
-                    myHelper.toast("Load Pushed to Server Successfully.")
-                    myData.isSync = 1
-                } else {
-                    if (responseBody.message == "Token has expired") {
-                        myHelper.log("Token Expired:$responseBody")
-                        myHelper.refreshToken()
-                    } else {
-                        myHelper.toast(responseBody.message)
-                    }
-                }
-                insertELoad(myData)
-            }
-            
-            override fun onFailure(call: retrofit2.Call<MyDataResponse>, t: Throwable) {
-                insertELoad(myData)
-                myHelper.toast("Failure" + t.message)
-            }
-        })
-    }*/
     
 }

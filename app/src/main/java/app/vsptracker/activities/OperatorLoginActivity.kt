@@ -103,11 +103,14 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
          * Call launchHomeForLoggedIn() method.
          */
         // Fetch Company Data when App is Launched, This will be useful when App will be updated and Operator Data will be erased.
-        when {
-            myHelper.isOnline() -> fetchOrgData()
-        }
+//        when {
+//            myHelper.isOnline() -> fetchOrgData()
+//        }
         when {
             myHelper.getOperatorAPI().id > 0 -> {
+                when {
+                    myHelper.isOnline() -> fetchOrgData()
+                }
                 launchHomeForLoggedIn()
             }
         }
@@ -196,7 +199,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun fetchOrgData() {
-        myHelper.toast("Fetching Company Data in background.")
+        myHelper.toast("Login Successful.\nFetching Company Data in background.")
         myDataPushSave.fetchOrgData()
     }
 

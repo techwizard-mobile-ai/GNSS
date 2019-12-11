@@ -11,6 +11,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
 import android.widget.ProgressBar
@@ -201,7 +202,8 @@ class MyHelper(var TAG: String, val context: Context) {
         val width = context.resources.getDimensionPixelSize(R.dimen._120sdp)
         val height = context.resources.getDimensionPixelSize(R.dimen._120sdp)
         val layoutParams = FrameLayout.LayoutParams(width, height)
-        view.layoutParams = layoutParams
+        @Suppress("USELESS_CAST")
+        view.layoutParams = layoutParams as ViewGroup.LayoutParams?
     }
     
     fun getWorkMode(): String {
@@ -255,7 +257,7 @@ class MyHelper(var TAG: String, val context: Context) {
             meter.isDelayStarted = true
             meter.delayStartTime = currentTime
             meter.delayStartGPSLocation = gpsMaterial
-            toast("Waiting Started.")
+//            toast("Waiting Started.")
             log("MeterStartAfter:$meter")
             setMeter(meter)
         } else {

@@ -57,7 +57,7 @@ class LocationActivity : BaseActivity(), View.OnClickListener {
 
         gv.adapter = adapter
         gv.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-            myHelper.toast("Selected Location: " + locations[position].name)
+//            myHelper.toast("Selected Location: " + locations[position].name)
 
             when {
                 myData.isForLoadResult -> {

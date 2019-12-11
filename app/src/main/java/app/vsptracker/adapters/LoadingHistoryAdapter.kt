@@ -75,7 +75,12 @@ class LoadingHistoryAdapter(
 
         holder.itemView.lhr_loading_machine.text = ":  ${db.getMachineByID(myData.loading_machine_id).number}"
 
-        holder.itemView.lhr_loaded_material.text = ":  ${db.getMaterialByID(myData.loading_material_id).name} / ${db.getMaterialByID(myData.unloading_material_id).name}"
+        if(myData.loading_material_id != myData.unloading_material_id){
+            holder.itemView.lhr_loaded_material.text = ":  ${db.getMaterialByID(myData.loading_material_id).name} / ${db.getMaterialByID(myData.unloading_material_id).name}"
+        }else{
+            holder.itemView.lhr_loaded_material.text = ":  ${db.getMaterialByID(myData.loading_material_id).name}"
+        }
+        
         val loadingLocation = db.getLocationByID(myData.loading_location_id).name
         val unloadingLocation = db.getLocationByID(myData.unloading_location_id).name
         holder.itemView.lhr_loading_location.text = ":  $loadingLocation / $unloadingLocation"

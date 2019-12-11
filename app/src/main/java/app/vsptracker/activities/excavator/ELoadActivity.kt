@@ -152,17 +152,24 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
     }
     private fun pushInsertELoad(myData: MyData): Int {
 
-        when {
-            myHelper.isOnline() -> pushELoad1(myData)
-            else -> {
-                myHelper.toast("No Internet Connection.\nData Saved in App but Not Uploaded to Server.")
+//        when {
+//            myHelper.isOnline() -> pushELoad1(myData)
+//            else -> {
+//                myHelper.toast("No Internet Connection.\nData Saved in App but Not Uploaded to Server.")
                 insertELoad(myData)
-            }
-        }
+//            }
+//        }
         return 1
     }
-
-    private fun pushELoad1(myData: MyData) {
+    
+    /**
+     * Previously was using this API call to Upload Data for Excavator Production Digging
+     * as after call there was adapter update with load which could not be done without this
+     * Activity. Now Adapter is updated and Data is inserted in App Database but it is not
+     * pushed to Server, rather on Data insertion standard method checkServerSyncData is called
+     * for uploading data to Server and updating in App after call.
+     */
+/*    private fun pushELoad1(myData: MyData) {
 
 //        myData.loadingGPSLocation = gpsLocation
 //        myData.orgId = myHelper.getLoginAPI().org_id
@@ -218,7 +225,7 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
                 myHelper.toast("Failure" + t.message)
             }
         })
-    }
+    }*/
 
     private fun insertELoad(myData: MyData): Long {
         myHelper.log("insertELoad:$myData")
