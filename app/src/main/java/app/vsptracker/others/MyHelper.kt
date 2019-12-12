@@ -63,6 +63,15 @@ class MyHelper(var TAG: String, val context: Context) {
     private lateinit var retrofit: Retrofit
     private lateinit var retrofitAPI: RetrofitAPI
     
+    /**
+     * Check if Meter Reading isEmpty OR is just a decimal return 0 else return value
+     * Without this it was causing NumberFormatException when trying to convert into float OR Double
+     */
+    fun getMeterValidValue(meterReading: String): String {
+        return if(meterReading.isNotEmpty()&& !meterReading.equals(".", true)){
+            meterReading
+        }else "0.0"
+    }
     fun isNavEnabled() = sessionManager.getNav()
     fun setIsNavEnabled(status: Boolean) = sessionManager.setNav(status)
     

@@ -83,15 +83,19 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         when (view!!.id) {
             R.id.sfinish_minus -> {
-                val value = sfinish_reading.text.toString().toFloat()
+                
+                val value = myHelper.getMeterValidValue(sfinish_reading.text.toString()).toFloat()
                 if (value > 0) {
                     val newValue = value - 0.1
                     sfinish_reading.setText(myHelper.getRoundedDecimal(newValue).toString())
+                }else{
+                    myHelper.toast("Please Enter Valid Meter Value.")
+                    sfinish_reading.setText(myHelper.getRoundedDecimal(value.toDouble()).toString())
                 }
             }
             
             R.id.sfinish_plus -> {
-                val value = sfinish_reading.text.toString().toFloat()
+                val value = myHelper.getMeterValidValue(sfinish_reading.text.toString()).toFloat()
                 val newValue = value + 0.1
                 sfinish_reading.setText(myHelper.getRoundedDecimal(newValue).toString())
             }
@@ -150,25 +154,25 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
                 } else {
                     machineData.isDayWorks = 0
                 }
-
+                
                 myDataPushSave.pushUpdateMachineStop(machineData)
                 
                 val meter = myHelper.getMeter()
                 meter.hourStartGPSLocation = gpsLocation
                 meter.hourStartTime = currentTime
                 meter.machineStartTime = currentTime
-                meter.startHours = sfinish_reading.text.toString()
+                meter.startHours = myHelper.getMeterValidValue(sfinish_reading.text.toString())
                 
-                if (!startReading.equals(sfinish_reading.text.toString(), true)) {
+                if (!startReading.equals(meter.startHours, true)) {
                     meter.isMachineStartTimeCustom = true
-                    myHelper.log("Custom Time : True, Original reading:${myHelper.getMeterTimeForStart()}, New Reading: ${sfinish_reading.text}")
+                    myHelper.log("Custom Time : True, Original reading:${myHelper.getMeterTimeForStart()}, New Reading: ${meter.startHours}")
                 } else {
                     meter.isMachineStartTimeCustom = false
-                    myHelper.log("Custom Time : False, Original reading:${myHelper.getMeterTimeForStart()}, New Reading: ${sfinish_reading.text}")
+                    myHelper.log("Custom Time : False, Original reading:${myHelper.getMeterTimeForStart()}, New Reading: ${meter.startHours}")
                 }
                 
                 myHelper.setMeter(meter)
-                val value = sfinish_reading.text.toString().toDouble()
+                val value = meter.startHours.toDouble()
                 val minutes = value * 60
                 val newMinutes = myHelper.getRoundedInt(minutes)
                 myHelper.log("Minutes: $newMinutes")
