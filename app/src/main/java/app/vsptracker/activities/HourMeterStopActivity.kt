@@ -135,30 +135,8 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
     }
     
     private fun logout() {
-        val totalHours = myHelper.getMeterValidValue(sfinish_reading.text.toString())
-        if (!myHelper.getMeterTimeForFinish().equals(totalHours, true)) {
-            val meter = myHelper.getMeter()
-            meter.isMachineStopTimeCustom = true
-            myData.isTotalHoursCustom = 1
-            myData.startHours = meter.startHours
-            myHelper.setMeter(meter)
-            myHelper.log("Custom Time : True, Original reading:${myHelper.getMeterTimeForFinish()}, New Reading: $totalHours")
-        } else {
-            val meter = myHelper.getMeter()
-            meter.isMachineStopTimeCustom = false
-            myData.isTotalHoursCustom = 0
-            myData.startHours = meter.startHours
-            myHelper.setMeter(meter)
-            myHelper.log("Custom Time : False, Original reading:${myHelper.getMeterTimeForFinish()}, New Reading: $totalHours")
-        }
-        val value = totalHours.toDouble()
-        val minutes = value * 60
-        val newMinutes = myHelper.getRoundedInt(minutes)
-        myHelper.log("Minutes: $newMinutes")
-        myHelper.setMachineTotalTime(newMinutes)
-        myData.totalHours = totalHours
-        myHelper.log("Before saveMachineHour:$myData")
-        
+    
+    
         val operatorAPI = myHelper.getOperatorAPI()
         operatorAPI.unloadingGPSLocation = gpsLocation
         operatorAPI.orgId = myHelper.getLoginAPI().org_id
@@ -178,15 +156,40 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
 //        myDataPushSave.pushInsertOperatorHour(operatorAPI)
         db.insertOperatorHour(operatorAPI)
         
-        myData.machine_stop_reason_id = -1
-        myData.isSync = 0
-        
-        myData.unloadingGPSLocation = gpsLocation
-
+        myHelper.log("isMachineStopped:${myHelper.getIsMachineStopped()}")
 //        If machine is already stopped in Machine Breakdown OR Machine Stop Adapter
 //        then Machine Hour is already inserted. But If machine is not stopped then stop machine and
 //        Insert Machine Hour
         if (!myHelper.getIsMachineStopped()) {
+            myHelper.log("Machine is not stopped.")
+            val totalHours = myHelper.getMeterValidValue(sfinish_reading.text.toString())
+            if (!myHelper.getMeterTimeForFinish().equals(totalHours, true)) {
+                val meter = myHelper.getMeter()
+                meter.isMachineStopTimeCustom = true
+                myData.isTotalHoursCustom = 1
+                myData.startHours = meter.startHours
+                myHelper.setMeter(meter)
+                myHelper.log("Custom Time : True, Original reading:${myHelper.getMeterTimeForFinish()}, New Reading: $totalHours")
+            } else {
+                val meter = myHelper.getMeter()
+                meter.isMachineStopTimeCustom = false
+                myData.isTotalHoursCustom = 0
+                myData.startHours = meter.startHours
+                myHelper.setMeter(meter)
+                myHelper.log("Custom Time : False, Original reading:${myHelper.getMeterTimeForFinish()}, New Reading: $totalHours")
+            }
+            val value = totalHours.toDouble()
+            val minutes = value * 60
+            val newMinutes = myHelper.getRoundedInt(minutes)
+            myHelper.log("Minutes: $newMinutes")
+            myHelper.setMachineTotalTime(newMinutes)
+            myData.totalHours = totalHours
+            myHelper.log("Before saveMachineHour:$myData")
+    
+            myData.machine_stop_reason_id = -1
+            myData.isSync = 0
+            myData.unloadingGPSLocation = gpsLocation
+            
             myDataPushSave.pushInsertMachineHour(myData, false)
         }
         
