@@ -24,6 +24,7 @@ private const val KEY_LOGINAPI = "login_api"
 private const val KEY_OPERATORAPI = "operator_api"
 private const val KEY_MACHINE_SETTINGS = "machine_settings"
 private const val KEY_DISABLE_NAV = "disable_navigation"
+private const val KEY_AUTO_LOGOUT_START_TIME = "auto_logout_startime"
 
 class SessionManager(_context: Context) {
 
@@ -33,7 +34,13 @@ class SessionManager(_context: Context) {
     init {
         editor = pref.run { edit() }
     }
-
+    
+    fun getAutoLogoutStartTime() = pref.getLong(KEY_AUTO_LOGOUT_START_TIME, 0)
+    fun setAutoLogoutStartTime(autoLogoutStartTime: Long) {
+        editor.putLong(KEY_AUTO_LOGOUT_START_TIME, autoLogoutStartTime)
+        editor.commit()
+    }
+    
     fun getNav() = pref.getBoolean(KEY_DISABLE_NAV, true)
     /**
      * Disable OR Enable Side Menu and Bottom Navigation.

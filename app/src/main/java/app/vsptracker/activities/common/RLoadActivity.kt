@@ -9,6 +9,7 @@ import android.widget.FrameLayout
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
+import app.vsptracker.others.MyCountDownTimer
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_rload.*
@@ -22,7 +23,6 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
     
     private val tag = this::class.java.simpleName
     
-    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
@@ -34,8 +34,8 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
         
         myData = myHelper.getLastJourney()
         myHelper.log("myData:$myData")
-        
-        
+    
+//        myTimer1 = MyCountDownTimer(startTime, interval)
         when (myData.nextAction) {
             0 -> {
                 trload_load.text = getString(R.string.load)
@@ -84,7 +84,7 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
         super.onResume()
         base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
     }
-    
+
     override fun onClick(view: View?) {
         myData.trip0ID = System.currentTimeMillis().toString()
         

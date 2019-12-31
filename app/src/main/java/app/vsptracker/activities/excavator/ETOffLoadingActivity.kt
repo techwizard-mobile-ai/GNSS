@@ -25,7 +25,7 @@ class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
     private lateinit var workTitle: String
     private var isWorking = false
     private var eWorkID = 0
-    private var startTime = 0L
+    private var startTime1 = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +68,7 @@ class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
     override fun onBackPressed() {
 
         if (isWorking) {
-            myHelper.showStopMessage(startTime)
+            myHelper.showStopMessage(startTime1)
         } else {
             super.onBackPressed()
             finish()
@@ -79,7 +79,7 @@ class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
         when (view!!.id) {
             R.id.et_offload_material ->{
                 if (isWorking) {
-                    myHelper.showStopMessage(startTime)
+                    myHelper.showStopMessage(startTime1)
                 } else {
                     val intent = Intent(this, MaterialActivity::class.java)
                     myData.isForLoadResult = true
@@ -91,7 +91,7 @@ class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
                 stopDelay()
                 if (isWorking) {
                     eWork.id = eWorkID
-                    eWork.startTime = startTime
+                    eWork.startTime = startTime1
                     eWork.unloadingGPSLocation = gpsLocation
                     val currentTime = System.currentTimeMillis()
                     eWork.stopTime = currentTime
@@ -126,8 +126,8 @@ class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
                         myHelper.toast(
                             "$workTitle is Stopped.\n" +
                                     "Data Saved Successfully.\n" +
-                                    "Work Duration : ${myHelper.getTotalTimeVSP(startTime)} (VSP Meter).\n" +
-                                    "Work Duration : ${myHelper.getTotalTimeMinutes(startTime)} (Minutes)"
+                                    "Work Duration : ${myHelper.getTotalTimeVSP(startTime1)} (VSP Meter).\n" +
+                                    "Work Duration : ${myHelper.getTotalTimeMinutes(startTime1)} (Minutes)"
                         )
                         ework_action_text.text = getString(R.string.start)
                         chronometer1.stop()
@@ -140,20 +140,20 @@ class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
 
 
                 } else {
-                    startTime = System.currentTimeMillis()
+                    startTime1 = System.currentTimeMillis()
                     myHelper.toast("$workTitle is Started.")
                     ework_action_text.text = getString(R.string.stop)
                     chronometer1.base = SystemClock.elapsedRealtime()
                     chronometer1.start()
                     isWorking = true
 
-                    eWork.startTime = startTime
+                    eWork.startTime = startTime1
                     eWork.orgId = myHelper.getLoginAPI().org_id
                     eWork.operatorId = myHelper.getOperatorAPI().id
                     eWork.siteId = myHelper.getMachineSettings().siteId
                     eWork.stopTime = System.currentTimeMillis()
-                    eWork.totalTime = System.currentTimeMillis() - startTime
-                    eWork.time = startTime.toString()
+                    eWork.totalTime = System.currentTimeMillis() - startTime1
+                    eWork.time = startTime1.toString()
                     eWork.workType = myData.eWorkType
                     eWork.isSync = 0
                     if (myHelper.isDailyModeStarted()) {
@@ -214,14 +214,14 @@ class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
                 myHelper.log("Loads:${db.getEWorksOffLoads(eWorkID)}")
 
                 if (isWorking) {
-                    myHelper.showStopMessage(startTime)
+                    myHelper.showStopMessage(startTime1)
                 } else {
                     myHelper.startHomeActivityByType(myData)
                 }
             }
             R.id.ework_offload_finish -> {
                 if (isWorking) {
-                    myHelper.showStopMessage(startTime)
+                    myHelper.showStopMessage(startTime1)
                 } else {
                     val intent = Intent(this, HourMeterStopActivity::class.java)
                     startActivity(intent)

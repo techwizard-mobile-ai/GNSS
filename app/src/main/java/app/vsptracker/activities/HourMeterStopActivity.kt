@@ -32,7 +32,7 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
     private val myDataList = ArrayList<MyData>()
     private val eWorkList = ArrayList<EWork>()
     private val serverSyncList = ArrayList<ServerSyncAPI>()
-    
+    private var isAutoLogoutCall = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
@@ -65,6 +65,15 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
         sfinish_reading.setText(myHelper.getMeterTimeForFinish())
         
         myHelper.log("onCreate:$myData")
+    
+        val bundle: Bundle? = intent.extras
+        if (bundle != null) {
+            isAutoLogoutCall = bundle.getBoolean("isAutoLogoutCall")
+            if(isAutoLogoutCall){
+                myHelper.log("isAutoLogoutCall:$isAutoLogoutCall")
+                logout(isAutoLogoutCall)
+            }
+        }
         
         sfinish_minus.setOnClickListener(this)
         sfinish_plus.setOnClickListener(this)
@@ -134,7 +143,7 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
         
     }
     
-    private fun logout() {
+    private fun logout(isAutoLogoutCall: Boolean = false) {
     
     
         val operatorAPI = myHelper.getOperatorAPI()
@@ -185,8 +194,11 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
             myHelper.setMachineTotalTime(newMinutes)
             myData.totalHours = totalHours
             myHelper.log("Before saveMachineHour:$myData")
-    
-            myData.machine_stop_reason_id = -1
+            if(isAutoLogoutCall){
+                myData.machine_stop_reason_id = -3
+            }else{
+                myData.machine_stop_reason_id = -1
+            }
             myData.isSync = 0
             myData.unloadingGPSLocation = gpsLocation
             

@@ -63,6 +63,8 @@ class MyHelper(var TAG: String, val context: Context) {
     private lateinit var retrofit: Retrofit
     private lateinit var retrofitAPI: RetrofitAPI
     
+    fun getAutoLogoutStartTime() = sessionManager.getAutoLogoutStartTime()
+    fun setAutoLogoutStartTime(autoLogoutStartTime: Long) {sessionManager.setAutoLogoutStartTime(autoLogoutStartTime)}
     /**
      * Check if Meter Reading isEmpty OR is just a decimal return 0 else return value
      * Without this it was causing NumberFormatException when trying to convert into float OR Double
@@ -419,7 +421,6 @@ class MyHelper(var TAG: String, val context: Context) {
     }
     
     fun getMeterTimeForFinishCustom(startHours2: String): String {
-        
         val startHours1: String = when {
             startHours2.isEmpty() -> "0"
             else -> startHours2
@@ -585,6 +586,7 @@ class MyHelper(var TAG: String, val context: Context) {
     }
     
     fun log(message: String) {
+//        if(message == "onFinish" || message == "cancelTimer Done" || message == "cancelTimer" || message == "onFinish--isTimeOver:false" || message == "onFinish--isTimeOver:true")
         Log.e(TAG, message)
     }
     

@@ -21,7 +21,7 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
 
     private lateinit var workTitle: String
     private var isWorking = false
-    private var startTime = 0L
+    private var startTime1 = 0L
     private lateinit var eWork: EWork
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,7 +69,7 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
     override fun onBackPressed() {
 
         if (isWorking) {
-            myHelper.showStopMessage(startTime)
+            myHelper.showStopMessage(startTime1)
         } else {
             super.onBackPressed()
             finish()
@@ -106,8 +106,8 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
                     myHelper.toast(
                         "$workTitle is Stopped.\n" +
                                 "Data Saved Successfully.\n" +
-                                "Work Duration : ${myHelper.getTotalTimeVSP(startTime)} (VSP Meter).\n" +
-                                "Work Duration : ${myHelper.getTotalTimeMinutes(startTime)} (Minutes)"
+                                "Work Duration : ${myHelper.getTotalTimeVSP(startTime1)} (VSP Meter).\n" +
+                                "Work Duration : ${myHelper.getTotalTimeMinutes(startTime1)} (Minutes)"
                     )
                     ework_action_fab.backgroundTintList = ColorStateList.valueOf(
                         ContextCompat.getColor(this, R.color.colorPrimary)
@@ -117,7 +117,7 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
                     isWorking = false
                     
                 } else {
-                    startTime = System.currentTimeMillis()
+                    startTime1 = System.currentTimeMillis()
                     myHelper.toast("$workTitle is Started.")
                     ework_action_fab.backgroundTintList = ColorStateList.valueOf(
                         ContextCompat.getColor(this, R.color.black)
@@ -125,7 +125,7 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
                     ework_action_text.text = getString(R.string.stop)
                     chronometer1.base = SystemClock.elapsedRealtime()
                     chronometer1.start()
-                    eWork.startTime = startTime
+                    eWork.startTime = startTime1
                     eWork.loadingGPSLocation = gpsLocation
                     eWork.loadingGPSLocationString = myHelper.getGPSLocationToString(eWork.loadingGPSLocation)
                     isWorking = true
@@ -136,14 +136,14 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
             }
             R.id.ework_home -> {
                 if (isWorking) {
-                    myHelper.showStopMessage(startTime)
+                    myHelper.showStopMessage(startTime1)
                 } else {
                     myHelper.startHomeActivityByType(myData)
                 }
             }
             R.id.ework_finish -> {
                 if (isWorking) {
-                    myHelper.showStopMessage(startTime)
+                    myHelper.showStopMessage(startTime1)
                 } else {
                     val intent = Intent(this, HourMeterStopActivity::class.java)
                     startActivity(intent)

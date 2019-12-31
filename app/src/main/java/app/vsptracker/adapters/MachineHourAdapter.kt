@@ -57,6 +57,9 @@ class MachineHourAdapter(
         holder.itemView.eth_duration.text = ":  " + myHelper.getFormattedTime(eWork.totalTime) + " Hrs"
         
         when (eWork.machine_stop_reason_id) {
+            -3 -> {
+                holder.itemView.eth_remarks.text = ":  Auto Logout"
+            }
             -2 -> {
                 holder.itemView.eth_remarks.text = ":  Machine Changed"
             }

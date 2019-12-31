@@ -66,6 +66,13 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     private lateinit var retrofit: Retrofit
     internal lateinit var retrofitAPI: RetrofitAPI
     lateinit var myDataPushSave: MyDataPushSave
+
+
+//    var logoutStartTime = 0L
+//    val autoLogoutTime = 1 * 30 * 1000L
+    
+    var autoLogoutTime = 0L
+    
     
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,6 +88,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         if (myHelper.getIsMachineStopped() || myHelper.getMachineID() < 1) {
             drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         }
+        
         
         gpsLocation = GPSLocation()
         db = DatabaseAdapter(this)
@@ -140,7 +148,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         val navigationView: NavigationView = findViewById(R.id.base_nav_view)
         val headerView: View = navigationView.getHeaderView(0)
         val navHeaderDeviceDetails: TextView = headerView.findViewById(R.id.nav_header_device_details)
-//        val navTitle : TextView = headerView.findViewById(R.id.nav_header_title)
+        val navTitle: TextView = headerView.findViewById(R.id.nav_header_title)
 //        val navSubTitle : TextView = headerView.findViewById(R.id.nav_header_sub_title)
         
         val deviceDetails = DeviceDetails()
@@ -149,50 +157,80 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 "DEVICE : ${deviceDetails.DEVICE}\n" +
                 "MODEL : ${deviceDetails.MODEL}\n" +
                 "ANDROID_API : ${deviceDetails.ANDROID_SDK_API}\n"
-//        navTitle.text = "VSP Tracker (${BuildConfig.VERSION_CODE})"
+        navTitle.text = "VSP Tracker Version: ${deviceDetails.VSPT_VERSION_NAME} (${deviceDetails.VSPT_VERSION_CODE})"
 //        navSubTitle.text = "Test just"
-
-
-//        handler = Handler()
-//        r = Runnable {
-//            myHelper.toast("User is Inacitve for 1 minute.")
-//            myHelper.log("User is Inacitve for 1 minute.")
-//
-//            myHelper.setOperatorAPI(MyData())
-//            val intent = Intent(this, OperatorLoginActivity::class.java)
-//            startActivity(intent)
-//        }
-//        startHandler()
+//        MachineAutoLogout is time set by administrator. If App is not in use for time greater than AutoLogoutTime
+//        which is different for Machine Type for Different sites then user should be Auto logout from App
+//        and all data should be sent to server.
+        if (db.getMachinesAutoLogout().size > 0) {
+            try {
+                autoLogoutTime = db.getMachinesAutoLogout()[0].autoLogoutTime!!.toLong() * 60 * 1000 //converting minutes in Milliseconds
+            }
+            catch (e: Exception) {
+                myHelper.log("autoLogoutTimeException: ${e.message}")
+            }
+        }
+        myHelper.log("autoLogoutTime = $autoLogoutTime")
+        
+        handler = Handler()
+        r = Runnable {
+            //            myHelper.toast("User is Inacitve for 1 minute.")
+            val runningTime = System.currentTimeMillis() - myHelper.getAutoLogoutStartTime()
+            val difference = runningTime - autoLogoutTime
+            myHelper.log(
+                "\nLogout\nautoLogoutTime = $autoLogoutTime " +
+                        "\nlogoutStartTime = ${myHelper.getAutoLogoutStartTime()}--${myHelper.getDateTime(myHelper.getAutoLogoutStartTime())}" +
+                        "\nrunningTime = $runningTime" +
+                        "\ndifference = $difference"
+            )
+            if (difference > 0 && autoLogoutTime > 0) {
+                myHelper.log("Logout Time Completed.")
+                val intent = Intent(this, HourMeterStopActivity::class.java)
+                intent.putExtra("isAutoLogoutCall", true)
+                startActivity(intent)
+            }else{
+                myHelper.log("AutoLogout not functional---------------")
+            }
+        }
+        if (autoLogoutTime > 0){
+            startHandler()
+        }
+        if(myHelper.getOperatorAPI().id < 1){
+            val intent = Intent(this, OperatorLoginActivity::class.java)
+            startActivity(intent)
+        }
     }
     
-/*
     override fun onUserInteraction() {
         super.onUserInteraction()
         myHelper.log("\nonUserInteraction")
-//        stopHandler()
-//        startHandler()
+        if (autoLogoutTime > 0) {
+            stopHandler()
+            startHandler()
+        }
+        
     }
+
+//    override fun onUserLeaveHint() {
+//        super.onUserLeaveHint()
+////        myHelper.log("\nonUserLeaveHint")
+////        resetTimer()
+////        stopHandler()
+////        startHandler()
+//    }
     
-    override fun onUserLeaveHint() {
-        super.onUserLeaveHint()
-        myHelper.log("\nonUserLeaveHint")
-//        stopHandler()
-//        startHandler()
-    }
     
     private fun stopHandler() {
         myHelper.log("stopHandler")
         handler.removeCallbacks(r)
-        handler.removeCallbacksAndMessages(null)
+        handler.removeCallbacksAndMessages(r)
     }
     
     private fun startHandler() {
         myHelper.log("startHandler")
-        handler.postDelayed(r, 1 * 60000) //for 1 minutes
-//        val autoLogout = db.getMachinesAutoLogout()[0]
-//        myHelper.log("AutoLogout:$autoLogout")
-//        handler.postDelayed(r, (autoLogout.autoLogoutTime!!.toLong() *60 * 1000)) //for 30 sec
-    }*/
+        myHelper.setAutoLogoutStartTime(System.currentTimeMillis())
+        handler.postDelayed(r, autoLogoutTime)
+    }
     
     private val mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->

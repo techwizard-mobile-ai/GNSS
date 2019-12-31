@@ -23,7 +23,7 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
     private lateinit var workTitle: String
     private var isWorking = false
     private var eWorkID = 0
-    private var startTime = 0L
+    private var startTime1 = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +67,7 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
     override fun onBackPressed() {
 
         if (isWorking) {
-            myHelper.showStopMessage(startTime)
+            myHelper.showStopMessage(startTime1)
         } else {
             super.onBackPressed()
         }
@@ -82,7 +82,7 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                 if (isWorking) {
 
                     eWork.id = eWorkID
-                    eWork.startTime = startTime
+                    eWork.startTime = startTime1
                     eWork.unloadingGPSLocation = gpsLocation
                     eWork.unloadingGPSLocationString = myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
 
@@ -115,8 +115,8 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                         myHelper.toast(
                             "$workTitle is Stopped.\n" +
                                     "MyData Saved Successfully.\n" +
-                                    "Work Duration : ${myHelper.getTotalTimeVSP(startTime)} (VSP Meter).\n" +
-                                    "Work Duration : ${myHelper.getTotalTimeMinutes(startTime)} (Minutes)"
+                                    "Work Duration : ${myHelper.getTotalTimeVSP(startTime1)} (VSP Meter).\n" +
+                                    "Work Duration : ${myHelper.getTotalTimeMinutes(startTime1)} (Minutes)"
                         )
                         ework_action_text.text = getString(R.string.start)
                         chronometer1.stop()
@@ -127,22 +127,22 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                         isWorking = false
                     }
                 } else {
-                    startTime = System.currentTimeMillis()
+                    startTime1 = System.currentTimeMillis()
                     myHelper.toast("$workTitle is Started.")
                     ework_action_text.text = getString(R.string.stop)
                     chronometer1.base = SystemClock.elapsedRealtime()
                     chronometer1.start()
                     isWorking = true
 
-                    eWork.startTime = startTime
+                    eWork.startTime = startTime1
                     eWork.orgId = myHelper.getLoginAPI().org_id
                     eWork.siteId = myHelper.getMachineSettings().siteId
                     eWork.operatorId = myHelper.getOperatorAPI().id
                     eWork.stopTime = System.currentTimeMillis()
-                    eWork.totalTime = System.currentTimeMillis() - startTime
+                    eWork.totalTime = System.currentTimeMillis() - startTime1
                     eWork.isSync = 0
     
-                    eWork.time = startTime.toString()
+                    eWork.time = startTime1.toString()
                     eWork.workType = myData.eWorkType
                     eWork.workActionType = 2
                     eWork.loadingGPSLocation = gpsLocation
@@ -193,14 +193,14 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                 myHelper.log("Loads:${db.getEWorksOffLoads(eWorkID)}")
 
                 if (isWorking) {
-                    myHelper.showStopMessage(startTime)
+                    myHelper.showStopMessage(startTime1)
                 } else {
                     myHelper.startHomeActivityByType(myData)
                 }
             }
             R.id.ework_offload_finish -> {
                 if (isWorking) {
-                    myHelper.showStopMessage(startTime)
+                    myHelper.showStopMessage(startTime1)
                 } else {
                     val intent = Intent(this, HourMeterStopActivity::class.java)
                     startActivity(intent)
