@@ -53,20 +53,21 @@ class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
         var isRespread = false
         var isOffSite = false
         for (task in tasks){
-            when(task.machineTaskId){
-                1 -> {
+//            when(task.machineTaskId){
+            when(task.name){
+                "Stockpile" -> {
                     isStockPile = true
                     stockPileId = task.id
                 }
-                2 -> {
+                "Fill" -> {
                     isFill = true
                     fillId = task.id
                 }
-                3 -> {
+                "Respread" -> {
                     isRespread = true
                     respreadId = task.id
                 }
-                4 -> {
+                "Off site" -> {
                     isOffSite = true
                     offSiteId = task.id
                 }
@@ -184,7 +185,7 @@ class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
                             }
                         }
                         val intent = Intent(this, LocationActivity::class.java)
-                        myData.unloading_task_id = offSiteId
+//                        myData.unloading_task_id = offSiteId
                         intent.putExtra("myData", myData)
                         startActivity(intent)
                     }
@@ -219,7 +220,7 @@ class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
                             }
                         }
                         val intent = Intent(this, LocationActivity::class.java)
-                        myData.unloading_task_id = 3
+//                        myData.unloading_task_id = 3
                         intent.putExtra("myData", myData)
                         startActivity(intent)
                     }
@@ -254,7 +255,7 @@ class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
                             }
                         }
                         val intent = Intent(this, LocationActivity::class.java)
-                        myData.unloading_task_id = 1
+//                        myData.unloading_task_id = 1
                         intent.putExtra("myData", myData)
                         startActivity(intent)
                     }
