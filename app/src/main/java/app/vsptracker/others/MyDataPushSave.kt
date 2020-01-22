@@ -514,7 +514,7 @@ class MyDataPushSave(private val context: Context) {
     private fun insertDelay(eWork: EWork) {
         val insertID = db.insertDelay(eWork)
         myHelper.log("saveDelayID: $insertID")
-        if (insertID > 0 )
+        if (insertID > 0)
             checkUpdateServerSyncData()
     }
     
@@ -526,7 +526,7 @@ class MyDataPushSave(private val context: Context) {
      * 4. Stop Waiting (Delay) if Started.
      * 5. Stop Daily Mode if Started.
      */
-    fun pushInsertMachineHour(myData: MyData, pushServerSync:Boolean = true): Boolean {
+    fun pushInsertMachineHour(myData: MyData, pushServerSync: Boolean = true): Boolean {
         
         
         val currentTime = System.currentTimeMillis()
@@ -617,7 +617,7 @@ class MyDataPushSave(private val context: Context) {
     private fun insertMachineHour(myData: MyData, pushServerSync: Boolean = true) {
         val insertID = db.insertMachineHours(myData)
         if (insertID > 0 && pushServerSync)
-            checkUpdateServerSyncData()
+            checkUpdateServerSyncData(false)
     }
     
     fun pushInsertOperatorHour(myData: MyData) {
@@ -739,7 +739,7 @@ class MyDataPushSave(private val context: Context) {
     private fun updateMachineStop(machineData: MyData) {
         val updateID = db.updateMachineStop(machineData)
         myHelper.log("updateMachineStopID:$updateID")
-        if (updateID > 0 )
+        if (updateID > 0)
             checkUpdateServerSyncData()
     }
     
@@ -836,7 +836,7 @@ class MyDataPushSave(private val context: Context) {
         val updateID = db.updateTrip(myData)
         myHelper.log("updateTripID:$updateID")
         
-        if (updateID > 0 )
+        if (updateID > 0)
             checkUpdateServerSyncData()
     }
     
@@ -854,7 +854,7 @@ class MyDataPushSave(private val context: Context) {
 //            myHelper.isOnline() -> pushSideCasting(eWork)
 //            else -> {
 //                myHelper.toast(noInternetMessage)
-        insertEWork(eWork)
+        insertEWork(eWork, true)
 //            }
 //        }
     }
@@ -897,13 +897,13 @@ class MyDataPushSave(private val context: Context) {
         })
     }
     
-    fun insertEWork(eWork: EWork): Long {
+    fun insertEWork(eWork: EWork, pushToServer: Boolean = false): Long {
         eWork.machineTypeId = myHelper.getMachineTypeID()
         eWork.machineId = myHelper.getMachineID()
         val insertID = db.insertEWork(eWork)
         myHelper.log("insertID:$insertID")
         
-        if (insertID > 0 )
+        if (insertID > 0 && pushToServer)
             checkUpdateServerSyncData()
         return insertID
     }
@@ -961,14 +961,14 @@ class MyDataPushSave(private val context: Context) {
         val updatedID = db.updateEWork(eWork)
         myHelper.log("updateEworkID:$updatedID")
         
-        if (updatedID > 0 )
+        if (updatedID > 0)
             checkUpdateServerSyncData()
     }
     
     fun insertELoad(myData: MyData): Long {
         val insertID = db.insertELoad(myData)
         myHelper.log("insertELoadID:$insertID")
-        if(insertID > 0)
+        if (insertID > 0)
             checkUpdateServerSyncData()
         return insertID
     }
@@ -985,7 +985,7 @@ class MyDataPushSave(private val context: Context) {
         return insertID
     }
     
-    private fun checkUpdateServerSyncData() {
+    private fun checkUpdateServerSyncData(showDialog: Boolean = true) {
         // remove all previous data if any and make list empty
         if (myDataList.size > 0)
             myDataList.removeAll(ArrayList())
@@ -1010,7 +1010,10 @@ class MyDataPushSave(private val context: Context) {
         
         if (myHelper.isOnline()) {
             if (serverSyncList.size > 0)
-                pushUpdateServerSync()
+//                Handler().postDelayed({
+//                    //Do something after 100ms
+//                }, 5 * 1000)
+                pushUpdateServerSync(showDialog)
         } else {
             myHelper.toast(noInternetMessage)
         }
@@ -1057,9 +1060,10 @@ class MyDataPushSave(private val context: Context) {
         }
     }
     
-    private fun pushUpdateServerSync() {
+    private fun pushUpdateServerSync(showDialog: Boolean = true) {
 //        val client = OkHttpClient()
-        
+        if (showDialog)
+            myHelper.showDialog()
         val client = OkHttpClient.Builder()
             .connectTimeout(2, TimeUnit.MINUTES)
             .readTimeout(2, TimeUnit.MINUTES)
@@ -1082,11 +1086,13 @@ class MyDataPushSave(private val context: Context) {
             .url("https://vsptracker.app/api/v1/orgsserversync/store")
             .post(formBody)
             .build()
-    
-       
+        
+        
         
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
+                
+                myHelper.log("response:$response")
                 val responseString = response.body()!!.string()
                 val responseJObject = JSONObject(responseString)
                 val success = responseJObject.getBoolean("success")
@@ -1113,14 +1119,20 @@ class MyDataPushSave(private val context: Context) {
                             myHelper.toast(responseJObject.getString("message "))
                         }
                     }
+                    if (showDialog)
+                        myHelper.hideDialog()
                 }
                 catch (e: Exception) {
+                    if (showDialog)
+                        myHelper.hideDialog()
                     myHelper.log("${e.message}")
                 }
             }
             
             override fun onFailure(call: Call, e: IOException) {
                 myHelper.run {
+                    if (showDialog)
+                        hideDialog()
                     toast(e.message.toString())
                     log("Exception: ${e.printStackTrace()}")
                 }

@@ -164,6 +164,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 //        and all data should be sent to server.
         if (db.getMachinesAutoLogout().size > 0) {
             try {
+                myHelper.log(db.getMachinesAutoLogout()[0].toString())
                 autoLogoutTime = db.getMachinesAutoLogout()[0].autoLogoutTime!!.toLong() * 60 * 1000 //converting minutes in Milliseconds
             }
             catch (e: Exception) {

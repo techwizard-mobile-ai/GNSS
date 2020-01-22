@@ -58,7 +58,7 @@ class MachineStatusAdapter(
             myHelper.log("totalHours:${data.totalHours}")
             myHelper.log("data:$data")
             data.unloadingGPSLocation = (myContext as MachineStatusActivity).gpsLocation
-            myContext.myDataPushSave.pushInsertMachineHour(data)
+            myContext.myDataPushSave.pushInsertMachineHour(data, true)
             data.loadingGPSLocation = (myContext as MachineStatusActivity).gpsLocation
             myContext.myDataPushSave.insertMachineStop(data, material)
                 myHelper.logout(myContext)

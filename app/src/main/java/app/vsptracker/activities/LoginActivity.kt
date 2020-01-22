@@ -73,8 +73,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         myHelper.hideKeyboardOnClick(login_main_layout)
         signin_signin.setOnClickListener(this)
         signin_forgot_pass.setOnClickListener(this)
-        signin_email.setText("vsptCambridgeConstruction@gmail.com")
-        signin_pass.setText("VsptCC123#")
+
         
     }
     

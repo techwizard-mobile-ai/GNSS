@@ -259,8 +259,7 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
             }
         }
     }
-
-
+    
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         super.onActivityResult(requestCode, resultCode, intent)
 
@@ -297,6 +296,4 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
         }
 
     }
-
-
 }
