@@ -837,7 +837,7 @@ class MyDataPushSave(private val context: Context) {
         myHelper.log("updateTripID:$updateID")
         
         if (updateID > 0)
-            checkUpdateServerSyncData()
+            checkUpdateServerSyncData(false)
     }
     
     fun pushInsertSideCasting(eWork: EWork) {
