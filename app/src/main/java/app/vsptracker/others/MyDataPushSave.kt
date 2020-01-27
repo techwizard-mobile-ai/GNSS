@@ -617,7 +617,7 @@ class MyDataPushSave(private val context: Context) {
     private fun insertMachineHour(myData: MyData, pushServerSync: Boolean = true) {
         val insertID = db.insertMachineHours(myData)
         if (insertID > 0 && pushServerSync)
-            checkUpdateServerSyncData(false)
+            checkUpdateServerSyncData()
     }
     
     fun pushInsertOperatorHour(myData: MyData) {
@@ -837,7 +837,7 @@ class MyDataPushSave(private val context: Context) {
         myHelper.log("updateTripID:$updateID")
         
         if (updateID > 0)
-            checkUpdateServerSyncData(false)
+            checkUpdateServerSyncData()
     }
     
     fun pushInsertSideCasting(eWork: EWork) {
@@ -904,7 +904,7 @@ class MyDataPushSave(private val context: Context) {
         myHelper.log("insertID:$insertID")
         
         if (insertID > 0 && pushToServer)
-            checkUpdateServerSyncData()
+            checkUpdateServerSyncData(true)
         return insertID
     }
     
@@ -962,14 +962,14 @@ class MyDataPushSave(private val context: Context) {
         myHelper.log("updateEworkID:$updatedID")
         
         if (updatedID > 0)
-            checkUpdateServerSyncData()
+            checkUpdateServerSyncData(true)
     }
     
     fun insertELoad(myData: MyData): Long {
         val insertID = db.insertELoad(myData)
         myHelper.log("insertELoadID:$insertID")
         if (insertID > 0)
-            checkUpdateServerSyncData()
+            checkUpdateServerSyncData(true)
         return insertID
     }
     
@@ -985,7 +985,7 @@ class MyDataPushSave(private val context: Context) {
         return insertID
     }
     
-    private fun checkUpdateServerSyncData(showDialog: Boolean = true) {
+    private fun checkUpdateServerSyncData(showDialog: Boolean = false) {
         // remove all previous data if any and make list empty
         if (myDataList.size > 0)
             myDataList.removeAll(ArrayList())
@@ -1060,7 +1060,7 @@ class MyDataPushSave(private val context: Context) {
         }
     }
     
-    private fun pushUpdateServerSync(showDialog: Boolean = true) {
+    private fun pushUpdateServerSync(showDialog: Boolean = false) {
 //        val client = OkHttpClient()
         if (showDialog)
             myHelper.showDialog()
