@@ -51,10 +51,17 @@
             android:icon="@drawable/ic_server_sync"
             android:title="@string/server_sync" />
         <item
+            android:id="@+id/nav_checkforms"
+            android:icon="@drawable/ic_checkform"
+            android:title="@string/checkform" />
+        <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_logout"
             android:title="@string/logout" />
+
     </group>
+
+
 
     <item android:title="@string/communicate">
         <menu>
@@ -62,7 +69,6 @@
                 android:id="@+id/nav_email"
                 android:icon="@drawable/ic_email"
                 android:title="@string/report_error" />
-
         </menu>
     </item>
 

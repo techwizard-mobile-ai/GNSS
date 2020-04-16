@@ -70,6 +70,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
         
+        val user = "zee.enterprises@mail.com"
+        val pass = "user1@123"
+        signin_email.setText(user)
+        signin_pass.setText(pass)
+        
         myHelper.hideKeyboardOnClick(login_main_layout)
         signin_signin.setOnClickListener(this)
         signin_forgot_pass.setOnClickListener(this)

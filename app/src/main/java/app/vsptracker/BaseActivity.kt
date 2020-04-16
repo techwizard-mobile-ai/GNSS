@@ -24,6 +24,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.get
+import androidx.core.view.size
 import androidx.drawerlayout.widget.DrawerLayout
 import app.vsptracker.activities.*
 import app.vsptracker.activities.common.MachineBreakdownActivity
@@ -405,6 +406,11 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             }
             R.id.nav_server_sync -> {
                 val intent = Intent(this, ServerSyncActivity::class.java)
+                startActivity(intent)
+                myHelper.setIsMapOpened(false)
+            }
+            R.id.nav_checkforms -> {
+                val intent = Intent(this, CheckFormsActivity::class.java)
                 startActivity(intent)
                 myHelper.setIsMapOpened(false)
             }
