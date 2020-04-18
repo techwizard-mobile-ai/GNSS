@@ -40,6 +40,7 @@ interface RetrofitAPI {
         const val ORGS_PUSH_OPERATORS_HOURS = "orgsoperatorshours/store"
         const val ORGS_MACHINE_MAX_HOUR ="orgsmachineshours/machine_max_hour"
         const val ORGS_SERVER_SYNC = "orgsserversync/store"
+        const val ORGS_SERVER_SYNC_LIST = "orgsserversync/list"
     }
     
 
@@ -171,4 +172,12 @@ interface RetrofitAPI {
         @Field("role") role: Int = 1,
         @Field("ttl") ttl: Int = 43800 // 43200 minutes = 30 days
     ): Call<LoginResponse>
+    
+    @GET(ORGS_SERVER_SYNC_LIST)
+    fun getServerSync(
+        @Query("org_id") org_id: Int?,
+        @Query("token") token: String?,
+        @Query("operator_id") id: Int,
+        @Query("device_details")deviceDetailsString: String
+    ): Call<ServerSyncResponse>
 }

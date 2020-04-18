@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import app.vsptracker.apis.delay.EWork
 import app.vsptracker.apis.operators.OperatorAPI
 import app.vsptracker.apis.trip.MyData
@@ -112,8 +113,6 @@ const val DROP_TABLE_E_LOAD_HISTORY = "DROP TABLE IF EXISTS $TABLE_E_LOAD_HISTOR
 const val DROP_TABLE_MACHINES_AUTO_LOGOUTS = "DROP TABLE IF EXISTS $TABLE_MACHINES_AUTO_LOGOUTS"
 const val DROP_TABLE_OPERATORS_HOURS = "DROP TABLE IF EXISTS $TABLE_OPERATORS_HOURS"
 
-// Database Version Code 12
-// App Version Code 8
 class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 8) {
     
     val tag = "DatabaseAdapter"
@@ -471,6 +470,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         
         val db = this.writableDatabase
         val cv = ContentValues()
+        val tableName = TABLE_MACHINES_AUTO_LOGOUTS
         
         for (datum in data) {
             cv.put(COL_ID, datum.id)
@@ -481,7 +481,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_STATUS, datum.status)
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
-            db.replace(TABLE_MACHINES_AUTO_LOGOUTS, null, cv)
+            val insertedID = db.replace(tableName, null, cv)
+            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -563,7 +564,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         
         val db = this.writableDatabase
         val cv = ContentValues()
-        
+        val tableName = TABLE_MACHINES_TASKS
         for (datum in data) {
             cv.put(COL_ID, datum.id)
             cv.put(COL_ORG_ID, datum.orgId)
@@ -574,7 +575,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_STATUS, datum.status)
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
-            db.replace(TABLE_MACHINES_TASKS, null, cv)
+            val insertedID = db.replace(tableName, null, cv)
+            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -582,7 +584,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         
         val db = this.writableDatabase
         val cv = ContentValues()
-        
+        val tableName = TABLE_MACHINES_PLANTS
         
         for (datum in data) {
             cv.put(COL_ID, datum.id)
@@ -593,8 +595,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_STATUS, datum.status)
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
-            db.replace(TABLE_MACHINES_PLANTS, null, cv)
-            // myHelper.log("insertMachinesPlants-inserID:$insertID")
+            val insertedID = db.replace(tableName, null, cv)
+            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -602,7 +604,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         
         val db = this.writableDatabase
         val cv = ContentValues()
-        
+        val tableName = TABLE_MACHINES_BRANDS
         
         for (datum in data) {
             cv.put(COL_ID, datum.id)
@@ -611,8 +613,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_STATUS, datum.status)
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
-            db.replace(TABLE_MACHINES_BRANDS, null, cv)
-            // myHelper.log("insertMachinesBrands-inserID:$insertID")
+            val insertedID = db.replace(tableName, null, cv)
+            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -620,7 +622,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         
         val db = this.writableDatabase
         val cv = ContentValues()
-        
+        val tableName = TABLE_MACHINES_TYPES
         
         for (datum in data) {
             cv.put(COL_ID, datum.id)
@@ -628,8 +630,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_STATUS, datum.status)
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
-            db.replace(TABLE_MACHINES_TYPES, null, cv)
-            // myHelper.log("insertMachinesTypes-inserID:$insertID")
+            val insertedID = db.replace(tableName, null, cv)
+            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -637,7 +639,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         
         val db = this.writableDatabase
         val cv = ContentValues()
-        
+        val tableName = TABLE_SITES
         
         for (datum in data) {
             cv.put(COL_ID, datum.siteId)
@@ -645,8 +647,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_STATUS, datum.status)
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
-            db.replace(TABLE_SITES, null, cv)
-            // myHelper.log("insertSites-inserID:$insertID")
+            val insertedID = db.replace(tableName, null, cv)
+            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -654,7 +656,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         
         val db = this.writableDatabase
         val cv = ContentValues()
-        
+        val tableName = TABLE_OPERATORS
         
         for (datum in data) {
             cv.put(COL_ID, datum.id)
@@ -664,8 +666,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_STATUS, datum.status)
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
-            db.replace(TABLE_OPERATORS, null, cv)
-            // myHelper.log("insertOperators-inserID:$insertID")
+            val insertedID = db.replace(tableName, null, cv)
+            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -673,6 +675,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         
         val db = this.writableDatabase
         val cv = ContentValues()
+        val tableName = TABLE_STOP_REASONS
         
         for (datum in data) {
             cv.put(COL_ID, datum.id)
@@ -681,8 +684,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_STATUS, datum.status)
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
-            db.replace(TABLE_STOP_REASONS, null, cv)
-            // myHelper.log("StopReasons-inserID:$insertID")
+            val insertedID = db.replace(TABLE_STOP_REASONS, null, cv)
+            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -690,7 +693,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         
         val db = this.writableDatabase
         val cv = ContentValues()
-        
+        val tableName = TABLE_MATERIALS
         for (datum in data) {
             cv.put(COL_ID, datum.id)
             cv.put(COL_ORG_ID, datum.orgId)
@@ -700,8 +703,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_STATUS, datum.status)
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
-            db.replace(TABLE_MATERIALS, null, cv)
-            // myHelper.log("Materials-inserID:$insertID")
+            val insertedID = db.replace(tableName, null, cv)
+            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -709,7 +712,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         
         val db = this.writableDatabase
         val cv = ContentValues()
-        
+        val tableName = TABLE_MACHINES
         for (datum in data) {
             cv.put(COL_ID, datum.id)
             cv.put(COL_ORG_ID, datum.orgId)
@@ -722,9 +725,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_STATUS, datum.status)
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
-            db.replace(TABLE_MACHINES, null, cv)
-//            // myHelper.log("Machines--datum:${datum}")
-            // myHelper.log("Machines-inserID:$insertID")
+            val insertedID = db.replace(tableName, null, cv)
+            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -732,7 +734,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         
         val db = this.writableDatabase
         val cv = ContentValues()
-        
+        val tableName = TABLE_LOCATIONS
         for (datum in data) {
             cv.put(COL_ID, datum.id)
             cv.put(COL_ORG_ID, datum.orgId)
@@ -741,8 +743,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_STATUS, datum.status)
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
-            db.replace(TABLE_LOCATIONS, null, cv)
-            // myHelper.log("Locations-inserID:$insertID")
+            val insertedID = db.replace(tableName, null, cv)
+            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     

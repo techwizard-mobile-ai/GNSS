@@ -1,6 +1,7 @@
 package app.vsptracker.apis.serverSync
 
 import app.vsptracker.apis.delay.EWork
+import app.vsptracker.apis.operators.OperatorAPI
 import app.vsptracker.apis.trip.MyData
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
@@ -24,12 +25,17 @@ class ServerSyncAPI : Serializable {
     @Expose
     var myEWorkList = ArrayList<EWork>()
     
+    @SerializedName("operatorapi_list")
+    @Expose
+    var operatorAPIList = ArrayList<OperatorAPI>()
+    
     override fun toString(): String {
         return "\n\nServerSyncAPI(" +
                 "type=$type, " +
                 "name='$name', " +
                 "myDataList=$myDataList, " +
-                "myEWorkList=$myEWorkList" +
+                "myEWorkList=$myEWorkList, " +
+                "operatorAPIList=$operatorAPIList" +
                 ")"
     }
 }

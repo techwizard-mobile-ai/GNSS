@@ -9,6 +9,7 @@ import app.vsptracker.apis.delay.EWorkResponse
 import app.vsptracker.apis.operators.OperatorAPI
 import app.vsptracker.apis.operators.OperatorResponse
 import app.vsptracker.apis.serverSync.ServerSyncAPI
+import app.vsptracker.apis.serverSync.ServerSyncResponse
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.apis.trip.MyDataResponse
 import app.vsptracker.classes.Material
@@ -69,7 +70,98 @@ class MyDataPushSave(private val context: Context) {
      * Old data will be replaced with new one.
      */
     fun fetchOrgData() {
-        fetchMachinesAutoLogouts()
+//        fetchMachinesAutoLogouts()
+        getServerSync()
+    }
+    
+    /**
+     * This single API call will be used for getting all data from Server.
+     * It has replaced 11 API calls with single Call and more Sync Data calls
+     * can be added in this function.
+     * It will reduce Internet Usage and User Wait time by 11 times.
+     */
+    private fun getServerSync() {
+        val call = this.retrofitAPI.getServerSync(
+            myHelper.getLoginAPI().org_id,
+            myHelper.getLoginAPI().auth_token,
+            myHelper.getOperatorAPI().id,
+            myHelper.getDeviceDetailsString()
+        )
+        call.enqueue(object : retrofit2.Callback<ServerSyncResponse> {
+            override fun onResponse(
+                call: retrofit2.Call<ServerSyncResponse>,
+                response: retrofit2.Response<ServerSyncResponse>
+            ) {
+                myHelper.log("Response:$response")
+                val responseBody = response.body()
+                if (responseBody!!.success ) {
+                    val getServerSyncData = responseBody.get_data
+                    getServerSyncData.forEach { serverSyncAPI ->
+                        when (serverSyncAPI.type) {
+                            1 -> {
+                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
+                                db.insertMachinesAutoLogouts(serverSyncAPI.operatorAPIList)
+                            }
+                            2 -> {
+                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
+                                db.insertMachinesTasks(serverSyncAPI.operatorAPIList)
+                            }
+                            3 -> {
+                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
+                                db.insertMaterials(serverSyncAPI.operatorAPIList)
+                            }
+                            4 -> {
+                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
+                                db.insertLocations(serverSyncAPI.operatorAPIList)
+                            }
+                            5 -> {
+                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
+                                db.insertMachines(serverSyncAPI.operatorAPIList)
+                            }
+                            6 -> {
+                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
+                                db.insertStopReasons(serverSyncAPI.operatorAPIList)
+                            }
+                            7 -> {
+                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
+                                db.insertMachinesPlants(serverSyncAPI.operatorAPIList)
+                            }
+                            8 -> {
+                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
+                                db.insertMachinesBrands(serverSyncAPI.operatorAPIList)
+                            }
+                            9 -> {
+                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
+                                db.insertMachinesTypes(serverSyncAPI.operatorAPIList)
+                            }
+                            10 -> {
+                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
+                                db.insertSites(serverSyncAPI.operatorAPIList)
+                            }
+                            11 -> {
+                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
+                                db.insertOperators(serverSyncAPI.operatorAPIList)
+                            }
+                        }
+                    }
+                    myHelper.hideProgressBar()
+                    when {
+                        !isBackgroundCall -> {
+                            val intent = Intent(context, OperatorLoginActivity::class.java)
+                            context.startActivity(intent)
+                        }
+                    }
+                } else {
+                    myHelper.hideProgressBar()
+                    myHelper.toast(responseBody.message)
+                }
+            }
+            
+            override fun onFailure(call: retrofit2.Call<ServerSyncResponse>, t: Throwable) {
+                myHelper.hideProgressBar()
+                myHelper.log("Failure" + t.message)
+            }
+        })
     }
     
     /**
@@ -77,7 +169,7 @@ class MyDataPushSave(private val context: Context) {
      * This Logout Time is different for each Site and each Machine Type.
      * After inactivity of Operator, Logout function will be called and required actions will be taken.
      */
-    private fun fetchMachinesAutoLogouts() {
+ /*   private fun fetchMachinesAutoLogouts() {
         val call = this.retrofitAPI.getMachinesAutoLogouts(
             myHelper.getLoginAPI().org_id,
             myHelper.getLoginAPI().auth_token,
@@ -106,7 +198,7 @@ class MyDataPushSave(private val context: Context) {
                 myHelper.log("Failure" + t.message)
             }
         })
-    }
+    }*/
     
     /**
      * No Need to Sync this data as It will not work properly when Operator don't have Internet connection
@@ -142,7 +234,7 @@ class MyDataPushSave(private val context: Context) {
         })
     }*/
     
-    private fun fetchMachinesTasks() {
+/*    private fun fetchMachinesTasks() {
         val call = this.retrofitAPI.getMachinesTasks(
             myHelper.getLoginAPI().org_id,
             myHelper.getLoginAPI().auth_token
@@ -461,7 +553,7 @@ class MyDataPushSave(private val context: Context) {
                 }
             }
         })
-    }
+    }*/
     
     fun pushInsertDelay(eWork: EWork) {
 //        when {

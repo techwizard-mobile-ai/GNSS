@@ -20,6 +20,10 @@ class ServerSyncResponse {
     @Expose
     val data = ServerSyncDataAPI()
     
+    @SerializedName("get_data")
+    @Expose
+    val get_data = ArrayList<ServerSyncAPI>()
+    
     @SerializedName("message")
     @Expose
     val message: String = ""
@@ -30,6 +34,7 @@ class ServerSyncResponse {
                 "operatorID=$operatorID, " +
                 "deviceDetails='$deviceDetails', " +
                 "data=$data, " +
+                "get_data=$get_data, " +
                 "message='$message'" +
                 ")"
     }

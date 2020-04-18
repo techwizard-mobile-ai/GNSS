@@ -80,10 +80,30 @@ class OperatorAPI : Serializable {
     @SerializedName("updated_at")
     @Expose
     var updatedAt: String? = null
-
+    
     override fun toString(): String {
-        return "OperatorAPI(id=$id, name=$name, pin=$pin, status=$status, auto_logout_time=$autoLogoutTime)"
+        return "OperatorAPI(" +
+                "id=$id, " +
+                "orgId=$orgId, " +
+                "siteId=$siteId, " +
+                "machineTypeId=$machineTypeId, " +
+                "machineBrandId=$machineBrandId, " +
+                "machinePlantId=$machinePlantId, " +
+                "machineTaskId=$machineTaskId, " +
+                "name=$name, " +
+                "siteName=$siteName, " +
+                "number=$number, " +
+                "totalHours=$totalHours, " +
+                "autoLogoutTime=$autoLogoutTime, " +
+                "pin=$pin, " +
+                "status=$status, " +
+                "isDeleted=$isDeleted, " +
+                "authToken=$authToken, " +
+                "rememberToken=$rememberToken, " +
+                "createdAt=$createdAt, " +
+                "updatedAt=$updatedAt" +
+                ")"
     }
-
-
+    
+    
 }

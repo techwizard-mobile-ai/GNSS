@@ -35,6 +35,7 @@ import app.vsptracker.activities.truck.TUnloadAfterActivity
 import app.vsptracker.apis.RetrofitAPI
 import app.vsptracker.apis.login.AppAPI
 import app.vsptracker.apis.login.LoginAPI
+import app.vsptracker.apis.operators.OperatorAPI
 import app.vsptracker.apis.serverSync.ServerSyncAPI
 import app.vsptracker.apis.serverSync.ServerSyncDataAPI
 import app.vsptracker.apis.trip.MyData
@@ -720,6 +721,10 @@ class MyHelper(var TAG: String, val context: Context) {
         catch (exception: Exception) {
             log("showDialogException:$exception")
         }
+    }
+    
+    fun printInsertion(tableName: String, insertedID: Long, datum: OperatorAPI) {
+        log("$tableName--$insertedID--$datum")
     }
 
 
