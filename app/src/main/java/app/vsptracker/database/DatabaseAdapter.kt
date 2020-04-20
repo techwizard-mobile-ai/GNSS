@@ -4,7 +4,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
 import app.vsptracker.apis.delay.EWork
 import app.vsptracker.apis.operators.OperatorAPI
 import app.vsptracker.apis.trip.MyData
@@ -32,6 +31,7 @@ const val TABLE_MACHINES_HOURS = "machines_hours"
 const val TABLE_MACHINES_AUTO_LOGOUTS = "machines_auto_logouts"
 const val TABLE_OPERATORS_HOURS = "operators_hours"
 const val TABLE_QUESTIONS_TYPES = "questions_types"
+const val TABLE_QUESTIONS = "questions"
 
 const val COL_TIME = "time"
 const val COL_DATE = "date"
@@ -73,6 +73,7 @@ const val COL_TRIP_TYPE = "trip_type"
 const val COL_TRIP0_ID = "trip0_id"
 const val COL_MACHINE_ID = "machine_id"
 const val COL_LOAD_TYPE_ID = "load_type_id"
+
 //const val COL_MACHINE_STOPPED_REASON = "machine_stop_reason"
 const val COL_MACHINE_STOP_REASON_ID = "machine_stop_reason_id"
 
@@ -83,6 +84,7 @@ const val COL_IS_START_HOURS_CUSTOM = "is_start_hours_custom"
 const val COL_IS_TOTAL_HOURS_CUSTOM = "is_total_hours_custom"
 
 const val COL_NUMBER = "number"
+
 // isSync 0 = Not Uploaded to Server
 // isSync 1 = Uploaded to Server
 // isSync 2 = Uploaded to Server by Export
@@ -91,13 +93,16 @@ const val COL_IS_DAY_WORKS = "is_day_works"
 const val COL_PIN = "pin"
 const val COL_SITE_ID = "site_id"
 const val COL_MACHINE_PLANT_ID = "machine_plant_id"
+
 // Auto Logout Time is in Minutes and col Type is Text
 const val COL_AUTO_LOGOUT_TIME = "auto_logout_time"
 const val COL_ANSWERS_OPTIONS = "answers_options"
 const val COL_TOTAL_CORRECT_ANSWERS = "total_correct_answers"
+const val COL_ADMIN_QUESTIONS_TYPES_ID = "admin_questions_types_id"
+const val COL_ANSWERS_DATA = "answers_data"
 
 
-val createMachinesHoursTable = "CREATE TABLE IF NOT EXISTS  $TABLE_MACHINES_HOURS (" +
+const val createMachinesHoursTable = "CREATE TABLE IF NOT EXISTS  $TABLE_MACHINES_HOURS (" +
         "$COL_ID  INTEGER PRIMARY KEY AUTOINCREMENT," +
         "$COL_ORG_ID INTEGER, " +
         "$COL_SITE_ID INTEGER, " +
@@ -121,7 +126,7 @@ val createMachinesHoursTable = "CREATE TABLE IF NOT EXISTS  $TABLE_MACHINES_HOUR
         ")"
 
 
-val createMachinesTasksTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES_TASKS ( " +
+const val createMachinesTasksTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES_TASKS ( " +
         "$COL_ID INTEGER PRIMARY KEY, " +
         "$COL_ORG_ID INTEGER, " +
         "$COL_SITE_ID INTEGER, " +
@@ -132,7 +137,7 @@ val createMachinesTasksTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES_TASKS
         "$COL_IS_DELETED INTEGER" +
         " )"
 
-val createMachinesPlantsTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES_PLANTS ( " +
+const val createMachinesPlantsTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES_PLANTS ( " +
         "$COL_ID INTEGER PRIMARY KEY, " +
         "$COL_ORG_ID INTEGER, " +
         "$COL_MACHINE_TYPE_ID INTEGER, " +
@@ -142,7 +147,7 @@ val createMachinesPlantsTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES_PLAN
         "$COL_IS_DELETED INTEGER" +
         " )"
 
-val createMachinesBrandsTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES_BRANDS ( " +
+const val createMachinesBrandsTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES_BRANDS ( " +
         "$COL_ID INTEGER PRIMARY KEY, " +
         "$COL_MACHINE_TYPE_ID INTEGER, " +
         "$COL_NAME TEXT, " +
@@ -150,21 +155,21 @@ val createMachinesBrandsTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES_BRAN
         "$COL_IS_DELETED INTEGER" +
         " )"
 
-val createMachinesTypesTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES_TYPES ( " +
+const val createMachinesTypesTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES_TYPES ( " +
         "$COL_ID INTEGER PRIMARY KEY, " +
         "$COL_NAME TEXT, " +
         "$COL_STATUS INTEGER, " +
         "$COL_IS_DELETED INTEGER" +
         " )"
 
-val createSitesTable = "CREATE TABLE IF NOT EXISTS $TABLE_SITES ( " +
+const val createSitesTable = "CREATE TABLE IF NOT EXISTS $TABLE_SITES ( " +
         "$COL_ID INTEGER PRIMARY KEY, " +
         "$COL_NAME TEXT, " +
         "$COL_STATUS INTEGER, " +
         "$COL_IS_DELETED INTEGER" +
         " )"
 
-val createOperatorsTable = "CREATE TABLE IF NOT EXISTS $TABLE_OPERATORS ( " +
+const val createOperatorsTable = "CREATE TABLE IF NOT EXISTS $TABLE_OPERATORS ( " +
         "$COL_ID INTEGER PRIMARY KEY, " +
         "$COL_ORG_ID INTEGER, " +
         "$COL_NAME TEXT, " +
@@ -173,7 +178,7 @@ val createOperatorsTable = "CREATE TABLE IF NOT EXISTS $TABLE_OPERATORS ( " +
         "$COL_IS_DELETED INTEGER" +
         " )"
 
-val createStopReasonsTable = "CREATE TABLE IF NOT EXISTS $TABLE_STOP_REASONS (" +
+const val createStopReasonsTable = "CREATE TABLE IF NOT EXISTS $TABLE_STOP_REASONS (" +
         "$COL_ID INTEGER PRIMARY KEY, " +
         "$COL_ORG_ID INTEGER, " +
         "$COL_NAME TEXT, " +
@@ -181,7 +186,7 @@ val createStopReasonsTable = "CREATE TABLE IF NOT EXISTS $TABLE_STOP_REASONS (" 
         "$COL_IS_DELETED INTEGER" +
         " )"
 
-val createMaterialsTable = "CREATE TABLE IF NOT EXISTS $TABLE_MATERIALS (" +
+const val createMaterialsTable = "CREATE TABLE IF NOT EXISTS $TABLE_MATERIALS (" +
         "$COL_ID INTEGER PRIMARY KEY, " +
         "$COL_ORG_ID INTEGER, " +
         "$COL_SITE_ID INTEGER, " +
@@ -192,7 +197,7 @@ val createMaterialsTable = "CREATE TABLE IF NOT EXISTS $TABLE_MATERIALS (" +
         " )"
 
 
-val createLocationsTable = "CREATE TABLE IF NOT EXISTS $TABLE_LOCATIONS (" +
+const val createLocationsTable = "CREATE TABLE IF NOT EXISTS $TABLE_LOCATIONS (" +
         "$COL_ID INTEGER PRIMARY KEY, " +
         "$COL_ORG_ID INTEGER, " +
         "$COL_SITE_ID INTEGER, " +
@@ -202,7 +207,7 @@ val createLocationsTable = "CREATE TABLE IF NOT EXISTS $TABLE_LOCATIONS (" +
         " )"
 
 
-val createMachinesStopsTable = "CREATE TABLE IF NOT EXISTS  $TABLE_MACHINES_STOPS (" +
+const val createMachinesStopsTable = "CREATE TABLE IF NOT EXISTS  $TABLE_MACHINES_STOPS (" +
         "$COL_ID  INTEGER PRIMARY KEY AUTOINCREMENT," +
         "$COL_ORG_ID INTEGER, " +
         "$COL_SITE_ID INTEGER, " +
@@ -222,7 +227,7 @@ val createMachinesStopsTable = "CREATE TABLE IF NOT EXISTS  $TABLE_MACHINES_STOP
         ")"
 
 
-val createTripTable = "CREATE TABLE IF NOT EXISTS  $TABLE_TRIP (" +
+const val createTripTable = "CREATE TABLE IF NOT EXISTS  $TABLE_TRIP (" +
         "$COL_ID  INTEGER PRIMARY KEY AUTOINCREMENT," +
         "$COL_ORG_ID INTEGER, " +
         "$COL_SITE_ID INTEGER, " +
@@ -249,7 +254,7 @@ val createTripTable = "CREATE TABLE IF NOT EXISTS  $TABLE_TRIP (" +
         "$COL_IS_DAY_WORKS  INTEGER" +
         ")"
 
-val createWaitsTable = "CREATE TABLE IF NOT EXISTS $TABLE_WAITS ( " +
+const val createWaitsTable = "CREATE TABLE IF NOT EXISTS $TABLE_WAITS ( " +
         "$COL_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
         "$COL_ORG_ID INTEGER, " +
         "$COL_SITE_ID INTEGER, " +
@@ -267,7 +272,7 @@ val createWaitsTable = "CREATE TABLE IF NOT EXISTS $TABLE_WAITS ( " +
         "$COL_IS_DAY_WORKS  INTEGER" +
         ")"
 
-val createEWorkActionOffloadingTable = "CREATE TABLE IF NOT EXISTS $TABLE_E_WORK_ACTION_OFFLOADING ( " +
+const val createEWorkActionOffloadingTable = "CREATE TABLE IF NOT EXISTS $TABLE_E_WORK_ACTION_OFFLOADING ( " +
         "$COL_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
         "$COL_ORG_ID INTEGER, " +
         "$COL_SITE_ID INTEGER, " +
@@ -283,7 +288,7 @@ val createEWorkActionOffloadingTable = "CREATE TABLE IF NOT EXISTS $TABLE_E_WORK
         "$COL_IS_DAY_WORKS  INTEGER" +
         ")"
 
-val createEWorkTable = "CREATE TABLE IF NOT EXISTS $TABLE_E_WORK ( " +
+const val createEWorkTable = "CREATE TABLE IF NOT EXISTS $TABLE_E_WORK ( " +
         "$COL_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
         "$COL_ORG_ID INTEGER, " +
         "$COL_SITE_ID INTEGER, " +
@@ -305,7 +310,7 @@ val createEWorkTable = "CREATE TABLE IF NOT EXISTS $TABLE_E_WORK ( " +
         "$COL_IS_DAY_WORKS  INTEGER" +
         ")"
 
-val createLoadHistoryTable = "CREATE TABLE IF NOT EXISTS " + TABLE_E_LOAD_HISTORY + " (" +
+const val createLoadHistoryTable = "CREATE TABLE IF NOT EXISTS " + TABLE_E_LOAD_HISTORY + " (" +
         "$COL_ID  INTEGER PRIMARY KEY AUTOINCREMENT," +
         "$COL_ORG_ID INTEGER, " +
         "$COL_SITE_ID INTEGER, " +
@@ -327,7 +332,7 @@ val createLoadHistoryTable = "CREATE TABLE IF NOT EXISTS " + TABLE_E_LOAD_HISTOR
         "$COL_IS_DAY_WORKS  INTEGER" +
         ")"
 
-val createMachinesTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES ( " +
+const val createMachinesTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES ( " +
         "$COL_ID INTEGER PRIMARY KEY, " +
         "$COL_ORG_ID INTEGER, " +
         "$COL_SITE_ID INTEGER, " +
@@ -341,7 +346,7 @@ val createMachinesTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES ( " +
         " )"
 
 
-val createMachinesAutoLogoutsTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES_AUTO_LOGOUTS ( " +
+const val createMachinesAutoLogoutsTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES_AUTO_LOGOUTS ( " +
         "$COL_ID INTEGER PRIMARY KEY, " +
         "$COL_ORG_ID INTEGER, " +
         "$COL_SITE_ID INTEGER, " +
@@ -351,7 +356,7 @@ val createMachinesAutoLogoutsTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES
         "$COL_IS_DELETED INTEGER" +
         " )"
 
-val createOperatorsHoursTable = "CREATE TABLE IF NOT EXISTS  $TABLE_OPERATORS_HOURS (" +
+const val createOperatorsHoursTable = "CREATE TABLE IF NOT EXISTS  $TABLE_OPERATORS_HOURS (" +
         "$COL_ID  INTEGER PRIMARY KEY AUTOINCREMENT," +
         "$COL_ORG_ID INTEGER, " +
         "$COL_SITE_ID INTEGER, " +
@@ -375,7 +380,18 @@ const val createQuestionsTypesTable = "CREATE TABLE IF NOT EXISTS  $TABLE_QUESTI
         "$COL_STATUS INTEGER, " +
         "$COL_IS_DELETED INTEGER" +
         ")"
+const val createQuestionsTable = "CREATE TABLE IF NOT EXISTS  $TABLE_QUESTIONS (" +
+        "$COL_ID  INTEGER PRIMARY KEY ," +
+        "$COL_ORG_ID INTEGER," +
+        "$COL_NAME  TEXT," +
+        "$COL_ADMIN_QUESTIONS_TYPES_ID INTEGER," +
+        "$COL_ANSWERS_DATA TEXT," +
+        "$COL_STATUS INTEGER, " +
+        "$COL_IS_DELETED INTEGER" +
+        ")"
 
+
+const val DROP_TABLE_QUESTIONS = "DROP TABLE IF EXISTS $TABLE_QUESTIONS"
 const val DROP_TABLE_MACHINES_HOURS = "DROP TABLE IF EXISTS $TABLE_MACHINES_HOURS"
 const val DROP_TABLE_MACHINES_TASKS = "DROP TABLE IF EXISTS $TABLE_MACHINES_TASKS"
 const val DROP_TABLE_MACHINES_PLANTS = "DROP TABLE IF EXISTS $TABLE_MACHINES_PLANTS"
@@ -408,6 +424,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
     
     override fun onCreate(db: SQLiteDatabase?) {
         
+        db?.execSQL(createQuestionsTable)
         db?.execSQL(createQuestionsTypesTable)
         db?.execSQL(createOperatorsHoursTable)
         db?.execSQL(createMachinesAutoLogoutsTable)
@@ -432,6 +449,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
     
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         
+        db?.execSQL(DROP_TABLE_QUESTIONS)
         db?.execSQL(DROP_TABLE_QUESTIONS_TYPES)
         db?.execSQL(DROP_TABLE_OPERATORS_HOURS)
         db?.execSQL(DROP_TABLE_MACHINES_AUTO_LOGOUTS)
@@ -453,6 +471,26 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         db?.execSQL(DROP_TABLE_E_WORK)
         db?.execSQL(DROP_TABLE_E_LOAD_HISTORY)
         onCreate(db)
+    }
+    
+    fun insertQuestions(data: ArrayList<MyData>) {
+        
+        val db = this.writableDatabase
+        val cv = ContentValues()
+        val tableName = TABLE_QUESTIONS
+        
+        for (datum in data) {
+            cv.put(COL_ID, datum.id)
+            cv.put(COL_ORG_ID, datum.orgId)
+            cv.put(COL_ADMIN_QUESTIONS_TYPES_ID, datum.admin_questions_types_id)
+            cv.put(COL_NAME, datum.name)
+            cv.put(COL_ANSWERS_DATA, datum.answers_data)
+            cv.put(COL_STATUS, datum.status)
+            cv.put(COL_IS_DELETED, datum.isDeleted)
+            
+            val insertedID = db.replace(tableName, null, cv)
+            myHelper.printInsertion(tableName, insertedID, datum)
+        }
     }
     
     fun insertQuestionsTypes(data: ArrayList<MyData>) {
@@ -495,7 +533,6 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         cv.put(COL_IS_DAY_WORKS, myData.isDayWorks)
         return db.insert(TABLE_OPERATORS_HOURS, null, cv)
     }
-    
     
     /**
      * Save Machines Logout Times in Database.
@@ -555,7 +592,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         cv.put(COL_IS_SYNC, datum.isSync)
         return db.insert(TABLE_MACHINES_HOURS, null, cv)
     }
-    
+
 /*    fun insertMachinesHours(data: ArrayList<MyData>) {
         
         
@@ -887,7 +924,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
     }
     
     fun insertDelay(eWork: EWork): Long {
-        
+
 //        val time = System.currentTimeMillis()
 ////        eWork.time = time.toString()
 //
@@ -1029,6 +1066,53 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return db.insert(TABLE_E_LOAD_HISTORY, null, cv)
     }
     
+    fun getQuestionByID(id: Int): MyData {
+        val db = this.readableDatabase
+        
+        val query =
+            "Select * from $TABLE_QUESTIONS WHERE $COL_ID = $id "
+        val result = db.rawQuery(query, null)
+        val datum = MyData()
+        if (result.moveToFirst()) {
+            datum.id = result.getInt(result.getColumnIndex(COL_ID))
+            datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+            datum.admin_questions_types_id = result.getInt(result.getColumnIndex(COL_ADMIN_QUESTIONS_TYPES_ID))
+            datum.name = result.getString(result.getColumnIndex(COL_NAME))
+            datum.answers_data = result.getString(result.getColumnIndex(COL_ANSWERS_DATA))
+            datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+            datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+        }
+        result.close()
+        db.close()
+        return datum
+    }
+    
+    fun getQuestionsByIDs(ids: ArrayList<Int>): ArrayList<MyData> {
+        val list: ArrayList<MyData> = ArrayList()
+        val db = this.readableDatabase
+        
+        val query =
+            "Select * from $TABLE_QUESTIONS WHERE $COL_ID  IN $ids "
+        val result = db.rawQuery(query, null)
+        
+        if (result.moveToFirst()) {
+            do {
+                val datum = MyData()
+                datum.id = result.getInt(result.getColumnIndex(COL_ID))
+                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+                datum.admin_questions_types_id = result.getInt(result.getColumnIndex(COL_ADMIN_QUESTIONS_TYPES_ID))
+                datum.name = result.getString(result.getColumnIndex(COL_NAME))
+                datum.answers_data = result.getString(result.getColumnIndex(COL_ANSWERS_DATA))
+                datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+                list.add(datum)
+            } while (result.moveToNext())
+        }
+        result.close()
+        db.close()
+        return list
+    }
+    
     fun getQuestionsTypesByID(id: Int): MyData {
         
         val db = this.readableDatabase
@@ -1045,7 +1129,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             datum.total_correct_answers = result.getInt(result.getColumnIndex(COL_TOTAL_CORRECT_ANSWERS))
             datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
             datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
-
+            
         }
         
         result.close()
@@ -1595,16 +1679,16 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val query =
             "Select * from $TABLE_STOP_REASONS  WHERE $COL_ID = $id  ORDER BY $COL_ID"
         val result = db.rawQuery(query, null)
-    
-    
+        
+        
         val datum = Material()
         if (result.moveToFirst()) {
 //            do {
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.name = result.getString(result.getColumnIndex(COL_NAME))
-                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
-                
+            datum.id = result.getInt(result.getColumnIndex(COL_ID))
+            datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+            datum.name = result.getString(result.getColumnIndex(COL_NAME))
+            datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+
 //            } while (result.moveToNext())
         }
         
@@ -2413,7 +2497,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return db.update(TABLE_MACHINES_STOPS, cv, "$COL_ID = ${myData.recordID}", null)
         
     }
-    
+
 /*    fun updateMachineHours(datum: MyData): Int {
         
         val db = this.writableDatabase

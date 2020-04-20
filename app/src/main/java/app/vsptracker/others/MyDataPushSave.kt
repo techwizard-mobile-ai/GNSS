@@ -143,8 +143,12 @@ class MyDataPushSave(private val context: Context) {
                                 db.insertOperators(serverSyncAPI.operatorAPIList)
                             }
                             12 -> {
-                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
+                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.myDataList.size}")
                                 db.insertQuestionsTypes(serverSyncAPI.myDataList)
+                            }
+                            13 -> {
+                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.myDataList.size}")
+                                db.insertQuestions(serverSyncAPI.myDataList)
                             }
                         }
                     }

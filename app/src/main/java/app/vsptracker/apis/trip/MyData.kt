@@ -213,13 +213,22 @@ class MyData : Serializable {
     @Expose
     var total_correct_answers: Int = 0
     
+    @SerializedName("admin_questions_types_id")
+    @Expose
+    var admin_questions_types_id: Int = 0
+    
+    @SerializedName("answers_data")
+    @Expose
+    var answers_data: String? = null
+    
     var isMapOpened: Boolean = false
     override fun toString(): String {
         return "MyData(" +
                 "id=$id, " +
+                "org_id=$orgId, " +
                 "name=$name, " +
-                "answers_options=$answers_options, " +
-                "total_correct_answers=$total_correct_answers, " +
+                "admin_questions_types_id=$admin_questions_types_id, " +
+                "answers_data=$answers_data, " +
                 "status=$status, " +
                 "is_deleted=$isDeleted, " +
                 ")"
