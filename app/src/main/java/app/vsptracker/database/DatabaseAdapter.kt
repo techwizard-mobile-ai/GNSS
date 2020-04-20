@@ -105,6 +105,7 @@ const val COL_ANSWERS_DATA = "answers_data"
 const val COL_DAYS = "days"
 const val COL_ADMIN_CHECKFORMS_SCHEDULES_ID = "admin_checkforms_schedules_id"
 const val COL_QUESTIONS_DATA = "questions_data"
+const val COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE = "admin_checkforms_schedules_value"
 
 
 const val createMachinesHoursTable = "CREATE TABLE IF NOT EXISTS  $TABLE_MACHINES_HOURS (" +
@@ -411,6 +412,7 @@ const val createAdminCheckFormsTable = "CREATE TABLE IF NOT EXISTS  $TABLE_ADMIN
         "$COL_MACHINE_TYPE_ID INTEGER, " +
         "$COL_MACHINE_ID INTEGER, " +
         "$COL_ADMIN_CHECKFORMS_SCHEDULES_ID INTEGER, " +
+        "$COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE  TEXT," +
         "$COL_NAME  TEXT," +
         "$COL_QUESTIONS_DATA TEXT," +
         "$COL_STATUS INTEGER, " +
@@ -519,6 +521,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
             cv.put(COL_MACHINE_ID, datum.machineId)
             cv.put(COL_ADMIN_CHECKFORMS_SCHEDULES_ID, datum.admin_checkforms_schedules_id)
+            cv.put(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE, datum.admin_checkforms_schedules_value)
             cv.put(COL_NAME, datum.name)
             cv.put(COL_QUESTIONS_DATA, datum.questions_data)
             cv.put(COL_STATUS, datum.status)
@@ -1157,6 +1160,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
                 datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
                 datum.admin_checkforms_schedules_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_ID))
+                datum.admin_checkforms_schedules_value = result.getString(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE))
                 datum.name = result.getString(result.getColumnIndex(COL_NAME))
                 datum.questions_data = result.getString(result.getColumnIndex(COL_QUESTIONS_DATA))
                 datum.status = result.getInt(result.getColumnIndex(COL_STATUS))

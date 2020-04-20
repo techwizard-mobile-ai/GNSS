@@ -8,7 +8,7 @@ import app.vsptracker.R
 import com.google.android.material.navigation.NavigationView
 
 class CheckFormsActivity : BaseActivity(), View.OnClickListener {
-    
+    private val tag = this::class.java.simpleName
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     
@@ -16,6 +16,9 @@ class CheckFormsActivity : BaseActivity(), View.OnClickListener {
         layoutInflater.inflate(R.layout.activity_check_forms, contentFrameLayout)
         val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
         navigationView.menu.getItem(10).isChecked = true
+    
+        myHelper.setTag(tag)
+        myHelper.log(db.getAdminCheckForms().toString())
     }
     override fun onClick(view: View?) {
         when (view!!.id) {
