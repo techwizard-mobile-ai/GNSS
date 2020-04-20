@@ -142,6 +142,10 @@ class MyDataPushSave(private val context: Context) {
                                 myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
                                 db.insertOperators(serverSyncAPI.operatorAPIList)
                             }
+                            12 -> {
+                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
+                                db.insertQuestionsTypes(serverSyncAPI.myDataList)
+                            }
                         }
                     }
                     myHelper.hideProgressBar()

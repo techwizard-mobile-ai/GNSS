@@ -726,6 +726,10 @@ class MyHelper(var TAG: String, val context: Context) {
     fun printInsertion(tableName: String, insertedID: Long, datum: OperatorAPI) {
         log("$tableName--$insertedID--$datum")
     }
+    
+    fun printInsertion(tableName: String, insertedID: Long, datum: MyData) {
+        log("$tableName--$insertedID--$datum")
+    }
 
 
 /*

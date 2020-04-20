@@ -196,19 +196,32 @@ class MyData : Serializable {
     @Expose
     var isSync: Int = 0
     
+    
+    @SerializedName("status")
+    @Expose
+    var status: Int? = null
+    
+    @SerializedName("is_deleted")
+    @Expose
+    var isDeleted: Int? = null
+    
+    @SerializedName("answers_options")
+    @Expose
+    var answers_options: Int = 0
+    
+    @SerializedName("total_correct_answers")
+    @Expose
+    var total_correct_answers: Int = 0
+    
     var isMapOpened: Boolean = false
     override fun toString(): String {
         return "MyData(" +
                 "id=$id, " +
-                "orgId=$orgId, " +
-                "siteId=$siteId, " +
-                "loading_machine_id=$loading_machine_id, " +
-                "loading_material_id=$loading_material_id, " +
-                "back_loading_material_id=$back_loading_material_id, " +
-                "loading_location_id=$loading_location_id, " +
-                "back_loading_location_id=$back_loading_location_id, " +
-                "unloading_task_id=$unloading_task_id, " +
-                "back_unloading_task_id=$back_unloading_task_id" +
+                "name=$name, " +
+                "answers_options=$answers_options, " +
+                "total_correct_answers=$total_correct_answers, " +
+                "status=$status, " +
+                "is_deleted=$isDeleted, " +
                 ")"
     }
     

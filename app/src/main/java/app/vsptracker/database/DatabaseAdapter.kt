@@ -31,6 +31,7 @@ const val TABLE_MACHINES_TASKS = "machines_tasks"
 const val TABLE_MACHINES_HOURS = "machines_hours"
 const val TABLE_MACHINES_AUTO_LOGOUTS = "machines_auto_logouts"
 const val TABLE_OPERATORS_HOURS = "operators_hours"
+const val TABLE_QUESTIONS_TYPES = "questions_types"
 
 const val COL_TIME = "time"
 const val COL_DATE = "date"
@@ -92,6 +93,288 @@ const val COL_SITE_ID = "site_id"
 const val COL_MACHINE_PLANT_ID = "machine_plant_id"
 // Auto Logout Time is in Minutes and col Type is Text
 const val COL_AUTO_LOGOUT_TIME = "auto_logout_time"
+const val COL_ANSWERS_OPTIONS = "answers_options"
+const val COL_TOTAL_CORRECT_ANSWERS = "total_correct_answers"
+
+
+val createMachinesHoursTable = "CREATE TABLE IF NOT EXISTS  $TABLE_MACHINES_HOURS (" +
+        "$COL_ID  INTEGER PRIMARY KEY AUTOINCREMENT," +
+        "$COL_ORG_ID INTEGER, " +
+        "$COL_SITE_ID INTEGER, " +
+        "$COL_MACHINE_TYPE_ID  INTEGER," +
+        "$COL_MACHINE_ID  INTEGER," +
+        "$COL_MACHINE_STOP_REASON_ID  INTEGER," +
+        "$COL_LOADING_GPS_LOCATION  TEXT," +
+        "$COL_UNLOADING_GPS_LOCATION  TEXT," +
+        "$COL_USER_ID  TEXT," +
+        "$COL_START_TIME  INTEGER," +
+        "$COL_END_TIME INTEGER," +
+        "$COL_TOTAL_TIME INTEGER," +
+        "$COL_START_HOURS TEXT," +
+        "$COL_IS_START_HOURS_CUSTOM INTEGER," +
+        "$COL_TOTAL_HOURS TEXT," +
+        "$COL_IS_TOTAL_HOURS_CUSTOM INTEGER," +
+        "$COL_DATE  TEXT," +
+        "$COL_TIME  INTEGER," +
+        "$COL_IS_SYNC INTEGER," +
+        "$COL_IS_DAY_WORKS  INTEGER" +
+        ")"
+
+
+val createMachinesTasksTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES_TASKS ( " +
+        "$COL_ID INTEGER PRIMARY KEY, " +
+        "$COL_ORG_ID INTEGER, " +
+        "$COL_SITE_ID INTEGER, " +
+        "$COL_MACHINE_TYPE_ID INTEGER, " +
+        "$COL_MACHINE_TASK_ID INTEGER, " +
+        "$COL_NAME TEXT, " +
+        "$COL_STATUS INTEGER, " +
+        "$COL_IS_DELETED INTEGER" +
+        " )"
+
+val createMachinesPlantsTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES_PLANTS ( " +
+        "$COL_ID INTEGER PRIMARY KEY, " +
+        "$COL_ORG_ID INTEGER, " +
+        "$COL_MACHINE_TYPE_ID INTEGER, " +
+        "$COL_MACHINE_BRAND_ID INTEGER, " +
+        "$COL_NAME TEXT, " +
+        "$COL_STATUS INTEGER, " +
+        "$COL_IS_DELETED INTEGER" +
+        " )"
+
+val createMachinesBrandsTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES_BRANDS ( " +
+        "$COL_ID INTEGER PRIMARY KEY, " +
+        "$COL_MACHINE_TYPE_ID INTEGER, " +
+        "$COL_NAME TEXT, " +
+        "$COL_STATUS INTEGER, " +
+        "$COL_IS_DELETED INTEGER" +
+        " )"
+
+val createMachinesTypesTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES_TYPES ( " +
+        "$COL_ID INTEGER PRIMARY KEY, " +
+        "$COL_NAME TEXT, " +
+        "$COL_STATUS INTEGER, " +
+        "$COL_IS_DELETED INTEGER" +
+        " )"
+
+val createSitesTable = "CREATE TABLE IF NOT EXISTS $TABLE_SITES ( " +
+        "$COL_ID INTEGER PRIMARY KEY, " +
+        "$COL_NAME TEXT, " +
+        "$COL_STATUS INTEGER, " +
+        "$COL_IS_DELETED INTEGER" +
+        " )"
+
+val createOperatorsTable = "CREATE TABLE IF NOT EXISTS $TABLE_OPERATORS ( " +
+        "$COL_ID INTEGER PRIMARY KEY, " +
+        "$COL_ORG_ID INTEGER, " +
+        "$COL_NAME TEXT, " +
+        "$COL_PIN TEXT, " +
+        "$COL_STATUS INTEGER, " +
+        "$COL_IS_DELETED INTEGER" +
+        " )"
+
+val createStopReasonsTable = "CREATE TABLE IF NOT EXISTS $TABLE_STOP_REASONS (" +
+        "$COL_ID INTEGER PRIMARY KEY, " +
+        "$COL_ORG_ID INTEGER, " +
+        "$COL_NAME TEXT, " +
+        "$COL_STATUS INTEGER, " +
+        "$COL_IS_DELETED INTEGER" +
+        " )"
+
+val createMaterialsTable = "CREATE TABLE IF NOT EXISTS $TABLE_MATERIALS (" +
+        "$COL_ID INTEGER PRIMARY KEY, " +
+        "$COL_ORG_ID INTEGER, " +
+        "$COL_SITE_ID INTEGER, " +
+        "$COL_MACHINE_TYPE_ID INTEGER, " +
+        "$COL_NAME TEXT, " +
+        "$COL_STATUS INTEGER, " +
+        "$COL_IS_DELETED INTEGER" +
+        " )"
+
+
+val createLocationsTable = "CREATE TABLE IF NOT EXISTS $TABLE_LOCATIONS (" +
+        "$COL_ID INTEGER PRIMARY KEY, " +
+        "$COL_ORG_ID INTEGER, " +
+        "$COL_SITE_ID INTEGER, " +
+        "$COL_NAME TEXT, " +
+        "$COL_STATUS INTEGER, " +
+        "$COL_IS_DELETED INTEGER" +
+        " )"
+
+
+val createMachinesStopsTable = "CREATE TABLE IF NOT EXISTS  $TABLE_MACHINES_STOPS (" +
+        "$COL_ID  INTEGER PRIMARY KEY AUTOINCREMENT," +
+        "$COL_ORG_ID INTEGER, " +
+        "$COL_SITE_ID INTEGER, " +
+        "$COL_MACHINE_TYPE_ID  INTEGER," +
+        "$COL_MACHINE_ID  INTEGER," +
+        "$COL_MACHINE_STOP_REASON_ID INTEGER, " +
+        "$COL_LOADING_GPS_LOCATION  TEXT," +
+        "$COL_UNLOADING_GPS_LOCATION  TEXT," +
+        "$COL_USER_ID  TEXT," +
+        "$COL_START_TIME  INTEGER," +
+        "$COL_END_TIME INTEGER," +
+        "$COL_TOTAL_TIME INTEGER," +
+        "$COL_DATE  TEXT," +
+        "$COL_TIME  INTEGER," +
+        "$COL_IS_SYNC  INTEGER," +
+        "$COL_IS_DAY_WORKS  INTEGER" +
+        ")"
+
+
+val createTripTable = "CREATE TABLE IF NOT EXISTS  $TABLE_TRIP (" +
+        "$COL_ID  INTEGER PRIMARY KEY AUTOINCREMENT," +
+        "$COL_ORG_ID INTEGER, " +
+        "$COL_SITE_ID INTEGER, " +
+        "$COL_TRIP_TYPE  INTEGER," +
+        "$COL_TRIP0_ID  TEXT," +
+        "$COL_MACHINE_TYPE_ID  INTEGER," +
+        "$COL_MACHINE_ID INTEGER," +
+        "$COL_LOADING_MACHINE_ID  INTEGER," +
+        "$COL_LOADING_MATERIAL_ID  INTEGER," +
+        "$COL_LOADING_LOCATION_ID  INTEGER," +
+        "$COL_LOADING_GPS_LOCATION  TEXT," +
+        "$COL_UNLOADING_GPS_LOCATION  TEXT," +
+        "$COL_USER_ID  TEXT," +
+        "$COL_START_TIME  INTEGER," +
+        "$COL_UNLOADING_TASK_ID INTEGER," +
+        "$COL_UNLOADING_MATERIAL_ID INTEGER," +
+        "$COL_UNLOADING_LOCATION_ID INTEGER," +
+        "$COL_UNLOADING_WEIGHT  REAL," +
+        "$COL_END_TIME INTEGER," +
+        "$COL_TOTAL_TIME INTEGER," +
+        "$COL_DATE  TEXT," +
+        "$COL_TIME  INTEGER," +
+        "$COL_IS_SYNC  INTEGER," +
+        "$COL_IS_DAY_WORKS  INTEGER" +
+        ")"
+
+val createWaitsTable = "CREATE TABLE IF NOT EXISTS $TABLE_WAITS ( " +
+        "$COL_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+        "$COL_ORG_ID INTEGER, " +
+        "$COL_SITE_ID INTEGER, " +
+        "$COL_MACHINE_TYPE_ID INTEGER, " +
+        "$COL_MACHINE_ID INTEGER," +
+        "$COL_START_TIME INTEGER, " +
+        "$COL_END_TIME INTEGER, " +
+        "$COL_LOADING_GPS_LOCATION  TEXT," +
+        "$COL_UNLOADING_GPS_LOCATION  TEXT," +
+        "$COL_USER_ID  TEXT," +
+        "$COL_TOTAL_TIME INTEGER, " +
+        "$COL_DATE TEXT, " +
+        "$COL_TIME INTEGER," +
+        "$COL_IS_SYNC  INTEGER," +
+        "$COL_IS_DAY_WORKS  INTEGER" +
+        ")"
+
+val createEWorkActionOffloadingTable = "CREATE TABLE IF NOT EXISTS $TABLE_E_WORK_ACTION_OFFLOADING ( " +
+        "$COL_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+        "$COL_ORG_ID INTEGER, " +
+        "$COL_SITE_ID INTEGER, " +
+        "$COL_MACHINE_TYPE_ID INTEGER, " +
+        "$COL_MACHINE_ID INTEGER," +
+        "$COL_EWORK_ID INTEGER, " +
+        "$COL_DATE TEXT, " +
+        "$COL_TIME INTEGER," +
+        "$COL_LOADING_GPS_LOCATION  TEXT," +
+        "$COL_UNLOADING_GPS_LOCATION  TEXT," +
+        "$COL_USER_ID  TEXT," +
+        "$COL_IS_SYNC  INTEGER," +
+        "$COL_IS_DAY_WORKS  INTEGER" +
+        ")"
+
+val createEWorkTable = "CREATE TABLE IF NOT EXISTS $TABLE_E_WORK ( " +
+        "$COL_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+        "$COL_ORG_ID INTEGER, " +
+        "$COL_SITE_ID INTEGER, " +
+        "$COL_MACHINE_TYPE_ID  INTEGER," +
+        "$COL_MACHINE_ID  INTEGER," +
+        "$COL_EWORK_TYPE INTEGER, " +
+        "$COL_EWORK_ACTION_TYPE INTEGER, " +
+        "$COL_TOTAL_LOADS INTEGER, " +
+        "$COL_START_TIME INTEGER, " +
+        "$COL_END_TIME INTEGER, " +
+        "$COL_LOADING_MATERIAL_ID INTEGER, " +
+        "$COL_LOADING_GPS_LOCATION  TEXT," +
+        "$COL_UNLOADING_GPS_LOCATION  TEXT," +
+        "$COL_USER_ID  TEXT," +
+        "$COL_TOTAL_TIME INTEGER, " +
+        "$COL_DATE TEXT, " +
+        "$COL_TIME INTEGER," +
+        "$COL_IS_SYNC  INTEGER," +
+        "$COL_IS_DAY_WORKS  INTEGER" +
+        ")"
+
+val createLoadHistoryTable = "CREATE TABLE IF NOT EXISTS " + TABLE_E_LOAD_HISTORY + " (" +
+        "$COL_ID  INTEGER PRIMARY KEY AUTOINCREMENT," +
+        "$COL_ORG_ID INTEGER, " +
+        "$COL_SITE_ID INTEGER, " +
+        "$COL_MACHINE_TYPE_ID  INTEGER," +
+        "$COL_MACHINE_ID  INTEGER," +
+        "$COL_LOAD_TYPE_ID  INTEGER," +
+        "$COL_LOADING_MATERIAL_ID  INTEGER," +
+        "$COL_LOADING_LOCATION_ID  INTEGER," +
+        "$COL_UNLOADING_WEIGHT  REAL," +
+        "$COL_START_TIME INTEGER, " +
+        "$COL_END_TIME INTEGER, " +
+        "$COL_TOTAL_TIME INTEGER, " +
+        "$COL_DATE  TEXT," +
+        "$COL_TIME  INTEGER," +
+        "$COL_LOADING_GPS_LOCATION  TEXT," +
+        "$COL_UNLOADING_GPS_LOCATION  TEXT," +
+        "$COL_USER_ID  TEXT," +
+        "$COL_IS_SYNC  INTEGER," +
+        "$COL_IS_DAY_WORKS  INTEGER" +
+        ")"
+
+val createMachinesTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES ( " +
+        "$COL_ID INTEGER PRIMARY KEY, " +
+        "$COL_ORG_ID INTEGER, " +
+        "$COL_SITE_ID INTEGER, " +
+        "$COL_MACHINE_TYPE_ID INTEGER, " +
+        "$COL_MACHINE_BRAND_ID INTEGER, " +
+        "$COL_MACHINE_PLANT_ID INTEGER, " +
+        "$COL_NUMBER TEXT, " +
+        "$COL_TOTAL_TIME TEXT," +
+        "$COL_STATUS INTEGER," +
+        "$COL_IS_DELETED INTEGER" +
+        " )"
+
+
+val createMachinesAutoLogoutsTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES_AUTO_LOGOUTS ( " +
+        "$COL_ID INTEGER PRIMARY KEY, " +
+        "$COL_ORG_ID INTEGER, " +
+        "$COL_SITE_ID INTEGER, " +
+        "$COL_MACHINE_TYPE_ID INTEGER, " +
+        "$COL_AUTO_LOGOUT_TIME TEXT, " +
+        "$COL_STATUS INTEGER, " +
+        "$COL_IS_DELETED INTEGER" +
+        " )"
+
+val createOperatorsHoursTable = "CREATE TABLE IF NOT EXISTS  $TABLE_OPERATORS_HOURS (" +
+        "$COL_ID  INTEGER PRIMARY KEY AUTOINCREMENT," +
+        "$COL_ORG_ID INTEGER, " +
+        "$COL_SITE_ID INTEGER, " +
+        "$COL_USER_ID  TEXT," +
+        "$COL_LOADING_GPS_LOCATION  TEXT," +
+        "$COL_UNLOADING_GPS_LOCATION  TEXT," +
+        "$COL_START_TIME  INTEGER," +
+        "$COL_END_TIME INTEGER," +
+        "$COL_TOTAL_TIME INTEGER," +
+        "$COL_DATE  TEXT," +
+        "$COL_TIME  INTEGER," +
+        "$COL_IS_SYNC  INTEGER," +
+        "$COL_IS_DAY_WORKS  INTEGER" +
+        ")"
+
+const val createQuestionsTypesTable = "CREATE TABLE IF NOT EXISTS  $TABLE_QUESTIONS_TYPES (" +
+        "$COL_ID  INTEGER PRIMARY KEY ," +
+        "$COL_NAME  TEXT," +
+        "$COL_ANSWERS_OPTIONS INTEGER," +
+        "$COL_TOTAL_CORRECT_ANSWERS INTEGER," +
+        "$COL_STATUS INTEGER, " +
+        "$COL_IS_DELETED INTEGER" +
+        ")"
 
 const val DROP_TABLE_MACHINES_HOURS = "DROP TABLE IF EXISTS $TABLE_MACHINES_HOURS"
 const val DROP_TABLE_MACHINES_TASKS = "DROP TABLE IF EXISTS $TABLE_MACHINES_TASKS"
@@ -112,6 +395,7 @@ const val DROP_TABLE_E_WORK = "DROP TABLE IF EXISTS $TABLE_E_WORK"
 const val DROP_TABLE_E_LOAD_HISTORY = "DROP TABLE IF EXISTS $TABLE_E_LOAD_HISTORY"
 const val DROP_TABLE_MACHINES_AUTO_LOGOUTS = "DROP TABLE IF EXISTS $TABLE_MACHINES_AUTO_LOGOUTS"
 const val DROP_TABLE_OPERATORS_HOURS = "DROP TABLE IF EXISTS $TABLE_OPERATORS_HOURS"
+const val DROP_TABLE_QUESTIONS_TYPES = "DROP TABLE IF EXISTS $TABLE_QUESTIONS_TYPES"
 
 class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 8) {
     
@@ -124,277 +408,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
     
     override fun onCreate(db: SQLiteDatabase?) {
         
-        val createMachinesHoursTable = "CREATE TABLE IF NOT EXISTS  $TABLE_MACHINES_HOURS (" +
-                "$COL_ID  INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "$COL_ORG_ID INTEGER, " +
-                "$COL_SITE_ID INTEGER, " +
-                "$COL_MACHINE_TYPE_ID  INTEGER," +
-                "$COL_MACHINE_ID  INTEGER," +
-                "$COL_MACHINE_STOP_REASON_ID  INTEGER," +
-                "$COL_LOADING_GPS_LOCATION  TEXT," +
-                "$COL_UNLOADING_GPS_LOCATION  TEXT," +
-                "$COL_USER_ID  TEXT," +
-                "$COL_START_TIME  INTEGER," +
-                "$COL_END_TIME INTEGER," +
-                "$COL_TOTAL_TIME INTEGER," +
-                "$COL_START_HOURS TEXT," +
-                "$COL_IS_START_HOURS_CUSTOM INTEGER," +
-                "$COL_TOTAL_HOURS TEXT," +
-                "$COL_IS_TOTAL_HOURS_CUSTOM INTEGER," +
-                "$COL_DATE  TEXT," +
-                "$COL_TIME  INTEGER," +
-                "$COL_IS_SYNC INTEGER," +
-                "$COL_IS_DAY_WORKS  INTEGER" +
-                ")"
-        
-        
-        val createMachinesTasksTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES_TASKS ( " +
-                "$COL_ID INTEGER PRIMARY KEY, " +
-                "$COL_ORG_ID INTEGER, " +
-                "$COL_SITE_ID INTEGER, " +
-                "$COL_MACHINE_TYPE_ID INTEGER, " +
-                "$COL_MACHINE_TASK_ID INTEGER, " +
-                "$COL_NAME TEXT, " +
-                "$COL_STATUS INTEGER, " +
-                "$COL_IS_DELETED INTEGER" +
-                " )"
-        
-        val createMachinesPlantsTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES_PLANTS ( " +
-                "$COL_ID INTEGER PRIMARY KEY, " +
-                "$COL_ORG_ID INTEGER, " +
-                "$COL_MACHINE_TYPE_ID INTEGER, " +
-                "$COL_MACHINE_BRAND_ID INTEGER, " +
-                "$COL_NAME TEXT, " +
-                "$COL_STATUS INTEGER, " +
-                "$COL_IS_DELETED INTEGER" +
-                " )"
-        
-        val createMachinesBrandsTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES_BRANDS ( " +
-                "$COL_ID INTEGER PRIMARY KEY, " +
-                "$COL_MACHINE_TYPE_ID INTEGER, " +
-                "$COL_NAME TEXT, " +
-                "$COL_STATUS INTEGER, " +
-                "$COL_IS_DELETED INTEGER" +
-                " )"
-        
-        val createMachinesTypesTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES_TYPES ( " +
-                "$COL_ID INTEGER PRIMARY KEY, " +
-                "$COL_NAME TEXT, " +
-                "$COL_STATUS INTEGER, " +
-                "$COL_IS_DELETED INTEGER" +
-                " )"
-        
-        val createSitesTable = "CREATE TABLE IF NOT EXISTS $TABLE_SITES ( " +
-                "$COL_ID INTEGER PRIMARY KEY, " +
-                "$COL_NAME TEXT, " +
-                "$COL_STATUS INTEGER, " +
-                "$COL_IS_DELETED INTEGER" +
-                " )"
-        
-        val createOperatorsTable = "CREATE TABLE IF NOT EXISTS $TABLE_OPERATORS ( " +
-                "$COL_ID INTEGER PRIMARY KEY, " +
-                "$COL_ORG_ID INTEGER, " +
-                "$COL_NAME TEXT, " +
-                "$COL_PIN TEXT, " +
-                "$COL_STATUS INTEGER, " +
-                "$COL_IS_DELETED INTEGER" +
-                " )"
-        
-        val createStopReasonsTable = "CREATE TABLE IF NOT EXISTS $TABLE_STOP_REASONS (" +
-                "$COL_ID INTEGER PRIMARY KEY, " +
-                "$COL_ORG_ID INTEGER, " +
-                "$COL_NAME TEXT, " +
-                "$COL_STATUS INTEGER, " +
-                "$COL_IS_DELETED INTEGER" +
-                " )"
-        
-        val createMaterialsTable = "CREATE TABLE IF NOT EXISTS $TABLE_MATERIALS (" +
-                "$COL_ID INTEGER PRIMARY KEY, " +
-                "$COL_ORG_ID INTEGER, " +
-                "$COL_SITE_ID INTEGER, " +
-                "$COL_MACHINE_TYPE_ID INTEGER, " +
-                "$COL_NAME TEXT, " +
-                "$COL_STATUS INTEGER, " +
-                "$COL_IS_DELETED INTEGER" +
-                " )"
-        
-        
-        val createLocationsTable = "CREATE TABLE IF NOT EXISTS $TABLE_LOCATIONS (" +
-                "$COL_ID INTEGER PRIMARY KEY, " +
-                "$COL_ORG_ID INTEGER, " +
-                "$COL_SITE_ID INTEGER, " +
-                "$COL_NAME TEXT, " +
-                "$COL_STATUS INTEGER, " +
-                "$COL_IS_DELETED INTEGER" +
-                " )"
-        
-        
-        val createMachinesStopsTable = "CREATE TABLE IF NOT EXISTS  $TABLE_MACHINES_STOPS (" +
-                "$COL_ID  INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "$COL_ORG_ID INTEGER, " +
-                "$COL_SITE_ID INTEGER, " +
-                "$COL_MACHINE_TYPE_ID  INTEGER," +
-                "$COL_MACHINE_ID  INTEGER," +
-                "$COL_MACHINE_STOP_REASON_ID INTEGER, " +
-                "$COL_LOADING_GPS_LOCATION  TEXT," +
-                "$COL_UNLOADING_GPS_LOCATION  TEXT," +
-                "$COL_USER_ID  TEXT," +
-                "$COL_START_TIME  INTEGER," +
-                "$COL_END_TIME INTEGER," +
-                "$COL_TOTAL_TIME INTEGER," +
-                "$COL_DATE  TEXT," +
-                "$COL_TIME  INTEGER," +
-                "$COL_IS_SYNC  INTEGER," +
-                "$COL_IS_DAY_WORKS  INTEGER" +
-                ")"
-        
-        
-        val createTripTable = "CREATE TABLE IF NOT EXISTS  $TABLE_TRIP (" +
-                "$COL_ID  INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "$COL_ORG_ID INTEGER, " +
-                "$COL_SITE_ID INTEGER, " +
-                "$COL_TRIP_TYPE  INTEGER," +
-                "$COL_TRIP0_ID  TEXT," +
-                "$COL_MACHINE_TYPE_ID  INTEGER," +
-                "$COL_MACHINE_ID INTEGER," +
-                "$COL_LOADING_MACHINE_ID  INTEGER," +
-                "$COL_LOADING_MATERIAL_ID  INTEGER," +
-                "$COL_LOADING_LOCATION_ID  INTEGER," +
-                "$COL_LOADING_GPS_LOCATION  TEXT," +
-                "$COL_UNLOADING_GPS_LOCATION  TEXT," +
-                "$COL_USER_ID  TEXT," +
-                "$COL_START_TIME  INTEGER," +
-                "$COL_UNLOADING_TASK_ID INTEGER," +
-                "$COL_UNLOADING_MATERIAL_ID INTEGER," +
-                "$COL_UNLOADING_LOCATION_ID INTEGER," +
-                "$COL_UNLOADING_WEIGHT  REAL," +
-                "$COL_END_TIME INTEGER," +
-                "$COL_TOTAL_TIME INTEGER," +
-                "$COL_DATE  TEXT," +
-                "$COL_TIME  INTEGER," +
-                "$COL_IS_SYNC  INTEGER," +
-                "$COL_IS_DAY_WORKS  INTEGER" +
-                ")"
-        
-        val createWaitsTable = "CREATE TABLE IF NOT EXISTS $TABLE_WAITS ( " +
-                "$COL_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "$COL_ORG_ID INTEGER, " +
-                "$COL_SITE_ID INTEGER, " +
-                "$COL_MACHINE_TYPE_ID INTEGER, " +
-                "$COL_MACHINE_ID INTEGER," +
-                "$COL_START_TIME INTEGER, " +
-                "$COL_END_TIME INTEGER, " +
-                "$COL_LOADING_GPS_LOCATION  TEXT," +
-                "$COL_UNLOADING_GPS_LOCATION  TEXT," +
-                "$COL_USER_ID  TEXT," +
-                "$COL_TOTAL_TIME INTEGER, " +
-                "$COL_DATE TEXT, " +
-                "$COL_TIME INTEGER," +
-                "$COL_IS_SYNC  INTEGER," +
-                "$COL_IS_DAY_WORKS  INTEGER" +
-                ")"
-        
-        val createEWorkActionOffloadingTable = "CREATE TABLE IF NOT EXISTS $TABLE_E_WORK_ACTION_OFFLOADING ( " +
-                "$COL_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "$COL_ORG_ID INTEGER, " +
-                "$COL_SITE_ID INTEGER, " +
-                "$COL_MACHINE_TYPE_ID INTEGER, " +
-                "$COL_MACHINE_ID INTEGER," +
-                "$COL_EWORK_ID INTEGER, " +
-                "$COL_DATE TEXT, " +
-                "$COL_TIME INTEGER," +
-                "$COL_LOADING_GPS_LOCATION  TEXT," +
-                "$COL_UNLOADING_GPS_LOCATION  TEXT," +
-                "$COL_USER_ID  TEXT," +
-                "$COL_IS_SYNC  INTEGER," +
-                "$COL_IS_DAY_WORKS  INTEGER" +
-                ")"
-        
-        val createEWorkTable = "CREATE TABLE IF NOT EXISTS $TABLE_E_WORK ( " +
-                "$COL_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "$COL_ORG_ID INTEGER, " +
-                "$COL_SITE_ID INTEGER, " +
-                "$COL_MACHINE_TYPE_ID  INTEGER," +
-                "$COL_MACHINE_ID  INTEGER," +
-                "$COL_EWORK_TYPE INTEGER, " +
-                "$COL_EWORK_ACTION_TYPE INTEGER, " +
-                "$COL_TOTAL_LOADS INTEGER, " +
-                "$COL_START_TIME INTEGER, " +
-                "$COL_END_TIME INTEGER, " +
-                "$COL_LOADING_MATERIAL_ID INTEGER, " +
-                "$COL_LOADING_GPS_LOCATION  TEXT," +
-                "$COL_UNLOADING_GPS_LOCATION  TEXT," +
-                "$COL_USER_ID  TEXT," +
-                "$COL_TOTAL_TIME INTEGER, " +
-                "$COL_DATE TEXT, " +
-                "$COL_TIME INTEGER," +
-                "$COL_IS_SYNC  INTEGER," +
-                "$COL_IS_DAY_WORKS  INTEGER" +
-                ")"
-        
-        val createLoadHistoryTable = "CREATE TABLE IF NOT EXISTS " + TABLE_E_LOAD_HISTORY + " (" +
-                "$COL_ID  INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "$COL_ORG_ID INTEGER, " +
-                "$COL_SITE_ID INTEGER, " +
-                "$COL_MACHINE_TYPE_ID  INTEGER," +
-                "$COL_MACHINE_ID  INTEGER," +
-                "$COL_LOAD_TYPE_ID  INTEGER," +
-                "$COL_LOADING_MATERIAL_ID  INTEGER," +
-                "$COL_LOADING_LOCATION_ID  INTEGER," +
-                "$COL_UNLOADING_WEIGHT  REAL," +
-                "$COL_START_TIME INTEGER, " +
-                "$COL_END_TIME INTEGER, " +
-                "$COL_TOTAL_TIME INTEGER, " +
-                "$COL_DATE  TEXT," +
-                "$COL_TIME  INTEGER," +
-                "$COL_LOADING_GPS_LOCATION  TEXT," +
-                "$COL_UNLOADING_GPS_LOCATION  TEXT," +
-                "$COL_USER_ID  TEXT," +
-                "$COL_IS_SYNC  INTEGER," +
-                "$COL_IS_DAY_WORKS  INTEGER" +
-                ")"
-        
-        val createMachinesTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES ( " +
-                "$COL_ID INTEGER PRIMARY KEY, " +
-                "$COL_ORG_ID INTEGER, " +
-                "$COL_SITE_ID INTEGER, " +
-                "$COL_MACHINE_TYPE_ID INTEGER, " +
-                "$COL_MACHINE_BRAND_ID INTEGER, " +
-                "$COL_MACHINE_PLANT_ID INTEGER, " +
-                "$COL_NUMBER TEXT, " +
-                "$COL_TOTAL_TIME TEXT," +
-                "$COL_STATUS INTEGER," +
-                "$COL_IS_DELETED INTEGER" +
-                " )"
-        
-        
-        val createMachinesAutoLogoutsTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES_AUTO_LOGOUTS ( " +
-                "$COL_ID INTEGER PRIMARY KEY, " +
-                "$COL_ORG_ID INTEGER, " +
-                "$COL_SITE_ID INTEGER, " +
-                "$COL_MACHINE_TYPE_ID INTEGER, " +
-                "$COL_AUTO_LOGOUT_TIME TEXT, " +
-                "$COL_STATUS INTEGER, " +
-                "$COL_IS_DELETED INTEGER" +
-                " )"
-        
-        
-        val createOperatorsHoursTable = "CREATE TABLE IF NOT EXISTS  $TABLE_OPERATORS_HOURS (" +
-                "$COL_ID  INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "$COL_ORG_ID INTEGER, " +
-                "$COL_SITE_ID INTEGER, " +
-                "$COL_USER_ID  TEXT," +
-                "$COL_LOADING_GPS_LOCATION  TEXT," +
-                "$COL_UNLOADING_GPS_LOCATION  TEXT," +
-                "$COL_START_TIME  INTEGER," +
-                "$COL_END_TIME INTEGER," +
-                "$COL_TOTAL_TIME INTEGER," +
-                "$COL_DATE  TEXT," +
-                "$COL_TIME  INTEGER," +
-                "$COL_IS_SYNC  INTEGER," +
-                "$COL_IS_DAY_WORKS  INTEGER" +
-                ")"
-        
+        db?.execSQL(createQuestionsTypesTable)
         db?.execSQL(createOperatorsHoursTable)
         db?.execSQL(createMachinesAutoLogoutsTable)
         db?.execSQL(createMachinesHoursTable)
@@ -417,6 +431,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
     }
     
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
+        
+        db?.execSQL(DROP_TABLE_QUESTIONS_TYPES)
         db?.execSQL(DROP_TABLE_OPERATORS_HOURS)
         db?.execSQL(DROP_TABLE_MACHINES_AUTO_LOGOUTS)
         db?.execSQL(DROP_TABLE_MACHINES_HOURS)
@@ -437,6 +453,25 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         db?.execSQL(DROP_TABLE_E_WORK)
         db?.execSQL(DROP_TABLE_E_LOAD_HISTORY)
         onCreate(db)
+    }
+    
+    fun insertQuestionsTypes(data: ArrayList<MyData>) {
+        
+        val db = this.writableDatabase
+        val cv = ContentValues()
+        val tableName = TABLE_QUESTIONS_TYPES
+        
+        for (datum in data) {
+            cv.put(COL_ID, datum.id)
+            cv.put(COL_NAME, datum.name)
+            cv.put(COL_ANSWERS_OPTIONS, datum.answers_options)
+            cv.put(COL_TOTAL_CORRECT_ANSWERS, datum.total_correct_answers)
+            cv.put(COL_STATUS, datum.status)
+            cv.put(COL_IS_DELETED, datum.isDeleted)
+            
+            val insertedID = db.replace(tableName, null, cv)
+            myHelper.printInsertion(tableName, insertedID, datum)
+        }
     }
     
     fun insertOperatorHour(myData: MyData): Long {
@@ -460,6 +495,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         cv.put(COL_IS_DAY_WORKS, myData.isDayWorks)
         return db.insert(TABLE_OPERATORS_HOURS, null, cv)
     }
+    
     
     /**
      * Save Machines Logout Times in Database.
@@ -993,6 +1029,30 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return db.insert(TABLE_E_LOAD_HISTORY, null, cv)
     }
     
+    fun getQuestionsTypesByID(id: Int): MyData {
+        
+        val db = this.readableDatabase
+        
+        val query =
+            "Select * from $TABLE_QUESTIONS_TYPES WHERE $COL_ID = $id ORDER BY $COL_ID DESC"
+        val result = db.rawQuery(query, null)
+        
+        val datum = MyData()
+        if (result.moveToFirst()) {
+            datum.id = result.getInt(result.getColumnIndex(COL_ID))
+            datum.name = result.getString(result.getColumnIndex(COL_NAME))
+            datum.answers_options = result.getInt(result.getColumnIndex(COL_ANSWERS_OPTIONS))
+            datum.total_correct_answers = result.getInt(result.getColumnIndex(COL_TOTAL_CORRECT_ANSWERS))
+            datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+            datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+
+        }
+        
+        result.close()
+        db.close()
+        return datum
+    }
+    
     fun getOperatorsHours(orderBy: String = "DESC"): ArrayList<MyData> {
         val list: ArrayList<MyData> = ArrayList()
         val db = this.readableDatabase
@@ -1034,7 +1094,6 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return list
     }
     
-    // TODO pending
     fun getMachinesAutoLogout(): ArrayList<OperatorAPI> {
         
         val list: ArrayList<OperatorAPI> = ArrayList()
