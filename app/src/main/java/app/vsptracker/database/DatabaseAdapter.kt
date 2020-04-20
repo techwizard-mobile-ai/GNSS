@@ -32,6 +32,7 @@ const val TABLE_MACHINES_AUTO_LOGOUTS = "machines_auto_logouts"
 const val TABLE_OPERATORS_HOURS = "operators_hours"
 const val TABLE_QUESTIONS_TYPES = "questions_types"
 const val TABLE_QUESTIONS = "questions"
+const val TABLE_ADMIN_CHECKFORMS_SCHEDULES = "admin_checkforms_schedules"
 
 const val COL_TIME = "time"
 const val COL_DATE = "date"
@@ -100,6 +101,7 @@ const val COL_ANSWERS_OPTIONS = "answers_options"
 const val COL_TOTAL_CORRECT_ANSWERS = "total_correct_answers"
 const val COL_ADMIN_QUESTIONS_TYPES_ID = "admin_questions_types_id"
 const val COL_ANSWERS_DATA = "answers_data"
+const val COL_DAYS = "days"
 
 
 const val createMachinesHoursTable = "CREATE TABLE IF NOT EXISTS  $TABLE_MACHINES_HOURS (" +
@@ -380,6 +382,7 @@ const val createQuestionsTypesTable = "CREATE TABLE IF NOT EXISTS  $TABLE_QUESTI
         "$COL_STATUS INTEGER, " +
         "$COL_IS_DELETED INTEGER" +
         ")"
+
 const val createQuestionsTable = "CREATE TABLE IF NOT EXISTS  $TABLE_QUESTIONS (" +
         "$COL_ID  INTEGER PRIMARY KEY ," +
         "$COL_ORG_ID INTEGER," +
@@ -390,7 +393,16 @@ const val createQuestionsTable = "CREATE TABLE IF NOT EXISTS  $TABLE_QUESTIONS (
         "$COL_IS_DELETED INTEGER" +
         ")"
 
+const val createAdminCheckFormsSchedulesTable = "CREATE TABLE IF NOT EXISTS  $TABLE_ADMIN_CHECKFORMS_SCHEDULES (" +
+        "$COL_ID  INTEGER PRIMARY KEY ," +
+        "$COL_NAME  TEXT," +
+        "$COL_DAYS TEXT," +
+        "$COL_STATUS INTEGER, " +
+        "$COL_IS_DELETED INTEGER" +
+        ")"
 
+
+const val DROP_TABLE_ADMIN_CHECKFORMS_SCHEDULES = "DROP TABLE IF EXISTS $TABLE_ADMIN_CHECKFORMS_SCHEDULES"
 const val DROP_TABLE_QUESTIONS = "DROP TABLE IF EXISTS $TABLE_QUESTIONS"
 const val DROP_TABLE_MACHINES_HOURS = "DROP TABLE IF EXISTS $TABLE_MACHINES_HOURS"
 const val DROP_TABLE_MACHINES_TASKS = "DROP TABLE IF EXISTS $TABLE_MACHINES_TASKS"
@@ -424,6 +436,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
     
     override fun onCreate(db: SQLiteDatabase?) {
         
+        db?.execSQL(createAdminCheckFormsSchedulesTable)
         db?.execSQL(createQuestionsTable)
         db?.execSQL(createQuestionsTypesTable)
         db?.execSQL(createOperatorsHoursTable)
@@ -449,6 +462,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
     
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         
+        db?.execSQL(DROP_TABLE_ADMIN_CHECKFORMS_SCHEDULES)
         db?.execSQL(DROP_TABLE_QUESTIONS)
         db?.execSQL(DROP_TABLE_QUESTIONS_TYPES)
         db?.execSQL(DROP_TABLE_OPERATORS_HOURS)
@@ -471,6 +485,24 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         db?.execSQL(DROP_TABLE_E_WORK)
         db?.execSQL(DROP_TABLE_E_LOAD_HISTORY)
         onCreate(db)
+    }
+    
+    fun insertAdminCheckFormsSchedules(data: ArrayList<MyData>) {
+        
+        val db = this.writableDatabase
+        val cv = ContentValues()
+        val tableName = TABLE_ADMIN_CHECKFORMS_SCHEDULES
+        
+        for (datum in data) {
+            cv.put(COL_ID, datum.id)
+            cv.put(COL_NAME, datum.name)
+            cv.put(COL_DAYS, datum.days)
+            cv.put(COL_STATUS, datum.status)
+            cv.put(COL_IS_DELETED, datum.isDeleted)
+            
+            val insertedID = db.replace(tableName, null, cv)
+            myHelper.printInsertion(tableName, insertedID, datum)
+        }
     }
     
     fun insertQuestions(data: ArrayList<MyData>) {
@@ -1064,6 +1096,25 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         cv.put(COL_IS_SYNC, myData.isSync)
         // myHelper.log("insertID:$insertID")
         return db.insert(TABLE_E_LOAD_HISTORY, null, cv)
+    }
+    
+    fun getAdminCheckFormScheduleByID(id: Int): MyData {
+        val db = this.readableDatabase
+        
+        val query =
+            "Select * from $TABLE_ADMIN_CHECKFORMS_SCHEDULES WHERE $COL_ID = $id "
+        val result = db.rawQuery(query, null)
+        val datum = MyData()
+        if (result.moveToFirst()) {
+            datum.id = result.getInt(result.getColumnIndex(COL_ID))
+            datum.name = result.getString(result.getColumnIndex(COL_NAME))
+            datum.days = result.getString(result.getColumnIndex(COL_DAYS))
+            datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+            datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+        }
+        result.close()
+        db.close()
+        return datum
     }
     
     fun getQuestionByID(id: Int): MyData {
