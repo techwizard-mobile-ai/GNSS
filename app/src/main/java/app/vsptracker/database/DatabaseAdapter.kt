@@ -33,6 +33,7 @@ const val TABLE_OPERATORS_HOURS = "operators_hours"
 const val TABLE_QUESTIONS_TYPES = "questions_types"
 const val TABLE_QUESTIONS = "questions"
 const val TABLE_ADMIN_CHECKFORMS_SCHEDULES = "admin_checkforms_schedules"
+const val TABLE_ADMIN_CHECKFORMS = "admin_checkforms"
 
 const val COL_TIME = "time"
 const val COL_DATE = "date"
@@ -102,6 +103,8 @@ const val COL_TOTAL_CORRECT_ANSWERS = "total_correct_answers"
 const val COL_ADMIN_QUESTIONS_TYPES_ID = "admin_questions_types_id"
 const val COL_ANSWERS_DATA = "answers_data"
 const val COL_DAYS = "days"
+const val COL_ADMIN_CHECKFORMS_SCHEDULES_ID = "admin_checkforms_schedules_id"
+const val COL_QUESTIONS_DATA = "questions_data"
 
 
 const val createMachinesHoursTable = "CREATE TABLE IF NOT EXISTS  $TABLE_MACHINES_HOURS (" +
@@ -401,7 +404,21 @@ const val createAdminCheckFormsSchedulesTable = "CREATE TABLE IF NOT EXISTS  $TA
         "$COL_IS_DELETED INTEGER" +
         ")"
 
+const val createAdminCheckFormsTable = "CREATE TABLE IF NOT EXISTS  $TABLE_ADMIN_CHECKFORMS (" +
+        "$COL_ID  INTEGER PRIMARY KEY ," +
+        "$COL_ORG_ID INTEGER, " +
+        "$COL_SITE_ID INTEGER, " +
+        "$COL_MACHINE_TYPE_ID INTEGER, " +
+        "$COL_MACHINE_ID INTEGER, " +
+        "$COL_ADMIN_CHECKFORMS_SCHEDULES_ID INTEGER, " +
+        "$COL_NAME  TEXT," +
+        "$COL_QUESTIONS_DATA TEXT," +
+        "$COL_STATUS INTEGER, " +
+        "$COL_IS_DELETED INTEGER" +
+        ")"
 
+
+const val DROP_TABLE_ADMIN_CHECKFORMS = "DROP TABLE IF EXISTS $TABLE_ADMIN_CHECKFORMS"
 const val DROP_TABLE_ADMIN_CHECKFORMS_SCHEDULES = "DROP TABLE IF EXISTS $TABLE_ADMIN_CHECKFORMS_SCHEDULES"
 const val DROP_TABLE_QUESTIONS = "DROP TABLE IF EXISTS $TABLE_QUESTIONS"
 const val DROP_TABLE_MACHINES_HOURS = "DROP TABLE IF EXISTS $TABLE_MACHINES_HOURS"
@@ -436,6 +453,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
     
     override fun onCreate(db: SQLiteDatabase?) {
         
+        db?.execSQL(createAdminCheckFormsTable)
         db?.execSQL(createAdminCheckFormsSchedulesTable)
         db?.execSQL(createQuestionsTable)
         db?.execSQL(createQuestionsTypesTable)
@@ -462,6 +480,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
     
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         
+        db?.execSQL(DROP_TABLE_ADMIN_CHECKFORMS)
         db?.execSQL(DROP_TABLE_ADMIN_CHECKFORMS_SCHEDULES)
         db?.execSQL(DROP_TABLE_QUESTIONS)
         db?.execSQL(DROP_TABLE_QUESTIONS_TYPES)
@@ -485,6 +504,29 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         db?.execSQL(DROP_TABLE_E_WORK)
         db?.execSQL(DROP_TABLE_E_LOAD_HISTORY)
         onCreate(db)
+    }
+    
+    fun insertAdminCheckForms(data: ArrayList<MyData>) {
+        
+        val db = this.writableDatabase
+        val cv = ContentValues()
+        val tableName = TABLE_ADMIN_CHECKFORMS
+        
+        for (datum in data) {
+            cv.put(COL_ID, datum.id)
+            cv.put(COL_ORG_ID, datum.orgId)
+            cv.put(COL_SITE_ID, datum.siteId)
+            cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
+            cv.put(COL_MACHINE_ID, datum.machineId)
+            cv.put(COL_ADMIN_CHECKFORMS_SCHEDULES_ID, datum.admin_checkforms_schedules_id)
+            cv.put(COL_NAME, datum.name)
+            cv.put(COL_QUESTIONS_DATA, datum.questions_data)
+            cv.put(COL_STATUS, datum.status)
+            cv.put(COL_IS_DELETED, datum.isDeleted)
+            
+            val insertedID = db.replace(tableName, null, cv)
+            myHelper.printInsertion(tableName, insertedID, datum)
+        }
     }
     
     fun insertAdminCheckFormsSchedules(data: ArrayList<MyData>) {
@@ -1096,6 +1138,35 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         cv.put(COL_IS_SYNC, myData.isSync)
         // myHelper.log("insertID:$insertID")
         return db.insert(TABLE_E_LOAD_HISTORY, null, cv)
+    }
+    
+    fun getAdminCheckForms(): ArrayList<MyData> {
+        val list: ArrayList<MyData> = ArrayList()
+        val db = this.readableDatabase
+        
+        val query =
+            "Select * FROM $TABLE_ADMIN_CHECKFORMS ORDER BY $COL_ID DESC "
+        val result = db.rawQuery(query, null)
+        
+        if (result.moveToFirst()) {
+            do {
+                val datum = MyData()
+                datum.id = result.getInt(result.getColumnIndex(COL_ID))
+                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+                datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
+                datum.admin_checkforms_schedules_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_ID))
+                datum.name = result.getString(result.getColumnIndex(COL_NAME))
+                datum.questions_data = result.getString(result.getColumnIndex(COL_QUESTIONS_DATA))
+                datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+                list.add(datum)
+            } while (result.moveToNext())
+        }
+        result.close()
+        db.close()
+        return list
     }
     
     fun getAdminCheckFormScheduleByID(id: Int): MyData {

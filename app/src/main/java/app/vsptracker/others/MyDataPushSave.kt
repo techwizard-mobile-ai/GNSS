@@ -154,6 +154,10 @@ class MyDataPushSave(private val context: Context) {
                                 myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.myDataList.size}")
                                 db.insertAdminCheckFormsSchedules(serverSyncAPI.myDataList)
                             }
+                            15 -> {
+                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.myDataList.size}")
+                                db.insertAdminCheckForms(serverSyncAPI.myDataList)
+                            }
                         }
                     }
                     myHelper.hideProgressBar()

@@ -225,12 +225,25 @@ class MyData : Serializable {
     @Expose
     var days: String? = null
     
+    @SerializedName("questions_data")
+    @Expose
+    var questions_data: String? = null
+    
+    @SerializedName("admin_checkforms_schedules_id")
+    @Expose
+    var admin_checkforms_schedules_id: Int = 0
+    
     var isMapOpened: Boolean = false
     override fun toString(): String {
         return "MyData(" +
                 "id=$id, " +
+                "org_id=$orgId, " +
+                "site_id=$siteId, " +
+                "machine_type_id=$machineTypeId, " +
+                "machine_id=$machineId, " +
+                "admin_checkforms_schedules_id=$admin_checkforms_schedules_id, " +
                 "name=$name, " +
-                "days=$days, " +
+                "questions_data=$questions_data, " +
                 "status=$status, " +
                 "is_deleted=$isDeleted, " +
                 ")"
