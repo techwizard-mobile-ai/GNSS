@@ -273,4 +273,23 @@
     <string name="checkform">Checkform</string>
     <string name="checkforms">Checkforms</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="due">Due</string>
+    <string name="all">All</string>
+    <string name="completed">Completed</string>
+    <string name="due_checkforms">Due CheckForms</string>
+    <string name="all_checkforms">All CheckForms</string>
+    <string name="completed_checkforms">Completed CheckForms</string>
+    <string name="no_checkforms">No CheckForms.</string>
+    <string name="schedule">Schedule</string>
+    <string name="questions">Questions</string>
+    <string name="applicable">Applicable</string>
+    <string name="acceptable">Acceptable</string>
+    <string name="unacceptable">Unacceptable</string>
+    <string name="enter_details_of_issue">Enter details of issue</string>
+    <string name="capture_photo">Capture Photo</string>
+    <string name="take_photo">Take photo</string>
+    <string name="attach_image">Attach Image</string>
+
 </resources>

@@ -93,84 +93,89 @@ class MyDataPushSave(private val context: Context) {
                 response: retrofit2.Response<ServerSyncResponse>
             ) {
                 myHelper.log("Response:$response")
-                val responseBody = response.body()
-                if (responseBody!!.success ) {
-                    val getServerSyncData = responseBody.get_data
-                    getServerSyncData.forEach { serverSyncAPI ->
-                        when (serverSyncAPI.type) {
-                            1 -> {
-                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
-                                db.insertMachinesAutoLogouts(serverSyncAPI.operatorAPIList)
-                            }
-                            2 -> {
-                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
-                                db.insertMachinesTasks(serverSyncAPI.operatorAPIList)
-                            }
-                            3 -> {
-                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
-                                db.insertMaterials(serverSyncAPI.operatorAPIList)
-                            }
-                            4 -> {
-                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
-                                db.insertLocations(serverSyncAPI.operatorAPIList)
-                            }
-                            5 -> {
-                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
-                                db.insertMachines(serverSyncAPI.operatorAPIList)
-                            }
-                            6 -> {
-                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
-                                db.insertStopReasons(serverSyncAPI.operatorAPIList)
-                            }
-                            7 -> {
-                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
-                                db.insertMachinesPlants(serverSyncAPI.operatorAPIList)
-                            }
-                            8 -> {
-                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
-                                db.insertMachinesBrands(serverSyncAPI.operatorAPIList)
-                            }
-                            9 -> {
-                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
-                                db.insertMachinesTypes(serverSyncAPI.operatorAPIList)
-                            }
-                            10 -> {
-                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
-                                db.insertSites(serverSyncAPI.operatorAPIList)
-                            }
-                            11 -> {
-                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
-                                db.insertOperators(serverSyncAPI.operatorAPIList)
-                            }
-                            12 -> {
-                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.myDataList.size}")
-                                db.insertQuestionsTypes(serverSyncAPI.myDataList)
-                            }
-                            13 -> {
-                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.myDataList.size}")
-                                db.insertQuestions(serverSyncAPI.myDataList)
-                            }
-                            14 -> {
-                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.myDataList.size}")
-                                db.insertAdminCheckFormsSchedules(serverSyncAPI.myDataList)
-                            }
-                            15 -> {
-                                myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.myDataList.size}")
-                                db.insertAdminCheckForms(serverSyncAPI.myDataList)
+                try {
+                    val responseBody = response.body()
+                    if (responseBody!!.success ) {
+                        val getServerSyncData = responseBody.get_data
+                        getServerSyncData.forEach { serverSyncAPI ->
+                            when (serverSyncAPI.type) {
+                                1 -> {
+                                    myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
+                                    db.insertMachinesAutoLogouts(serverSyncAPI.operatorAPIList)
+                                }
+                                2 -> {
+                                    myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
+                                    db.insertMachinesTasks(serverSyncAPI.operatorAPIList)
+                                }
+                                3 -> {
+                                    myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
+                                    db.insertMaterials(serverSyncAPI.operatorAPIList)
+                                }
+                                4 -> {
+                                    myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
+                                    db.insertLocations(serverSyncAPI.operatorAPIList)
+                                }
+                                5 -> {
+                                    myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
+                                    db.insertMachines(serverSyncAPI.operatorAPIList)
+                                }
+                                6 -> {
+                                    myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
+                                    db.insertStopReasons(serverSyncAPI.operatorAPIList)
+                                }
+                                7 -> {
+                                    myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
+                                    db.insertMachinesPlants(serverSyncAPI.operatorAPIList)
+                                }
+                                8 -> {
+                                    myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
+                                    db.insertMachinesBrands(serverSyncAPI.operatorAPIList)
+                                }
+                                9 -> {
+                                    myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
+                                    db.insertMachinesTypes(serverSyncAPI.operatorAPIList)
+                                }
+                                10 -> {
+                                    myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
+                                    db.insertSites(serverSyncAPI.operatorAPIList)
+                                }
+                                11 -> {
+                                    myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.operatorAPIList.size}")
+                                    db.insertOperators(serverSyncAPI.operatorAPIList)
+                                }
+                                12 -> {
+                                    myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.myDataList.size}")
+                                    db.insertQuestionsTypes(serverSyncAPI.myDataList)
+                                }
+                                13 -> {
+                                    myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.myDataList.size}")
+                                    db.insertQuestions(serverSyncAPI.myDataList)
+                                }
+                                14 -> {
+                                    myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.myDataList.size}")
+                                    db.insertAdminCheckFormsSchedules(serverSyncAPI.myDataList)
+                                }
+                                15 -> {
+                                    myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.myDataList.size}")
+                                    db.insertAdminCheckForms(serverSyncAPI.myDataList)
+                                }
                             }
                         }
-                    }
-                    myHelper.hideProgressBar()
-                    when {
-                        !isBackgroundCall -> {
-                            val intent = Intent(context, OperatorLoginActivity::class.java)
-                            context.startActivity(intent)
+                        myHelper.hideProgressBar()
+                        when {
+                            !isBackgroundCall -> {
+                                val intent = Intent(context, OperatorLoginActivity::class.java)
+                                context.startActivity(intent)
+                            }
                         }
+                    } else {
+                        myHelper.hideProgressBar()
+                        myHelper.toast(responseBody.message)
                     }
-                } else {
-                    myHelper.hideProgressBar()
-                    myHelper.toast(responseBody.message)
+                }catch (e:Exception){
+                    myHelper.log("getServerSync:${e.localizedMessage}")
                 }
+                
             }
             
             override fun onFailure(call: retrofit2.Call<ServerSyncResponse>, t: Throwable) {
@@ -1201,10 +1206,10 @@ class MyDataPushSave(private val context: Context) {
             override fun onResponse(call: Call, response: Response) {
                 
                 myHelper.log("response:$response")
-                val responseString = response.body()!!.string()
-                val responseJObject = JSONObject(responseString)
-                val success = responseJObject.getBoolean("success")
                 try {
+                    val responseString = response.body()!!.string()
+                    val responseJObject = JSONObject(responseString)
+                    val success = responseJObject.getBoolean("success")
                     if (success) {
                         val gson = GsonBuilder().create()
 //                      this data is used for convert data arraylist into object to convert in gson

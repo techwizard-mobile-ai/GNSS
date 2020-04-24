@@ -15,6 +15,7 @@
         android:screenOrientation="landscape"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".activities.CheckFormTaskActivity"></activity>
         <activity android:name=".activities.CheckFormsActivity" />
         <activity android:name=".activities.ServerSyncActivity" />
         <activity android:name=".activities.HoursReportingActivity" />

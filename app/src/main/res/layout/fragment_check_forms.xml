@@ -1,0 +1,33 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:layout_height="match_parent"
+        tools:context=".fragments.common.CheckFormsFragment"
+        >
+        <TextView
+            android:id="@+id/cf_title"
+            android:layout_alignParentTop="true"
+            style="@style/activity_title"
+            android:layout_width="match_parent"
+            android:gravity="center_horizontal"
+            android:text="@string/checkforms" />
+        <TextView
+            android:id="@+id/no_cf"
+            android:layout_centerInParent="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            style="@style/avenirnext_fontstyle"
+            android:textColor="@color/gray_dark"
+            android:gravity="center"
+            android:textSize="@dimen/_16sdp"
+            android:textStyle="bold"
+            />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/cf_rv"
+            android:layout_below="@id/cf_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>

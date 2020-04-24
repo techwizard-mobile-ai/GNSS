@@ -102,6 +102,4 @@ class HoursReportingActivity : BaseActivity(), View.OnClickListener,
 
     override fun onClick(view: View?) {
     }
-
-
 }

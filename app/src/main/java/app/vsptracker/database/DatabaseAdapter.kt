@@ -632,7 +632,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
             val insertedID = db.replace(tableName, null, cv)
-            myHelper.printInsertion(tableName, insertedID, datum)
+//            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -726,7 +726,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
             val insertedID = db.replace(tableName, null, cv)
-            myHelper.printInsertion(tableName, insertedID, datum)
+//            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -746,7 +746,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
             val insertedID = db.replace(tableName, null, cv)
-            myHelper.printInsertion(tableName, insertedID, datum)
+//            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -764,7 +764,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
             val insertedID = db.replace(tableName, null, cv)
-            myHelper.printInsertion(tableName, insertedID, datum)
+//            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -781,7 +781,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
             val insertedID = db.replace(tableName, null, cv)
-            myHelper.printInsertion(tableName, insertedID, datum)
+//            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -798,7 +798,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
             val insertedID = db.replace(tableName, null, cv)
-            myHelper.printInsertion(tableName, insertedID, datum)
+//            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -817,7 +817,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
             val insertedID = db.replace(tableName, null, cv)
-            myHelper.printInsertion(tableName, insertedID, datum)
+//            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -835,7 +835,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
             val insertedID = db.replace(TABLE_STOP_REASONS, null, cv)
-            myHelper.printInsertion(tableName, insertedID, datum)
+//            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -854,7 +854,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
             val insertedID = db.replace(tableName, null, cv)
-            myHelper.printInsertion(tableName, insertedID, datum)
+//            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -876,7 +876,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
             val insertedID = db.replace(tableName, null, cv)
-            myHelper.printInsertion(tableName, insertedID, datum)
+//            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -894,7 +894,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
             val insertedID = db.replace(tableName, null, cv)
-            myHelper.printInsertion(tableName, insertedID, datum)
+//            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -1143,6 +1143,32 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return db.insert(TABLE_E_LOAD_HISTORY, null, cv)
     }
     
+    fun getAdminCheckFormByID(id: Int): MyData {
+        val db = this.readableDatabase
+        
+        val query =
+            "Select * FROM $TABLE_ADMIN_CHECKFORMS WHERE $COL_ID = $id  "
+        val result = db.rawQuery(query, null)
+        val datum = MyData()
+        if (result.moveToFirst()) {
+                datum.id = result.getInt(result.getColumnIndex(COL_ID))
+                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+                datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
+                datum.admin_checkforms_schedules_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_ID))
+                datum.admin_checkforms_schedules_value = result.getString(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE))
+                datum.name = result.getString(result.getColumnIndex(COL_NAME))
+                datum.questions_data = result.getString(result.getColumnIndex(COL_QUESTIONS_DATA))
+                datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+            
+        }
+        result.close()
+        db.close()
+        return datum
+    }
+    
     fun getAdminCheckForms(): ArrayList<MyData> {
         val list: ArrayList<MyData> = ArrayList()
         val db = this.readableDatabase
@@ -1213,12 +1239,14 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return datum
     }
     
-    fun getQuestionsByIDs(ids: ArrayList<Int>): ArrayList<MyData> {
+    fun getQuestionsByIDs(ids: String): ArrayList<MyData> {
         val list: ArrayList<MyData> = ArrayList()
         val db = this.readableDatabase
         
         val query =
-            "Select * from $TABLE_QUESTIONS WHERE $COL_ID  IN $ids "
+            "Select * from $TABLE_QUESTIONS WHERE $COL_ID  IN ( $ids ) "
+        
+        myHelper.log("query:$query")
         val result = db.rawQuery(query, null)
         
         if (result.moveToFirst()) {

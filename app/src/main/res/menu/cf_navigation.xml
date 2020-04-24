@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/cf_due"
+        android:icon="@drawable/ic_cf_due"
+        android:title="@string/due" />
+
+    <item
+        android:id="@+id/cf_all"
+        android:icon="@drawable/ic_cf_all"
+        android:title="@string/all" />
+
+    <item
+        android:id="@+id/cf_completed"
+        android:icon="@drawable/ic_cf_completed"
+        android:title="@string/completed" />
+
+    <item
+        android:id="@+id/navf_finish"
+        android:icon="@drawable/ic_action_cancel_presentation"
+        android:title="@string/finish" />
+
+</menu>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/eth_row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/_5sdp">
+
+    <androidx.cardview.widget.CardView
+        style="?attr/cardStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_3sdp"
+        card_view:cardCornerRadius="5dp"
+        card_view:cardElevation="6dp"
+        card_view:cardMaxElevation="10dp"
+        card_view:contentPadding="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <LinearLayout style="@style/load_history_row_item">
+                <TextView
+                    style="@style/cf_text"
+                    android:text="@string/id" />
+                <TextView
+                    android:id="@+id/cf_id"
+                    style="@style/cf_desc" android:text="@string/list_row_delay_history_eth_record_number_text" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/load_history_row_item">
+                <TextView
+                    style="@style/cf_text"
+                    android:text="@string/checkform" />
+                <TextView
+                    android:id="@+id/cf_name"
+                    style="@style/cf_desc" android:text="@string/list_row_delay_history_eth_record_number_text" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/load_history_row_item">
+                <TextView
+                    style="@style/cf_text"
+                    android:text="@string/applicable" />
+                <TextView
+                    android:id="@+id/cf_applicable"
+                    style="@style/cf_desc"
+                    android:text="@string/list_row_delay_history_eth_record_number_text" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/load_history_row_item">
+                <TextView
+                    style="@style/cf_text"
+                    android:text="@string/schedule" />
+                <TextView
+                    android:id="@+id/cf_schedule"
+                    style="@style/cf_desc"
+                    android:text="@string/list_row_delay_history_eth_record_number_text" />
+            </LinearLayout>
+
+            <LinearLayout style="@style/load_history_row_item">
+                <TextView
+                    style="@style/cf_text"
+                    android:text="@string/questions" />
+                <TextView
+                    android:id="@+id/cf_questions"
+                    style="@style/cf_desc"
+                    android:text="@string/list_row_delay_history_eth_record_number_text" />
+            </LinearLayout>
+            <Button
+                android:id="@+id/cf_start"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:text="@string/start"
+                style="@style/next_button_single"
+                android:background="@drawable/bdue_background"
+                android:layout_marginBottom="@dimen/_10sdp" />
+<!--            <Button-->
+<!--                android:id="@+id/thome_logout"-->
+<!--                android:layout_marginTop="@dimen/_10sdp"-->
+<!--                android:text="@string/start"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                style="@style/next_button_single"-->
+<!--                android:layout_marginBottom="@dimen/_10sdp" />-->
+        </LinearLayout>
+
+
+    </androidx.cardview.widget.CardView>
+</LinearLayout>

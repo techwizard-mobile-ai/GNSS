@@ -1,0 +1,32 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_gravity="center_horizontal"
+    android:gravity="center_horizontal"
+    android:layout_height="match_parent"
+    tools:context=".activities.CheckFormTaskActivity"
+    >
+    <TextView
+        android:id="@+id/cft_title"
+        android:layout_alignParentTop="true"
+        style="@style/activity_title"
+        android:layout_width="match_parent"
+        android:gravity="center_horizontal"
+        android:text="@string/checkforms" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/cft_rv"
+        android:layout_below="@id/cft_title"
+        android:layout_above="@id/cft_finish"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <Button
+        android:id="@+id/cft_finish"
+        android:text="@string/save"
+        style="@style/next_button_single"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bnext_background"
+        android:layout_marginBottom="@dimen/_10sdp" />
+</RelativeLayout>

@@ -205,7 +205,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     
     override fun onUserInteraction() {
         super.onUserInteraction()
-        myHelper.log("\nonUserInteraction")
+//        myHelper.log("\nonUserInteraction")
         if (autoLogoutTime > 0) {
             stopHandler()
             startHandler()

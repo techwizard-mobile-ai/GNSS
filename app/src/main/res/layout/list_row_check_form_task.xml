@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/eth_row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/_5sdp">
+
+    <androidx.cardview.widget.CardView
+        style="?attr/cardStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_3sdp"
+        card_view:cardCornerRadius="5dp"
+        card_view:cardElevation="6dp"
+        card_view:cardMaxElevation="10dp"
+        card_view:contentPadding="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/_10sdp">
+
+
+            <TextView
+                android:id="@+id/cft_question"
+                style="@style/eload_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/_10sdp"
+                android:paddingEnd="@dimen/_10sdp"
+                android:text="@string/questions" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:id="@+id/cft_item_acceptable"
+                    style="@style/acceptable_unchecked" />
+
+                <TextView
+                    android:id="@+id/cft_item_unacceptable"
+                    style="@style/unacceptable_unchecked" />
+            </LinearLayout>
+            <EditText
+                android:id="@+id/cft_comment"
+                android:visibility="gone"
+                style="@style/cft_comment_background"
+                android:layout_height="@dimen/_60sdp"
+                android:hint="@string/enter_details_of_issue"
+                android:inputType="textShortMessage|textMultiLine|textAutoCorrect|textAutoComplete"
+                android:textColor="@color/black" />
+            <LinearLayout
+                android:id="@+id/cft_photo_layout"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/cft_item_capture"
+                    android:layout_width="0dp"
+                    android:layout_weight=".4"
+                    android:drawableStart="@drawable/ic_add_a_photo"
+                    android:drawablePadding="@dimen/_5sdp"
+                    android:text="@string/take_photo"
+                    android:textColor="@color/light_colorPrimary"
+                    style="@style/eload_text" />
+                <TextView
+                    android:id="@+id/cft_item_attachment"
+                    android:layout_width="0dp"
+                    android:layout_weight=".4"
+                    android:drawableStart="@drawable/ic_image"
+                    android:textColor="@color/light_colorPrimary"
+                    android:drawablePadding="@dimen/_5sdp"
+                    android:text="@string/attach_image"
+                    style="@style/eload_text" />
+
+            </LinearLayout>
+            <!--            <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_marginTop="@dimen/_5sdp"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center_horizontal"
+                            >
+                            <TextView
+                                android:id="@+id/cft_item_acceptable_checked"
+                                style="@style/acceptable_checked"
+                                />
+                            <TextView
+                                android:id="@+id/cft_item_unacceptable_checked"
+                                style="@style/unacceptable_checked"
+                                />
+                        </LinearLayout>-->
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+</LinearLayout>

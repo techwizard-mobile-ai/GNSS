@@ -10,6 +10,9 @@
     <solid android:color="@color/white" />
     <stroke
         android:width="1dip"
+        android:dashWidth="10px"
+        android:dashGap="10px"
         android:color="@color/gray_dark" />
+
 
 </shape>

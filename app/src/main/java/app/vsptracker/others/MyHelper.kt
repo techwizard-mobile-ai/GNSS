@@ -52,6 +52,7 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 import kotlin.math.roundToLong
 
 @SuppressLint("SimpleDateFormat")
@@ -117,31 +118,36 @@ class MyHelper(var TAG: String, val context: Context) {
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
                 val responseString = response.body()!!.string()
-                val responseJObject = JSONObject(responseString)
-                log("RefreshToken:$responseString")
-                val success = responseJObject.getBoolean("success")
-                if (success) {
-                    val gson = GsonBuilder().create()
-                    val loginAPI = gson.fromJson(responseJObject.getString("data"), LoginAPI::class.java)
-                    loginAPI.pass = getLoginAPI().pass
-                    
-                    val app = gson.fromJson(responseJObject.getString("app"), AppAPI::class.java)
-                    log("app:$app")
-                    
-                    val appVersionCode = BuildConfig.VERSION_CODE
-                    @Suppress("ConstantConditionIf")
-                    if (app.version_code > appVersionCode && app.is_critical > 0) {
-                        log("Update App")
-                        val appRater = AppRater()
-                        appRater.rateNow(context)
+                try {
+                    val responseJObject = JSONObject(responseString)
+                    log("RefreshToken:$responseString")
+                    val success = responseJObject.getBoolean("success")
+                    if (success) {
+                        val gson = GsonBuilder().create()
+                        val loginAPI = gson.fromJson(responseJObject.getString("data"), LoginAPI::class.java)
+                        loginAPI.pass = getLoginAPI().pass
+        
+                        val app = gson.fromJson(responseJObject.getString("app"), AppAPI::class.java)
+                        log("app:$app")
+        
+                        val appVersionCode = BuildConfig.VERSION_CODE
+                        @Suppress("ConstantConditionIf")
+                        if (app.version_code > appVersionCode && app.is_critical > 0) {
+                            log("Update App")
+                            val appRater = AppRater()
+                            appRater.rateNow(context)
+                        } else {
+                            setLoginAPI(loginAPI)
+                        }
                     } else {
-                        setLoginAPI(loginAPI)
+                        toast(responseJObject.getString("message"))
+                        val intent = Intent(context, LoginActivity::class.java)
+                        context.startActivity(intent)
                     }
-                } else {
-                    toast(responseJObject.getString("message"))
-                    val intent = Intent(context, LoginActivity::class.java)
-                    context.startActivity(intent)
+                }catch (e : Exception){
+                    log("refreshToken:"+e.localizedMessage)
                 }
+
             }
             
             override fun onFailure(call: Call, e: IOException) {
@@ -551,8 +557,15 @@ class MyHelper(var TAG: String, val context: Context) {
             context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputManager.hideSoftInputFromWindow(
             view.windowToken,
-            InputMethodManager.HIDE_NOT_ALWAYS
+            InputMethodManager.HIDE_IMPLICIT_ONLY
         )
+    }
+    
+    fun showKeyboard(view: View) {
+        view.requestFocus()
+        val imm =
+            context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
     }
     
     fun showProgressBar() {
@@ -730,8 +743,29 @@ class MyHelper(var TAG: String, val context: Context) {
     fun printInsertion(tableName: String, insertedID: Long, datum: MyData) {
         log("$tableName--$insertedID--$datum")
     }
-
-
+    
+    fun getQuestionsIDsList(questionsData: String?): List<Int> {
+        var questionsIDs = ArrayList<Int>()
+        if(questionsData != null){
+            questionsIDs = questionsData.removeSurrounding("[", "]").split(",").map { it.toInt() } as ArrayList<Int>
+        }
+        return questionsIDs
+    }
+    
+    fun toCommaSeparatedString(questionIDS: String?): String {
+        val list = getQuestionsIDsList(questionIDS)
+        return if (list.isNotEmpty()) {
+            val nameBuilder = StringBuilder()
+            for (item in list) {
+                nameBuilder.append(item).append(", ")
+            }
+            nameBuilder.deleteCharAt(nameBuilder.length - 1)
+            nameBuilder.deleteCharAt(nameBuilder.length - 1)
+            nameBuilder.toString()
+        } else {
+            ""
+        }
+    }
 /*
     fun imageLoadFromURL(url: String, imageView: ImageView, myContext: Context) {
 

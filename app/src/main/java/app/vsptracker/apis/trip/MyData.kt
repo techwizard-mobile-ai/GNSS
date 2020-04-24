@@ -237,6 +237,9 @@ class MyData : Serializable {
     @Expose
     var admin_checkforms_schedules_value: String? = null
     
+    var acceptableChecked = false
+    var unacceptableChecked = false
+    
     var isMapOpened: Boolean = false
     override fun toString(): String {
         return "MyData(" +
@@ -249,6 +252,7 @@ class MyData : Serializable {
                 "admin_checkforms_schedules_value=$admin_checkforms_schedules_value, " +
                 "name=$name, " +
                 "questions_data=$questions_data, " +
+                "admin_questions_types_id=$admin_questions_types_id, " +
                 "status=$status, " +
                 "is_deleted=$isDeleted, " +
                 ")"
