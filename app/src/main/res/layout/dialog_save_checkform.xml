@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/_5sdp"
+    android:layout_marginStart="@dimen/_10sdp"
+    android:layout_marginEnd="@dimen/_10sdp"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/cftd_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_marginTop="@dimen/_20sdp"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/checkform_not_completed"
+            android:textColor="@color/gray_dark"
+            android:textSize="@dimen/_16sdp"
+            style="@style/avenirnext_fontstyle"
+            android:textStyle="bold"
+            />
+        <TextView
+            android:id="@+id/cftd_sub_title"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/gray_dark"
+            style="@style/avenirnext_fontstyle"
+            android:text="Save checkform without completion. There are remaining questions."
+            android:textSize="@dimen/_12sdp"
+            />
+    </LinearLayout>
+
+
+
+    <View
+        android:id="@+id/cftd_title_layout_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:background="@color/light_white" />
+
+    <TextView
+        android:id="@+id/save_checkform_yes"
+        style="@style/avenirnext_fontstyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:text="@string/save_checkform"
+        android:textColor="@color/red"
+        android:textSize="@dimen/_16sdp" />
+
+    <View
+        android:id="@+id/cftd_save_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:background="@color/light_white" />
+
+    <TextView
+        android:id="@+id/save_checkform_no"
+        style="@style/avenirnext_fontstyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_20sdp"
+        android:background="@android:color/transparent"
+        android:gravity="center_horizontal"
+        android:text="@string/cancel"
+        android:textColor="@color/blue"
+        android:textSize="@dimen/_16sdp" />
+</LinearLayout>

@@ -2,12 +2,11 @@ package app.vsptracker.others
 
 import android.content.Context
 import android.content.Intent
+import android.os.AsyncTask
 import app.vsptracker.activities.OperatorLoginActivity
 import app.vsptracker.apis.RetrofitAPI
 import app.vsptracker.apis.delay.EWork
 import app.vsptracker.apis.delay.EWorkResponse
-import app.vsptracker.apis.operators.OperatorAPI
-import app.vsptracker.apis.operators.OperatorResponse
 import app.vsptracker.apis.serverSync.ServerSyncAPI
 import app.vsptracker.apis.serverSync.ServerSyncResponse
 import app.vsptracker.apis.trip.MyData
@@ -1299,5 +1298,4 @@ class MyDataPushSave(private val context: Context) {
             }
         }
     }
-    
 }

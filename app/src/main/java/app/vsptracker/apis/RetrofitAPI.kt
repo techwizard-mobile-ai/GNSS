@@ -180,4 +180,10 @@ interface RetrofitAPI {
         @Query("operator_id") id: Int,
         @Query("device_details")deviceDetailsString: String
     ): Call<ServerSyncResponse>
+    
+    @GET(ORGS_SERVER_SYNC_LIST)
+    fun getServerSyncOrg(
+        @Query("org_id") org_id: Int?,
+        @Query("token") token: String?
+    ): Call<ServerSyncResponse>
 }

@@ -1,5 +1,6 @@
 package app.vsptracker.apis.trip
 
+import app.vsptracker.classes.CheckFormData
 import app.vsptracker.classes.GPSLocation
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
@@ -144,7 +145,6 @@ class MyData : Serializable {
     @Expose
     var machine_stop_reason_id: Int = 0
     
-    
     var recordID: Long = 0L
     var isStartMachine: Boolean = false
     
@@ -196,7 +196,6 @@ class MyData : Serializable {
     @Expose
     var isSync: Int = 0
     
-    
     @SerializedName("status")
     @Expose
     var status: Int? = null
@@ -216,15 +215,7 @@ class MyData : Serializable {
     @SerializedName("admin_questions_types_id")
     @Expose
     var admin_questions_types_id: Int = 0
-    
-    @SerializedName("answers_data")
-    @Expose
-    var answers_data: String? = null
-    
-    @SerializedName("days")
-    @Expose
-    var days: String? = null
-    
+
     @SerializedName("questions_data")
     @Expose
     var questions_data: String? = null
@@ -239,6 +230,15 @@ class MyData : Serializable {
     
     var acceptableChecked = false
     var unacceptableChecked = false
+    
+    @SerializedName("admin_checkforms_id")
+    @Expose
+    var admin_checkforms_id: Int = 0
+    
+    @SerializedName("checkform_data")
+    @Expose
+    var checkformDataString = ""
+    var checkformData = CheckFormData()
     
     var isMapOpened: Boolean = false
     override fun toString(): String {

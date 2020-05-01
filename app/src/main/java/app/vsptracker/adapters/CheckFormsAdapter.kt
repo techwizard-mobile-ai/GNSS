@@ -13,12 +13,11 @@ import app.vsptracker.apis.trip.MyData
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyHelper
 import kotlinx.android.synthetic.main.list_row_check_forms.view.*
-import kotlinx.android.synthetic.main.list_row_machine_stop.view.*
-import java.lang.Exception
 
 class CheckFormsAdapter(
     val context: Activity,
-    private val dataList: ArrayList<MyData>
+    private val dataList: ArrayList<MyData>,
+    private val type: Int
 ) : RecyclerView.Adapter<CheckFormsAdapter
 .ViewHolder>() {
 
@@ -42,6 +41,17 @@ class CheckFormsAdapter(
 
         val datum = dataList[position]
         myHelper.log(datum.toString())
+        
+        when(type){
+            0 -> {
+                // Due checkforms
+                holder.itemView.cf_start.background = context.getDrawable(R.drawable.bdue_background)
+            }
+            1 -> {
+                // All checkforms
+                holder.itemView.cf_start.background = context.getDrawable(R.drawable.bnext_background)
+            }
+        }
         
         holder.itemView.cf_id.text = ":  ${datum.id}"
         holder.itemView.cf_name.text = ":  ${datum.name}"

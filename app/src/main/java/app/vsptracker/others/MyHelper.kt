@@ -39,10 +39,7 @@ import app.vsptracker.apis.operators.OperatorAPI
 import app.vsptracker.apis.serverSync.ServerSyncAPI
 import app.vsptracker.apis.serverSync.ServerSyncDataAPI
 import app.vsptracker.apis.trip.MyData
-import app.vsptracker.classes.DeviceDetails
-import app.vsptracker.classes.GPSLocation
-import app.vsptracker.classes.Material
-import app.vsptracker.classes.Meter
+import app.vsptracker.classes.*
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import okhttp3.*
@@ -553,6 +550,7 @@ class MyHelper(var TAG: String, val context: Context) {
     }
     
     fun hideKeyboard(view: View) {
+        view.requestFocus()
         val inputManager =
             context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputManager.hideSoftInputFromWindow(
@@ -766,6 +764,23 @@ class MyHelper(var TAG: String, val context: Context) {
             ""
         }
     }
+    
+    fun printInsertion(tableName: String, insertedID: Long, datum: CheckFormData) {
+        log("$tableName--$insertedID--$datum")
+    }
+    fun getStringToAnswerData(answerData: String?): AnswerData {
+//        log("getStringToGPSLocation:$stringGPSLocation")
+        return if (answerData == null)
+            AnswerData()
+        else gson.fromJson(answerData, AnswerData::class.java)
+        
+        
+    }
+    
+    fun getAnswerDataToString(answerData: AnswerData): String {
+        return gson.toJson(answerData)
+    }
+    
 /*
     fun imageLoadFromURL(url: String, imageView: ImageView, myContext: Context) {
 

@@ -13,14 +13,11 @@ import androidx.recyclerview.widget.RecyclerView
 
 import app.vsptracker.R
 import app.vsptracker.adapters.CheckFormsAdapter
-import app.vsptracker.adapters.MachineStopAdapter
 import app.vsptracker.apis.delay.EWork
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyHelper
 import kotlinx.android.synthetic.main.fragment_check_forms.*
 import kotlinx.android.synthetic.main.fragment_check_forms.view.*
-import kotlinx.android.synthetic.main.fragment_check_forms.view.cf_title
-import kotlinx.android.synthetic.main.fragment_machine_stop.view.*
 
 class CheckFormsFragment : Fragment() {
     private var listener: OnFragmentInteractionListener? = null
@@ -59,7 +56,7 @@ class CheckFormsFragment : Fragment() {
         myHelper.log("CheckForms:$dataList")
         
         
-        val mAdapter = CheckFormsAdapter(context as Activity, dataList)
+        val mAdapter = CheckFormsAdapter(context as Activity, dataList, type)
         root!!.cf_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
         root!!.cf_rv!!.adapter = mAdapter
         
@@ -80,7 +77,15 @@ class CheckFormsFragment : Fragment() {
                 no_cf.visibility= View.VISIBLE
             }
             else ->{
-                no_cf.visibility= View.GONE
+                when(type){
+                    0,1 -> no_cf.visibility = View.GONE
+                    2-> {
+                        cf_rv.visibility = View.GONE
+                        no_cf.visibility= View.VISIBLE
+                        no_cf.text = "Under development"
+                    }
+                }
+                
             }
         }
     }

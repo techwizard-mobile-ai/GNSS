@@ -291,5 +291,9 @@
     <string name="capture_photo">Capture Photo</string>
     <string name="take_photo">Take photo</string>
     <string name="attach_image">Attach Image</string>
+    <string name="skip">Skip</string>
+    <string name="save_checkform">Save Checkform</string>
+    <string name="save_unfinished_form">Save Unfinished Form</string>
+    <string name="checkform_not_completed">Checkform not completed!</string>
 
 </resources>
