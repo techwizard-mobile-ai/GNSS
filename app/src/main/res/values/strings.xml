@@ -295,5 +295,10 @@
     <string name="save_checkform">Save Checkform</string>
     <string name="save_unfinished_form">Save Unfinished Form</string>
     <string name="checkform_not_completed">Checkform not completed!</string>
+    <string name="details">Details</string>
+    <string name="attempted_questions">Attempted Questions</string>
+    <string name="total_questions">Total Questions</string>
+    <string name="no_questions">No Questions</string>
+    <string name="remove_image">Remove Image</string>
 
 </resources>

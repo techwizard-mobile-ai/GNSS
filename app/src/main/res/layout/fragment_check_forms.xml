@@ -10,6 +10,8 @@
             android:id="@+id/cf_title"
             android:layout_alignParentTop="true"
             style="@style/activity_title"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
             android:layout_width="match_parent"
             android:gravity="center_horizontal"
             android:text="@string/checkforms" />

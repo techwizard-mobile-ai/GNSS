@@ -19,6 +19,11 @@ class CheckFormData : Serializable {
     @Expose
     var admin_questions_id: Int = 0
     
+    @SerializedName("answer")
+    @Expose
+    var answer  = ""
+    // 0 Unacceptable, 1 Acceptable
+    
     @SerializedName("answer_data")
     @Expose
     var answerDataString  = ""
@@ -33,7 +38,16 @@ class CheckFormData : Serializable {
     @Expose
     var isSync: Int = 0
     override fun toString(): String {
-        return "CheckFormData(id=$id, admin_checkform_completed_id=$admin_checkform_completed_id, admin_checkform_completed_local_id=$admin_checkform_completed_local_id, admin_questions_id=$admin_questions_id, answer_dataString='$answerDataString', answer_data=$answerDataObj, time='$time', isSync=$isSync)"
+        return "CheckFormData(" +
+                "id=$id, " +
+                "admin_checkform_completed_id=$admin_checkform_completed_id, " +
+                "admin_checkform_completed_local_id=$admin_checkform_completed_local_id, " +
+                "admin_questions_id=$admin_questions_id, " +
+                "answer='$answer', " +
+                "answerDataString='$answerDataString', " +
+                "answerDataObj=$answerDataObj, " +
+                "time='$time', " +
+                "isSync=$isSync" +
+                ")"
     }
-    
 }

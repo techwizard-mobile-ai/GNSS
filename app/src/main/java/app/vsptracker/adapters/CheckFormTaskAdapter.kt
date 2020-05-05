@@ -2,6 +2,9 @@ package app.vsptracker.adapters
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Intent
+import android.graphics.Bitmap
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -25,6 +28,7 @@ class CheckFormTaskAdapter(
 ) : RecyclerView.Adapter<CheckFormTaskAdapter
 .ViewHolder>() {
     
+    private lateinit var myItemView: View
     private val tag = this::class.java.simpleName
     lateinit var myHelper: MyHelper
     private lateinit var db: DatabaseAdapter
@@ -45,13 +49,14 @@ class CheckFormTaskAdapter(
         
         val datum = dataList[position]
         
-        
+        myItemView = holder.itemView
+//        myPosition = position
         holder.itemView.cft_question.text = "${datum.name}"
         
         holder.itemView.cft_item_acceptable.setOnClickListener {
             myHelper.log(datum.toString())
             
-            addCheckFormData(datum.id, 1, holder.itemView.cft_comment.text.toString())
+            addCheckFormData(datum.id, "1", holder.itemView.cft_comment.text.toString())
             
             holder.itemView.cft_item_acceptable.background = context.getDrawable(R.drawable.bnext_background)
             holder.itemView.cft_item_acceptable.setTextColor(context.resources.getColor(R.color.white))
@@ -83,7 +88,7 @@ class CheckFormTaskAdapter(
                 count: Int
             ) {
                 myHelper.showKeyboard(holder.itemView.cft_comment)
-                addCheckFormData(datum.id, -1, holder.itemView.cft_comment.text.toString())
+                addCheckFormData(datum.id, "-1", holder.itemView.cft_comment.text.toString())
                 (context as CheckFormTaskActivity).hideSaveLayout()
             }
             
@@ -104,7 +109,7 @@ class CheckFormTaskAdapter(
         }
         holder.itemView.cft_item_unacceptable.setOnClickListener {
             myHelper.log(datum.toString())
-            addCheckFormData(datum.id, 0, holder.itemView.cft_comment.text.toString())
+            addCheckFormData(datum.id, "0", holder.itemView.cft_comment.text.toString())
             
             holder.itemView.cft_item_unacceptable.background = context.getDrawable(R.drawable.bdue_background)
             holder.itemView.cft_item_unacceptable.setTextColor(context.resources.getColor(R.color.white))
@@ -148,41 +153,60 @@ class CheckFormTaskAdapter(
         
         holder.itemView.cft_item_capture.setOnClickListener {
             myHelper.log("capture photo")
-            myHelper.toast("Under development")
-            
+//            myHelper.toast("Under development")
+            takePhoto(position)
             myHelper.hideKeyboard(holder.itemView.cft_item_capture)
             (context as CheckFormTaskActivity).showSaveLayout()
         }
         holder.itemView.cft_item_attachment.setOnClickListener {
             myHelper.log("photo attachment")
-            myHelper.toast("Under development")
+//            myHelper.toast("Under development")
+            showFileChooser(position)
             myHelper.hideKeyboard(holder.itemView.cft_item_capture)
             (context as CheckFormTaskActivity).showSaveLayout()
             
         }
     }
+    fun takePhoto(position: Int) {
+        myHelper.log("takePhoto:$position")
+        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (cameraIntent.resolveActivity(context.packageManager) != null) {
+            (context as CheckFormTaskActivity).mAdapterPostion = position
+            context.startActivityForResult(cameraIntent, (context as CheckFormTaskActivity).CAMERA_REQUEST)
+        } else {
+            myHelper.toast("Camera not available.")
+        }
+    }
     
-    fun addCheckFormData(questionID: Int, answer: Int, comment: String) {
+    private fun showFileChooser(position: Int) {
+        myHelper.log("showFileChooser:$position")
+        (context as CheckFormTaskActivity).mAdapterPostion = position
+        val selectFileIntent: Intent = Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        selectFileIntent.type = "image/*"
+        context.startActivityForResult(Intent.createChooser(selectFileIntent, "SelectFile"), (context as CheckFormTaskActivity).PICK_FILE_REQUEST)
+    }
+ 
+    fun addCheckFormData(questionID: Int, answer: String, comment: String) {
         
         val checkFormData = CheckFormData()
+        checkFormData.time = System.currentTimeMillis().toString()
         checkFormData.admin_questions_id = questionID
         val answerData = AnswerData()
-        
         answerData.comment = comment
         
         
         val data = (context as CheckFormTaskActivity).checkFormDataList.find { it.admin_questions_id == questionID }
         myHelper.log("data:$data")
         if (data == null) {
-            answerData.answer = answer
+            checkFormData.answer = answer
             checkFormData.answerDataObj = answerData
             // question data is not already saved in list. Add data to list
             (context as CheckFormTaskActivity).checkFormDataList.add(checkFormData)
         } else {
-            if (answer != -1)
-                answerData.answer = answer
+            if (!answer.isBlank())
+                checkFormData.answer = answer
             else
-                answerData.answer = data.answerDataObj.answer
+                checkFormData.answer = data.answer
             // questions data is already in the list. Update data to list
             checkFormData.answerDataObj = answerData
             val index: Int = (context as CheckFormTaskActivity).checkFormDataList.indexOf(data)

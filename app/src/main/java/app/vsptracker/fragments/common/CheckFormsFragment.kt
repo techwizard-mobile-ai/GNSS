@@ -8,12 +8,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import app.vsptracker.R
 import app.vsptracker.adapters.CheckFormsAdapter
+import app.vsptracker.adapters.CheckFormsCompletedAdapter
+import app.vsptracker.adapters.CheckFormsDataAdapter
 import app.vsptracker.apis.delay.EWork
+import app.vsptracker.apis.trip.MyData
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyHelper
 import kotlinx.android.synthetic.main.fragment_check_forms.*
@@ -50,44 +54,72 @@ class CheckFormsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        val dataList = db.getAdminCheckForms()
+        var dataList = db.getAdminCheckForms()
+        
+        var checkFormData = db.getAdminCheckFormsDataByLocalID(checkFormCompleted.id)
+        
         myHelper.log("type: $type")
         myHelper.log("CheckForms:${dataList.size}")
         myHelper.log("CheckForms:$dataList")
-        
-        
-        val mAdapter = CheckFormsAdapter(context as Activity, dataList, type)
-        root!!.cf_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
-        root!!.cf_rv!!.adapter = mAdapter
         
         var title = ""
         when(type){
             0-> title = getString(R.string.due_checkforms)
             1-> title = getString(R.string.all_checkforms)
             2-> title = getString(R.string.completed_checkforms)
+            3-> title = "${db.getAdminCheckFormByID(checkFormCompleted.admin_checkforms_id).name} Details"
         }
     
         cf_title.text = title
-        when(dataList.size){
-            0 ->{
-                when(type){
-                    1 -> no_cf.text = getString(R.string.no_checkforms)
-                    else -> no_cf.text = "No $title."
-                }
-                no_cf.visibility= View.VISIBLE
-            }
-            else ->{
-                when(type){
-                    0,1 -> no_cf.visibility = View.GONE
-                    2-> {
-                        cf_rv.visibility = View.GONE
+        
+        when(type){
+            3 -> {
+                when(checkFormData.size){
+                    0 -> {
+                        no_cf.text = "No Questions to show."
                         no_cf.visibility= View.VISIBLE
-                        no_cf.text = "Under development"
+                    }
+                    else -> {
+                        val mAdapter = CheckFormsDataAdapter(context as Activity, checkFormData)
+                        root!!.cf_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
+                        root!!.cf_rv!!.adapter = mAdapter
                     }
                 }
-                
+            }
+            else ->{
+                when(dataList.size){
+                    0 ->{
+                        when(type){
+                            1 -> no_cf.text = getString(R.string.no_checkforms)
+                            3 -> no_cf.text = getString(R.string.no_questions)
+                            else -> no_cf.text = "No $title."
+                        }
+                        no_cf.visibility= View.VISIBLE
+                    }
+                    else ->{
+                        no_cf.visibility = View.GONE
+                        when(type){
+                            0,1 -> {
+                                val mAdapter = CheckFormsAdapter(context as Activity, dataList, type)
+                                root!!.cf_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
+                                root!!.cf_rv!!.adapter = mAdapter
+                            }
+                            2-> {
+                                dataList = db.getAdminCheckFormsCompleted()
+                                val mAdapter = CheckFormsCompletedAdapter(context as Activity, dataList, type, supportFragmentManager1)
+                                root!!.cf_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
+                                root!!.cf_rv!!.adapter = mAdapter
+                    
+                            }
+                        }
+            
+                    }
+                }
             }
         }
+        
+    
+
     }
     
     override fun onAttach(context: Context) {
@@ -109,14 +141,20 @@ class CheckFormsFragment : Fragment() {
     }
     companion object {
         private var type: Int = 0
+        private var checkFormCompleted = MyData()
+        private lateinit var supportFragmentManager1: FragmentManager
         
         @JvmStatic
         fun newInstance(
-            FRAGMENT_TYPE: Int
+            FRAGMENT_TYPE: Int,
+            supportFragmentManager: FragmentManager,
+            checkFormCompleted1: MyData
         ) =
             CheckFormsFragment().apply {
                 arguments = Bundle().apply {
                     type = FRAGMENT_TYPE
+                    supportFragmentManager1 = supportFragmentManager
+                    checkFormCompleted = checkFormCompleted1
                 }
             }
     }

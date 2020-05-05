@@ -86,23 +86,31 @@
                     style="@style/eload_text" />
 
             </LinearLayout>
-            <!--            <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_marginTop="@dimen/_5sdp"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone"
-                            android:layout_gravity="center_horizontal"
-                            android:gravity="center_horizontal"
-                            >
-                            <TextView
-                                android:id="@+id/cft_item_acceptable_checked"
-                                style="@style/acceptable_checked"
-                                />
-                            <TextView
-                                android:id="@+id/cft_item_unacceptable_checked"
-                                style="@style/unacceptable_checked"
-                                />
-                        </LinearLayout>-->
+            <LinearLayout
+                android:id="@+id/photo_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                >
+                <ImageView
+                    android:id="@+id/image_view"
+                    android:layout_width="@dimen/_130sdp"
+                    android:layout_height="@dimen/_130sdp"
+                    android:src="@drawable/welcomenew"
+                    android:layout_gravity="center"
+                    />
+                <Button
+                    android:id="@+id/cft_remove_image"
+                    style="@style/next_button"
+                    android:text="@string/remove_image"
+                    android:layout_marginEnd="@dimen/_1sdp"
+                    android:textSize="@dimen/_12sdp"
+                    android:layout_gravity="center"
+                    />
+            </LinearLayout>
 
         </LinearLayout>
 

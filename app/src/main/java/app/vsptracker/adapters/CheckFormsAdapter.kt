@@ -63,23 +63,23 @@ class CheckFormsAdapter(
         }else{
             val siteName = db.getSiteByID(datum.siteId).name
             if(datum.machineTypeId < 1){
-                applicable = "$siteName [ All Machines Types ]"
+                applicable = "$siteName\n  [ All Machines Types ]"
             }else{
                 val machineTypeName = db.getMachineTypeByID(datum.machineTypeId).name
                 if(datum.machineId < 1){
-                    applicable = "$siteName [All $machineTypeName ]"
+                    applicable = "$siteName\n  [All $machineTypeName ]"
                 }else{
                     myHelper.log("All Machines: ${db.getMachines()}")
                     myHelper.log("Machine:${db.getMachineByID(datum.machineId)}")
-                    val machineNumber = db.getMachineByID(37).number
-                    applicable = "$siteName [ $machineTypeName# $machineNumber ]"
+                    val machineNumber = db.getMachineByID(datum.machineId).number
+                    applicable = "$siteName\n  [ $machineTypeName# $machineNumber ]"
                 }
             }
         }
         holder.itemView.cf_applicable.text = ":  $applicable"
         
         val checkFormSchedule = db.getAdminCheckFormScheduleByID(datum.admin_checkforms_schedules_id)
-        holder.itemView.cf_schedule.text = ":  ${checkFormSchedule.name}"
+        holder.itemView.cf_schedule.text = ":  ${checkFormSchedule.name}[${datum.admin_checkforms_schedules_value}]"
         holder.itemView.cf_questions.text = ":  ${myHelper.getQuestionsIDsList(datum.questions_data).size}"
         
         holder.itemView.cf_start.setOnClickListener {

@@ -240,22 +240,17 @@ class MyData : Serializable {
     var checkformDataString = ""
     var checkformData = CheckFormData()
     
+    @SerializedName("images_limit")
+    @Expose
+    var images_limit: Int = 0
+    
+    @SerializedName("images_quality")
+    @Expose
+    var images_quality: Int = 0
+    
     var isMapOpened: Boolean = false
     override fun toString(): String {
-        return "MyData(" +
-                "id=$id, " +
-                "org_id=$orgId, " +
-                "site_id=$siteId, " +
-                "machine_type_id=$machineTypeId, " +
-                "machine_id=$machineId, " +
-                "admin_checkforms_schedules_id=$admin_checkforms_schedules_id, " +
-                "admin_checkforms_schedules_value=$admin_checkforms_schedules_value, " +
-                "name=$name, " +
-                "questions_data=$questions_data, " +
-                "admin_questions_types_id=$admin_questions_types_id, " +
-                "status=$status, " +
-                "is_deleted=$isDeleted, " +
-                ")"
+        return "MyData(id=$id, name=$name, admin_questions_types_id=$admin_questions_types_id, images_limit=$images_limit, images_quality=$images_quality)"
     }
     
     

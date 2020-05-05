@@ -57,7 +57,7 @@ const val COL_LOADING_GPS_LOCATION = "loading_gps_location"
 const val COL_UNLOADING_GPS_LOCATION = "unloading_gps_location"
 
 const val COL_ID = "id"
-const val COL_USER_ID = "user_id"
+const val COL_OPERATOR_ID = "operator_id"
 const val COL_ORG_ID = "org_id"
 
 const val COL_START_TIME = "start_time"
@@ -105,14 +105,16 @@ const val COL_ANSWERS_OPTIONS = "answers_options"
 const val COL_TOTAL_CORRECT_ANSWERS = "total_correct_answers"
 const val COL_ADMIN_QUESTIONS_TYPES_ID = "admin_questions_types_id"
 const val COL_ADMIN_QUESTIONS_ID = "admin_questions_id"
-const val COL_ANSWERS_DATA = "answers_data"
+const val COL_ANSWER_DATA = "answer_data"
+const val COL_ANSWER = "answer"
 const val COL_ADMIN_CHECKFORMS_SCHEDULES_ID = "admin_checkforms_schedules_id"
 const val COL_QUESTIONS_DATA = "questions_data"
 const val COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE = "admin_checkforms_schedules_value"
 const val COL_ADMIN_CHECKFORMS_ID = "admin_checkforms_id"
 const val COL_ADMIN_CHECKFORMS_COMPLETED_ID = "admin_checkforms_completed_id"
 const val COL_ADMIN_CHECKFORMS_COMPLETED_LOCAL_ID = "admin_checkforms_completed_local_id"
-
+const val COL_IMAGES_LIMIT = "images_limit"
+const val COL_IMAGES_QUALITY = "images_quality"
 
 const val createMachinesHoursTable = "CREATE TABLE IF NOT EXISTS  $TABLE_MACHINES_HOURS (" +
         "$COL_ID  INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -123,7 +125,7 @@ const val createMachinesHoursTable = "CREATE TABLE IF NOT EXISTS  $TABLE_MACHINE
         "$COL_MACHINE_STOP_REASON_ID  INTEGER," +
         "$COL_LOADING_GPS_LOCATION  TEXT," +
         "$COL_UNLOADING_GPS_LOCATION  TEXT," +
-        "$COL_USER_ID  TEXT," +
+        "$COL_OPERATOR_ID  TEXT," +
         "$COL_START_TIME  INTEGER," +
         "$COL_END_TIME INTEGER," +
         "$COL_TOTAL_TIME INTEGER," +
@@ -228,7 +230,7 @@ const val createMachinesStopsTable = "CREATE TABLE IF NOT EXISTS  $TABLE_MACHINE
         "$COL_MACHINE_STOP_REASON_ID INTEGER, " +
         "$COL_LOADING_GPS_LOCATION  TEXT," +
         "$COL_UNLOADING_GPS_LOCATION  TEXT," +
-        "$COL_USER_ID  TEXT," +
+        "$COL_OPERATOR_ID  TEXT," +
         "$COL_START_TIME  INTEGER," +
         "$COL_END_TIME INTEGER," +
         "$COL_TOTAL_TIME INTEGER," +
@@ -252,7 +254,7 @@ const val createTripTable = "CREATE TABLE IF NOT EXISTS  $TABLE_TRIP (" +
         "$COL_LOADING_LOCATION_ID  INTEGER," +
         "$COL_LOADING_GPS_LOCATION  TEXT," +
         "$COL_UNLOADING_GPS_LOCATION  TEXT," +
-        "$COL_USER_ID  TEXT," +
+        "$COL_OPERATOR_ID  TEXT," +
         "$COL_START_TIME  INTEGER," +
         "$COL_UNLOADING_TASK_ID INTEGER," +
         "$COL_UNLOADING_MATERIAL_ID INTEGER," +
@@ -276,7 +278,7 @@ const val createWaitsTable = "CREATE TABLE IF NOT EXISTS $TABLE_WAITS ( " +
         "$COL_END_TIME INTEGER, " +
         "$COL_LOADING_GPS_LOCATION  TEXT," +
         "$COL_UNLOADING_GPS_LOCATION  TEXT," +
-        "$COL_USER_ID  TEXT," +
+        "$COL_OPERATOR_ID  TEXT," +
         "$COL_TOTAL_TIME INTEGER, " +
         "$COL_DATE TEXT, " +
         "$COL_TIME INTEGER," +
@@ -295,7 +297,7 @@ const val createEWorkActionOffloadingTable = "CREATE TABLE IF NOT EXISTS $TABLE_
         "$COL_TIME INTEGER," +
         "$COL_LOADING_GPS_LOCATION  TEXT," +
         "$COL_UNLOADING_GPS_LOCATION  TEXT," +
-        "$COL_USER_ID  TEXT," +
+        "$COL_OPERATOR_ID  TEXT," +
         "$COL_IS_SYNC  INTEGER," +
         "$COL_IS_DAY_WORKS  INTEGER" +
         ")"
@@ -314,7 +316,7 @@ const val createEWorkTable = "CREATE TABLE IF NOT EXISTS $TABLE_E_WORK ( " +
         "$COL_LOADING_MATERIAL_ID INTEGER, " +
         "$COL_LOADING_GPS_LOCATION  TEXT," +
         "$COL_UNLOADING_GPS_LOCATION  TEXT," +
-        "$COL_USER_ID  TEXT," +
+        "$COL_OPERATOR_ID  TEXT," +
         "$COL_TOTAL_TIME INTEGER, " +
         "$COL_DATE TEXT, " +
         "$COL_TIME INTEGER," +
@@ -339,7 +341,7 @@ const val createLoadHistoryTable = "CREATE TABLE IF NOT EXISTS " + TABLE_E_LOAD_
         "$COL_TIME  INTEGER," +
         "$COL_LOADING_GPS_LOCATION  TEXT," +
         "$COL_UNLOADING_GPS_LOCATION  TEXT," +
-        "$COL_USER_ID  TEXT," +
+        "$COL_OPERATOR_ID  TEXT," +
         "$COL_IS_SYNC  INTEGER," +
         "$COL_IS_DAY_WORKS  INTEGER" +
         ")"
@@ -372,7 +374,7 @@ const val createOperatorsHoursTable = "CREATE TABLE IF NOT EXISTS  $TABLE_OPERAT
         "$COL_ID  INTEGER PRIMARY KEY AUTOINCREMENT," +
         "$COL_ORG_ID INTEGER, " +
         "$COL_SITE_ID INTEGER, " +
-        "$COL_USER_ID  TEXT," +
+        "$COL_OPERATOR_ID  TEXT," +
         "$COL_LOADING_GPS_LOCATION  TEXT," +
         "$COL_UNLOADING_GPS_LOCATION  TEXT," +
         "$COL_START_TIME  INTEGER," +
@@ -398,6 +400,8 @@ const val createQuestionsTable = "CREATE TABLE IF NOT EXISTS  $TABLE_QUESTIONS (
         "$COL_ORG_ID INTEGER," +
         "$COL_NAME  TEXT," +
         "$COL_ADMIN_QUESTIONS_TYPES_ID INTEGER," +
+        "$COL_IMAGES_LIMIT INTEGER," +
+        "$COL_IMAGES_QUALITY INTEGER," +
         "$COL_STATUS INTEGER, " +
         "$COL_IS_DELETED INTEGER" +
         ")"
@@ -410,7 +414,7 @@ const val createAdminCheckFormsSchedulesTable = "CREATE TABLE IF NOT EXISTS  $TA
         ")"
 
 const val createAdminCheckFormsTable = "CREATE TABLE IF NOT EXISTS  $TABLE_ADMIN_CHECKFORMS (" +
-        "$COL_ID  INTEGER PRIMARY KEY ," +
+        "$COL_ID  INTEGER PRIMARY KEY AUTOINCREMENT," +
         "$COL_ORG_ID INTEGER, " +
         "$COL_SITE_ID INTEGER, " +
         "$COL_MACHINE_TYPE_ID INTEGER, " +
@@ -427,7 +431,7 @@ const val createAdminCheckFormsCompletedTable = "CREATE TABLE IF NOT EXISTS  $TA
         "$COL_ID  INTEGER PRIMARY KEY AUTOINCREMENT," +
         "$COL_ORG_ID INTEGER, " +
         "$COL_SITE_ID INTEGER, " +
-        "$COL_USER_ID  TEXT," +
+        "$COL_OPERATOR_ID  TEXT," +
         "$COL_MACHINE_TYPE_ID  INTEGER," +
         "$COL_MACHINE_ID INTEGER," +
         "$COL_ADMIN_CHECKFORMS_ID INTEGER," +
@@ -447,7 +451,8 @@ const val createAdminCheckFormsDataTable = "CREATE TABLE IF NOT EXISTS  $TABLE_A
         "$COL_ADMIN_CHECKFORMS_COMPLETED_ID INTEGER, " +
         "$COL_ADMIN_CHECKFORMS_COMPLETED_LOCAL_ID INTEGER, " +
         "$COL_ADMIN_QUESTIONS_ID INTEGER, " +
-        "$COL_ANSWERS_DATA  TEXT," +
+        "$COL_ANSWER  TEXT," +
+        "$COL_ANSWER_DATA  TEXT," +
         "$COL_TIME  INTEGER," +
         "$COL_IS_SYNC  INTEGER " +
         ")"
@@ -546,7 +551,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         onCreate(db)
     }
     
-    fun insertAdminCheckFormsData(data: ArrayList<CheckFormData>) {
+    fun insertAdminCheckFormsData(data: ArrayList<CheckFormData>, checkFormCompletedLocalID: Long) {
         
         val db = this.writableDatabase
         val cv = ContentValues()
@@ -554,18 +559,45 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         
         for (datum in data) {
             cv.put(COL_ADMIN_CHECKFORMS_COMPLETED_ID, datum.admin_checkform_completed_id)
-            cv.put(COL_ADMIN_CHECKFORMS_COMPLETED_LOCAL_ID, datum.admin_checkform_completed_local_id)
+            cv.put(COL_ADMIN_CHECKFORMS_COMPLETED_LOCAL_ID, checkFormCompletedLocalID)
             cv.put(COL_ADMIN_QUESTIONS_ID, datum.admin_questions_id)
-            
-            cv.put(COL_ANSWERS_DATA, myHelper.getAnswerDataToString(datum.answerDataObj))
-
+            cv.put(COL_ANSWER, datum.answer)
+            cv.put(COL_ANSWER_DATA, myHelper.getAnswerDataToString(datum.answerDataObj))
             cv.put(COL_TIME, datum.time)
             cv.put(COL_IS_SYNC, datum.isSync)
             
             
-            val insertedID = db.replace(tableName, null, cv)
+            val insertedID = db.insert(tableName, null, cv)
             myHelper.printInsertion(tableName, insertedID, datum)
         }
+    }
+    
+    fun insertAdminCheckFormsCompleted(datum: MyData): Long {
+        myHelper.log("insertAdminCheckFormsCompleted:$datum")
+        val db = this.writableDatabase
+        val cv = ContentValues()
+        val tableName = TABLE_ADMIN_CHECKFORMS_COMPLETED
+        
+        cv.put(COL_ORG_ID, datum.orgId)
+        cv.put(COL_SITE_ID, datum.siteId)
+        cv.put(COL_OPERATOR_ID, datum.operatorId)
+        cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
+        cv.put(COL_MACHINE_ID, datum.machineId)
+        cv.put(COL_ADMIN_CHECKFORMS_ID, datum.admin_checkforms_id)
+        cv.put(COL_LOADING_GPS_LOCATION, datum.loadingGPSLocationString)
+        cv.put(COL_UNLOADING_GPS_LOCATION, datum.unloadingGPSLocationString)
+        cv.put(COL_START_TIME, datum.startTime)
+        cv.put(COL_END_TIME, datum.stopTime)
+        cv.put(COL_TOTAL_TIME, datum.totalTime)
+        cv.put(COL_TIME, datum.stopTime)
+        cv.put(COL_DATE, datum.date)
+        cv.put(COL_IS_DAY_WORKS, datum.isDayWorks)
+        cv.put(COL_IS_SYNC, datum.isSync)
+        
+        val insertedID = db.insert(tableName, null, cv)
+        myHelper.printInsertion(tableName, insertedID, datum)
+        return insertedID
+        
     }
     
     fun insertAdminCheckFormsCompleted(data: ArrayList<MyData>) {
@@ -578,12 +610,12 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_ID, datum.id)
             cv.put(COL_ORG_ID, datum.orgId)
             cv.put(COL_SITE_ID, datum.siteId)
-            cv.put(COL_USER_ID, datum.operatorId)
+            cv.put(COL_OPERATOR_ID, datum.operatorId)
             cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
             cv.put(COL_MACHINE_ID, datum.machineId)
             cv.put(COL_ADMIN_CHECKFORMS_ID, datum.admin_checkforms_id)
             cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.loadingGPSLocation))
-            cv.put(COL_UNLOADING_GPS_LOCATION,myHelper.getGPSLocationToString(datum.unloadingGPSLocation))
+            cv.put(COL_UNLOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.unloadingGPSLocation))
             cv.put(COL_START_TIME, datum.startTime)
             cv.put(COL_END_TIME, datum.stopTime)
             cv.put(COL_TOTAL_TIME, datum.totalTime)
@@ -592,8 +624,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_IS_DAY_WORKS, datum.isDayWorks)
             cv.put(COL_IS_SYNC, datum.isSync)
             
-            
-            val insertedID = db.replace(tableName, null, cv)
+            val insertedID = db.insert(tableName, null, cv)
             myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
@@ -649,6 +680,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_ID, datum.id)
             cv.put(COL_ORG_ID, datum.orgId)
             cv.put(COL_ADMIN_QUESTIONS_TYPES_ID, datum.admin_questions_types_id)
+            cv.put(COL_IMAGES_LIMIT, datum.images_limit)
+            cv.put(COL_IMAGES_QUALITY, datum.images_quality)
             cv.put(COL_NAME, datum.name)
             cv.put(COL_STATUS, datum.status)
             cv.put(COL_IS_DELETED, datum.isDeleted)
@@ -686,7 +719,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val cv = ContentValues()
         cv.put(COL_ORG_ID, myData.orgId)
         cv.put(COL_SITE_ID, myData.siteId)
-        cv.put(COL_USER_ID, myData.operatorId)
+        cv.put(COL_OPERATOR_ID, myData.operatorId)
         cv.put(COL_START_TIME, myData.startTime)
         cv.put(COL_END_TIME, myData.stopTime)
         cv.put(COL_TOTAL_TIME, myData.totalTime)
@@ -753,7 +786,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         cv.put(COL_IS_DAY_WORKS, datum.isDayWorks)
         cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.loadingGPSLocation))
         cv.put(COL_UNLOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.unloadingGPSLocation))
-        cv.put(COL_USER_ID, datum.operatorId)
+        cv.put(COL_OPERATOR_ID, datum.operatorId)
         cv.put(COL_IS_SYNC, datum.isSync)
         return db.insert(TABLE_MACHINES_HOURS, null, cv)
     }
@@ -1012,7 +1045,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             COL_UNLOADING_GPS_LOCATION,
             myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
         )
-        cv.put(COL_USER_ID, myData.operatorId)
+        cv.put(COL_OPERATOR_ID, myData.operatorId)
         cv.put(COL_IS_SYNC, myData.isSync)
         
         
@@ -1079,7 +1112,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             COL_UNLOADING_GPS_LOCATION,
             myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
         )
-        cv.put(COL_USER_ID, myData.operatorId)
+        cv.put(COL_OPERATOR_ID, myData.operatorId)
         cv.put(COL_IS_SYNC, myData.isSync)
         
         // myHelper.log("BeforeInsertTrip--:$myData")
@@ -1116,7 +1149,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             COL_UNLOADING_GPS_LOCATION,
             myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
         )
-        cv.put(COL_USER_ID, eWork.operatorId)
+        cv.put(COL_OPERATOR_ID, eWork.operatorId)
         cv.put(COL_IS_SYNC, eWork.isSync)
         
         myHelper.log("delayInsert:$eWork")
@@ -1145,7 +1178,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             COL_UNLOADING_GPS_LOCATION,
             myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
         )
-        cv.put(COL_USER_ID, eWork.operatorId)
+        cv.put(COL_OPERATOR_ID, eWork.operatorId)
         cv.put(COL_IS_SYNC, eWork.isSync)
         
         // myHelper.log("insertID:$insertID")
@@ -1185,7 +1218,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         
         cv.put(COL_UNLOADING_GPS_LOCATION, myHelper.getGPSLocationToString(eWork.unloadingGPSLocation))
         
-        cv.put(COL_USER_ID, eWork.operatorId)
+        cv.put(COL_OPERATOR_ID, eWork.operatorId)
         cv.put(COL_IS_SYNC, eWork.isSync)
         // myHelper.log("insertID:$insertID")
         return db.insert(TABLE_E_WORK, null, cv)
@@ -1225,13 +1258,13 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             COL_UNLOADING_GPS_LOCATION,
             myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
         )
-        cv.put(COL_USER_ID, myData.operatorId)
+        cv.put(COL_OPERATOR_ID, myData.operatorId)
         cv.put(COL_IS_SYNC, myData.isSync)
         // myHelper.log("insertID:$insertID")
         return db.insert(TABLE_E_LOAD_HISTORY, null, cv)
     }
     
-    fun getAdminCheckFormsDataByLocalID(completedCheckFormLocalID : Int): ArrayList<CheckFormData> {
+    fun getAdminCheckFormsDataByLocalID(completedCheckFormLocalID: Int): ArrayList<CheckFormData> {
         val list: ArrayList<CheckFormData> = ArrayList()
         val db = this.readableDatabase
         
@@ -1246,16 +1279,17 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.admin_checkform_completed_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_COMPLETED_ID))
                 datum.admin_checkform_completed_local_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_COMPLETED_LOCAL_ID))
                 datum.admin_questions_id = result.getInt(result.getColumnIndex(COL_ADMIN_QUESTIONS_ID))
+                datum.answer = result.getString(result.getColumnIndex(COL_ANSWER))
                 datum.time = myHelper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
-    
+                
                 datum.answerDataObj = myHelper.getStringToAnswerData(
                     result.getString(
-                        result.getColumnIndex(COL_ANSWERS_DATA)
+                        result.getColumnIndex(COL_ANSWER_DATA)
                     )
                 )
                 datum.answerDataString = result.getString(
-                        result.getColumnIndex(COL_ANSWERS_DATA)
-                    )
+                    result.getColumnIndex(COL_ANSWER_DATA)
+                )
                 
                 datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
                 
@@ -1282,16 +1316,17 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.admin_checkform_completed_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_COMPLETED_ID))
                 datum.admin_checkform_completed_local_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_COMPLETED_LOCAL_ID))
                 datum.admin_questions_id = result.getInt(result.getColumnIndex(COL_ADMIN_QUESTIONS_ID))
+                datum.answer = result.getString(result.getColumnIndex(COL_ANSWER))
                 datum.time = myHelper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
-    
+                
                 datum.answerDataObj = myHelper.getStringToAnswerData(
                     result.getString(
-                        result.getColumnIndex(COL_ANSWERS_DATA)
+                        result.getColumnIndex(COL_ANSWER_DATA)
                     )
                 )
                 datum.answerDataString = result.getString(
-                        result.getColumnIndex(COL_ANSWERS_DATA)
-                    )
+                    result.getColumnIndex(COL_ANSWER_DATA)
+                )
                 
                 datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
                 
@@ -1317,7 +1352,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.id = result.getInt(result.getColumnIndex(COL_ID))
                 datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
                 datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-                datum.operatorId = result.getInt(result.getColumnIndex(COL_USER_ID))
+                datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
                 datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
                 datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
                 datum.admin_checkforms_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_ID))
@@ -1325,19 +1360,19 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
                 datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
                 datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
-    
+                
                 datum.time = myHelper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
                 datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
                 datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
-    
+                
                 datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
                     result.getString(
                         result.getColumnIndex(COL_LOADING_GPS_LOCATION)
                     )
                 )
                 datum.loadingGPSLocationString = result.getString(
-                        result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                    )
+                    result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+                )
                 
                 datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
                     result.getString(
@@ -1346,8 +1381,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 )
                 
                 datum.unloadingGPSLocationString = result.getString(
-                        result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                    )
+                    result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+                )
                 
                 datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
                 
@@ -1367,17 +1402,17 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val result = db.rawQuery(query, null)
         val datum = MyData()
         if (result.moveToFirst()) {
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-                datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
-                datum.admin_checkforms_schedules_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_ID))
-                datum.admin_checkforms_schedules_value = result.getString(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE))
-                datum.name = result.getString(result.getColumnIndex(COL_NAME))
-                datum.questions_data = result.getString(result.getColumnIndex(COL_QUESTIONS_DATA))
-                datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
-                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+            datum.id = result.getInt(result.getColumnIndex(COL_ID))
+            datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+            datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+            datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+            datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
+            datum.admin_checkforms_schedules_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_ID))
+            datum.admin_checkforms_schedules_value = result.getString(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE))
+            datum.name = result.getString(result.getColumnIndex(COL_NAME))
+            datum.questions_data = result.getString(result.getColumnIndex(COL_QUESTIONS_DATA))
+            datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+            datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
             
         }
         result.close()
@@ -1444,6 +1479,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             datum.id = result.getInt(result.getColumnIndex(COL_ID))
             datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
             datum.admin_questions_types_id = result.getInt(result.getColumnIndex(COL_ADMIN_QUESTIONS_TYPES_ID))
+            datum.images_limit = result.getInt(result.getColumnIndex(COL_IMAGES_LIMIT))
+            datum.images_quality = result.getInt(result.getColumnIndex(COL_IMAGES_QUALITY))
             datum.name = result.getString(result.getColumnIndex(COL_NAME))
             datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
             datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
@@ -1479,6 +1516,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.id = result.getInt(result.getColumnIndex(COL_ID))
                 datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
                 datum.admin_questions_types_id = result.getInt(result.getColumnIndex(COL_ADMIN_QUESTIONS_TYPES_ID))
+                datum.images_limit = result.getInt(result.getColumnIndex(COL_IMAGES_LIMIT))
+                datum.images_quality = result.getInt(result.getColumnIndex(COL_IMAGES_QUALITY))
                 datum.name = result.getString(result.getColumnIndex(COL_NAME))
                 datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
                 datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
@@ -1544,7 +1583,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                     )
                 )
                 datum.unloadingGPSLocationString = result.getString(result.getColumnIndex(COL_UNLOADING_GPS_LOCATION))
-                datum.operatorId = result.getInt(result.getColumnIndex(COL_USER_ID))
+                datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
                 datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
                 list.add(datum)
             } while (result.moveToNext())
@@ -1659,7 +1698,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 )
             )
             
-            datum.operatorId = result.getInt(result.getColumnIndex(COL_USER_ID))
+            datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
             datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
             datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
         }
@@ -1719,7 +1758,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 )
                 datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(datum.unloadingGPSLocationString)
                 
-                datum.operatorId = result.getInt(result.getColumnIndex(COL_USER_ID))
+                datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
                 datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
                 datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
                 list.add(datum)
@@ -2292,7 +2331,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                     result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
                 )
                 
-                datum.operatorId = result.getInt(result.getColumnIndex(COL_USER_ID))
+                datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
                 datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
                 
                 list.add(datum)
@@ -2338,7 +2377,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                         result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
                     )
                 )
-                datum.operatorId = result.getInt(result.getColumnIndex(COL_USER_ID))
+                datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
                 datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
                 list.add(datum)
             } while (result.moveToNext())
@@ -2399,7 +2438,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.unloadingGPSLocationString = result.getString(
                     result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
                 )
-                datum.operatorId = result.getInt(result.getColumnIndex(COL_USER_ID))
+                datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
                 datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
 //                myHelper.log("getEWorks:$datum")
                 list.add(datum)
@@ -2461,7 +2500,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.unloadingGPSLocationString = result.getString(
                     result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
                 )
-                datum.operatorId = result.getInt(result.getColumnIndex(COL_USER_ID))
+                datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
                 datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
                 list.add(datum)
             } while (result.moveToNext())
@@ -2519,7 +2558,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                     result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
                 )
             )
-            datum.operatorId = result.getInt(result.getColumnIndex(COL_USER_ID))
+            datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
             datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
         }
         
@@ -2574,7 +2613,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                         result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
                     )
                 )
-                datum.operatorId = result.getInt(result.getColumnIndex(COL_USER_ID))
+                datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
                 datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
                 list.add(datum)
             } while (result.moveToNext())
@@ -2642,7 +2681,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.unloadingGPSLocationString = result.getString(
                     result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
                 )
-                datum.operatorId = result.getInt(result.getColumnIndex(COL_USER_ID))
+                datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
                 datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
                 list.add(datum)
             } while (result.moveToNext())
@@ -2692,7 +2731,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                     result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
                 )
             )
-            datum.operatorId = result.getInt(result.getColumnIndex(COL_USER_ID))
+            datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
             datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
 //                list.add(datum)
 //            } while (result.moveToNext())
@@ -2747,7 +2786,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.unloadingGPSLocationString = result.getString(
                     result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
                 )
-                datum.operatorId = result.getInt(result.getColumnIndex(COL_USER_ID))
+                datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
                 datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
                 list.add(datum)
             } while (result.moveToNext())

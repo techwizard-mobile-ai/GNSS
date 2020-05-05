@@ -43,23 +43,23 @@ class CheckFormsActivity : BaseActivity(), View.OnClickListener,
         if (menuFragment != null) {
             when (menuFragment) {
                 "dueCheckFormsFragment" -> {
-                    val machineStopFragment = CheckFormsFragment.newInstance(0)
+                    val machineStopFragment = CheckFormsFragment.newInstance(0, supportFragmentManager, MyData())
                     openFragment(machineStopFragment, DUE_CHECKFORMS)
                 }
                 "allCheckFormsFragment" -> {
-                    val operatorHourFragment = CheckFormsFragment.newInstance(1)
+                    val operatorHourFragment = CheckFormsFragment.newInstance(1, supportFragmentManager, MyData())
                     openFragment(operatorHourFragment, ALL_CHECKFORMS)
                 }
                 else -> {
-                    val machineHourFragment = CheckFormsFragment.newInstance(2)
+                    val machineHourFragment = CheckFormsFragment.newInstance(2, supportFragmentManager, MyData())
                     openFragment(machineHourFragment, COMPLETED_CHECKFORMS)
                 }
             }
         } else {
-            val machineHourFragment = CheckFormsFragment.newInstance(0)
+            val machineHourFragment = CheckFormsFragment.newInstance(0, supportFragmentManager, MyData())
             openFragment(machineHourFragment, DUE_CHECKFORMS)
         }
-        val machineHourFragment = CheckFormsFragment.newInstance(0)
+        val machineHourFragment = CheckFormsFragment.newInstance(0, supportFragmentManager, MyData())
         openFragment(machineHourFragment, DUE_CHECKFORMS)
     }
     private fun openFragment(fragment: Fragment, FRAGMENT_TAG: String?) {
@@ -73,17 +73,17 @@ class CheckFormsActivity : BaseActivity(), View.OnClickListener,
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.cf_due -> {
-                    val dueCheckFormsFragment = CheckFormsFragment.newInstance(0)
+                    val dueCheckFormsFragment = CheckFormsFragment.newInstance(0, supportFragmentManager, MyData())
                     openFragment(dueCheckFormsFragment, DUE_CHECKFORMS)
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.cf_all -> {
-                    val allCheckFormsFragment = CheckFormsFragment.newInstance(1)
+                    val allCheckFormsFragment = CheckFormsFragment.newInstance(1, supportFragmentManager, MyData())
                     openFragment(allCheckFormsFragment, ALL_CHECKFORMS)
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.cf_completed -> {
-                    val completedCheckFormsFragment = CheckFormsFragment.newInstance(2)
+                    val completedCheckFormsFragment = CheckFormsFragment.newInstance(2, supportFragmentManager, MyData())
                     openFragment(completedCheckFormsFragment, COMPLETED_CHECKFORMS)
                     return@OnNavigationItemSelectedListener true
                 }
