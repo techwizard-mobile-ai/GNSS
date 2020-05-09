@@ -300,5 +300,7 @@
     <string name="total_questions">Total Questions</string>
     <string name="no_questions">No Questions</string>
     <string name="remove_image">Remove Image</string>
+    <string name="image_showing_issue">Image showing Issue</string>
+    <string name="no_questions_to_show">No Questions to show.</string>
 
 </resources>

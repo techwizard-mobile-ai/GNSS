@@ -107,10 +107,10 @@ class CheckFormsCompletedAdapter(
             )} "
     
         holder.itemView.cfc_gps_loading_layout.setOnClickListener {
-            myHelper.showOnMap(datum.loadingGPSLocation, "Delay Location")
+            myHelper.showOnMap(datum.loadingGPSLocation, "Checkform started location.")
         }
         holder.itemView.cfc_gps_unloading_layout.setOnClickListener {
-            myHelper.showOnMap(datum.unloadingGPSLocation, "Delay Location")
+            myHelper.showOnMap(datum.unloadingGPSLocation, "Checkform completed Location")
         }
     
         when {

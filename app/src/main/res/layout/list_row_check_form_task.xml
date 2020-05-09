@@ -56,7 +56,8 @@
                 android:layout_height="@dimen/_60sdp"
                 android:hint="@string/enter_details_of_issue"
                 android:inputType="textShortMessage|textMultiLine|textAutoCorrect|textAutoComplete"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:autofillHints="@string/enter_details_of_issue" />
             <LinearLayout
                 android:id="@+id/cft_photo_layout"
                 android:visibility="gone"
@@ -86,31 +87,53 @@
                     style="@style/eload_text" />
 
             </LinearLayout>
-            <LinearLayout
-                android:id="@+id/photo_layout"
+
+            <TextView
+                android:id="@+id/cft_photo_info"
+                android:visibility="gone"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_info_"
+                android:layout_marginBottom="@dimen/_3sdp"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:textColor="@color/red"
+                android:drawablePadding="@dimen/_5sdp"
+                android:textSize="@dimen/_12sdp"
+                android:text="@string/attach_image"
+                style="@style/eload_text" />
+
+            <HorizontalScrollView
+                android:id="@+id/photo_layout_main"
+                android:layout_width="match_parent"
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginEnd="@dimen/_10sdp"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                >
-                <ImageView
-                    android:id="@+id/image_view"
-                    android:layout_width="@dimen/_130sdp"
-                    android:layout_height="@dimen/_130sdp"
-                    android:src="@drawable/welcomenew"
-                    android:layout_gravity="center"
-                    />
-                <Button
-                    android:id="@+id/cft_remove_image"
-                    style="@style/next_button"
-                    android:text="@string/remove_image"
-                    android:layout_marginEnd="@dimen/_1sdp"
-                    android:textSize="@dimen/_12sdp"
-                    android:layout_gravity="center"
-                    />
-            </LinearLayout>
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:id="@+id/photo_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/_2sdp"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    >
+                    <!--                <ImageView-->
+                    <!--                    android:id="@+id/image_view"-->
+                    <!--                    android:layout_width="@dimen/_130sdp"-->
+                    <!--                    android:layout_height="@dimen/_130sdp"-->
+                    <!--                    android:src="@drawable/welcomenew"-->
+                    <!--                    android:layout_gravity="center"-->
+                    <!--                    android:contentDescription="@string/image_showing_issue" />-->
+                    <!--                <Button-->
+                    <!--                    android:id="@+id/cft_remove_image"-->
+                    <!--                    style="@style/next_button"-->
+                    <!--                    android:text="@string/remove_image"-->
+                    <!--                    android:layout_marginStart="@dimen/_20sdp"-->
+                    <!--                    android:layout_marginEnd="@dimen/_1sdp"-->
+                    <!--                    android:textSize="@dimen/_12sdp"-->
+                    <!--                    android:layout_gravity="center"-->
+                    <!--                    />-->
+                </LinearLayout>
+            </HorizontalScrollView>
+
 
         </LinearLayout>
 

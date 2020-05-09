@@ -23,6 +23,7 @@
             android:orientation="vertical">
 
             <LinearLayout style="@style/load_history_row_item">
+
                 <TextView
                     android:id="@+id/cfd_question"
                     style="@style/cfd"
@@ -30,20 +31,38 @@
             </LinearLayout>
 
             <LinearLayout style="@style/load_history_row_item">
+
                 <TextView
                     android:id="@+id/cfd_answer"
                     style="@style/cfd"
                     android:text="@string/questions" />
             </LinearLayout>
 
-            <LinearLayout
-                style="@style/load_history_row_item">
+            <LinearLayout style="@style/load_history_row_item">
+
                 <TextView
                     android:id="@+id/cfd_comment"
-                    android:visibility="gone"
                     style="@style/cf_text"
-                    android:text="@string/questions" />
+                    android:text="@string/questions"
+                    android:textColor="@color/red"
+                    android:visibility="gone" />
             </LinearLayout>
+
+            <HorizontalScrollView
+                android:id="@+id/photo_layout_main"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_10sdp">
+                <LinearLayout
+                    android:id="@+id/photo_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/_2sdp"
+                    android:visibility="gone">
+                </LinearLayout>
+            </HorizontalScrollView>
 
         </LinearLayout>
 

@@ -3,22 +3,22 @@ package app.vsptracker.adapters
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.RecyclerView
 import app.vsptracker.R
 import app.vsptracker.activities.CheckFormTaskActivity
 import app.vsptracker.apis.trip.MyData
-import app.vsptracker.classes.AnswerData
-import app.vsptracker.classes.CheckFormData
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyHelper
 import kotlinx.android.synthetic.main.list_row_check_form_task.view.*
+import java.io.File
 import java.util.*
 
 
@@ -48,29 +48,22 @@ class CheckFormTaskAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         
         val datum = dataList[position]
-        
         myItemView = holder.itemView
-//        myPosition = position
         holder.itemView.cft_question.text = "${datum.name}"
-        
         holder.itemView.cft_item_acceptable.setOnClickListener {
             myHelper.log(datum.toString())
-            
-            addCheckFormData(datum.id, "1", holder.itemView.cft_comment.text.toString())
+            (context as CheckFormTaskActivity).addCheckFormData(datum.id, "1", holder.itemView.cft_comment.text.toString())
             
             holder.itemView.cft_item_acceptable.background = context.getDrawable(R.drawable.bnext_background)
-            holder.itemView.cft_item_acceptable.setTextColor(context.resources.getColor(R.color.white))
+            holder.itemView.cft_item_acceptable.setTextColor(ContextCompat.getColor(context, R.color.white))
             datum.acceptableChecked = true
             
-            holder.itemView.cft_comment.visibility = View.GONE
-            holder.itemView.cft_photo_layout.visibility = View.GONE
-            myHelper.hideKeyboard(holder.itemView.cft_item_acceptable)
-            (context as CheckFormTaskActivity).showSaveLayout()
+            hideCommentsPhotoLayout(holder.itemView)
             
             when (datum.unacceptableChecked) {
                 true -> {
                     holder.itemView.cft_item_unacceptable.background = context.getDrawable(R.drawable.bdue_border)
-                    holder.itemView.cft_item_unacceptable.setTextColor(context.resources.getColor(R.color.light_red))
+                    holder.itemView.cft_item_unacceptable.setTextColor(ContextCompat.getColor(context, R.color.light_red))
                     datum.unacceptableChecked = false
                 }
             }
@@ -88,8 +81,8 @@ class CheckFormTaskAdapter(
                 count: Int
             ) {
                 myHelper.showKeyboard(holder.itemView.cft_comment)
-                addCheckFormData(datum.id, "-1", holder.itemView.cft_comment.text.toString())
-                (context as CheckFormTaskActivity).hideSaveLayout()
+                (context as CheckFormTaskActivity).addCheckFormData(datum.id, "-1", holder.itemView.cft_comment.text.toString())
+                context.hideSaveLayout()
             }
             
             override fun beforeTextChanged(
@@ -102,49 +95,42 @@ class CheckFormTaskAdapter(
         })
         
         
-        
         holder.itemView.cft_row.setOnClickListener {
             myHelper.hideKeyboard(holder.itemView.cft_row)
             (context as CheckFormTaskActivity).showSaveLayout()
         }
         holder.itemView.cft_item_unacceptable.setOnClickListener {
             myHelper.log(datum.toString())
-            addCheckFormData(datum.id, "0", holder.itemView.cft_comment.text.toString())
+            (context as CheckFormTaskActivity).addCheckFormData(datum.id, "0", holder.itemView.cft_comment.text.toString())
             
             holder.itemView.cft_item_unacceptable.background = context.getDrawable(R.drawable.bdue_background)
-            holder.itemView.cft_item_unacceptable.setTextColor(context.resources.getColor(R.color.white))
+            holder.itemView.cft_item_unacceptable.setTextColor(ContextCompat.getColor(context, R.color.white))
             datum.unacceptableChecked = true
             
             myHelper.hideKeyboard(holder.itemView.cft_item_unacceptable)
-            (context as CheckFormTaskActivity).showSaveLayout()
+            context.showSaveLayout()
             when (datum.admin_questions_types_id) {
                 2 -> {
                     //show comments section
-                    holder.itemView.cft_comment.visibility = View.VISIBLE
-                    myHelper.showKeyboard(holder.itemView.cft_comment)
-                    context.hideSaveLayout()
-                    holder.itemView.cft_photo_layout.visibility = View.VISIBLE
+                    showCommentsLayout(holder.itemView)
                     
                 }
                 3 -> {
                     //show photo section
-                    holder.itemView.cft_photo_layout.visibility = View.VISIBLE
+                    showPhotoLayout(holder.itemView, datum.images_limit)
                     context.showSaveLayout()
                 }
                 4 -> {
-                    //show comments section
-                    holder.itemView.cft_comment.visibility = View.VISIBLE
-                    myHelper.showKeyboard(holder.itemView.cft_comment)
-                    context.hideSaveLayout()
-                    
-                    holder.itemView.cft_photo_layout.visibility = View.VISIBLE
+                    //show photo, comments section
+                    showCommentsLayout(holder.itemView)
+                    showPhotoLayout(holder.itemView, datum.images_limit)
                 }
             }
             
             when (datum.acceptableChecked) {
                 true -> {
                     holder.itemView.cft_item_acceptable.background = context.getDrawable(R.drawable.bnext_border)
-                    holder.itemView.cft_item_acceptable.setTextColor(context.resources.getColor(R.color.light_colorPrimary))
+                    holder.itemView.cft_item_acceptable.setTextColor(ContextCompat.getColor(context, R.color.light_colorPrimary))
                     datum.acceptableChecked = true
                 }
             }
@@ -152,27 +138,57 @@ class CheckFormTaskAdapter(
         }
         
         holder.itemView.cft_item_capture.setOnClickListener {
-            myHelper.log("capture photo")
-//            myHelper.toast("Under development")
-            takePhoto(position)
-            myHelper.hideKeyboard(holder.itemView.cft_item_capture)
-            (context as CheckFormTaskActivity).showSaveLayout()
-        }
-        holder.itemView.cft_item_attachment.setOnClickListener {
-            myHelper.log("photo attachment")
-//            myHelper.toast("Under development")
-            showFileChooser(position)
-            myHelper.hideKeyboard(holder.itemView.cft_item_capture)
-            (context as CheckFormTaskActivity).showSaveLayout()
+            
+            if( datum.images_limit <= (context as CheckFormTaskActivity).getAttachedImagesSize(datum.id)){
+                myHelper.toast("Attachments limit reached.")
+            }else{
+                takePhoto(position)
+                myHelper.hideKeyboard(holder.itemView.cft_item_capture)
+                context.showSaveLayout()
+                context.selectedQuestionID = datum.id
+            }
             
         }
+        holder.itemView.cft_item_attachment.setOnClickListener {
+            
+            if( datum.images_limit <= (context as CheckFormTaskActivity).getAttachedImagesSize(datum.id)){
+                myHelper.toast("Attachments limit reached.")
+            }else{
+                showFileChooser(position)
+                myHelper.hideKeyboard(holder.itemView.cft_item_capture)
+                context.showSaveLayout()
+                context.selectedQuestionID = datum.id
+            }
+        }
     }
+    
     fun takePhoto(position: Int) {
         myHelper.log("takePhoto:$position")
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        
         if (cameraIntent.resolveActivity(context.packageManager) != null) {
-            (context as CheckFormTaskActivity).mAdapterPostion = position
-            context.startActivityForResult(cameraIntent, (context as CheckFormTaskActivity).CAMERA_REQUEST)
+            (context as CheckFormTaskActivity).mAdapterPosition = position
+            
+            val photoFile: File?
+            try {
+                photoFile = context.createImageFile()
+                if (photoFile != null) {
+                    myHelper.log("photoFile:${photoFile.path}")
+                    context.imageToUploadUri = FileProvider.getUriForFile(context, "app.vsptracker.provider", photoFile)
+                    cameraIntent.putExtra(
+                        MediaStore.EXTRA_OUTPUT,
+                        context.imageToUploadUri
+                    )
+                    context.startActivityForResult(
+                        cameraIntent,
+                        context.CAMERA_REQUEST
+                    )
+                }
+            }
+            catch (e: Exception) {
+                myHelper.log(e.message.toString())
+            }
+            
         } else {
             myHelper.toast("Camera not available.")
         }
@@ -180,38 +196,33 @@ class CheckFormTaskAdapter(
     
     private fun showFileChooser(position: Int) {
         myHelper.log("showFileChooser:$position")
-        (context as CheckFormTaskActivity).mAdapterPostion = position
-        val selectFileIntent: Intent = Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        (context as CheckFormTaskActivity).mAdapterPosition = position
+        val selectFileIntent = Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         selectFileIntent.type = "image/*"
-        context.startActivityForResult(Intent.createChooser(selectFileIntent, "SelectFile"), (context as CheckFormTaskActivity).PICK_FILE_REQUEST)
+        context.startActivityForResult(Intent.createChooser(selectFileIntent, "SelectFile"), context.PICK_FILE_REQUEST)
     }
- 
-    fun addCheckFormData(questionID: Int, answer: String, comment: String) {
+    
+    private fun showCommentsLayout(itemView: View) {
+        itemView.cft_comment.visibility = View.VISIBLE
+        myHelper.showKeyboard(itemView.cft_comment)
+        (context as CheckFormTaskActivity).hideSaveLayout()
+    }
+    
+    private fun hideCommentsPhotoLayout(itemView: View) {
         
-        val checkFormData = CheckFormData()
-        checkFormData.time = System.currentTimeMillis().toString()
-        checkFormData.admin_questions_id = questionID
-        val answerData = AnswerData()
-        answerData.comment = comment
-        
-        
-        val data = (context as CheckFormTaskActivity).checkFormDataList.find { it.admin_questions_id == questionID }
-        myHelper.log("data:$data")
-        if (data == null) {
-            checkFormData.answer = answer
-            checkFormData.answerDataObj = answerData
-            // question data is not already saved in list. Add data to list
-            (context as CheckFormTaskActivity).checkFormDataList.add(checkFormData)
-        } else {
-            if (!answer.isBlank())
-                checkFormData.answer = answer
-            else
-                checkFormData.answer = data.answer
-            // questions data is already in the list. Update data to list
-            checkFormData.answerDataObj = answerData
-            val index: Int = (context as CheckFormTaskActivity).checkFormDataList.indexOf(data)
-            (context as CheckFormTaskActivity).checkFormDataList[index] = checkFormData
-        }
+        itemView.cft_comment.visibility = View.GONE
+        itemView.cft_photo_layout.visibility = View.GONE
+        itemView.photo_layout_main.visibility = View.GONE
+        itemView.cft_photo_info.visibility = View.GONE
+        myHelper.hideKeyboard(itemView.cft_item_acceptable)
+        (context as CheckFormTaskActivity).showSaveLayout()
+    }
+    
+    private fun showPhotoLayout(itemView: View, imagesLimit: Int) {
+        itemView.cft_photo_layout.visibility = View.VISIBLE
+        itemView.photo_layout_main.visibility = View.VISIBLE
+        itemView.cft_photo_info.text = "Images Limit: $imagesLimit"
+        itemView.cft_photo_info.visibility = View.VISIBLE
     }
     
     override fun getItemCount(): Int {

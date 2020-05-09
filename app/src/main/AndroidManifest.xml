@@ -6,6 +6,10 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-feature android:name="android.hardware.camera"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -15,11 +19,22 @@
         android:screenOrientation="landscape"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".activities.CheckFormTaskActivity"></activity>
+        <activity android:name=".activities.CheckFormTaskActivity" />
         <activity android:name=".activities.CheckFormsActivity" />
         <activity android:name=".activities.ServerSyncActivity" />
         <activity android:name=".activities.HoursReportingActivity" />
         <activity android:name=".activities.common.MachineBreakdownActivity" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="app.vsptracker.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths">
+            </meta-data>
+        </provider>
 
         <receiver android:name=".others.VSPTWidget">
             <intent-filter>

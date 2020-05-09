@@ -6,19 +6,20 @@ import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
+import android.net.Uri
 import android.text.TextUtils
 import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.FrameLayout
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import app.vsptracker.BuildConfig
 import app.vsptracker.R
+import app.vsptracker.activities.CheckFormTaskActivity
 import app.vsptracker.activities.HourMeterStopActivity
 import app.vsptracker.activities.LoginActivity
 import app.vsptracker.activities.Map1Activity
@@ -40,6 +41,10 @@ import app.vsptracker.apis.serverSync.ServerSyncAPI
 import app.vsptracker.apis.serverSync.ServerSyncDataAPI
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.*
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import okhttp3.*
@@ -781,7 +786,7 @@ class MyHelper(var TAG: String, val context: Context) {
         return gson.toJson(answerData)
     }
     
-/*
+
     fun imageLoadFromURL(url: String, imageView: ImageView, myContext: Context) {
 
 //        log("imageLoadFromURL:$url")
@@ -820,15 +825,49 @@ class MyHelper(var TAG: String, val context: Context) {
         }
 
     }
-    fun imageLoad(filePath: Uri?, coach_user_image: ImageView) {
+    fun imageLoad(filePath: Uri?, imageView: ImageView) {
         try {
-            Glide.with(context).load(filePath).into(coach_user_image)
-            toast("Image Attached Successfully.")
+            Glide.with(context).load(filePath).into(imageView)
+//            toast("Image Attached Successfully.")
         } catch (exception: Exception) {
             toast("$exception")
         }
     }
+    fun imageLoad(bitmap: Bitmap?, imageView: ImageView) {
+        try {
+            Glide.with(context).load(bitmap).into(imageView)
+//            toast("Image Attached Successfully.")
+        } catch (exception: Exception) {
+            toast("$exception")
+        }
+    }
+    
+    fun addImageToPhotoLayout(context: Context, imageBitmap: Bitmap?, imageURI: Uri?): LinearLayout? {
+            val linearLayout = LinearLayout(context)
+            val layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        
+            layoutParams.setMargins(context.resources.getDimensionPixelSize(R.dimen._10sdp), 0, context.resources.getDimensionPixelSize(R.dimen._10sdp), 0)
+            linearLayout.layoutParams = layoutParams
+            linearLayout.orientation = LinearLayout.HORIZONTAL
+        
+            val imageView = ImageView(context)
+            val imageViewParam = LinearLayout.LayoutParams(context.resources.getDimensionPixelSize(R.dimen._130sdp), context.resources.getDimensionPixelSize(R.dimen._130sdp))
+            imageViewParam.gravity = Gravity.CENTER
+        
+            imageView.layoutParams = imageViewParam
+            imageView.contentDescription = context.resources.getString(R.string.image_showing_issue)
 
+//        imageView.setImageBitmap(imageURI)
+            if (imageBitmap != null)
+                imageLoad(imageBitmap, imageView)
+            else
+                imageLoad(imageURI, imageView)
+        
+            linearLayout.addView(imageView, 0)
+            return linearLayout
+        }
+    
+/*
     fun isValidUsername(target: String): Boolean {
         return if (TextUtils.isEmpty(target)) {
             false

@@ -76,7 +76,7 @@ class CheckFormsFragment : Fragment() {
             3 -> {
                 when(checkFormData.size){
                     0 -> {
-                        no_cf.text = "No Questions to show."
+                        no_cf.text = getString(R.string.no_questions_to_show)
                         no_cf.visibility= View.VISIBLE
                     }
                     else -> {

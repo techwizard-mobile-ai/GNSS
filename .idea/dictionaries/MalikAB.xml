@@ -4,6 +4,7 @@
       <w>checkform</w>
       <w>checkforms</w>
       <w>digginghistory</w>
+      <w>eload</w>
       <w>ework</w>
       <w>gpslocation</w>
       <w>gson</w>
@@ -19,6 +20,7 @@
       <w>trenchinghistory</w>
       <w>vspt</w>
       <w>vsptracker</w>
+      <w>welcomenew</w>
     </words>
   </dictionary>
 </component>

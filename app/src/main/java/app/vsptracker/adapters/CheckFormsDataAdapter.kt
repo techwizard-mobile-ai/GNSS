@@ -2,9 +2,15 @@ package app.vsptracker.adapters
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
+import android.graphics.Bitmap
+import android.net.Uri
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -69,16 +75,24 @@ class CheckFormsDataAdapter(
                     }
                     
                 }
+                if(datum.answerDataObj.imagesPath.size > 0){
+                    holder.itemView.photo_layout_main.visibility = View.VISIBLE
+                    holder.itemView.photo_layout.visibility = View.VISIBLE
+                    datum.answerDataObj.imagesPath.forEach {
+                        holder.itemView.photo_layout.addView(myHelper.addImageToPhotoLayout(context, null, Uri.parse(it)))
+                    }
+                }else{
+                    holder.itemView.photo_layout_main.visibility = View.GONE
+                    holder.itemView.photo_layout.visibility = View.GONE
+                }
             }
         }
-        
-        
-    
     }
+    
     override fun getItemCount(): Int {
         return dataList.size
     }
-
+    
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     
 }
