@@ -2145,7 +2145,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val db = this.readableDatabase
         
         val query =
-            "Select * from $TABLE_MATERIALS  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1  AND $COL_MACHINE_TYPE_ID = ${myHelper.getMachineTypeID()} ORDER BY $COL_ID DESC"
+            "Select * from $TABLE_MATERIALS  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1  AND $COL_MACHINE_TYPE_ID = ${myHelper.getMachineTypeID()} AND $COL_SITE_ID = ${myHelper.getMachineSettings().siteId} ORDER BY $COL_ID DESC"
         val result = db.rawQuery(query, null)
         
         if (result.moveToFirst()) {
