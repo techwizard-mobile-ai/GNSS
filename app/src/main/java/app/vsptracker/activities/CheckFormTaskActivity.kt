@@ -3,20 +3,14 @@ package app.vsptracker.activities
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ContentResolver
-import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.provider.MediaStore.Images.Media.getBitmap
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -300,7 +294,7 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
         
         if (data == null) {
             val answerData = AnswerData()
-            answerData.imagesPath.add(imagePath)
+            answerData.imagesPaths.add(imagePath)
             checkFormData.answerDataObj = answerData
             // question data is not already saved in list. Add data to list
             checkFormDataList.add(checkFormData)
@@ -308,7 +302,7 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
             checkFormData.answer = data.answer
             // questions data is already in the list. Update data to list
             checkFormData.answerDataObj = data.answerDataObj
-            checkFormData.answerDataObj.imagesPath.add(imagePath)
+            checkFormData.answerDataObj.imagesPaths.add(imagePath)
             val index: Int = checkFormDataList.indexOf(data)
             checkFormDataList[index] = checkFormData
         }
@@ -320,7 +314,7 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
         return if (data == null) {
             0
         } else {
-            data.answerDataObj.imagesPath.size
+            data.answerDataObj.imagesPaths.size
         }
     }
     

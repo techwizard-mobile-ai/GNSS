@@ -302,5 +302,7 @@
     <string name="remove_image">Remove Image</string>
     <string name="image_showing_issue">Image showing Issue</string>
     <string name="no_questions_to_show">No Questions to show.</string>
+    <string name="no_completed_checkforms">No Completed CheckForms</string>
+    <string name="no_due_checkforms">Under development.</string>
 
 </resources>

@@ -1338,6 +1338,12 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return list
     }
     
+    fun getAdminCheckFormsDue(): ArrayList<MyData> {
+        val list: ArrayList<MyData> = ArrayList()
+        
+        return list
+    }
+    
     fun getAdminCheckFormsCompleted(): ArrayList<MyData> {
         val list: ArrayList<MyData> = ArrayList()
         val db = this.readableDatabase
@@ -1425,7 +1431,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val db = this.readableDatabase
         
         val query =
-            "Select * FROM $TABLE_ADMIN_CHECKFORMS ORDER BY $COL_ID DESC "
+            "Select * FROM $TABLE_ADMIN_CHECKFORMS  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1  ORDER BY $COL_ID DESC "
         val result = db.rawQuery(query, null)
         
         if (result.moveToFirst()) {

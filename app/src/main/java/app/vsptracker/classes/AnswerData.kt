@@ -5,10 +5,11 @@ import java.io.Serializable
 class AnswerData : Serializable {
     
     var comment: String = ""
-    var imagesPath = ArrayList<String>()
-    override fun toString(): String {
-        return "AnswerData(comment='$comment', imagesPath=$imagesPath)"
-    }
+    var imagesPaths = ArrayList<String>()
+    var awsImagesPaths = ArrayList<String>()
     
+    override fun toString(): String {
+        return "AnswerData(comment='$comment', imagesPaths=$imagesPaths, awsImagesPaths=$awsImagesPaths)"
+    }
     
 }

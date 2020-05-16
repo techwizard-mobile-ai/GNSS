@@ -2,31 +2,16 @@ package app.vsptracker.adapters
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Context
-import android.graphics.Bitmap
 import android.net.Uri
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import app.vsptracker.R
-import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.CheckFormData
 import app.vsptracker.database.DatabaseAdapter
-import app.vsptracker.fragments.common.CheckFormsFragment
 import app.vsptracker.others.MyHelper
-import kotlinx.android.synthetic.main.list_row_check_forms.view.cf_applicable
-import kotlinx.android.synthetic.main.list_row_check_forms.view.cf_id
-import kotlinx.android.synthetic.main.list_row_check_forms.view.cf_name
-import kotlinx.android.synthetic.main.list_row_check_forms.view.cf_questions
-import kotlinx.android.synthetic.main.list_row_check_forms.view.cf_schedule
-import kotlinx.android.synthetic.main.list_row_check_forms_completed.view.*
 import kotlinx.android.synthetic.main.list_row_check_forms_data.view.*
 
 class CheckFormsDataAdapter(
@@ -75,10 +60,10 @@ class CheckFormsDataAdapter(
                     }
                     
                 }
-                if(datum.answerDataObj.imagesPath.size > 0){
+                if(datum.answerDataObj.imagesPaths.size > 0){
                     holder.itemView.photo_layout_main.visibility = View.VISIBLE
                     holder.itemView.photo_layout.visibility = View.VISIBLE
-                    datum.answerDataObj.imagesPath.forEach {
+                    datum.answerDataObj.imagesPaths.forEach {
                         holder.itemView.photo_layout.addView(myHelper.addImageToPhotoLayout(context, null, Uri.parse(it)))
                     }
                 }else{

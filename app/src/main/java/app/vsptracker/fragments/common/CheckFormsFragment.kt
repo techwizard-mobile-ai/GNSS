@@ -54,13 +54,11 @@ class CheckFormsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        var dataList = db.getAdminCheckForms()
+//        var dataList = db.getAdminCheckForms()
         
-        var checkFormData = db.getAdminCheckFormsDataByLocalID(checkFormCompleted.id)
+        
         
         myHelper.log("type: $type")
-        myHelper.log("CheckForms:${dataList.size}")
-        myHelper.log("CheckForms:$dataList")
         
         var title = ""
         when(type){
@@ -73,7 +71,50 @@ class CheckFormsFragment : Fragment() {
         cf_title.text = title
         
         when(type){
+            0 -> {
+                val dueCheckForms = db.getAdminCheckFormsDue()
+                when(dueCheckForms.size){
+                    0 -> {
+                        no_cf.text = getString(R.string.no_due_checkforms)
+                        no_cf.visibility= View.VISIBLE
+                    }
+                    else -> {
+                        val mAdapter = CheckFormsAdapter(context as Activity, dueCheckForms, type)
+                        root!!.cf_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
+                        root!!.cf_rv!!.adapter = mAdapter
+                    }
+                }
+            }
+            1 -> {
+                val allCheckForms = db.getAdminCheckForms()
+                when(allCheckForms.size){
+                    0 -> {
+                        no_cf.text = getString(R.string.no_checkforms)
+                        no_cf.visibility= View.VISIBLE
+                    }
+                    else -> {
+                        val mAdapter = CheckFormsAdapter(context as Activity, allCheckForms, type)
+                        root!!.cf_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
+                        root!!.cf_rv!!.adapter = mAdapter
+                    }
+                }
+            }
+            2 -> {
+                val completedCheckForms = db.getAdminCheckFormsCompleted()
+                when(completedCheckForms.size){
+                    0 -> {
+                        no_cf.text = getString(R.string.no_completed_checkforms)
+                        no_cf.visibility= View.VISIBLE
+                    }
+                    else -> {
+                        val mAdapter = CheckFormsCompletedAdapter(context as Activity, completedCheckForms, type, supportFragmentManager1)
+                        root!!.cf_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
+                        root!!.cf_rv!!.adapter = mAdapter
+                    }
+                }
+            }
             3 -> {
+                val checkFormData = db.getAdminCheckFormsDataByLocalID(checkFormCompleted.id)
                 when(checkFormData.size){
                     0 -> {
                         no_cf.text = getString(R.string.no_questions_to_show)
@@ -86,36 +127,36 @@ class CheckFormsFragment : Fragment() {
                     }
                 }
             }
-            else ->{
-                when(dataList.size){
-                    0 ->{
-                        when(type){
-                            1 -> no_cf.text = getString(R.string.no_checkforms)
-                            3 -> no_cf.text = getString(R.string.no_questions)
-                            else -> no_cf.text = "No $title."
-                        }
-                        no_cf.visibility= View.VISIBLE
-                    }
-                    else ->{
-                        no_cf.visibility = View.GONE
-                        when(type){
-                            0,1 -> {
-                                val mAdapter = CheckFormsAdapter(context as Activity, dataList, type)
-                                root!!.cf_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
-                                root!!.cf_rv!!.adapter = mAdapter
-                            }
-                            2-> {
-                                dataList = db.getAdminCheckFormsCompleted()
-                                val mAdapter = CheckFormsCompletedAdapter(context as Activity, dataList, type, supportFragmentManager1)
-                                root!!.cf_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
-                                root!!.cf_rv!!.adapter = mAdapter
-                    
-                            }
-                        }
-            
-                    }
-                }
-            }
+//            else ->{
+//                when(dataList.size){
+//                    0 ->{
+//                        when(type){
+//                            1 -> no_cf.text = getString(R.string.no_checkforms)
+//                            3 -> no_cf.text = getString(R.string.no_questions)
+//                            else -> no_cf.text = "No $title."
+//                        }
+//                        no_cf.visibility= View.VISIBLE
+//                    }
+//                    else ->{
+//                        no_cf.visibility = View.GONE
+//                        when(type){
+//                            0,1 -> {
+//                                val mAdapter = CheckFormsAdapter(context as Activity, dataList, type)
+//                                root!!.cf_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
+//                                root!!.cf_rv!!.adapter = mAdapter
+//                            }
+//                            2-> {
+//                                dataList = db.getAdminCheckFormsCompleted()
+//                                val mAdapter = CheckFormsCompletedAdapter(context as Activity, dataList, type, supportFragmentManager1)
+//                                root!!.cf_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
+//                                root!!.cf_rv!!.adapter = mAdapter
+//
+//                            }
+//                        }
+//
+//                    }
+//                }
+//            }
         }
         
     
