@@ -129,7 +129,7 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
         
         if (questionsList.size > checkFormDataList.size) {
             val txt =
-                "Total Question:${questionsList.size}\nRemaining Questions: ${questionsList.size - checkFormDataList.size}\n\nPlease complete all questions to save checkform."
+                "Total Questions:${questionsList.size}\nRemaining Questions: ${questionsList.size - checkFormDataList.size}\n\nPlease complete all questions to save checkform."
             mDialogView.cftd_sub_title.text = txt
             mDialogView.save_checkform_yes.visibility = View.GONE
             mDialogView.cftd_save_bottom.visibility = View.GONE
@@ -183,7 +183,7 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
         val mDialogView = LayoutInflater.from(this).inflate(R.layout.dialog_save_checkform, null)
         if (questionsList.size > checkFormDataList.size) {
             val txt =
-                "Total Question:${questionsList.size}\nRemaining Questions: ${questionsList.size - checkFormDataList.size}\n\nPlease complete all questions."
+                "Total Questions:${questionsList.size}\nRemaining Questions: ${questionsList.size - checkFormDataList.size}\n\nPlease complete all questions."
             mDialogView.cftd_sub_title.text = txt
             mDialogView.save_checkform_yes.text = getString(R.string.save_unfinished_form)
             myHelper.log("Checkform not completed.")

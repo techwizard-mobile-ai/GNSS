@@ -316,7 +316,7 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
                 myHelper.hideDialog()
-                val responseString = response.body()!!.string()
+                val responseString = response.body!!.string()
                 val responseJObject = JSONObject(responseString)
                 val success = responseJObject.getBoolean("success")
                 try {

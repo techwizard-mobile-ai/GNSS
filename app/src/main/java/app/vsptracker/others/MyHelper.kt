@@ -119,7 +119,7 @@ class MyHelper(var TAG: String, val context: Context) {
         
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
-                val responseString = response.body()!!.string()
+                val responseString = response.body!!.string()
                 try {
                     val responseJObject = JSONObject(responseString)
                     log("RefreshToken:$responseString")

@@ -1206,7 +1206,7 @@ class MyDataPushSave(private val context: Context) {
                 
                 myHelper.log("response:$response")
                 try {
-                    val responseString = response.body()!!.string()
+                    val responseString = response.body!!.string()
                     val responseJObject = JSONObject(responseString)
                     val success = responseJObject.getBoolean("success")
                     if (success) {
