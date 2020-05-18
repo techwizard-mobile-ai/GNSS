@@ -304,5 +304,8 @@
     <string name="no_questions_to_show">No Questions to show.</string>
     <string name="no_completed_checkforms">No Completed CheckForms</string>
     <string name="no_due_checkforms">Under development.</string>
+    <string name="storage_permissions_are_disabled">Storage permission disabled!</string>
+    <string name="exit_checkform_task">Exit Checkform Task</string>
+    <string name="go_to_app_permissions">Go to App Permissions</string>
 
 </resources>

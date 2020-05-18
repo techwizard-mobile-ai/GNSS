@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/_5sdp"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/cftd_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_marginTop="@dimen/_20sdp"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/storage_permissions_are_disabled"
+            android:textColor="@color/gray_dark"
+            android:textSize="@dimen/_16sdp"
+            style="@style/avenirnext_fontstyle"
+            android:textStyle="bold"
+            />
+        <TextView
+            android:id="@+id/cftd_sub_title"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/gray_dark"
+            style="@style/avenirnext_fontstyle"
+            android:text="Image attachments and photos capture requires Storage permission."
+            android:textSize="@dimen/_12sdp"
+            />
+    </LinearLayout>
+
+
+
+    <View
+        android:id="@+id/cftd_title_layout_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:background="@color/light_white" />
+
+    <TextView
+        android:id="@+id/permissions_yes"
+        style="@style/avenirnext_fontstyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:text="@string/go_to_app_permissions"
+        android:textColor="@color/blue"
+        android:textSize="@dimen/_16sdp" />
+
+    <View
+        android:id="@+id/cftd_save_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:background="@color/light_white" />
+
+    <TextView
+        android:id="@+id/permissions_no"
+        style="@style/avenirnext_fontstyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_20sdp"
+        android:background="@android:color/transparent"
+        android:gravity="center_horizontal"
+        android:text="@string/exit_checkform_task"
+        android:textColor="@color/red"
+        android:textSize="@dimen/_16sdp" />
+</LinearLayout>

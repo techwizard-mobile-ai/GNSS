@@ -1,17 +1,21 @@
 package app.vsptracker.activities
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ContentResolver
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.provider.Settings
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,16 +27,19 @@ import app.vsptracker.classes.AnswerData
 import app.vsptracker.classes.CheckFormData
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_check_form_task.*
+import kotlinx.android.synthetic.main.dialog_permissions.view.*
 import kotlinx.android.synthetic.main.dialog_save_checkform.view.*
+import kotlinx.android.synthetic.main.dialog_save_checkform.view.cftd_save_bottom
+import kotlinx.android.synthetic.main.dialog_save_checkform.view.cftd_sub_title
+import kotlinx.android.synthetic.main.dialog_save_checkform.view.cftd_title_layout
+import kotlinx.android.synthetic.main.dialog_save_checkform.view.cftd_title_layout_bottom
 import kotlinx.android.synthetic.main.list_row_check_form_task.view.*
 import java.io.File
 import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.collections.ArrayList
 
 
 class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
+    private val MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: Int = 7
     internal lateinit var imageToUploadUri: Uri
     private lateinit var imageFilePath: String
     internal var selectedQuestionID = 0
@@ -86,6 +93,8 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
         cft_rv.adapter = mAdapter
         cft_finish.setOnClickListener(this)
         cft_skip.setOnClickListener(this)
+        
+        checkStoragePermissions()
         
     }
     
@@ -233,7 +242,7 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
             myHelper.log("mime:$mime")
             val types = mime!!.split("/").toTypedArray()
             if (types[0].equals("image", ignoreCase = true)) {
-
+                
                 cft_rv.findViewHolderForAdapterPosition(mAdapterPosition)!!.itemView.photo_layout.addView(myHelper.addImageToPhotoLayout(this, null, filePath))
                 val imagePath = filePath.toString()
                 addImageToCheckFormData(selectedQuestionID, imagePath)
@@ -245,14 +254,20 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
             
             myHelper.log("onResult:$imageToUploadUri")
             addImageToCheckFormData(selectedQuestionID, imageToUploadUri.toString())
-            cft_rv.findViewHolderForAdapterPosition(mAdapterPosition)!!.itemView.photo_layout.addView(myHelper.addImageToPhotoLayout(this, null, imageToUploadUri))
+            cft_rv.findViewHolderForAdapterPosition(mAdapterPosition)!!.itemView.photo_layout.addView(
+                myHelper.addImageToPhotoLayout(
+                    this,
+                    null,
+                    imageToUploadUri
+                )
+            )
             cft_rv.findViewHolderForAdapterPosition(mAdapterPosition)!!.itemView.photo_layout.visibility = View.VISIBLE
             myHelper.toast("Captured image attached successfully.")
         } else {
             myHelper.toast("No image attached.")
         }
     }
-  
+    
     fun addCheckFormData(questionID: Int, answer: String, comment: String) {
         
         val checkFormData = CheckFormData()
@@ -320,10 +335,10 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
     
     @Throws(IOException::class)
     fun createImageFile(): File? {
-        val timeStamp: String = SimpleDateFormat(
-            "yyyyMMdd_HHmmss",
-            Locale.getDefault()
-        ).format(Date())
+//        val timeStamp: String = SimpleDateFormat(
+//            "yyyyMMdd_HHmmss",
+//            Locale.getDefault()
+//        ).format(Date())
         val imageFileName = "VSPTracker1_IMG"
         val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         val image = File.createTempFile(
@@ -342,6 +357,86 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
             val f = File(imageFilePath)
             mediaScanIntent.data = Uri.fromFile(f)
             sendBroadcast(mediaScanIntent)
+        }
+    }
+    
+    fun checkStoragePermissions() {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            myHelper.log("Permission is not granted")
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE
+                )
+        
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE
+                )
+            }
+
+            
+        } else {
+            myHelper.log("Permission has already been granted")
+        }
+    }
+    
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>, grantResults: IntArray
+    ) {
+        when (requestCode) {
+            MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] != PackageManager.PERMISSION_GRANTED)) {
+                    myHelper.log("Permission denied.")
+                    showStorageDeniedDisabledAlertToUser()
+                }
+                return
+            }
+        }
+    }
+    
+    private fun showStorageDeniedDisabledAlertToUser() {
+    
+        val mDialogView = LayoutInflater.from(this).inflate(R.layout.dialog_permissions, null)
+        
+        val mBuilder = AlertDialog.Builder(this)
+            .setView(mDialogView)
+        val mAlertDialog = mBuilder.show()
+        mAlertDialog.setCancelable(false)
+    
+        val window = mAlertDialog.window
+        val wlp = window!!.attributes
+    
+        wlp.gravity = Gravity.CENTER
+        window.attributes = wlp
+    
+        mDialogView.permissions_yes.setOnClickListener {
+            mAlertDialog.dismiss()
+            val intent = Intent(
+                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                Uri.fromParts("package", packageName, null)
+            )
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        
+        }
+        mDialogView.permissions_no.setOnClickListener {
+            mAlertDialog.dismiss()
+            this.finish()
         }
     }
 }
