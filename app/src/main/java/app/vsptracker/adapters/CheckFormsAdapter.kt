@@ -80,12 +80,22 @@ class CheckFormsAdapter(
         
         val checkFormSchedule = db.getAdminCheckFormScheduleByID(datum.admin_checkforms_schedules_id)
         holder.itemView.cf_schedule.text = ":  ${checkFormSchedule.name}[${datum.admin_checkforms_schedules_value}]"
-        holder.itemView.cf_questions.text = ":  ${myHelper.getQuestionsIDsList(datum.questions_data).size}"
+        
+        val totalQuestions = myHelper.getQuestionsIDsList(datum.questions_data).size
+        holder.itemView.cf_questions.text = ":  $totalQuestions"
         
         holder.itemView.cf_start.setOnClickListener {
-            val intent = Intent(context, CheckFormTaskActivity::class.java)
-            intent.putExtra("checkform_id", datum.id)
-            context.startActivity(intent)
+            when(totalQuestions){
+                0 ->{
+                    myHelper.showErrorDialog("There are no questions in this checkform.")
+                }
+                else ->{
+                    val intent = Intent(context, CheckFormTaskActivity::class.java)
+                    intent.putExtra("checkform_id", datum.id)
+                    context.startActivity(intent)
+                }
+            }
+
         }
     }
 

@@ -14,25 +14,26 @@
         android:layout_marginEnd="@dimen/_10sdp"
         android:orientation="vertical">
         <TextView
+            android:id="@+id/permissions_title"
             android:layout_marginTop="@dimen/_20sdp"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/storage_permissions_are_disabled"
+            android:text="@string/storage_permissions_title"
             android:textColor="@color/gray_dark"
             android:textSize="@dimen/_16sdp"
             style="@style/avenirnext_fontstyle"
             android:textStyle="bold"
             />
         <TextView
-            android:id="@+id/cftd_sub_title"
+            android:id="@+id/permissions_sub_title"
             android:layout_marginTop="@dimen/_2sdp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="@color/gray_dark"
             style="@style/avenirnext_fontstyle"
-            android:text="Image attachments and photos capture requires Storage permission."
+            android:text="@string/storage_permission_explanation"
             android:textSize="@dimen/_12sdp"
             />
     </LinearLayout>
@@ -61,10 +62,12 @@
         android:id="@+id/cftd_save_bottom"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:visibility="gone"
         android:layout_marginTop="@dimen/_5sdp"
         android:background="@color/light_white" />
 
     <TextView
+        android:visibility="gone"
         android:id="@+id/permissions_no"
         style="@style/avenirnext_fontstyle"
         android:layout_width="match_parent"

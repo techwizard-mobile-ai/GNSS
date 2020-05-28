@@ -9,11 +9,12 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.provider.Settings
+import android.telephony.TelephonyManager
+import android.view.*
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
@@ -24,7 +25,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.get
-import androidx.core.view.size
 import androidx.drawerlayout.widget.DrawerLayout
 import app.vsptracker.activities.*
 import app.vsptracker.activities.common.MachineBreakdownActivity
@@ -42,12 +42,16 @@ import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.app_bar_base.*
+import kotlinx.android.synthetic.main.dialog_permissions.*
+import kotlinx.android.synthetic.main.dialog_permissions.view.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-private const val REQUEST_ACCESS_FINE_LOCATION = 1
+private const val REQUEST_ACCESS_FINE_LOCATION: Int = 1
+private const val REQUEST_WRITE_EXTERNAL_STORAGE: Int = 7
 
 open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     
@@ -84,12 +88,12 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         setContentView(R.layout.activity_base)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
+
         
         myHelper = MyHelper(tag1, this)
         if (myHelper.getIsMachineStopped() || myHelper.getMachineID() < 1) {
             drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         }
-        
         
         gpsLocation = GPSLocation()
         db = DatabaseAdapter(this)
@@ -158,7 +162,21 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 "DEVICE : ${deviceDetails.DEVICE}\n" +
                 "MODEL : ${deviceDetails.MODEL}\n" +
                 "ANDROID_API : ${deviceDetails.ANDROID_SDK_API}\n"
-        navTitle.text = "VSP Tracker Version: ${deviceDetails.VSPT_VERSION_NAME} (${deviceDetails.VSPT_VERSION_CODE})"
+        
+        val appAPI = myHelper.getLatestVSPTVersion()
+        
+        var versionTitle = ""
+        if(appAPI.version_code > deviceDetails.VSPT_VERSION_CODE){
+            versionTitle = "Latest Version:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${appAPI.version_name} (${appAPI.version_code})<br/>" +
+                    "Installed Version: <font color=#FF382A>${deviceDetails.VSPT_VERSION_NAME} (${deviceDetails.VSPT_VERSION_CODE})</font>"
+            
+        }else{
+            versionTitle = "Latest Version:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${appAPI.version_name} (${appAPI.version_code})<br/>" +
+                    "Installed Version:&nbsp;${deviceDetails.VSPT_VERSION_NAME} (${deviceDetails.VSPT_VERSION_CODE})"
+        }
+        
+        
+        navTitle.text = HtmlCompat.fromHtml(versionTitle, HtmlCompat.FROM_HTML_MODE_LEGACY)
 //        navSubTitle.text = "Test just"
 //        MachineAutoLogout is time set by administrator. If App is not in use for time greater than AutoLogoutTime
 //        which is different for Machine Type for Different sites then user should be Auto logout from App
@@ -201,6 +219,9 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             val intent = Intent(this, OperatorLoginActivity::class.java)
             startActivity(intent)
         }
+    
+    
+        requestPermissions()
     }
     
     override fun onUserInteraction() {
@@ -212,15 +233,6 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         }
         
     }
-
-//    override fun onUserLeaveHint() {
-//        super.onUserLeaveHint()
-////        myHelper.log("\nonUserLeaveHint")
-////        resetTimer()
-////        stopHandler()
-////        startHandler()
-//    }
-    
     
     private fun stopHandler() {
         myHelper.log("stopHandler")
@@ -261,19 +273,12 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     
     override fun onResume() {
         super.onResume()
+
         startGPS()
 //        If Navigation is Disabled Lock Side Menu
         if (!myHelper.isNavEnabled()) {
             drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         }
-//        base_nav_view.setCheckedItem(base_nav_view.checkedItem.itemId)
-
-//        myHelper.log("CurrentActivity:${this::class.java.simpleName}")
-//        onNavigationItemSelected(base_nav_view.getMenu().getItem(0));
-//        if(this::class.java.simpleName == "THomeActivity"){
-//            onNavigationItemSelected(base_nav_view.menu.getItem(0));
-//        }
-        
         
         if (myHelper.getIsMachineStopped()) {
             base_machine_status_layout.visibility = View.VISIBLE
@@ -293,12 +298,8 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 }
             }
 
-
-//            val text ="<font color=#FF382A>Machine is Stopped. </font><font color=#106d14><u>Click here to Start Machine</u>.</font>"
             val text = "<font color=#106d14><u>Click here to Start Machine</u>.</font>"
             base_machine_status.text = HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_LEGACY)
-            myHelper.log("Is Machine Stopped: ${myHelper.getIsMachineStopped()}")
-            myHelper.log("Machine Stopped Reason: ${myHelper.getMachineStoppedReason()}")
             
         } else {
             base_machine_status_layout.visibility = View.GONE
@@ -501,7 +502,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         
         val details = myHelper.getDeviceDetailsString()
         
-        val email = "support@vsptracker.com"
+        val email = "support@vsptracker.app"
         val addressees: Array<String> = arrayOf(email)
         val intent = Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse("mailto:") // only email apps should handle this
@@ -533,7 +534,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         }
         catch (ex: SecurityException) {
             myHelper.log("No Location Available:${ex.message}")
-            requestPermission()
+            requestGPSPermissions()
         }
         
     }
@@ -542,22 +543,16 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         locationManager?.removeUpdates(locationListener)
     }
     
-    private fun requestPermission() {
+    private fun requestGPSPermissions() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED
         ) {
-            // Permission is not granted
-            
-            // Should we show an explanation?
+
             if (ActivityCompat.shouldShowRequestPermissionRationale(
                     this,
                     Manifest.permission.ACCESS_FINE_LOCATION
                 )
             ) {
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-                
                 ActivityCompat.requestPermissions(
                     this,
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
@@ -571,7 +566,6 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                     REQUEST_ACCESS_FINE_LOCATION
                 )
-                
             }
             
             
@@ -592,17 +586,51 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         }
     }
     
+    private fun requestPermissions() {
+        
+        // request Storage Permission
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            myHelper.log("Permission is not granted")
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    REQUEST_WRITE_EXTERNAL_STORAGE
+                )
+            
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    REQUEST_WRITE_EXTERNAL_STORAGE
+                )
+            }
+        }
+        
+    }
+    
     private fun showGPSDisabledAlertToUser() {
         val alertDialogBuilder = AlertDialog.Builder(this, R.style.ThemeOverlay_AppCompat_Dialog)
         alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
             .setCancelable(false)
             .setPositiveButton(
-                "Goto Settings Page\nTo Enable GPS"
-            ) { _, _ ->
+                "Goto Settings page\nto enable GPS"
+            ) { dialog, _ ->
                 val callGPSSettingIntent = Intent(
                     android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
                 )
                 startActivity(callGPSSettingIntent)
+                dialog.dismiss()
             }
         alertDialogBuilder.setNegativeButton(
             "Cancel"
@@ -623,11 +651,13 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 }
                 return
             }
-            
-            // Add other 'when' lines to check for other
-            // permissions this app might request.
-            else -> {
-                // Ignore all other requests.
+    
+            REQUEST_WRITE_EXTERNAL_STORAGE -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] != PackageManager.PERMISSION_GRANTED)) {
+                    myHelper.log("Permission denied.")
+                    showPermissionDisabledAlertToUser(resources.getString(R.string.storage_permissions_title), resources.getString(R.string.storage_permission_explanation))
+                }
+                return
             }
         }
     }
@@ -638,7 +668,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             "You have previously declined GPS permission.\n" + "You must approve this permission in \"Permissions\" in the app settings on your device.",
             Snackbar.LENGTH_LONG
         ).setAction(
-            "Settings"
+            getString(R.string.settings)
         ) {
             startActivity(
                 Intent(
@@ -691,6 +721,39 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 //        gpsLocation.extras = location1.extras
         gpsLocation.time = location1.time
         
+    }
+    
+    private fun showPermissionDisabledAlertToUser(title: String, sub_title: String) {
+        
+        val mDialogView = LayoutInflater.from(this).inflate(R.layout.dialog_permissions, null)
+    
+        permissions_title.text = title
+        permissions_sub_title.text = sub_title
+        
+        val mBuilder = AlertDialog.Builder(this)
+            .setView(mDialogView)
+        val mAlertDialog = mBuilder.show()
+        mAlertDialog.setCancelable(false)
+        
+        val window = mAlertDialog.window
+        val wlp = window!!.attributes
+        
+        wlp.gravity = Gravity.CENTER
+        window.attributes = wlp
+        
+        mDialogView.permissions_yes.setOnClickListener {
+            mAlertDialog.dismiss()
+            val intent = Intent(
+                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                Uri.fromParts("package", packageName, null)
+            )
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }
+        mDialogView.permissions_no.setOnClickListener {
+            mAlertDialog.dismiss()
+            this.finish()
+        }
     }
 }
 

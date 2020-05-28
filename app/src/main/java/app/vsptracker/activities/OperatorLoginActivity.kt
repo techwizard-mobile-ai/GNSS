@@ -10,6 +10,7 @@ import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -27,7 +28,10 @@ import app.vsptracker.others.MyDataPushSave
 import app.vsptracker.others.MyHelper
 import app.vsptracker.others.Utils
 import com.bumptech.glide.Glide
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.iid.InstanceIdResult
 import kotlinx.android.synthetic.main.activity_operator_login.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -60,7 +64,20 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
         myHelper = MyHelper(tag, this)
         myHelper.setProgressBar(signin_pb)
         db = DatabaseAdapter(this)
-
+    
+    
+//        val fcmToken = FirebaseInstanceId.getInstance().token
+//        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener(this@OperatorLoginActivity, object : OnSuccessListener<InstanceIdResult?> {
+//            fun onSuccess(instanceIdResult: InstanceIdResult) {
+//                val mToken: String = instanceIdResult.token
+//                Log.e("mToken", mToken)
+//            }
+//        })
+        
+//        myHelper.log("fcmToken:$fcmToken")
+        
+        
+//        35be154602eb7e02
         myDataPushSave = MyDataPushSave(this)
 
         gpsLocation = GPSLocation()
@@ -115,6 +132,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
         val loginPin = "OP1"
+//        val loginPin = "AA0101"
         signin_pin.setText(loginPin)
         
         myHelper.hideKeyboardOnClick(login_main_layout)

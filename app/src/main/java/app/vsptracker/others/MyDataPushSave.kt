@@ -80,6 +80,7 @@ class MyDataPushSave(private val context: Context) {
      * It will reduce Internet Usage and User Wait time by 11 times.
      */
     private fun getServerSync() {
+        myHelper.log("deviceDetails:${myHelper.getDeviceDetailsString()}")
         val call = this.retrofitAPI.getServerSync(
             myHelper.getLoginAPI().org_id,
             myHelper.getLoginAPI().auth_token,

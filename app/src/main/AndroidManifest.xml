@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="app.vsptracker">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -25,6 +24,17 @@
         <activity android:name=".activities.ServerSyncActivity" />
         <activity android:name=".activities.HoursReportingActivity" />
         <activity android:name=".activities.common.MachineBreakdownActivity" />
+
+
+        <meta-data android:name="com.google.firebase.messaging.default_notification_icon"
+
+            android:resource="@drawable/ic_launcher" />
+
+        <service android:name=".others.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"></action>
+            </intent-filter>
+        </service>
 
         <provider
             android:name="androidx.core.content.FileProvider"

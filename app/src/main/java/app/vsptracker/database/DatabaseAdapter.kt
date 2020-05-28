@@ -1513,7 +1513,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val query =
             "Select * from $TABLE_QUESTIONS WHERE $COL_ID  IN ( $ids ) ORDER BY $orderBy"
         
-        myHelper.log("query:$query")
+//        myHelper.log("query:$query")
         val result = db.rawQuery(query, null)
         
         if (result.moveToFirst()) {
@@ -2047,7 +2047,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val db = this.readableDatabase
         
         val query =
-            "Select * from $TABLE_OPERATORS WHERE $COL_PIN =? AND $COL_IS_DELETED = 0 AND $COL_STATUS = 1 ORDER BY $COL_ID DESC"
+            "Select * from $TABLE_OPERATORS WHERE $COL_PIN =? AND $COL_ORG_ID = ${myHelper.getLoginAPI().org_id} AND $COL_IS_DELETED = 0 AND $COL_STATUS = 1 ORDER BY $COL_ID DESC"
         val result = db.rawQuery(query, arrayOf(pin))
         
         

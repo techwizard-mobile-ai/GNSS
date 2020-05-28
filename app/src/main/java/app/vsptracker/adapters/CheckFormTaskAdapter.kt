@@ -3,6 +3,7 @@ package app.vsptracker.adapters
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,6 +17,7 @@ import app.vsptracker.R
 import app.vsptracker.activities.CheckFormTaskActivity
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.database.DatabaseAdapter
+import app.vsptracker.others.MyEnum
 import app.vsptracker.others.MyHelper
 import kotlinx.android.synthetic.main.list_row_check_form_task.view.*
 import java.io.File
@@ -49,10 +51,14 @@ class CheckFormTaskAdapter(
         
         val datum = dataList[position]
         myItemView = holder.itemView
-        holder.itemView.cft_question.text = "${datum.name}"
+        holder.itemView.cft_question.text = "${position + 1}. ${datum.name}"
+        
+        resetItemView(holder, datum)
+        
         holder.itemView.cft_item_acceptable.setOnClickListener {
+            myHelper.log("position:$position")
             myHelper.log(datum.toString())
-            (context as CheckFormTaskActivity).addCheckFormData(datum.id, "1", holder.itemView.cft_comment.text.toString())
+            (context as CheckFormTaskActivity).addCheckFormData(datum.id, MyEnum.ACCEPTED, holder.itemView.cft_comment.text.toString())
             
             holder.itemView.cft_item_acceptable.background = context.getDrawable(R.drawable.bnext_background)
             holder.itemView.cft_item_acceptable.setTextColor(ContextCompat.getColor(context, R.color.white))
@@ -67,11 +73,13 @@ class CheckFormTaskAdapter(
                     datum.unacceptableChecked = false
                 }
             }
+            resetItemView(holder, datum)
         }
         
         holder.itemView.cft_comment.setOnClickListener {
             myHelper.showKeyboard(holder.itemView.cft_comment)
             (context as CheckFormTaskActivity).hideSaveLayout()
+            resetItemView(holder, datum)
         }
         
         
@@ -81,44 +89,44 @@ class CheckFormTaskAdapter(
                 count: Int
             ) {
                 myHelper.showKeyboard(holder.itemView.cft_comment)
-                (context as CheckFormTaskActivity).addCheckFormData(datum.id, "-1", holder.itemView.cft_comment.text.toString())
+                (context as CheckFormTaskActivity).addCheckFormData(datum.id, MyEnum.UNDEFINED, holder.itemView.cft_comment.text.toString())
                 context.hideSaveLayout()
             }
             
             override fun beforeTextChanged(
                 s: CharSequence, start: Int, count: Int,
                 after: Int
-            ) {
-            }
+            ) {}
             
             override fun afterTextChanged(s: Editable) {}
         })
         
-        
         holder.itemView.cft_row.setOnClickListener {
             myHelper.hideKeyboard(holder.itemView.cft_row)
             (context as CheckFormTaskActivity).showSaveLayout()
+            myHelper.hideKeyboard(holder.itemView.cft_row)
+            resetItemView(holder, datum)
         }
         holder.itemView.cft_item_unacceptable.setOnClickListener {
             myHelper.log(datum.toString())
-            (context as CheckFormTaskActivity).addCheckFormData(datum.id, "0", holder.itemView.cft_comment.text.toString())
+            (context as CheckFormTaskActivity).addCheckFormData(datum.id, MyEnum.UNACCEPTED, holder.itemView.cft_comment.text.toString())
             
             holder.itemView.cft_item_unacceptable.background = context.getDrawable(R.drawable.bdue_background)
             holder.itemView.cft_item_unacceptable.setTextColor(ContextCompat.getColor(context, R.color.white))
             datum.unacceptableChecked = true
             
             myHelper.hideKeyboard(holder.itemView.cft_item_unacceptable)
-            context.showSaveLayout()
+            
             when (datum.admin_questions_types_id) {
                 2 -> {
                     //show comments section
                     showCommentsLayout(holder.itemView)
-                    
                 }
                 3 -> {
                     //show photo section
                     showPhotoLayout(holder.itemView, datum.images_limit)
                     context.showSaveLayout()
+                    myHelper.hideKeyboard(holder.itemView)
                 }
                 4 -> {
                     //show photo, comments section
@@ -134,33 +142,37 @@ class CheckFormTaskAdapter(
                     datum.acceptableChecked = true
                 }
             }
+            resetItemView(holder, datum)
             
         }
         
         holder.itemView.cft_item_capture.setOnClickListener {
             
-            if( datum.images_limit <= (context as CheckFormTaskActivity).getAttachedImagesSize(datum.id)){
+            if (datum.images_limit <= (context as CheckFormTaskActivity).getAttachedImagesSize(datum.id)) {
                 myHelper.toast("Attachments limit reached.")
-            }else{
-                takePhoto(position)
+            } else {
                 myHelper.hideKeyboard(holder.itemView.cft_item_capture)
-                context.showSaveLayout()
                 context.selectedQuestionID = datum.id
+                takePhoto(position)
+                context.showSaveLayout()
             }
+            resetItemView(holder, datum)
             
         }
         holder.itemView.cft_item_attachment.setOnClickListener {
             
-            if( datum.images_limit <= (context as CheckFormTaskActivity).getAttachedImagesSize(datum.id)){
+            if (datum.images_limit <= (context as CheckFormTaskActivity).getAttachedImagesSize(datum.id)) {
                 myHelper.toast("Attachments limit reached.")
-            }else{
+            } else {
                 showFileChooser(position)
                 myHelper.hideKeyboard(holder.itemView.cft_item_capture)
                 context.showSaveLayout()
                 context.selectedQuestionID = datum.id
             }
+            resetItemView(holder, datum)
         }
     }
+    
     
     fun takePhoto(position: Int) {
         myHelper.log("takePhoto:$position")
@@ -221,8 +233,78 @@ class CheckFormTaskAdapter(
     private fun showPhotoLayout(itemView: View, imagesLimit: Int) {
         itemView.cft_photo_layout.visibility = View.VISIBLE
         itemView.photo_layout_main.visibility = View.VISIBLE
-        itemView.cft_photo_info.text = "Images Limit: $imagesLimit"
+        itemView.cft_photo_info.text = context.resources.getString(R.string.images_limit, imagesLimit)
         itemView.cft_photo_info.visibility = View.VISIBLE
+        
+    }
+    
+    private fun resetItemView(holder: ViewHolder, datum: MyData) {
+        holder.setIsRecyclable(false)
+        
+        val data = (context as CheckFormTaskActivity).checkFormDataList.find { it.admin_questions_id == datum.id }
+    
+        when (data) {
+            null -> {
+    
+                holder.itemView.cft_item_acceptable.background = context.getDrawable(R.drawable.bnext_border)
+                holder.itemView.cft_item_acceptable.setTextColor(ContextCompat.getColor(context, R.color.light_colorPrimary))
+                holder.itemView.cft_item_unacceptable.background = context.getDrawable(R.drawable.bdue_border)
+                holder.itemView.cft_item_unacceptable.setTextColor(ContextCompat.getColor(context, R.color.light_red))
+                holder.itemView.cft_comment.setText("")
+                hideCommentsPhotoLayout(holder.itemView)
+                context.showSaveLayout()
+                
+            }
+            else -> {
+                when(data.answer){
+                    MyEnum.UNACCEPTED ->{
+                        holder.itemView.cft_item_acceptable.background = context.getDrawable(R.drawable.bnext_border)
+                        holder.itemView.cft_item_acceptable.setTextColor(ContextCompat.getColor(context, R.color.light_colorPrimary))
+                        holder.itemView.cft_item_unacceptable.background = context.getDrawable(R.drawable.bdue_background)
+                        holder.itemView.cft_item_unacceptable.setTextColor(ContextCompat.getColor(context, R.color.white))
+                        holder.itemView.cft_comment.setText(data.answerDataObj.comment)
+                        when (datum.admin_questions_types_id) {
+                            2 -> {
+                                //show comments section
+                                showCommentsLayout(holder.itemView)
+                            }
+                            3 -> {
+                                //show photo section
+                                showPhotoLayout(holder.itemView, datum.images_limit)
+                                context.showSaveLayout()
+                                myHelper.hideKeyboard(holder.itemView.cft_item_acceptable)
+    
+                                holder.itemView.photo_layout.removeAllViews()
+                                data.answerDataObj.imagesPaths.forEach {
+                                    holder.itemView.photo_layout.addView(myHelper.addImageToPhotoLayout(context, null, Uri.parse(it)))
+                                }
+                                holder.itemView.photo_layout.visibility = View.VISIBLE
+                            }
+                            4 -> {
+                                //show photo, comments section
+                                showCommentsLayout(holder.itemView)
+                                showPhotoLayout(holder.itemView, datum.images_limit)
+                                holder.itemView.photo_layout.removeAllViews()
+                                data.answerDataObj.imagesPaths.forEach {
+                                    holder.itemView.photo_layout.addView(myHelper.addImageToPhotoLayout(context, null, Uri.parse(it)))
+                                }
+                                holder.itemView.photo_layout.visibility = View.VISIBLE
+                            }
+                        }
+                    }
+                    MyEnum.ACCEPTED ->{
+                        holder.itemView.cft_item_acceptable.background = context.getDrawable(R.drawable.bnext_background)
+                        holder.itemView.cft_item_acceptable.setTextColor(ContextCompat.getColor(context, R.color.white))
+                        holder.itemView.cft_item_unacceptable.background = context.getDrawable(R.drawable.bdue_border)
+                        holder.itemView.cft_item_unacceptable.setTextColor(ContextCompat.getColor(context, R.color.light_red))
+                        holder.itemView.cft_comment.setText("")
+                        context.showSaveLayout()
+                        myHelper.hideKeyboard(holder.itemView.cft_item_acceptable)
+                        hideCommentsPhotoLayout(holder.itemView)
+                    }
+                }
+            }
+        }
     }
     
     override fun getItemCount(): Int {

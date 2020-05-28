@@ -13,13 +13,14 @@ import android.net.Uri
 import android.text.TextUtils
 import android.util.Log
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import app.vsptracker.BuildConfig
 import app.vsptracker.R
-import app.vsptracker.activities.CheckFormTaskActivity
 import app.vsptracker.activities.HourMeterStopActivity
 import app.vsptracker.activities.LoginActivity
 import app.vsptracker.activities.Map1Activity
@@ -47,6 +48,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import kotlinx.android.synthetic.main.dialog_error.view.*
 import okhttp3.*
 import org.json.JSONObject
 import retrofit2.Retrofit
@@ -67,17 +69,27 @@ class MyHelper(var TAG: String, val context: Context) {
     private lateinit var retrofit: Retrofit
     private lateinit var retrofitAPI: RetrofitAPI
     
+    fun getFcmToken() : String = sessionManager.getFcmToken()
+    
+    fun setFcmToken(fcmToken: String ){
+        sessionManager.setFcmToken(fcmToken)
+    }
+    
     fun getAutoLogoutStartTime() = sessionManager.getAutoLogoutStartTime()
-    fun setAutoLogoutStartTime(autoLogoutStartTime: Long) {sessionManager.setAutoLogoutStartTime(autoLogoutStartTime)}
+    fun setAutoLogoutStartTime(autoLogoutStartTime: Long) {
+        sessionManager.setAutoLogoutStartTime(autoLogoutStartTime)
+    }
+    
     /**
      * Check if Meter Reading isEmpty OR is just a decimal return 0 else return value
      * Without this it was causing NumberFormatException when trying to convert into float OR Double
      */
     fun getMeterValidValue(meterReading: String): String {
-        return if(meterReading.isNotEmpty()&& !meterReading.equals(".", true)){
+        return if (meterReading.isNotEmpty() && !meterReading.equals(".", true)) {
             meterReading
-        }else "0.0"
+        } else "0.0"
     }
+    
     fun isNavEnabled() = sessionManager.getNav()
     fun setIsNavEnabled(status: Boolean) = sessionManager.setNav(status)
     
@@ -102,20 +114,17 @@ class MyHelper(var TAG: String, val context: Context) {
     }
     
     fun refreshToken() {
-        log(getDeviceDetailsString())
         val client = OkHttpClient()
         val formBody = FormBody.Builder()
             .add("email", getLoginAPI().email)
             .add("password", getLoginAPI().pass)
-            .add("role", "1")
-            .add("ttl", "43800")
+            .add("role", MyEnum.OPERATOR_ROLE)
+            .add("ttl", MyEnum.TTL)
             .build()
         val request = Request.Builder()
-            .url("https://vsptracker.app/api/v1/org/users/login1")
+            .url(MyEnum.LOGIN_URL)
             .post(formBody)
             .build()
-//        val deviceDetails = getDeviceDetails()
-//        log(deviceDetails)
         
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
@@ -128,10 +137,10 @@ class MyHelper(var TAG: String, val context: Context) {
                         val gson = GsonBuilder().create()
                         val loginAPI = gson.fromJson(responseJObject.getString("data"), LoginAPI::class.java)
                         loginAPI.pass = getLoginAPI().pass
-        
+                        
                         val app = gson.fromJson(responseJObject.getString("app"), AppAPI::class.java)
                         log("app:$app")
-        
+                        setLatestVSPTVersion(app)
                         val appVersionCode = BuildConfig.VERSION_CODE
                         @Suppress("ConstantConditionIf")
                         if (app.version_code > appVersionCode && app.is_critical > 0) {
@@ -146,16 +155,23 @@ class MyHelper(var TAG: String, val context: Context) {
                         val intent = Intent(context, LoginActivity::class.java)
                         context.startActivity(intent)
                     }
-                }catch (e : Exception){
-                    log("refreshToken:"+e.localizedMessage)
                 }
-
+                catch (e: Exception) {
+                    log("refreshToken:" + e.localizedMessage)
+                }
+                
             }
             
             override fun onFailure(call: Call, e: IOException) {
                 log("Failed to execute request ${e.printStackTrace()}")
             }
         })
+    }
+    
+    fun getLatestVSPTVersion(): AppAPI = sessionManager.getLatestVSPTVersion()
+    
+    fun setLatestVSPTVersion(appAPI: AppAPI) {
+        sessionManager.setLatestVSPTVersion(appAPI)
     }
     
     fun getServerSyncDataAPIString(serverSyncList: ArrayList<ServerSyncAPI>): String {
@@ -165,7 +181,10 @@ class MyHelper(var TAG: String, val context: Context) {
     }
     
     fun getDeviceDetailsString(): String {
-        return gson.toJson(DeviceDetails(), DeviceDetails::class.java)
+        
+        val deviceDetails = DeviceDetails()
+        deviceDetails.fcmToken = getFcmToken()
+        return gson.toJson(deviceDetails, DeviceDetails::class.java)
 //        return ("AppVersionCode:$versionCode--Device:$device--Build:$build--Manufacturer:$manufacturer--Model:$model--AndroidOS:$andoridOS")
     }
     
@@ -730,7 +749,7 @@ class MyHelper(var TAG: String, val context: Context) {
     fun showDialog() {
         try {
             dialog = ProgressDialog.show(
-                context, "", "VSP Tracker. Loading Please wait...", true, false
+                context, "VSP Tracker", "Loading Please wait...", true, false
             )
             
         }
@@ -749,7 +768,10 @@ class MyHelper(var TAG: String, val context: Context) {
     
     fun getQuestionsIDsList(questionsData: String?): List<Int> {
         var questionsIDs = ArrayList<Int>()
-        if(questionsData != null){
+        
+        // If there is not questionsData String then it will contain an empty array []
+        // So there are two brackets which count length of 2.
+        if (questionsData!!.length > 2) {
             questionsIDs = questionsData.removeSurrounding("[", "]").split(",").map { it.toInt() } as ArrayList<Int>
         }
         return questionsIDs
@@ -773,6 +795,7 @@ class MyHelper(var TAG: String, val context: Context) {
     fun printInsertion(tableName: String, insertedID: Long, datum: CheckFormData) {
         log("$tableName--$insertedID--$datum")
     }
+    
     fun getStringToAnswerData(answerData: String?): AnswerData {
 //        log("getStringToGPSLocation:$stringGPSLocation")
         return if (answerData == null)
@@ -786,12 +809,12 @@ class MyHelper(var TAG: String, val context: Context) {
         return gson.toJson(answerData)
     }
     
-
+    
     fun imageLoadFromURL(url: String, imageView: ImageView, myContext: Context) {
 
 //        log("imageLoadFromURL:$url")
         if (!url.isBlank()) {
-
+            
             Glide.with(myContext)
                 .load(url)
                 .listener(object : RequestListener<Drawable> {
@@ -804,7 +827,7 @@ class MyHelper(var TAG: String, val context: Context) {
 //                                myHelper.hideDialog()
                         return false
                     }
-
+                    
                     override fun onResourceReady(
                         resource: Drawable?,
                         model: Any?,
@@ -815,7 +838,7 @@ class MyHelper(var TAG: String, val context: Context) {
 //                                myHelper.hideDialog()
                         return false
                     }
-
+                    
                 })
                 .into(imageView)
         } else {
@@ -823,50 +846,95 @@ class MyHelper(var TAG: String, val context: Context) {
             log("else$url")
             imageView.setImageResource(R.drawable.user_img)
         }
-
+        
     }
+    
     fun imageLoad(filePath: Uri?, imageView: ImageView) {
         try {
             Glide.with(context).load(filePath).into(imageView)
 //            toast("Image Attached Successfully.")
-        } catch (exception: Exception) {
+        }
+        catch (exception: Exception) {
             toast("$exception")
         }
     }
+    
     fun imageLoad(bitmap: Bitmap?, imageView: ImageView) {
         try {
             Glide.with(context).load(bitmap).into(imageView)
 //            toast("Image Attached Successfully.")
-        } catch (exception: Exception) {
+        }
+        catch (exception: Exception) {
             toast("$exception")
         }
     }
     
     fun addImageToPhotoLayout(context: Context, imageBitmap: Bitmap?, imageURI: Uri?): LinearLayout? {
-            val linearLayout = LinearLayout(context)
-            val layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        log("Uri:$imageURI")
+        val linearLayout = LinearLayout(context)
+        val layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         
-            layoutParams.setMargins(context.resources.getDimensionPixelSize(R.dimen._10sdp), 0, context.resources.getDimensionPixelSize(R.dimen._10sdp), 0)
-            linearLayout.layoutParams = layoutParams
-            linearLayout.orientation = LinearLayout.HORIZONTAL
+        layoutParams.setMargins(context.resources.getDimensionPixelSize(R.dimen._10sdp), 0, context.resources.getDimensionPixelSize(R.dimen._10sdp), 0)
+        linearLayout.layoutParams = layoutParams
+        linearLayout.orientation = LinearLayout.HORIZONTAL
         
-            val imageView = ImageView(context)
-            val imageViewParam = LinearLayout.LayoutParams(context.resources.getDimensionPixelSize(R.dimen._130sdp), context.resources.getDimensionPixelSize(R.dimen._130sdp))
-            imageViewParam.gravity = Gravity.CENTER
+        val imageView = ImageView(context)
+        val imageViewParam =
+            LinearLayout.LayoutParams(context.resources.getDimensionPixelSize(R.dimen._130sdp), context.resources.getDimensionPixelSize(R.dimen._130sdp))
+        imageViewParam.gravity = Gravity.CENTER
         
-            imageView.layoutParams = imageViewParam
-            imageView.contentDescription = context.resources.getString(R.string.image_showing_issue)
+        imageView.layoutParams = imageViewParam
+        imageView.contentDescription = context.resources.getString(R.string.image_showing_issue)
 
 //        imageView.setImageBitmap(imageURI)
-            if (imageBitmap != null)
-                imageLoad(imageBitmap, imageView)
-            else
-                imageLoad(imageURI, imageView)
+        if (imageBitmap != null)
+            imageLoad(imageBitmap, imageView)
+        else
+            imageLoad(imageURI, imageView)
         
-            linearLayout.addView(imageView, 0)
-            return linearLayout
-        }
+        linearLayout.addView(imageView, 0)
+        return linearLayout
+    }
     
+    fun getFileName(checkform_id: Int, selectedQuestionID: Int): String {
+        
+        val currentTime = System.currentTimeMillis()
+        return "${getLoginAPI().org_id}_${getMachineSettings().siteId}_${getOperatorAPI().id}_${checkform_id}_${selectedQuestionID}_${currentTime}"
+    }
+    
+    fun getAWSFilePath(): String {
+        val calendar = Calendar.getInstance()
+        
+        val currentYear = calendar.get(Calendar.YEAR)
+        val currentMonth = calendar.get((Calendar.MONTH)) + 1 // due to 0 based indexing we need to add 1 to get accurate month number
+        val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
+        
+        return "${getLoginAPI().org_id}/$currentYear/$currentMonth/$currentDay/${getMachineSettings().siteId}/${getMachineTypeID()}/${getMachineID()}/${getOperatorAPI().id}"
+        
+    }
+    
+    fun showErrorDialog(message: String) {
+        
+        val mDialogView = LayoutInflater.from(context).inflate(R.layout.dialog_error, null)
+        
+        mDialogView.error_message.text = message
+        
+        val mBuilder = AlertDialog.Builder(context)
+            .setView(mDialogView)
+        val mAlertDialog = mBuilder.show()
+        mAlertDialog.setCancelable(true)
+        
+        val window = mAlertDialog.window
+        val wlp = window!!.attributes
+        
+        wlp.gravity = Gravity.CENTER
+        window.attributes = wlp
+        
+        mDialogView.error_ok.setOnClickListener {
+            mAlertDialog.dismiss()
+        }
+    }
+
 /*
     fun isValidUsername(target: String): Boolean {
         return if (TextUtils.isEmpty(target)) {

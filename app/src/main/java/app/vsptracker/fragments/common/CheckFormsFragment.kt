@@ -4,14 +4,13 @@ import android.app.Activity
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-
 import app.vsptracker.R
 import app.vsptracker.adapters.CheckFormsAdapter
 import app.vsptracker.adapters.CheckFormsCompletedAdapter
@@ -54,29 +53,25 @@ class CheckFormsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-//        var dataList = db.getAdminCheckForms()
-        
-        
-        
         myHelper.log("type: $type")
         
         var title = ""
-        when(type){
-            0-> title = getString(R.string.due_checkforms)
-            1-> title = getString(R.string.all_checkforms)
-            2-> title = getString(R.string.completed_checkforms)
-            3-> title = "${db.getAdminCheckFormByID(checkFormCompleted.admin_checkforms_id).name} Details"
+        when (type) {
+            0 -> title = getString(R.string.due_checkforms)
+            1 -> title = getString(R.string.all_checkforms)
+            2 -> title = getString(R.string.completed_checkforms)
+            3 -> title = "${db.getAdminCheckFormByID(checkFormCompleted.admin_checkforms_id).name} Details"
         }
-    
+        
         cf_title.text = title
         
-        when(type){
+        when (type) {
             0 -> {
                 val dueCheckForms = db.getAdminCheckFormsDue()
-                when(dueCheckForms.size){
+                when (dueCheckForms.size) {
                     0 -> {
                         no_cf.text = getString(R.string.no_due_checkforms)
-                        no_cf.visibility= View.VISIBLE
+                        no_cf.visibility = View.VISIBLE
                     }
                     else -> {
                         val mAdapter = CheckFormsAdapter(context as Activity, dueCheckForms, type)
@@ -87,10 +82,10 @@ class CheckFormsFragment : Fragment() {
             }
             1 -> {
                 val allCheckForms = db.getAdminCheckForms()
-                when(allCheckForms.size){
+                when (allCheckForms.size) {
                     0 -> {
                         no_cf.text = getString(R.string.no_checkforms)
-                        no_cf.visibility= View.VISIBLE
+                        no_cf.visibility = View.VISIBLE
                     }
                     else -> {
                         val mAdapter = CheckFormsAdapter(context as Activity, allCheckForms, type)
@@ -101,24 +96,30 @@ class CheckFormsFragment : Fragment() {
             }
             2 -> {
                 val completedCheckForms = db.getAdminCheckFormsCompleted()
-                when(completedCheckForms.size){
+                when (completedCheckForms.size) {
                     0 -> {
                         no_cf.text = getString(R.string.no_completed_checkforms)
-                        no_cf.visibility= View.VISIBLE
+                        no_cf.visibility = View.VISIBLE
                     }
                     else -> {
                         val mAdapter = CheckFormsCompletedAdapter(context as Activity, completedCheckForms, type, supportFragmentManager1)
                         root!!.cf_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
                         root!!.cf_rv!!.adapter = mAdapter
+                        root!!.checkforms_upload.visibility = View.VISIBLE
+                        root!!.checkforms_upload.setOnClickListener {
+                            myHelper.log("upload checkforms:$completedCheckForms")
+                            val checkFormData = db.getAdminCheckFormsDataByLocalID(completedCheckForms.get(0).id)
+                            myHelper.log("checkFormData:$checkFormData")
+                        }
                     }
                 }
             }
             3 -> {
                 val checkFormData = db.getAdminCheckFormsDataByLocalID(checkFormCompleted.id)
-                when(checkFormData.size){
+                when (checkFormData.size) {
                     0 -> {
                         no_cf.text = getString(R.string.no_questions_to_show)
-                        no_cf.visibility= View.VISIBLE
+                        no_cf.visibility = View.VISIBLE
                     }
                     else -> {
                         val mAdapter = CheckFormsDataAdapter(context as Activity, checkFormData)
@@ -127,40 +128,8 @@ class CheckFormsFragment : Fragment() {
                     }
                 }
             }
-//            else ->{
-//                when(dataList.size){
-//                    0 ->{
-//                        when(type){
-//                            1 -> no_cf.text = getString(R.string.no_checkforms)
-//                            3 -> no_cf.text = getString(R.string.no_questions)
-//                            else -> no_cf.text = "No $title."
-//                        }
-//                        no_cf.visibility= View.VISIBLE
-//                    }
-//                    else ->{
-//                        no_cf.visibility = View.GONE
-//                        when(type){
-//                            0,1 -> {
-//                                val mAdapter = CheckFormsAdapter(context as Activity, dataList, type)
-//                                root!!.cf_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
-//                                root!!.cf_rv!!.adapter = mAdapter
-//                            }
-//                            2-> {
-//                                dataList = db.getAdminCheckFormsCompleted()
-//                                val mAdapter = CheckFormsCompletedAdapter(context as Activity, dataList, type, supportFragmentManager1)
-//                                root!!.cf_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
-//                                root!!.cf_rv!!.adapter = mAdapter
-//
-//                            }
-//                        }
-//
-//                    }
-//                }
-//            }
         }
         
-    
-
     }
     
     override fun onAttach(context: Context) {
@@ -180,6 +149,7 @@ class CheckFormsFragment : Fragment() {
     interface OnFragmentInteractionListener {
         fun onFragmentInteraction(uri: Uri)
     }
+    
     companion object {
         private var type: Int = 0
         private var checkFormCompleted = MyData()
@@ -199,4 +169,5 @@ class CheckFormsFragment : Fragment() {
                 }
             }
     }
+    
 }

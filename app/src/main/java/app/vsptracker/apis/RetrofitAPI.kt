@@ -8,11 +8,13 @@ import app.vsptracker.apis.serverSync.ServerSyncResponse
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.apis.trip.MyDataListResponse
 import app.vsptracker.apis.trip.MyDataResponse
+import app.vsptracker.others.MyEnum
 import retrofit2.Call
 import retrofit2.http.*
 interface RetrofitAPI {
     companion object {
-        const val BASE_URL = "https://vsptracker.app/api/v1/"
+//        const val BASE_URL = "https://vsptracker.app/api/v1/"
+        const val BASE_URL = MyEnum.BASE_URL
         const val LOGIN = "org/users/login1"
         const val ORGS_LOCATIONS = "orgslocations/list"
         const val ORGS_MACHINES = "orgsmachines/list"

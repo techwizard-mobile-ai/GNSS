@@ -3,6 +3,7 @@ package app.vsptracker.others
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.SharedPreferences.Editor
+import app.vsptracker.apis.login.AppAPI
 import app.vsptracker.apis.login.LoginAPI
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.Material
@@ -25,14 +26,24 @@ private const val KEY_OPERATORAPI = "operator_api"
 private const val KEY_MACHINE_SETTINGS = "machine_settings"
 private const val KEY_DISABLE_NAV = "disable_navigation"
 private const val KEY_AUTO_LOGOUT_START_TIME = "auto_logout_startime"
+private const val KEY_FCM_TOKEN = "fcm_token"
+
+private const val KEY_APP_API = "app_api"
 
 class SessionManager(_context: Context) {
-
+    
     private var pref: SharedPreferences = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE)
     private var editor: Editor
 
     init {
         editor = pref.run { edit() }
+    }
+    
+    fun getFcmToken() = pref.getString(KEY_FCM_TOKEN, "").toString()
+    
+    fun setFcmToken(fcmToken: String) {
+        editor.putString(KEY_FCM_TOKEN, fcmToken)
+        editor.commit()
     }
     
     fun getAutoLogoutStartTime() = pref.getLong(KEY_AUTO_LOGOUT_START_TIME, 0)
@@ -148,12 +159,12 @@ class SessionManager(_context: Context) {
     }
 
     fun getMachineID() = pref.getInt(KEY_MACHINE_ID, 0)
-    fun getMachineNumber() = pref.getString(KEY_MACHINE_NUMBER, "").toString()
     fun setMachineID(id: Int) {
         editor.putInt(KEY_MACHINE_ID, id)
         editor.commit()
     }
-
+    fun getMachineNumber() = pref.getString(KEY_MACHINE_NUMBER, "").toString()
+    
     fun setMachineNumber(number: String) {
         editor.putString(KEY_MACHINE_NUMBER, number)
         editor.commit()
@@ -163,6 +174,22 @@ class SessionManager(_context: Context) {
     
     fun setMachineTypeID(type: Int) {
         editor.putInt(KEY_MACHINE_TYPE_ID, type)
+        editor.commit()
+    }
+    
+    fun getLatestVSPTVersion(): AppAPI {
+        val gson = Gson()
+        val json = pref.getString(KEY_APP_API, "")
+        return when (val obj = gson.fromJson<AppAPI>(json, AppAPI::class.java)) {
+            null -> AppAPI()
+            else -> obj
+        }
+    }
+    
+    fun setLatestVSPTVersion(appAPI: AppAPI) {
+        val gson = Gson()
+        val json = gson.toJson(appAPI)
+        editor.putString(KEY_APP_API, json)
         editor.commit()
     }
 }

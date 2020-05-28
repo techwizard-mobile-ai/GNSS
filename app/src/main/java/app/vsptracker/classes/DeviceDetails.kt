@@ -13,6 +13,7 @@ class DeviceDetails : Serializable {
     val BRAND: String = Build.BRAND
     val MODEL: String = Build.MODEL
     val ANDROID_SDK_API = Build.VERSION.SDK_INT
+    var fcmToken = ""
     override fun toString(): String {
         return "DeviceDetails(" +
                 "VSPT_VERSION_CODE=$VSPT_VERSION_CODE, " +
@@ -22,6 +23,7 @@ class DeviceDetails : Serializable {
                 "BRAND='$BRAND', " +
                 "MODEL='$MODEL', " +
                 "ANDROID_SDK_API=$ANDROID_SDK_API" +
+                "fcmToken=$fcmToken" +
                 ")"
     }
     

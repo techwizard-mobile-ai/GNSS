@@ -74,14 +74,6 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
         val checkForm = db.getAdminCheckFormByID(checkform_id)
         cft_title.text = checkForm.name
         
-        myHelper.log("checkForm:$checkForm")
-        myHelper.log("questionsIDs:${myHelper.getQuestionsIDsList(checkForm.questions_data)}")
-        myHelper.log(
-            "Questions:${db.getQuestionsByIDs(
-                myHelper.toCommaSeparatedString(checkForm.questions_data),
-                myHelper.getQuestionsIDsList(checkForm.questions_data)
-            )}"
-        )
         
         questionsList = db.getQuestionsByIDs(
             myHelper.toCommaSeparatedString(checkForm.questions_data),
@@ -94,7 +86,6 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
         cft_finish.setOnClickListener(this)
         cft_skip.setOnClickListener(this)
         
-        checkStoragePermissions()
         
     }
     
@@ -335,11 +326,8 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
     
     @Throws(IOException::class)
     fun createImageFile(): File? {
-//        val timeStamp: String = SimpleDateFormat(
-//            "yyyyMMdd_HHmmss",
-//            Locale.getDefault()
-//        ).format(Date())
-        val imageFileName = "VSPTracker1_IMG"
+        
+        val imageFileName = myHelper.getFileName(checkform_id, selectedQuestionID)
         val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         val image = File.createTempFile(
             imageFileName,  /* prefix */
@@ -348,6 +336,7 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
         )
         imageFilePath = image.absolutePath
         myHelper.log("imageFilePath:$imageFilePath")
+        myHelper.log("getAWSFilePath:${myHelper.getAWSFilePath()}")
         galleryAddPic(imageFilePath)
         return image
     }
@@ -360,83 +349,4 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
         }
     }
     
-    fun checkStoragePermissions() {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            myHelper.log("Permission is not granted")
-            if (ActivityCompat.shouldShowRequestPermissionRationale(
-                    this,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                )
-            ) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE
-                )
-        
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE
-                )
-            }
-
-            
-        } else {
-            myHelper.log("Permission has already been granted")
-        }
-    }
-    
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>, grantResults: IntArray
-    ) {
-        when (requestCode) {
-            MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE -> {
-                if ((grantResults.isNotEmpty() && grantResults[0] != PackageManager.PERMISSION_GRANTED)) {
-                    myHelper.log("Permission denied.")
-                    showStorageDeniedDisabledAlertToUser()
-                }
-                return
-            }
-        }
-    }
-    
-    private fun showStorageDeniedDisabledAlertToUser() {
-    
-        val mDialogView = LayoutInflater.from(this).inflate(R.layout.dialog_permissions, null)
-        
-        val mBuilder = AlertDialog.Builder(this)
-            .setView(mDialogView)
-        val mAlertDialog = mBuilder.show()
-        mAlertDialog.setCancelable(false)
-    
-        val window = mAlertDialog.window
-        val wlp = window!!.attributes
-    
-        wlp.gravity = Gravity.CENTER
-        window.attributes = wlp
-    
-        mDialogView.permissions_yes.setOnClickListener {
-            mAlertDialog.dismiss()
-            val intent = Intent(
-                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                Uri.fromParts("package", packageName, null)
-            )
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-        
-        }
-        mDialogView.permissions_no.setOnClickListener {
-            mAlertDialog.dismiss()
-            this.finish()
-        }
-    }
 }
