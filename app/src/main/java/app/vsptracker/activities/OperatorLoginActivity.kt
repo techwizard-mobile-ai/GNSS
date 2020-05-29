@@ -131,8 +131,10 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
                 launchHomeForLoggedIn()
             }
         }
-        val loginPin = "OP1"
+//        val loginPin = "OP1"
 //        val loginPin = "AA0101"
+//        val loginPin = "BM3012"
+        val loginPin = "AA9999"
         signin_pin.setText(loginPin)
         
         myHelper.hideKeyboardOnClick(login_main_layout)

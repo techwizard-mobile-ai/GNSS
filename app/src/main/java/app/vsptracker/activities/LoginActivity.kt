@@ -70,11 +70,15 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
         
-        val user = "zee.enterprises@mail.com"
-        val pass = "user1@123"
-        
+//        val user = "zee.enterprises@mail.com"
+//        val pass = "user1@123"
+//
 //        val user = "kamil.vspt@gmail.com"
 //        val pass = "VSPTuser1@123"
+        
+        val user = "vsptCambridgeConstruction@gmail.com"
+        val pass = "VsptCC123#"
+        
         signin_email.setText(user)
         signin_pass.setText(pass)
         

@@ -42,7 +42,9 @@ class CustomGrid(private val mContext: Context, private val arrayList: ArrayList
 //            if(arrayList.get(position).id == 0){
 //                arrayList.removeAt(0)
 //            }
-            textView.text = arrayList.get(position).name
+            textView.text  = arrayList.get(position).name
+//            val material = arrayList.get(position)
+//            textView.text  = "${material.id}. ${material.name}"
 
 //            imageView.setLayoutParams(AbsListView.LayoutParams(350, 350))
 //            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP)
