@@ -43,24 +43,24 @@ class CheckFormsActivity : BaseActivity(), View.OnClickListener,
         if (menuFragment != null) {
             when (menuFragment) {
                 "dueCheckFormsFragment" -> {
-                    val machineStopFragment = CheckFormsFragment.newInstance(0, supportFragmentManager, MyData())
-                    openFragment(machineStopFragment, DUE_CHECKFORMS)
+                    val dueCheckFormsFragment = CheckFormsFragment.newInstance(0, supportFragmentManager, MyData())
+                    openFragment(dueCheckFormsFragment, DUE_CHECKFORMS)
                 }
                 "allCheckFormsFragment" -> {
-                    val operatorHourFragment = CheckFormsFragment.newInstance(1, supportFragmentManager, MyData())
-                    openFragment(operatorHourFragment, ALL_CHECKFORMS)
+                    val allCheckFormsFragment = CheckFormsFragment.newInstance(1, supportFragmentManager, MyData())
+                    openFragment(allCheckFormsFragment, ALL_CHECKFORMS)
                 }
                 else -> {
-                    val machineHourFragment = CheckFormsFragment.newInstance(2, supportFragmentManager, MyData())
-                    openFragment(machineHourFragment, COMPLETED_CHECKFORMS)
+                    val completedCheckFormsFragment = CheckFormsFragment.newInstance(2, supportFragmentManager, MyData())
+                    openFragment(completedCheckFormsFragment, COMPLETED_CHECKFORMS)
                 }
             }
         } else {
-            val machineHourFragment = CheckFormsFragment.newInstance(0, supportFragmentManager, MyData())
-            openFragment(machineHourFragment, DUE_CHECKFORMS)
+            val dueCheckFormsFragment = CheckFormsFragment.newInstance(0, supportFragmentManager, MyData())
+            openFragment(dueCheckFormsFragment, DUE_CHECKFORMS)
         }
-        val machineHourFragment = CheckFormsFragment.newInstance(0, supportFragmentManager, MyData())
-        openFragment(machineHourFragment, DUE_CHECKFORMS)
+        val dueCheckFormsFragment = CheckFormsFragment.newInstance(0, supportFragmentManager, MyData())
+        openFragment(dueCheckFormsFragment, DUE_CHECKFORMS)
     }
     private fun openFragment(fragment: Fragment, FRAGMENT_TAG: String?) {
         val transaction = supportFragmentManager.beginTransaction()

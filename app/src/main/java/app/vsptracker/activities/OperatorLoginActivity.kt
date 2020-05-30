@@ -25,6 +25,7 @@ import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.GPSLocation
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyDataPushSave
+import app.vsptracker.others.MyEnum
 import app.vsptracker.others.MyHelper
 import app.vsptracker.others.Utils
 import com.bumptech.glide.Glide
@@ -131,11 +132,8 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
                 launchHomeForLoggedIn()
             }
         }
-//        val loginPin = "OP1"
-//        val loginPin = "AA0101"
-//        val loginPin = "BM3012"
-        val loginPin = "AA9999"
-        signin_pin.setText(loginPin)
+
+        signin_pin.setText(MyEnum.loginPin)
         
         myHelper.hideKeyboardOnClick(login_main_layout)
         signin_signin.setOnClickListener(this)

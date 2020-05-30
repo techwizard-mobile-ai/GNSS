@@ -424,6 +424,7 @@ class MyHelper(var TAG: String, val context: Context) {
     
     fun getLastJourney() = sessionManager.getLastJourney()
     fun setLastJourney(myData: MyData) {
+        log("setLastJourney:$myData")
         sessionManager.setLastJourney(myData)
     }
     
@@ -870,7 +871,7 @@ class MyHelper(var TAG: String, val context: Context) {
     }
     
     fun addImageToPhotoLayout(context: Context, imageBitmap: Bitmap?, imageURI: Uri?): LinearLayout? {
-        log("Uri:$imageURI")
+//        log("Uri:$imageURI")
         val linearLayout = LinearLayout(context)
         val layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         

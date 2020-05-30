@@ -4,15 +4,9 @@
     android:layout_height="wrap_content"
     android:padding="5dp">
 
-    <ImageView
-        android:id="@+id/grid_image"
-        android:layout_width="@dimen/_120sdp"
-        android:layout_height="@dimen/_120sdp"
-        android:visibility="gone"></ImageView>
-
     <TextView
         android:id="@+id/grid_text"
         style="@style/grid_tv"
-        android:text="@string/list_row_grid_grid_text_text"></TextView>
+        android:text="@string/list_row_grid_grid_text_text" />
 
 </LinearLayout>

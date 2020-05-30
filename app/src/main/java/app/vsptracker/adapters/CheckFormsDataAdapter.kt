@@ -41,6 +41,8 @@ class CheckFormsDataAdapter(
         val datum = dataList[position]
         myHelper.log(datum.toString())
         holder.itemView.cfd_question.text = "${db.getQuestionByID(datum.admin_questions_id).name}"
+    
+        holder.setIsRecyclable(false)
         
         when(datum.answer){
             "1" -> {

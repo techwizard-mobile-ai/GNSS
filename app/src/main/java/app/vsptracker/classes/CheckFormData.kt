@@ -44,9 +44,7 @@ class CheckFormData : Serializable {
                 "admin_checkform_completed_local_id=$admin_checkform_completed_local_id, " +
                 "admin_questions_id=$admin_questions_id, " +
                 "answer='$answer', " +
-                "answerDataString='$answerDataString', " +
                 "answerDataObj=$answerDataObj, " +
-                "time='$time', " +
                 "isSync=$isSync" +
                 ")"
     }

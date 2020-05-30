@@ -15,103 +15,60 @@ import kotlinx.android.synthetic.main.activity_runload.*
 private const val REQUEST_MATERIAL = 2
 private const val REQUEST_LOCATION = 3
 private const val REQUEST_WEIGHT = 4
+
 class RUnloadActivity : BaseActivity(), View.OnClickListener {
     private val tag = this::class.java.simpleName
-
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        
         val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
         layoutInflater.inflate(R.layout.activity_runload, contentFrameLayout)
         val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
         navigationView.menu.getItem(0).isChecked = true
-
+        
         myHelper.setTag(tag)
         myData = myHelper.getLastJourney()
         myHelper.log("myData:$myData")
-
+        
         when (myData.nextAction) {
             1 -> {
                 trul_task.text = db.getTaskByID(myData.unloading_task_id).name
                 trul_material.text = db.getMaterialByID(myData.unloading_material_id).name
                 trul_location.text = db.getLocationByID(myData.unloading_location_id).name
-//                trul_weight.text = "Tonnes (" + myData.unloadingWeight + ")"
                 trul_weight.text = "0.0"
-//                trunload_unload.text = "Unload"
                 trunload_unload.text = getString(R.string.unload)
             }
             3 -> {
                 trul_task.text = db.getTaskByID(myData.back_unloading_task_id).name
                 trul_material.text = db.getMaterialByID(myData.back_unloading_material_id).name
                 trul_location.text = db.getLocationByID(myData.back_unloading_location_id).name
-//                trul_weight.text = "Tonnes (" + myData.unloadingWeight + ")"
                 trul_weight.text = "0.0"
-//                trunload_unload.text = "Back Unload"
                 trunload_unload.text = getString(R.string.back_unload)
             }
         }
-
+        
         runload_home.setOnClickListener(this)
         runload_finish.setOnClickListener(this)
-
+        
         trunload_unload.setOnClickListener(this)
         trul_task.setOnClickListener(this)
         trul_material.setOnClickListener(this)
         trul_location.setOnClickListener(this)
         trul_weight.setOnClickListener(this)
     }
-
+    
     override fun onResume() {
         super.onResume()
         base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
     }
-
-/*
-    private fun pushTrip(myData: MyData){
-        myHelper.log("pushDelay:$myData")
-
-        val call = this.retrofitAPI.pushTrip(
-            myHelper.getLoginAPI().auth_token,
-            myData
-        )
-        call.enqueue(object : retrofit2.Callback<MyDataResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<MyDataResponse>,
-                response: retrofit2.Response<MyDataResponse>
-            ) {
-                val responseBody = response.body()
-                myHelper.log("EWorkResponse:$responseBody")
-                if (responseBody!!.success) {
-                    myData.isSync = 1
-                    db.updateTrip(myData)
-
-                } else {
-                    db.updateTrip(myData)
-                    if (responseBody.message == "Token has expired") {
-                        myHelper.log("Token Expired:$response")
-                        myHelper.refreshToken()
-                    } else {
-                        myHelper.toast(responseBody.message)
-                    }
-                }
-            }
-
-            override fun onFailure(call: retrofit2.Call<MyDataResponse>, t: Throwable) {
-//                myHelper.hideDialog()
-//                saveTrip(myData)
-                db.updateTrip(myData)
-                myHelper.log("Failure" + t.message)
-            }
-        })
-    }*/
-
+    
     override fun onClick(view: View?) {
         when (view!!.id) {
-
+            
             R.id.runload_home -> {
-                val data = MyData()
 //                everything should be reset when clicked on Finish
-//                data.nextAction = 1
+                val data = MyData()
                 myHelper.setLastJourney(data)
                 myHelper.startHomeActivityByType(data)
             }
@@ -119,63 +76,49 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                 myHelper.logout(this)
             }
             R.id.trunload_unload -> {
-
                 myData.unloadingGPSLocation = gpsLocation
                 myData.orgId = myHelper.getLoginAPI().org_id
                 myData.siteId = myHelper.getMachineSettings().siteId
                 myData.operatorId = myHelper.getOperatorAPI().id
                 myData.machineTypeId = myHelper.getMachineTypeID()
                 myData.machineId = myHelper.getMachineID()
-
-                myData.back_unloading_material_id = myData.back_loading_material_id
-
+                
                 val currentTime = System.currentTimeMillis()
                 myData.stopTime = currentTime
                 myData.totalTime = myData.stopTime - myData.startTime
-                if(myHelper.isDailyModeStarted()){
+                if (myHelper.isDailyModeStarted()) {
                     myData.isDayWorks = 1
-                }else {
+                } else {
                     myData.isDayWorks = 0
                 }
                 val datum = db.getTrip(myData.recordID)
                 myData.loadingGPSLocationString = myHelper.getGPSLocationToString(datum.loadingGPSLocation)
                 myData.unloadingGPSLocationString = myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
-
-
-                if(myData.tripType == 1) {
+                
+                
+                if (myData.tripType == 1) {
                     saveTrip(myData)
                     myData.loading_machine_id = myData.back_loading_machine_id
                     myData.loading_material_id = myData.back_loading_material_id
                     myData.loading_location_id = myData.back_loading_location_id
                     myData.unloading_task_id = myData.back_unloading_task_id
                     myData.unloading_material_id = myData.back_unloading_material_id
-                    myData.unloading_location_id= myData.back_unloading_location_id
-//                    myData.loadingGPSLocation = myData.backLoadingGPSLocation
-//                    myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
-//
-//                    myData.unloadingGPSLocation = myData.backUnloadingGPSLocation
-//                    myData.unloadingGPSLocationString = myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
-                }else{
+                    myData.unloading_location_id = myData.back_unloading_location_id
+                } else {
                     saveTrip(myData)
                 }
-
-
+                
+                
                 myData.unloadingWeight = trul_weight.text.toString().toDouble()
                 myDataPushSave.pushUpdateTrip(myData)
                 
                 stopDelay()
-//                if(myHelper.isOnline()){
-//                    pushTrip(myData)
-//                }else{
-//                    myHelper.toast("No Internet Connection.\nDelay Not Uploaded to Server.")
-//                    db.updateTrip(myData)
-//                }
             }
             R.id.trul_task -> {
                 val intent = Intent(this, UnloadTaskActivity::class.java)
-                if(myData.nextAction == 1){
+                if (myData.nextAction == 1) {
                     myData.isForUnloadResult = true
-                }else{
+                } else {
                     myData.isForBackUnloadResult = true
                 }
                 intent.putExtra("myData", myData)
@@ -183,9 +126,9 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
             }
             R.id.trul_material -> {
                 val intent = Intent(this, MaterialActivity::class.java)
-                if(myData.nextAction == 1){
+                if (myData.nextAction == 1) {
                     myData.isForUnloadResult = true
-                }else{
+                } else {
                     myData.isForBackUnloadResult = true
                 }
                 intent.putExtra("myData", myData)
@@ -193,9 +136,9 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
             }
             R.id.trul_location -> {
                 val intent = Intent(this, LocationActivity::class.java)
-                if(myData.nextAction == 1){
+                if (myData.nextAction == 1) {
                     myData.isForUnloadResult = true
-                }else{
+                } else {
                     myData.isForBackUnloadResult = true
                 }
                 intent.putExtra("myData", myData)
@@ -203,9 +146,9 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
             }
             R.id.trul_weight -> {
                 val intent = Intent(this, WeightActivity::class.java)
-                if(myData.nextAction == 1){
+                if (myData.nextAction == 1) {
                     myData.isForUnloadResult = true
-                }else{
+                } else {
                     myData.isForBackUnloadResult = true
                 }
                 intent.putExtra("myData", myData)
@@ -213,8 +156,8 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
             }
         }
     }
-
-    private fun saveTrip(myData: MyData){
+    
+    private fun saveTrip(myData: MyData) {
         when (myData.repeatJourney) {
             0 -> {
                 when (myData.nextAction) {
@@ -225,8 +168,7 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                         myData.nextAction = 3
                     }
                 }
-
-//                myData.unloadingWeight = 0.0;
+                
                 myHelper.setLastJourney(myData)
                 myHelper.startLoadAfterActivityByType(myData)
             }
@@ -237,7 +179,6 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                     }
                 }
                 val intent = Intent(this, RLoadActivity::class.java)
-//                myData.unloadingWeight = 0.0;
                 myHelper.setLastJourney(myData)
                 startActivity(intent)
                 finish()
@@ -251,7 +192,6 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                         myData.nextAction = 0
                     }
                 }
-//                myData.unloadingWeight = 0.0;
                 myHelper.setLastJourney(myData)
                 val intent = Intent(this, RLoadActivity::class.java)
                 startActivity(intent)
@@ -262,38 +202,38 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
     
     override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
         super.onActivityResult(requestCode, resultCode, intent)
-
+        
         if (resultCode == Activity.RESULT_OK) {
             val bundle: Bundle? = intent!!.extras
             if (bundle != null) {
                 myData = bundle.getSerializable("myData") as MyData
                 myHelper.log("myData:$myData")
-
-
-
-                when(myData.nextAction ) {
-                    1 ->{
+                
+                
+                
+                when (myData.nextAction) {
+                    1 -> {
                         trul_task.text = db.getTaskByID(myData.unloading_task_id).name
                         trul_material.text = db.getMaterialByID(myData.unloading_material_id).name
                         trul_location.text = db.getLocationByID(myData.unloading_location_id).name
                     }
-                    3 ->{
+                    3 -> {
                         trul_task.text = db.getTaskByID(myData.back_unloading_task_id).name
                         trul_material.text = db.getMaterialByID(myData.back_unloading_material_id).name
                         trul_location.text = db.getLocationByID(myData.back_unloading_location_id).name
                     }
-
+                    
                 }
-
+                
                 trul_weight.text = myData.unloadingWeight.toString()
                 myData.isForUnloadResult = false
                 myData.isForLoadResult = false
                 myHelper.setLastJourney(myData)
-
+                
             }
         } else {
             myHelper.toast("Request can not be completed.")
         }
-
+        
     }
 }

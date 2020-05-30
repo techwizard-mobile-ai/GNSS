@@ -46,7 +46,9 @@ class CheckFormsCompletedAdapter(
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
+    
+        
+        
         val datum = dataList[position]
         myHelper.log(datum.toString())
         val adminCheckForm = db.getAdminCheckFormByID(datum.admin_checkforms_id)

@@ -11,10 +11,7 @@ import app.vsptracker.R
 import app.vsptracker.apis.RetrofitAPI
 import app.vsptracker.apis.login.LoginResponse
 import app.vsptracker.database.DatabaseAdapter
-import app.vsptracker.others.AppRater
-import app.vsptracker.others.MyDataPushSave
-import app.vsptracker.others.MyHelper
-import app.vsptracker.others.Utils
+import app.vsptracker.others.*
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_login.*
 import retrofit2.Retrofit
@@ -70,17 +67,10 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
         
-//        val user = "zee.enterprises@mail.com"
-//        val pass = "user1@123"
-//
-//        val user = "kamil.vspt@gmail.com"
-//        val pass = "VSPTuser1@123"
+
         
-        val user = "vsptCambridgeConstruction@gmail.com"
-        val pass = "VsptCC123#"
-        
-        signin_email.setText(user)
-        signin_pass.setText(pass)
+        signin_email.setText(MyEnum.user)
+        signin_pass.setText(MyEnum.pass)
         
         myHelper.hideKeyboardOnClick(login_main_layout)
         signin_signin.setOnClickListener(this)
