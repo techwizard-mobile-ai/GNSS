@@ -108,7 +108,7 @@ class CheckFormsFragment : Fragment() {
                         root!!.checkforms_upload.visibility = View.VISIBLE
                         root!!.checkforms_upload.setOnClickListener {
                             myHelper.log("upload checkforms:$completedCheckForms")
-                            val checkFormData = db.getAdminCheckFormsDataByLocalID(completedCheckForms.get(0).id)
+                            val checkFormData = db.getAdminCheckFormsDataByLocalID(completedCheckForms[0].id)
                             myHelper.log("checkFormData:$checkFormData")
                         }
                     }
