@@ -30,5 +30,8 @@ class MyEnum {
         const val ACCEPTED: String = "1"
         const val UNACCEPTED: String = "0"
         const val UNDEFINED: String = "-1"
+    
+        const val REQUEST_ACCESS_FINE_LOCATION: Int = 1
+        const val REQUEST_WRITE_EXTERNAL_STORAGE: Int = 7
     }
 }

@@ -22,6 +22,7 @@ import app.vsptracker.others.MyHelper
 import kotlinx.android.synthetic.main.fragment_check_forms.*
 import kotlinx.android.synthetic.main.fragment_check_forms.view.*
 
+
 class CheckFormsFragment : Fragment() {
     private var listener: OnFragmentInteractionListener? = null
     
@@ -108,8 +109,30 @@ class CheckFormsFragment : Fragment() {
                         root!!.checkforms_upload.visibility = View.VISIBLE
                         root!!.checkforms_upload.setOnClickListener {
                             myHelper.log("upload checkforms:$completedCheckForms")
-                            val checkFormData = db.getAdminCheckFormsDataByLocalID(completedCheckForms[0].id)
-                            myHelper.log("checkFormData:$checkFormData")
+//                            val checkFormData = db.getAdminCheckFormsDataByLocalID(completedCheckForms[0].id)
+//                            myHelper.log("checkFormData:$checkFormData")
+
+                            completedCheckForms.forEach { completedCheckForm ->
+                                val checkFormData = db.getAdminCheckFormsDataByLocalID(completedCheckForm.id)
+                                checkFormData.forEach { checkFormDatum ->
+                                    myHelper.log("checkFormDatum:$checkFormData")
+                                    if (checkFormDatum.answerDataObj.imagesPaths.size > checkFormDatum.answerDataObj.awsImagesPaths.size) {
+                                        checkFormDatum.answerDataObj.imagesPaths.forEach { imagePath ->
+                                            try {
+                                                val file = myHelper.readContentToFile(Uri.parse(imagePath))
+                                                val filePath = myHelper.getAWSFilePath()
+                                                myHelper.awsFileUpload(filePath, file)
+                                                checkFormDatum.answerDataObj.awsImagesPaths.add(filePath + file.name)
+                                                myHelper.log("fileAdded:${checkFormDatum.answerDataObj.awsImagesPaths}")
+                                            }
+                                            catch (e: Exception) {
+                                                myHelper.log("uploadException:${e.localizedMessage}")
+                                            }
+                                        }
+                                    }
+                                }
+                                db.updateAdminCheckFormsData(checkFormData)
+                            }
                         }
                     }
                 }

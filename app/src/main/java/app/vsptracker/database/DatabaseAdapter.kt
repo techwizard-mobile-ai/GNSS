@@ -3047,4 +3047,18 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             myHelper.log("updateELoads:updateID:$updatedID")
         }
     }
+    
+    fun updateAdminCheckFormsData(data: ArrayList<CheckFormData>) {
+        
+        val db = this.writableDatabase
+        val cv = ContentValues()
+        
+        for (datum in data) {
+            cv.put(COL_IS_SYNC, datum.isSync)
+            cv.put(COL_ANSWER_DATA, myHelper.getAnswerDataToString(datum.answerDataObj))
+            
+            val updatedID = db.update(TABLE_ADMIN_CHECKFORMS_DATA, cv, "$COL_ID = ${datum.id}", null)
+            myHelper.log("updateAdminCheckFormsData:updateID:$updatedID")
+        }
+    }
 }

@@ -1,6 +1,5 @@
 package app.vsptracker
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -9,18 +8,15 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.provider.Settings
-import android.telephony.TelephonyManager
-import android.view.*
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.core.view.GravityCompat
@@ -36,22 +32,17 @@ import app.vsptracker.classes.DeviceDetails
 import app.vsptracker.classes.GPSLocation
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyDataPushSave
+import app.vsptracker.others.MyEnum
 import app.vsptracker.others.MyHelper
 import app.vsptracker.others.Utils
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.app_bar_base.*
-import kotlinx.android.synthetic.main.dialog_permissions.*
-import kotlinx.android.synthetic.main.dialog_permissions.view.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-private const val REQUEST_ACCESS_FINE_LOCATION: Int = 1
-private const val REQUEST_WRITE_EXTERNAL_STORAGE: Int = 7
 
 open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     
@@ -88,7 +79,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         setContentView(R.layout.activity_base)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-
+        
         
         myHelper = MyHelper(tag1, this)
         if (myHelper.getIsMachineStopped() || myHelper.getMachineID() < 1) {
@@ -166,11 +157,11 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         val appAPI = myHelper.getLatestVSPTVersion()
         
         var versionTitle = ""
-        if(appAPI.version_code > deviceDetails.VSPT_VERSION_CODE){
+        if (appAPI.version_code > deviceDetails.VSPT_VERSION_CODE) {
             versionTitle = "Latest Version:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${appAPI.version_name} (${appAPI.version_code})<br/>" +
                     "Installed Version: <font color=#FF382A>${deviceDetails.VSPT_VERSION_NAME} (${deviceDetails.VSPT_VERSION_CODE})</font>"
             
-        }else{
+        } else {
             versionTitle = "Latest Version:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${appAPI.version_name} (${appAPI.version_code})<br/>" +
                     "Installed Version:&nbsp;${deviceDetails.VSPT_VERSION_NAME} (${deviceDetails.VSPT_VERSION_CODE})"
         }
@@ -194,7 +185,6 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         
         handler = Handler()
         r = Runnable {
-            //            myHelper.toast("User is Inacitve for 1 minute.")
             val runningTime = System.currentTimeMillis() - myHelper.getAutoLogoutStartTime()
             val difference = runningTime - autoLogoutTime
             myHelper.log(
@@ -208,20 +198,19 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 val intent = Intent(this, HourMeterStopActivity::class.java)
                 intent.putExtra("isAutoLogoutCall", true)
                 startActivity(intent)
-            }else{
+            } else {
                 myHelper.log("AutoLogout not functional---------------")
             }
         }
-        if (autoLogoutTime > 0){
+        if (autoLogoutTime > 0) {
             startHandler()
         }
-        if(myHelper.getOperatorAPI().id < 1){
+        if (myHelper.getOperatorAPI().id < 1) {
             val intent = Intent(this, OperatorLoginActivity::class.java)
             startActivity(intent)
         }
-    
-    
-        requestPermissions()
+        
+        myHelper.requestPermissions()
     }
     
     override fun onUserInteraction() {
@@ -273,7 +262,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     
     override fun onResume() {
         super.onResume()
-
+        
         startGPS()
 //        If Navigation is Disabled Lock Side Menu
         if (!myHelper.isNavEnabled()) {
@@ -297,7 +286,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                         .into(base_machine_status_icon)
                 }
             }
-
+            
             val text = "<font color=#106d14><u>Click here to Start Machine</u>.</font>"
             base_machine_status.text = HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_LEGACY)
             
@@ -523,7 +512,6 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
         try {
-//            myHelper.log("Permission Granted.")
             locationManager?.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
                 1000,
@@ -534,7 +522,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         }
         catch (ex: SecurityException) {
             myHelper.log("No Location Available:${ex.message}")
-            requestGPSPermissions()
+            myHelper.showGPSDisabledAlertToUser()
         }
         
     }
@@ -543,145 +531,33 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         locationManager?.removeUpdates(locationListener)
     }
     
-    private fun requestGPSPermissions() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(
-                    this,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                )
-            ) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    REQUEST_ACCESS_FINE_LOCATION
-                )
-                
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    REQUEST_ACCESS_FINE_LOCATION
-                )
-            }
-            
-            
-        } else {
-            // Permission has already been granted
-            
-            if (locationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                //                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListener);
-                locationManager!!.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER,
-                    1000,
-                    0f,
-                    locationListener
-                )
-            } else {
-                showGPSDisabledAlertToUser()
-            }
-        }
-    }
-    
-    private fun requestPermissions() {
-        
-        // request Storage Permission
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            myHelper.log("Permission is not granted")
-            if (ActivityCompat.shouldShowRequestPermissionRationale(
-                    this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                )
-            ) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    REQUEST_WRITE_EXTERNAL_STORAGE
-                )
-            
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    REQUEST_WRITE_EXTERNAL_STORAGE
-                )
-            }
-        }
-        
-    }
-    
-    private fun showGPSDisabledAlertToUser() {
-        val alertDialogBuilder = AlertDialog.Builder(this, R.style.ThemeOverlay_AppCompat_Dialog)
-        alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
-            .setCancelable(false)
-            .setPositiveButton(
-                "Goto Settings page\nto enable GPS"
-            ) { dialog, _ ->
-                val callGPSSettingIntent = Intent(
-                    android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
-                )
-                startActivity(callGPSSettingIntent)
-                dialog.dismiss()
-            }
-        alertDialogBuilder.setNegativeButton(
-            "Cancel"
-        ) { dialog, _ -> dialog.cancel() }
-        val alert = alertDialogBuilder.create()
-        alert.show()
-    }
     
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
-            REQUEST_ACCESS_FINE_LOCATION -> {
-                // If request is cancelled, the result arrays are empty.
+            MyEnum.REQUEST_ACCESS_FINE_LOCATION -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     startGPS()
                 } else {
                     myHelper.log("GPS Permission Permanently Denied.")
-                    showSettings()
+                    myHelper.showPermissionDisabledAlertToUser(
+                        resources.getString(R.string.gps_permission_title),
+                        resources.getString(R.string.gps_permission_explanation)
+                    )
                 }
                 return
             }
-    
-            REQUEST_WRITE_EXTERNAL_STORAGE -> {
+            
+            MyEnum.REQUEST_WRITE_EXTERNAL_STORAGE -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] != PackageManager.PERMISSION_GRANTED)) {
                     myHelper.log("Permission denied.")
-                    showPermissionDisabledAlertToUser(resources.getString(R.string.storage_permissions_title), resources.getString(R.string.storage_permission_explanation))
+                    myHelper.showPermissionDisabledAlertToUser(
+                        resources.getString(R.string.storage_permission_title),
+                        resources.getString(R.string.storage_permission_explanation)
+                    )
                 }
                 return
             }
         }
-    }
-    
-    private fun showSettings() {
-        val snackbar = Snackbar.make(
-            findViewById(android.R.id.content),
-            "You have previously declined GPS permission.\n" + "You must approve this permission in \"Permissions\" in the app settings on your device.",
-            Snackbar.LENGTH_LONG
-        ).setAction(
-            getString(R.string.settings)
-        ) {
-            startActivity(
-                Intent(
-                    android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                    Uri.parse("package:" + BuildConfig.APPLICATION_ID)
-                )
-            )
-        }
-        val snackbarView = snackbar.view
-        val textView =
-            snackbarView.findViewById(R.id.snackbar_text) as TextView
-        textView.maxLines = 5  //Or as much as you need
-        snackbar.show()
     }
     
     private val locationListener: LocationListener = object : LocationListener {
@@ -699,7 +575,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         
         override fun onProviderDisabled(provider: String) {
             myHelper.log("Location Disabled.")
-            showGPSDisabledAlertToUser()
+            myHelper.showGPSDisabledAlertToUser()
         }
     }
     
@@ -723,37 +599,5 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         
     }
     
-    private fun showPermissionDisabledAlertToUser(title: String, sub_title: String) {
-        
-        val mDialogView = LayoutInflater.from(this).inflate(R.layout.dialog_permissions, null)
-    
-        permissions_title.text = title
-        permissions_sub_title.text = sub_title
-        
-        val mBuilder = AlertDialog.Builder(this)
-            .setView(mDialogView)
-        val mAlertDialog = mBuilder.show()
-        mAlertDialog.setCancelable(false)
-        
-        val window = mAlertDialog.window
-        val wlp = window!!.attributes
-        
-        wlp.gravity = Gravity.CENTER
-        window.attributes = wlp
-        
-        mDialogView.permissions_yes.setOnClickListener {
-            mAlertDialog.dismiss()
-            val intent = Intent(
-                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                Uri.fromParts("package", packageName, null)
-            )
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-        }
-        mDialogView.permissions_no.setOnClickListener {
-            mAlertDialog.dismiss()
-            this.finish()
-        }
-    }
 }
 

@@ -19,7 +19,7 @@
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/storage_permissions_title"
+            android:text="@string/storage_permission_title"
             android:textColor="@color/gray_dark"
             android:textSize="@dimen/_16sdp"
             style="@style/avenirnext_fontstyle"
@@ -37,8 +37,6 @@
             android:textSize="@dimen/_12sdp"
             />
     </LinearLayout>
-
-
 
     <View
         android:id="@+id/cftd_title_layout_bottom"

@@ -1,15 +1,19 @@
 package app.vsptracker.others
 
 //import android.app.ProgressDialog
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.net.Uri
+import android.provider.MediaStore
+import android.provider.Settings
 import android.text.TextUtils
 import android.util.Log
 import android.view.Gravity
@@ -19,6 +23,8 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import app.vsptracker.BuildConfig
 import app.vsptracker.R
 import app.vsptracker.activities.HourMeterStopActivity
@@ -41,7 +47,10 @@ import app.vsptracker.apis.operators.OperatorAPI
 import app.vsptracker.apis.serverSync.ServerSyncAPI
 import app.vsptracker.apis.serverSync.ServerSyncDataAPI
 import app.vsptracker.apis.trip.MyData
+import app.vsptracker.aws.Util
 import app.vsptracker.classes.*
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -49,9 +58,12 @@ import com.bumptech.glide.request.RequestListener
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.dialog_error.view.*
+import kotlinx.android.synthetic.main.dialog_permissions.view.*
 import okhttp3.*
 import org.json.JSONObject
 import retrofit2.Retrofit
+import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -69,9 +81,65 @@ class MyHelper(var TAG: String, val context: Context) {
     private lateinit var retrofit: Retrofit
     private lateinit var retrofitAPI: RetrofitAPI
     
-    fun getFcmToken() : String = sessionManager.getFcmToken()
+    // AWS Upload variables
+    var util: Util = Util()
+    var transferUtility: TransferUtility? = util.getTransferUtility(context)
     
-    fun setFcmToken(fcmToken: String ){
+    
+    /**
+     * Returns the filename for the given Uri
+     * @param uri the Uri
+     * @return String representing the file name (DISPLAY_NAME)
+     */
+    private fun getDisplayName(uri: Uri): String {
+        val projection = arrayOf<String>(MediaStore.Images.Media.DISPLAY_NAME)
+        context.contentResolver.query(uri, projection, null, null, null).use { cursor ->
+            val columnIndex: Int = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
+            if (cursor.moveToFirst()) {
+                return cursor.getString(columnIndex)
+            }
+        }
+        // If the display name is not found for any reason, use the Uri path as a fallback.
+        log("Couldnt determine DISPLAY_NAME for Uri.  Falling back to Uri path: " + uri.path)
+        return uri.path.toString()
+    }
+    
+    /**
+     * Copies the resource associated with the Uri to a new File in the cache directory, and returns the File
+     * @param uri the Uri
+     * @return a copy of the Uri's content as a File in the cache directory
+     * @throws IOException if openInputStream fails or writing to the OutputStream fails
+     */
+    @Throws(IOException::class)
+    fun readContentToFile(uri: Uri): File {
+        val file = File(context.cacheDir, this.getDisplayName(uri))
+        context.contentResolver.openInputStream(uri).use { `in` ->
+            FileOutputStream(file, false).use { out ->
+                val buffer = ByteArray(1024)
+                run {
+                    var len: Int
+                    while (`in`!!.read(buffer).also { len = it } != -1) {
+                        out.write(buffer, 0, len)
+                    }
+                }
+                return file
+            }
+        }
+    }
+    
+    /*
+     * Begins to upload the file specified by the file path.
+     */
+    fun awsFileUpload(path: String, file: File) {
+//        TransferObserver observer = transferUtility.upload("checkforms/"+file.getName(),file);
+        
+        val observer: TransferObserver = transferUtility!!.upload(path + file.name, file)
+        log("awsFileUpload:$observer")
+    }
+    
+    fun getFcmToken(): String = sessionManager.getFcmToken()
+    
+    fun setFcmToken(fcmToken: String) {
         sessionManager.setFcmToken(fcmToken)
     }
     
@@ -181,11 +249,9 @@ class MyHelper(var TAG: String, val context: Context) {
     }
     
     fun getDeviceDetailsString(): String {
-        
         val deviceDetails = DeviceDetails()
         deviceDetails.fcmToken = getFcmToken()
         return gson.toJson(deviceDetails, DeviceDetails::class.java)
-//        return ("AppVersionCode:$versionCode--Device:$device--Build:$build--Manufacturer:$manufacturer--Model:$model--AndroidOS:$andoridOS")
     }
     
     fun getIsMapOpened() = sessionManager.getLastJourney().isMapOpened
@@ -262,7 +328,6 @@ class MyHelper(var TAG: String, val context: Context) {
         meter.delayStopGPSLocation = gpsMaterial
         log("MeterStopAfter:$meter")
         setMeter(meter)
-//            toast("Delay Stopped.\nStart Time: ${getTime(getMeter().dailyModeStartTime)}Hrs.\nTotal Time: ${getFormattedTime(meter.delayTotalTime)}")
     }
     
     fun stopDailyMode() {
@@ -274,18 +339,10 @@ class MyHelper(var TAG: String, val context: Context) {
             val startTime = meter.dailyModeStartTime
             val totalTime = (currentTime - startTime) + meter.dailyModeTotalTime
             meter.dailyModeTotalTime = 0L
-            log("MeterStopAfter:$meter")
-//            Reset Meter as we are not counting Daily Mode as whole but in entries
             setMeter(meter)
-//            setMeter(Meter())
             toast("Day Works Stopped.\nStart Time: ${getTime(getMeter().dailyModeStartTime)}.\nTotal Time: ${getMinutesFromMillisec(totalTime)}")
         }
-//        else {
-//            toast(
-//                "Day Works Already Stopped." +
-//                        "\nTotal Time: ${getMinutesFromMillisec(getMeter().dailyModeTotalTime)}"
-//            )
-//        }
+        
     }
     
     fun startDelay(gpsMaterial: GPSLocation) {
@@ -515,9 +572,7 @@ class MyHelper(var TAG: String, val context: Context) {
             val data = MyData()
             setLastJourney(data)
         }
-
-//            toast("Machine is Stopped.\n Machine Total Time : $meterONTime (mins)")
-//        toast("Machine is Stopped.")
+        
     }
     
     fun startMachine() {
@@ -903,15 +958,18 @@ class MyHelper(var TAG: String, val context: Context) {
         return "${getLoginAPI().org_id}_${getMachineSettings().siteId}_${getOperatorAPI().id}_${checkform_id}_${selectedQuestionID}_${currentTime}"
     }
     
-    fun getAWSFilePath(): String {
+    fun getAWSFilePath(type: String = "images"): String {
         val calendar = Calendar.getInstance()
         
         val currentYear = calendar.get(Calendar.YEAR)
         val currentMonth = calendar.get((Calendar.MONTH)) + 1 // due to 0 based indexing we need to add 1 to get accurate month number
         val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
         
-        return "${getLoginAPI().org_id}/$currentYear/$currentMonth/$currentDay/${getMachineSettings().siteId}/${getMachineTypeID()}/${getMachineID()}/${getOperatorAPI().id}"
+        val path =
+            "${getLoginAPI().org_id}/$type/$currentYear/$currentMonth/$currentDay/${getMachineSettings().siteId}/${getMachineTypeID()}/${getMachineID()}/${getOperatorAPI().id}/"
         
+        log("path:$path")
+        return path
     }
     
     fun showErrorDialog(message: String) {
@@ -935,6 +993,145 @@ class MyHelper(var TAG: String, val context: Context) {
             mAlertDialog.dismiss()
         }
     }
+    
+    /**
+     * Show this dialog whenever user disable location from Settings even Location Permission is enabled.
+     */
+    fun showGPSDisabledAlertToUser() {
+        
+        val mDialogView = LayoutInflater.from(context).inflate(R.layout.dialog_permissions, null)
+        
+        mDialogView.permissions_title.text = context.resources.getString(R.string.gps_permission_title)
+        mDialogView.permissions_sub_title.text = context.resources.getString(R.string.gps_permission_explanation)
+        mDialogView.permissions_yes.text = context.resources.getString(R.string.gps_location_settings)
+        mDialogView.permissions_no.text = context.resources.getString(R.string.cancel)
+        
+        mDialogView.cftd_save_bottom.visibility = View.VISIBLE
+        mDialogView.permissions_no.visibility = View.VISIBLE
+        
+        
+        val mBuilder = AlertDialog.Builder(context)
+            .setView(mDialogView)
+        val mAlertDialog = mBuilder.show()
+        mAlertDialog.setCancelable(true)
+        
+        val window = mAlertDialog.window
+        val wlp = window!!.attributes
+        
+        wlp.gravity = Gravity.CENTER
+        window.attributes = wlp
+        
+        mDialogView.permissions_yes.setOnClickListener {
+            mAlertDialog.dismiss()
+            val callGPSSettingIntent = Intent(
+                android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
+            )
+            context.startActivity(callGPSSettingIntent)
+        }
+        mDialogView.permissions_no.setOnClickListener {
+            mAlertDialog.dismiss()
+        }
+    }
+    
+    /**
+     * Request Permissions from User in real time as per Marshmallow and above OS requirements.
+     * onPermission result is handled in each Permission requesting Activity.
+     * When Location Permission is granted startGPS method will be called in that activity.
+     */
+    fun requestPermissions() {
+        
+        // request GPS Permission
+        if (ContextCompat.checkSelfPermission(
+                (context as Activity),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            log("Permission is not granted")
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    (context as Activity),
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            ) {
+                ActivityCompat.requestPermissions(
+                    (context as Activity),
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    MyEnum.REQUEST_ACCESS_FINE_LOCATION
+                )
+                
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(
+                    (context as Activity),
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    MyEnum.REQUEST_ACCESS_FINE_LOCATION
+                )
+            }
+        }
+        
+        // request Storage Permission
+        if (ContextCompat.checkSelfPermission(
+                (context as Activity),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            log("Permission is not granted")
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    (context as Activity),
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
+            ) {
+                ActivityCompat.requestPermissions(
+                    (context as Activity),
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    MyEnum.REQUEST_WRITE_EXTERNAL_STORAGE
+                )
+                
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(
+                    (context as Activity),
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    MyEnum.REQUEST_WRITE_EXTERNAL_STORAGE
+                )
+            }
+        }
+    }
+    
+    /**
+     * If User deny Any Permission show this dialog. This dialog can not be cancelled
+     * and user has to allow certain permission to use the app.
+     */
+    fun showPermissionDisabledAlertToUser(title: String, sub_title: String) {
+        
+        val mDialogView = LayoutInflater.from(context).inflate(R.layout.dialog_permissions, null)
+        
+        mDialogView.permissions_title.text = title
+        mDialogView.permissions_sub_title.text = sub_title
+        
+        val mBuilder = AlertDialog.Builder(context)
+            .setView(mDialogView)
+        val mAlertDialog = mBuilder.show()
+        mAlertDialog.setCancelable(false)
+        
+        val window = mAlertDialog.window
+        val wlp = window!!.attributes
+        
+        wlp.gravity = Gravity.CENTER
+        window.attributes = wlp
+        
+        mDialogView.permissions_yes.setOnClickListener {
+            mAlertDialog.dismiss()
+            val intent = Intent(
+                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                Uri.fromParts("package", context.packageName, null)
+            )
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(intent)
+        }
+    }
+
 
 /*
     fun isValidUsername(target: String): Boolean {

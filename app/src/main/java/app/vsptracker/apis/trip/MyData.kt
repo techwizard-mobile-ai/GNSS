@@ -250,7 +250,15 @@ class MyData : Serializable {
     
     var isMapOpened: Boolean = false
     override fun toString(): String {
-        return "MyData(id=$id, loadTypeId=$loadTypeId, loading_material_id=$loading_material_id, back_loading_material_id=$back_loading_material_id, loading_location_id=$loading_location_id, back_loading_location_id=$back_loading_location_id, unloading_material_id=$unloading_material_id, back_unloading_material_id=$back_unloading_material_id, unloading_location_id=$unloading_location_id, back_unloading_location_id=$back_unloading_location_id, isForLoadResult=$isForLoadResult, isForUnloadResult=$isForUnloadResult, isForBackLoadResult=$isForBackLoadResult, isForBackUnloadResult=$isForBackUnloadResult)"
+        return "MyData(" +
+                "id=$id, " +
+                "orgId=$orgId, " +
+                "siteId=$siteId, " +
+                "operatorId=$operatorId, " +
+                "name=$name, " +
+                "isSync=$isSync, " +
+                "checkformData=$checkformData" +
+                ")"
     }
     
     

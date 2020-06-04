@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="app.vsptracker">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -24,62 +25,16 @@
         <activity android:name=".activities.ServerSyncActivity" />
         <activity android:name=".activities.HoursReportingActivity" />
         <activity android:name=".activities.common.MachineBreakdownActivity" />
-
-
-        <meta-data android:name="com.google.firebase.messaging.default_notification_icon"
-
-            android:resource="@drawable/ic_launcher" />
-
-        <service android:name=".others.MyFirebaseMessagingService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"></action>
-            </intent-filter>
-        </service>
-
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="app.vsptracker.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths">
-            </meta-data>
-        </provider>
-
-        <receiver android:name=".others.VSPTWidget">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/vsptwidget_info" />
-        </receiver>
-
         <activity android:name=".activities.OperatorLoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".activities.scrapper.SHistoryActivity" />
         <activity android:name=".activities.excavator.ETOffLoadingActivity" />
         <activity android:name=".activities.Map1Activity" />
-
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
-
-        <uses-library
-            android:name="org.apache.http.legacy"
-            android:required="false" />
-
         <activity android:name=".activities.MapActivity" />
         <activity android:name=".activities.truck.THistoryActivity" />
         <activity android:name=".activities.DelayActivity" />
@@ -91,7 +46,8 @@
         <activity android:name=".activities.excavator.EHomeActivity" />
         <activity android:name=".activities.common.RUnloadActivity" />
         <activity android:name=".activities.common.RLoadActivity" />
-        <activity android:name=".activities.common.UnloadTaskActivity" /> <!-- Hide Keyboard by default on Activity Launch -->
+        <activity android:name=".activities.common.UnloadTaskActivity" />
+        <!-- Hide Keyboard by default on Activity Launch -->
         <activity
             android:name=".activities.common.MachineStatusActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
@@ -99,38 +55,70 @@
         <activity android:name=".activities.common.LMachineActivity" />
         <activity android:name=".activities.common.LocationActivity" />
         <activity android:name=".activities.common.MaterialActivity" />
-        <activity android:name=".activities.truck.TUnloadAfterActivity" /> <!-- <activity android:name=".activities.notused.TUnloadActivity" /> -->
+        <activity android:name=".activities.truck.TUnloadAfterActivity" />
+        <!-- <activity android:name=".activities.notused.TUnloadActivity" /> -->
         <!-- <activity android:name=".activities.notused.TLoadActivity" /> -->
         <activity android:name=".activities.truck.THomeActivity" />
         <activity android:name=".activities.HourMeterStartActivity" />
         <activity android:name=".activities.HourMeterStopActivity" />
-        <activity android:name=".activities.scrapper.SUnloadAfterActivity" /> <!-- <activity android:name=".activities.notused.MachineStatusActivity" /> -->
+        <activity android:name=".activities.scrapper.SUnloadAfterActivity" />
+        <!-- <activity android:name=".activities.notused.MachineStatusActivity" /> -->
         <!-- <activity android:name=".activities.notused.SUnloadActivity" /> -->
         <!-- <activity android:name=".activities.notused.SLoadActivity" /> -->
         <activity android:name=".activities.scrapper.SHomeActivity" />
         <activity android:name=".activities.MachineTypeActivity" />
         <activity android:name=".activities.notused.LoadUnloadActivity" />
         <activity android:name=".activities.notused.FinishActivity" />
-        <activity android:name=".activities.excavator.ELoadActivity">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN"/> -->
-            <!-- <category android:name="android.intent.category.LAUNCHER"/> -->
-            <!-- </intent-filter> -->
-        </activity>
-        <activity android:name=".activities.LoginActivity">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity> <!-- <activity android:name=".activities.notused.EHomeOldActivity" /> -->
+        <activity android:name=".activities.excavator.ELoadActivity"/>
+        <activity android:name=".activities.LoginActivity"/>
+        <!-- <activity android:name=".activities.notused.EHomeOldActivity" /> -->
         <activity
             android:name=".BaseActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+        <service
+            android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
+            android:enabled="true" />
+        <service
+            android:name=".aws.MyService"
+            android:enabled="true" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_launcher" />
+        <service android:name=".others.MyFirebaseMessagingService"
+            tools:ignore="ExportedService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="app.vsptracker.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths">
+            </meta-data>
+        </provider>
+        <receiver android:name=".others.VSPTWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/vsptwidget_info" />
+        </receiver>
     </application>
 
 </manifest>

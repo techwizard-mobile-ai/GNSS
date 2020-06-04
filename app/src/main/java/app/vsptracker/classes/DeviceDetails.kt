@@ -23,7 +23,6 @@ class DeviceDetails : Serializable {
                 "BRAND='$BRAND', " +
                 "MODEL='$MODEL', " +
                 "ANDROID_SDK_API=$ANDROID_SDK_API" +
-                "fcmToken=$fcmToken" +
                 ")"
     }
     
