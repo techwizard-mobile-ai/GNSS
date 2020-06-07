@@ -68,11 +68,13 @@ class Util {
      */
     fun getS3Client(context: Context): AmazonS3Client {
         if (sS3Client == null) {
-            sS3Client = AmazonS3Client(getCredProvider(context))
+//            This method is deprecated
+//            sS3Client = AmazonS3Client(getCredProvider(context))
             try {
                 val regionString = AWSConfiguration(context)
                     .optJsonObject("S3TransferUtility")
                     .getString("Region")
+                sS3Client = AmazonS3Client(getCredProvider(context), Region.getRegion(regionString))
                 sS3Client!!.setRegion(Region.getRegion(regionString))
             }
             catch (e: JSONException) {

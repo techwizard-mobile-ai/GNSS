@@ -25,7 +25,10 @@
         <activity android:name=".activities.ServerSyncActivity" />
         <activity android:name=".activities.HoursReportingActivity" />
         <activity android:name=".activities.common.MachineBreakdownActivity" />
-        <activity android:name=".activities.OperatorLoginActivity">
+        <activity
+            android:name=".activities.OperatorLoginActivity"
+            android:theme="@style/splashScreenTheme"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />

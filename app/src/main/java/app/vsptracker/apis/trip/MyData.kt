@@ -237,8 +237,7 @@ class MyData : Serializable {
     
     @SerializedName("checkform_data")
     @Expose
-    var checkformDataString = ""
-    var checkformData = CheckFormData()
+    var checkFormData = ArrayList<CheckFormData> ()
     
     @SerializedName("images_limit")
     @Expose
@@ -250,14 +249,14 @@ class MyData : Serializable {
     
     var isMapOpened: Boolean = false
     override fun toString(): String {
-        return "MyData(" +
+        return "\n\nMyData(" +
                 "id=$id, " +
                 "orgId=$orgId, " +
                 "siteId=$siteId, " +
                 "operatorId=$operatorId, " +
                 "name=$name, " +
                 "isSync=$isSync, " +
-                "checkformData=$checkformData" +
+                "checkformData=$checkFormData" +
                 ")"
     }
     

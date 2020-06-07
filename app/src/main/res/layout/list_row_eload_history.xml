@@ -9,11 +9,11 @@
         style="?attr/cardStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_3sdp"
-        card_view:cardCornerRadius="5dp"
-        card_view:cardElevation="6dp"
-        card_view:cardMaxElevation="10dp"
-        card_view:contentPadding="5dp">
+        android:layout_margin="@dimen/_5sdp"
+        card_view:cardCornerRadius="@dimen/_8sdp"
+        card_view:cardElevation="@dimen/_8sdp"
+        card_view:cardMaxElevation="@dimen/_10sdp"
+        card_view:contentPadding="@dimen/_5sdp">
 
         <LinearLayout
             android:layout_width="match_parent"

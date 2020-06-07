@@ -186,7 +186,7 @@ class MyHelper(var TAG: String, val context: Context) {
         val formBody = FormBody.Builder()
             .add("email", getLoginAPI().email)
             .add("password", getLoginAPI().pass)
-            .add("role", MyEnum.OPERATOR_ROLE)
+            .add("role", MyEnum.ROLE_OPERATOR)
             .add("ttl", MyEnum.TTL)
             .build()
         val request = Request.Builder()
@@ -226,12 +226,16 @@ class MyHelper(var TAG: String, val context: Context) {
                 }
                 catch (e: Exception) {
                     log("refreshToken:" + e.localizedMessage)
+                    val intent = Intent(context, LoginActivity::class.java)
+                    context.startActivity(intent)
                 }
                 
             }
             
             override fun onFailure(call: Call, e: IOException) {
                 log("Failed to execute request ${e.printStackTrace()}")
+                val intent = Intent(context, LoginActivity::class.java)
+                context.startActivity(intent)
             }
         })
     }
@@ -972,11 +976,15 @@ class MyHelper(var TAG: String, val context: Context) {
         return path
     }
     
-    fun showErrorDialog(message: String) {
+    fun showErrorDialog(title: String , explanation: String = "") {
         
         val mDialogView = LayoutInflater.from(context).inflate(R.layout.dialog_error, null)
+        mDialogView.error_title.text = title
+        if(explanation.isNotBlank()){
+            mDialogView.error_explanation.text = explanation
+            mDialogView.error_explanation.visibility = View.VISIBLE
+        }
         
-        mDialogView.error_message.text = message
         
         val mBuilder = AlertDialog.Builder(context)
             .setView(mDialogView)
@@ -1131,7 +1139,36 @@ class MyHelper(var TAG: String, val context: Context) {
             context.startActivity(intent)
         }
     }
+    
 
+//    fun uploadImagesToAWS(completedCheckForms: List<MyData>): List<MyData> {
+//        completedCheckForms.forEach { completedCheckForm ->
+//            completedCheckForm.checkFormData.forEach { checkFormDatum ->
+//                log("checkFormDatum:${checkFormDatum}")
+//                checkFormDatum.answerDataObj.imagesList.forEach { images ->
+//                    if (images.localImagePath.isNotBlank() && images.awsImagePath.isBlank()) {
+//                        try {
+//                            val file = readContentToFile(Uri.parse(images.localImagePath))
+//                            val filePath = getAWSFilePath()
+//                            awsFileUpload(filePath, file)
+//                            images.awsImagePath = filePath + file.name
+//                            checkFormDatum.answerDataObj.imagesList.add(images)
+//                            log("fileAdded:${checkFormDatum.answerDataObj}")
+//                        }
+//                        catch (e: Exception) {
+//                            log("uploadException:${e.localizedMessage}")
+//                        }
+//                    }
+//                }
+//                log("checkFormDatumAfter:${checkFormDatum}")
+////                val checkFormsDatumList = ArrayList<CheckFormData>()
+////                checkFormsDatumList.add(checkFormDatum)
+////                db.updateAdminCheckFormsData(checkFormsDatumList)
+//            }
+//        }
+//
+//        return completedCheckForms
+//    }
 
 /*
     fun isValidUsername(target: String): Boolean {

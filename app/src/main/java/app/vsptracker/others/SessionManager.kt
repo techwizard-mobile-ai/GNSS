@@ -65,7 +65,7 @@ class SessionManager(_context: Context) {
     fun getMachineSettings(): Material {
         val gson = Gson()
         val json = pref.getString(KEY_MACHINE_SETTINGS, "")
-        return when (val obj = gson.fromJson<Material>(json, Material::class.java)) {
+        return when (val obj = gson.fromJson(json, Material::class.java)) {
             null -> Material()
             else -> obj
         }
@@ -81,7 +81,7 @@ class SessionManager(_context: Context) {
     fun getLastJourney(): MyData {
         val gson = Gson()
         val json = pref.getString(KEY_LAST_JOURNEY, "")
-        return when (val obj = gson.fromJson<MyData>(json, MyData::class.java)) {
+        return when (val obj = gson.fromJson(json, MyData::class.java)) {
             null -> MyData()
             else -> obj
         }
@@ -97,7 +97,7 @@ class SessionManager(_context: Context) {
     fun getOperatorAPI(): MyData {
         val gson = Gson()
         val json = pref.getString(KEY_OPERATORAPI, "")
-        return when (val obj = gson.fromJson<MyData>(json, MyData::class.java)) {
+        return when (val obj = gson.fromJson(json, MyData::class.java)) {
             null -> MyData()
             else -> obj
         }
@@ -106,7 +106,7 @@ class SessionManager(_context: Context) {
     fun getLoginAPI(): LoginAPI {
         val gson = Gson()
         val json = pref.getString(KEY_LOGINAPI, "")
-        return when (val obj = gson.fromJson<LoginAPI>(json, LoginAPI::class.java)) {
+        return when (val obj = gson.fromJson(json, LoginAPI::class.java)) {
             null -> LoginAPI()
             else -> obj
         }
@@ -115,7 +115,7 @@ class SessionManager(_context: Context) {
     fun getMeter(): Meter {
         val gson = Gson()
         val json = pref.getString(KEY_METER, "")
-        return when (val obj = gson.fromJson<Meter>(json, Meter::class.java)) {
+        return when (val obj = gson.fromJson(json, Meter::class.java)) {
             null -> Meter()
             else -> obj
         }
@@ -180,7 +180,7 @@ class SessionManager(_context: Context) {
     fun getLatestVSPTVersion(): AppAPI {
         val gson = Gson()
         val json = pref.getString(KEY_APP_API, "")
-        return when (val obj = gson.fromJson<AppAPI>(json, AppAPI::class.java)) {
+        return when (val obj = gson.fromJson(json, AppAPI::class.java)) {
             null -> AppAPI()
             else -> obj
         }

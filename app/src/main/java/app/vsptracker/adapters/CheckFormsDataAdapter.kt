@@ -62,11 +62,11 @@ class CheckFormsDataAdapter(
                     }
                     
                 }
-                if(datum.answerDataObj.imagesPaths.size > 0){
+                if(datum.answerDataObj.imagesList.size > 0){
                     holder.itemView.photo_layout_main.visibility = View.VISIBLE
                     holder.itemView.photo_layout.visibility = View.VISIBLE
-                    datum.answerDataObj.imagesPaths.forEach {
-                        holder.itemView.photo_layout.addView(myHelper.addImageToPhotoLayout(context, null, Uri.parse(it)))
+                    datum.answerDataObj.imagesList.forEach {
+                        holder.itemView.photo_layout.addView(myHelper.addImageToPhotoLayout(context, null, Uri.parse(it.localImagePath)))
                     }
                 }else{
                     holder.itemView.photo_layout_main.visibility = View.GONE

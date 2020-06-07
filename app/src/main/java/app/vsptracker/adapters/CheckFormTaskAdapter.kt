@@ -275,8 +275,8 @@ class CheckFormTaskAdapter(
                                 myHelper.hideKeyboard(holder.itemView.cft_item_acceptable)
     
                                 holder.itemView.photo_layout.removeAllViews()
-                                data.answerDataObj.imagesPaths.forEach {
-                                    holder.itemView.photo_layout.addView(myHelper.addImageToPhotoLayout(context, null, Uri.parse(it)))
+                                data.answerDataObj.imagesList.forEach {
+                                    holder.itemView.photo_layout.addView(myHelper.addImageToPhotoLayout(context, null, Uri.parse(it.localImagePath)))
                                 }
                                 holder.itemView.photo_layout.visibility = View.VISIBLE
                             }
@@ -285,8 +285,8 @@ class CheckFormTaskAdapter(
                                 showCommentsLayout(holder.itemView)
                                 showPhotoLayout(holder.itemView, datum.images_limit)
                                 holder.itemView.photo_layout.removeAllViews()
-                                data.answerDataObj.imagesPaths.forEach {
-                                    holder.itemView.photo_layout.addView(myHelper.addImageToPhotoLayout(context, null, Uri.parse(it)))
+                                data.answerDataObj.imagesList.forEach {
+                                    holder.itemView.photo_layout.addView(myHelper.addImageToPhotoLayout(context, null, Uri.parse(it.localImagePath)))
                                 }
                                 holder.itemView.photo_layout.visibility = View.VISIBLE
                             }

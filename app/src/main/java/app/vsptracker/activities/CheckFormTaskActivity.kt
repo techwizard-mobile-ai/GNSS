@@ -1,21 +1,17 @@
 package app.vsptracker.activities
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ContentResolver
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.provider.Settings
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.app.AlertDialog
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,14 +21,11 @@ import app.vsptracker.adapters.CheckFormTaskAdapter
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.AnswerData
 import app.vsptracker.classes.CheckFormData
+import app.vsptracker.classes.Images
+import app.vsptracker.others.MyDataPushSave
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_check_form_task.*
-import kotlinx.android.synthetic.main.dialog_permissions.view.*
 import kotlinx.android.synthetic.main.dialog_save_checkform.view.*
-import kotlinx.android.synthetic.main.dialog_save_checkform.view.cftd_save_bottom
-import kotlinx.android.synthetic.main.dialog_save_checkform.view.cftd_sub_title
-import kotlinx.android.synthetic.main.dialog_save_checkform.view.cftd_title_layout
-import kotlinx.android.synthetic.main.dialog_save_checkform.view.cftd_title_layout_bottom
 import kotlinx.android.synthetic.main.list_row_check_form_task.view.*
 import java.io.File
 import java.io.IOException
@@ -70,25 +63,20 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
         }
         
         initCheckFormCompleted()
-        
         val checkForm = db.getAdminCheckFormByID(checkform_id)
         cft_title.text = checkForm.name
-        
         
         questionsList = db.getQuestionsByIDs(
             myHelper.toCommaSeparatedString(checkForm.questions_data),
             myHelper.getQuestionsIDsList(checkForm.questions_data)
         )
-        
         mAdapter = CheckFormTaskAdapter(this, questionsList)
         cft_rv.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        cft_rv.isNestedScrollingEnabled = true
         cft_rv.adapter = mAdapter
         cft_finish.setOnClickListener(this)
         cft_skip.setOnClickListener(this)
-        
-        
     }
-    
     
     private fun initCheckFormCompleted() {
         checkFormCompleted = MyData()
@@ -174,6 +162,11 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
         val checkFormCompletedLocalID = db.insertAdminCheckFormsCompleted(checkFormCompleted)
         myHelper.log("checkFormCompletedLocalID:$checkFormCompletedLocalID")
         db.insertAdminCheckFormsData(checkFormDataList, checkFormCompletedLocalID)
+    
+//        val myDataPushSave = MyDataPushSave(this)
+//        myDataPushSave.uploadCompletedCheckForms()
+//        if (myHelper.isOnline())
+//            uploadImagesToAWS()
         finish()
     }
     
@@ -193,7 +186,6 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
             mDialogView.cftd_title_layout_bottom.visibility = View.GONE
         }
         
-        
         val mBuilder = AlertDialog.Builder(this)
             .setView(mDialogView)
         
@@ -206,7 +198,6 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
         wlp.gravity = Gravity.CENTER
         window.attributes = wlp
         
-        
         mDialogView.save_checkform_yes.setOnClickListener {
             mAlertDialog.dismiss()
             saveCompletedCheckForm()
@@ -214,7 +205,6 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
         mDialogView.save_checkform_no.setOnClickListener {
             mAlertDialog.dismiss()
         }
-        
     }
     
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -300,7 +290,7 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
         
         if (data == null) {
             val answerData = AnswerData()
-            answerData.imagesPaths.add(imagePath)
+            answerData.imagesList.add(Images(imagePath, ""))
             checkFormData.answerDataObj = answerData
             // question data is not already saved in list. Add data to list
             checkFormDataList.add(checkFormData)
@@ -308,7 +298,7 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
             checkFormData.answer = data.answer
             // questions data is already in the list. Update data to list
             checkFormData.answerDataObj = data.answerDataObj
-            checkFormData.answerDataObj.imagesPaths.add(imagePath)
+            checkFormData.answerDataObj.imagesList.add(Images(imagePath, ""))
             val index: Int = checkFormDataList.indexOf(data)
             checkFormDataList[index] = checkFormData
         }
@@ -320,7 +310,7 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
         return if (data == null) {
             0
         } else {
-            data.answerDataObj.imagesPaths.size
+            data.answerDataObj.imagesList.size
         }
     }
     

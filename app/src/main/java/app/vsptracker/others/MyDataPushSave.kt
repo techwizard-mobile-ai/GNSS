@@ -2,7 +2,7 @@ package app.vsptracker.others
 
 import android.content.Context
 import android.content.Intent
-import android.os.AsyncTask
+import app.vsptracker.R
 import app.vsptracker.activities.OperatorLoginActivity
 import app.vsptracker.apis.RetrofitAPI
 import app.vsptracker.apis.delay.EWork
@@ -95,7 +95,7 @@ class MyDataPushSave(private val context: Context) {
                 myHelper.log("Response:$response")
                 try {
                     val responseBody = response.body()
-                    if (responseBody!!.success ) {
+                    if (responseBody!!.success) {
                         val getServerSyncData = responseBody.get_data
                         getServerSyncData.forEach { serverSyncAPI ->
                             when (serverSyncAPI.type) {
@@ -172,7 +172,8 @@ class MyDataPushSave(private val context: Context) {
                         myHelper.hideProgressBar()
                         myHelper.toast(responseBody.message)
                     }
-                }catch (e:Exception){
+                }
+                catch (e: Exception) {
                     myHelper.log("getServerSync:${e.localizedMessage}")
                 }
                 
@@ -190,36 +191,36 @@ class MyDataPushSave(private val context: Context) {
      * This Logout Time is different for each Site and each Machine Type.
      * After inactivity of Operator, Logout function will be called and required actions will be taken.
      */
- /*   private fun fetchMachinesAutoLogouts() {
-        val call = this.retrofitAPI.getMachinesAutoLogouts(
-            myHelper.getLoginAPI().org_id,
-            myHelper.getLoginAPI().auth_token,
-            myHelper.getOperatorAPI().id,
-            myHelper.getDeviceDetailsString()
-        )
-        call.enqueue(object : retrofit2.Callback<OperatorResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<OperatorResponse>,
-                response: retrofit2.Response<OperatorResponse>
-            ) {
-                myHelper.log("Response:$response")
-                val responseBody = response.body()
-                if (responseBody!!.success && responseBody.data != null) {
-                    db.insertMachinesAutoLogouts(responseBody.data as ArrayList<OperatorAPI>)
-//                    fetchMachinesHours()
-                    fetchMachinesTasks()
-                } else {
-                    myHelper.hideProgressBar()
-                    myHelper.toast(responseBody.message)
-                }
-            }
-            
-            override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
-                myHelper.hideProgressBar()
-                myHelper.log("Failure" + t.message)
-            }
-        })
-    }*/
+    /*   private fun fetchMachinesAutoLogouts() {
+           val call = this.retrofitAPI.getMachinesAutoLogouts(
+               myHelper.getLoginAPI().org_id,
+               myHelper.getLoginAPI().auth_token,
+               myHelper.getOperatorAPI().id,
+               myHelper.getDeviceDetailsString()
+           )
+           call.enqueue(object : retrofit2.Callback<OperatorResponse> {
+               override fun onResponse(
+                   call: retrofit2.Call<OperatorResponse>,
+                   response: retrofit2.Response<OperatorResponse>
+               ) {
+                   myHelper.log("Response:$response")
+                   val responseBody = response.body()
+                   if (responseBody!!.success && responseBody.data != null) {
+                       db.insertMachinesAutoLogouts(responseBody.data as ArrayList<OperatorAPI>)
+   //                    fetchMachinesHours()
+                       fetchMachinesTasks()
+                   } else {
+                       myHelper.hideProgressBar()
+                       myHelper.toast(responseBody.message)
+                   }
+               }
+               
+               override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
+                   myHelper.hideProgressBar()
+                   myHelper.log("Failure" + t.message)
+               }
+           })
+       }*/
     
     /**
      * No Need to Sync this data as It will not work properly when Operator don't have Internet connection
@@ -254,7 +255,7 @@ class MyDataPushSave(private val context: Context) {
             }
         })
     }*/
-    
+
 /*    private fun fetchMachinesTasks() {
         val call = this.retrofitAPI.getMachinesTasks(
             myHelper.getLoginAPI().org_id,
@@ -1296,7 +1297,48 @@ class MyDataPushSave(private val context: Context) {
                     myHelper.log("Operators Waiting")
                     db.updateWaits(serverSyncAPI.myEWorkList)
                 }
+                11 -> {
+                    myHelper.log("CheckForms Completed")
+                    db.updateAdminCheckFormsCompleted(serverSyncAPI.myDataList)
+                    serverSyncAPI.myDataList.forEach {
+                        db.updateAdminCheckFormsData(it.checkFormData)
+                    }
+                }
             }
+        }
+    }
+    
+    fun uploadCompletedCheckForms(showDialog: Boolean = false) {
+    
+        
+        if (myDataList.size > 0)
+            myDataList.removeAll(ArrayList())
+    
+        if (eWorkList.size > 0)
+            eWorkList.removeAll(ArrayList())
+    
+        if (serverSyncList.size > 0)
+            serverSyncList.removeAll(ArrayList())
+    
+        addToList(1, "Operators Hours", db.getOperatorsHours("ASC"))
+        addToList(2, "Trucks Trips", db.getTripsByTypes(3, "ASC"))
+        addToList(3, "Scrapers Trips", db.getTripsByTypes(2, "ASC"))
+        addToList(4, "Scrapers Trimmings", db.getEWorks(3, "ASC"))
+        addToList(5, "Excavators Prod. Digging", db.getELoadHistory("ASC"))
+        addToList(6, "Excavators Trenching", db.getEWorks(2, "ASC"))
+        addToList(7, "Excavators Gen. Digging", db.getEWorks(1, "ASC"))
+        addToList(8, "Machines Stops", db.getMachinesStops("ASC"))
+        addToList(9, "Machines Hours", db.getMachinesHours("ASC"))
+        addToList(10, "Operators Waiting", db.getWaits("ASC"))
+        addToList(11, "Completed CheckForms", db.getAdminCheckFormsCompleted("ASC"))
+    
+    
+        if (myHelper.isOnline()) {
+            if (serverSyncList.size > 0)
+                pushUpdateServerSync(showDialog)
+            else myHelper.showErrorDialog(context.resources.getString(R.string.no_offline_data_title), context.resources.getString(R.string.no_offline_data_explanation))
+        } else {
+            myHelper.toast(noInternetMessage)
         }
     }
 }

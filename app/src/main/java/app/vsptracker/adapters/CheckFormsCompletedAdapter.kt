@@ -46,8 +46,6 @@ class CheckFormsCompletedAdapter(
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-    
-        
         
         val datum = dataList[position]
         myHelper.log(datum.toString())
@@ -78,7 +76,8 @@ class CheckFormsCompletedAdapter(
         holder.itemView.cf_applicable.text = ":  $applicable"
         
         val totalQuestions = myHelper.getQuestionsIDsList(adminCheckForm.questions_data).size
-        val attemptedQuestions = db.getAdminCheckFormsDataByLocalID(datum.id).size
+//        val attemptedQuestions = db.getAdminCheckFormsDataByLocalID(datum.id).size
+        val attemptedQuestions = datum.checkFormData.size
         if( totalQuestions > attemptedQuestions){
             holder.itemView.cf_done_questions_text.setTextColor(ContextCompat.getColor(context, R.color.red))
             holder.itemView.cf_done_questions.setTextColor(ContextCompat.getColor(context, R.color.red))

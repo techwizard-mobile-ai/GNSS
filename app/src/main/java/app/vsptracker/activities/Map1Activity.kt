@@ -1,5 +1,6 @@
 package app.vsptracker.activities
 
+import android.annotation.SuppressLint
 import android.location.Location
 import android.os.Bundle
 import android.view.View
@@ -86,6 +87,7 @@ class Map1Activity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
         setUpMap()
     }
 
+    @SuppressLint("MissingPermission")
     private fun setUpMap() {
 
         if (mapGPSLocation.latitude != 0.0 && mapGPSLocation.longitude != 0.0) {
@@ -125,15 +127,12 @@ class Map1Activity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
                     lastLocation = location
                     val currentLatLng = LatLng(location.latitude, location.longitude)
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, ZOOM_LEVEL))
-
-                    val layer = KmlLayer(map, R.raw.dury_south, applicationContext)
+//                    val layer = KmlLayer(map, R.raw.dury_south, applicationContext)
+                    val layer = KmlLayer(map, R.raw.drury_xhunua, applicationContext)
                     layer.addLayerToMap()
                 }
             }
         }
-
-
-
     }
 
     override fun onMarkerClick(p0: Marker?) = false

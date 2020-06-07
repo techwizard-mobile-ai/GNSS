@@ -10,9 +10,9 @@ class CheckFormData : Serializable {
     @Expose
     var id: Int = 0
     
-    @SerializedName("admin_checkform_completed_id")
+    @SerializedName("admin_checkforms_completed_id")
     @Expose
-    var admin_checkform_completed_id: Int = 0
+    var admin_checkforms_completed_id: Int = 0
     var admin_checkform_completed_local_id: Int = 0
     
     @SerializedName("admin_questions_id")
@@ -40,7 +40,7 @@ class CheckFormData : Serializable {
     override fun toString(): String {
         return "CheckFormData(" +
                 "id=$id, " +
-                "admin_checkform_completed_id=$admin_checkform_completed_id, " +
+                "admin_checkforms_completed_id=$admin_checkforms_completed_id, " +
                 "admin_checkform_completed_local_id=$admin_checkform_completed_local_id, " +
                 "admin_questions_id=$admin_questions_id, " +
                 "answer='$answer', " +

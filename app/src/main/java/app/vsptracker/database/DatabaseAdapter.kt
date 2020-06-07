@@ -558,7 +558,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val tableName = TABLE_ADMIN_CHECKFORMS_DATA
         
         for (datum in data) {
-            cv.put(COL_ADMIN_CHECKFORMS_COMPLETED_ID, datum.admin_checkform_completed_id)
+            cv.put(COL_ADMIN_CHECKFORMS_COMPLETED_ID, datum.admin_checkforms_completed_id)
             cv.put(COL_ADMIN_CHECKFORMS_COMPLETED_LOCAL_ID, checkFormCompletedLocalID)
             cv.put(COL_ADMIN_QUESTIONS_ID, datum.admin_questions_id)
             cv.put(COL_ANSWER, datum.answer)
@@ -1276,7 +1276,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             do {
                 val datum = CheckFormData()
                 datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.admin_checkform_completed_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_COMPLETED_ID))
+                datum.admin_checkforms_completed_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_COMPLETED_ID))
                 datum.admin_checkform_completed_local_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_COMPLETED_LOCAL_ID))
                 datum.admin_questions_id = result.getInt(result.getColumnIndex(COL_ADMIN_QUESTIONS_ID))
                 datum.answer = result.getString(result.getColumnIndex(COL_ANSWER))
@@ -1313,7 +1313,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             do {
                 val datum = CheckFormData()
                 datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.admin_checkform_completed_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_COMPLETED_ID))
+                datum.admin_checkforms_completed_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_COMPLETED_ID))
                 datum.admin_checkform_completed_local_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_COMPLETED_LOCAL_ID))
                 datum.admin_questions_id = result.getInt(result.getColumnIndex(COL_ADMIN_QUESTIONS_ID))
                 datum.answer = result.getString(result.getColumnIndex(COL_ANSWER))
@@ -1344,12 +1344,12 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return list
     }
     
-    fun getAdminCheckFormsCompleted(): ArrayList<MyData> {
+    fun getAdminCheckFormsCompleted(orderBy: String = "DESC"): ArrayList<MyData> {
         val list: ArrayList<MyData> = ArrayList()
         val db = this.readableDatabase
         
         val query =
-            "Select * FROM $TABLE_ADMIN_CHECKFORMS_COMPLETED ORDER BY $COL_ID DESC "
+            "Select * FROM $TABLE_ADMIN_CHECKFORMS_COMPLETED ORDER BY $COL_ID $orderBy "
         val result = db.rawQuery(query, null)
         
         if (result.moveToFirst()) {
@@ -1391,6 +1391,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 )
                 
                 datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
+                datum.checkFormData = getAdminCheckFormsDataByLocalID(datum.id)
                 
                 list.add(datum)
             } while (result.moveToNext())
@@ -3054,11 +3055,27 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val cv = ContentValues()
         
         for (datum in data) {
-            cv.put(COL_IS_SYNC, datum.isSync)
+            cv.put(COL_ADMIN_CHECKFORMS_COMPLETED_ID, datum.admin_checkforms_completed_id)
+            cv.put(COL_ANSWER, datum.answer)
             cv.put(COL_ANSWER_DATA, myHelper.getAnswerDataToString(datum.answerDataObj))
+            cv.put(COL_IS_SYNC, datum.isSync)
             
             val updatedID = db.update(TABLE_ADMIN_CHECKFORMS_DATA, cv, "$COL_ID = ${datum.id}", null)
             myHelper.log("updateAdminCheckFormsData:updateID:$updatedID")
+            myHelper.log("updateAdminCheckFormsData:$data")
+        }
+    }
+    
+    
+    fun updateAdminCheckFormsCompleted(data: ArrayList<MyData>) {
+        
+        val db = this.writableDatabase
+        val cv = ContentValues()
+        
+        for (datum in data) {
+            cv.put(COL_IS_SYNC, datum.isSync)
+            val updatedID = db.update(TABLE_ADMIN_CHECKFORMS_COMPLETED, cv, "$COL_ID = ${datum.id}", null)
+            myHelper.log("updateAdminCheckFormsCompleted:updateID:$updatedID")
         }
     }
 }

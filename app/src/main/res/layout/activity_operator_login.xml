@@ -74,6 +74,14 @@
             android:layout_marginTop="@dimen/_10sdp"
             android:text="@string/login" />
 
+        <TextView
+            android:id="@+id/company_signin"
+            style="@style/signin_btn"
+            android:visibility="gone"
+            android:textSize="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:text="@string/company_login" />
+
 
         <TextView
             style="@style/avenirnext_fontstyle"

@@ -94,6 +94,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     }
     
     private fun orgLogin(email: String, pass: String) {
+        myHelper.log("email:$email")
+        myHelper.log("pass:$pass")
         if (!myHelper.isOnline()) {
             myHelper.toast("No Internet Connection.\nPlease Connect Internet and Try Again.")
         } else {
@@ -102,6 +104,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             call.enqueue(object : retrofit2.Callback<LoginResponse> {
                 
                 override fun onResponse(call: retrofit2.Call<LoginResponse>, response: retrofit2.Response<LoginResponse>) {
+                    myHelper.log("RetrofitResponse:${response}")
                     myHelper.log("RetrofitResponse:${response.body()}")
                     val loginResponse = response.body()
                     if (loginResponse!!.success) {
@@ -128,7 +131,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 
                 override fun onFailure(call: retrofit2.Call<LoginResponse>, t: Throwable) {
                     myHelper.hideProgressBar()
-                    myHelper.toast(t.message.toString())
+//                    myHelper.toast(t.message.toString())
                     Log.e(tag, "FailureResponse:" + t.message)
                 }
             })

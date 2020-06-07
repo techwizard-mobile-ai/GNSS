@@ -17,6 +17,7 @@ import app.vsptracker.apis.delay.EWork
 import app.vsptracker.apis.serverSync.ServerSyncAPI
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.ServerSyncModel
+import app.vsptracker.others.MyEnum
 import com.google.android.material.navigation.NavigationView
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_server_sync.*
@@ -30,8 +31,9 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
     private lateinit var mAdapter: ServerSyncAdapter
     
     private val adapterList = ArrayList<ServerSyncModel>()
-    private val myDataList = ArrayList<MyData>()
-    private val eWorkList = ArrayList<EWork>()
+    
+    //    private val myDataList = ArrayList<MyData>()
+//    private val eWorkList = ArrayList<EWork>()
     private val serverSyncList = ArrayList<ServerSyncAPI>()
     
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,10 +53,16 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
         addToList(8, "Machines Stops", db.getMachinesStops("ASC"))
         addToList(9, "Machines Hours", db.getMachinesHours("ASC"))
         addToList(10, "Operators Waiting", db.getWaits("ASC"))
+//        addToList(11, "CheckForms Completed", db.getAdminCheckFormsCompleted("ASC"))
+//        addToListCheckFormsCompleted(11, "CheckForms Completed", db.getAdminCheckFormsCompleted("ASC"))
         
         refreshData()
         
         server_sync_upload.setOnClickListener(this)
+    }
+    
+    fun uploadCompletedCheckForms(){
+        addToList(11, "CheckForms Completed", db.getAdminCheckFormsCompleted("ASC"))
     }
     
     fun refreshData() {
@@ -82,10 +90,9 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
         val synced = list.filter { it.isSync == 1 }.size
         val remaining = list.filter { it.isSync == 0 }
         myHelper.log("$name:$total, isSynced:$synced, isRemaining:${remaining.size}")
+        myHelper.log("completedCheckForms:$list")
         if (remaining.isNotEmpty()) {
             adapterList.add(ServerSyncModel(name, total, synced, remaining.size))
-            myDataList.addAll(remaining)
-            
             val serverSyncAPI = ServerSyncAPI()
             serverSyncAPI.type = type
             serverSyncAPI.name = name
@@ -105,7 +112,7 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
         myHelper.log("$name:$total, isSynced:$synced, isRemaining:${remaining.size}")
         if (remaining.isNotEmpty()) {
             adapterList.add(ServerSyncModel(name, total, synced, remaining.size))
-            eWorkList.addAll(remaining)
+//            eWorkList.addAll(remaining)
             
             val serverSyncAPI = ServerSyncAPI()
             serverSyncAPI.type = type
@@ -115,13 +122,54 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
         }
     }
     
+    private fun removeItem(myData: MyData): Boolean {
+        if (myData.isSync == 0) {
+            myData.checkFormData.forEach { checkFormDatum ->
+                checkFormDatum.answerDataObj.imagesList.forEach { images ->
+                    if (images.localImagePath.isNotBlank() && images.awsImagePath.isBlank()) {
+                        return true
+                    }
+                }
+            }
+            return false
+        } else {
+            return true
+        }
+    }
+    
+    private fun addToListCheckFormsCompleted(type: Int, name: String, list: ArrayList<MyData>) {
+        val total = list.size
+        val synced = list.filter { it.isSync == 1 }.size
+        myHelper.log("totalList:$list")
+        myHelper.log("syncedList:$synced")
+//        val remaining = ArrayList<MyData>()
+        
+        for (i in 0 until list.size - 1) {
+            if (removeItem(list[i])) {
+                list.remove(list[i])
+            }
+        }
+        
+        myHelper.log("list:${list.size}")
+        if (list.isNotEmpty()) {
+            
+            adapterList.add(ServerSyncModel(name, total, synced, total - synced))
+            val serverSyncAPI = ServerSyncAPI()
+            serverSyncAPI.type = type
+            serverSyncAPI.name = name
+            serverSyncAPI.myDataList.addAll(list)
+            serverSyncList.add(serverSyncAPI)
+        }
+    }
+    
     override fun onClick(view: View?) {
         when (view!!.id) {
             R.id.server_sync_upload -> {
                 if (adapterList.size > 0) {
-                    if (myHelper.isOnline()) pushUpdateServerSync(serverSyncList)
-                    else myHelper.toast("No Internet Connection. Please Connect to Internet and Try Again.")
-                } else myHelper.toast("No Offline Data to Sync.")
+                    if (myHelper.isOnline()) {
+                        pushUpdateServerSync(serverSyncList)
+                    } else myHelper.showErrorDialog(resources.getString(R.string.no_internet_connection), resources.getString(R.string.no_internet_explanation))
+                } else myHelper.toast(resources.getString(R.string.no_offline_data_to_sync_to_server))
             }
         }
     }
@@ -137,7 +185,7 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
             .build()
         
         val request = Request.Builder()
-            .url("https://vsptracker.app/api/v1/orgsserversync/store")
+            .url(MyEnum.BASE_URL + "orgsserversync/store")
             .post(formBody)
             .build()
         
@@ -145,8 +193,13 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
             override fun onResponse(call: Call, response: Response) {
                 myHelper.hideDialog()
                 val responseString = response.body!!.string()
+                myHelper.log("pushUpdateServerSync:${response}")
+                myHelper.log("pushUpdateServerSync:${response.body.toString()}")
                 val responseJObject = JSONObject(responseString)
                 val success = responseJObject.getBoolean("success")
+                myHelper.log("success:$success")
+                val message = responseJObject.getString("message")
+                myHelper.log("message:$message")
                 try {
                     if (success) {
                         val gson = GsonBuilder().create()
@@ -162,7 +215,7 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
 //                      App Database and change their status from isSync 0 to 1 as these entries are successfully updated in Portal Database.
                         if (updateServerSync(data)) {
                             runOnUiThread {
-                                //                                myHelper.toast("All Data Uploaded to Server Successfully.")
+//                                myHelper.toast("All Data Uploaded to Server Successfully.")
                                 mAdapter.notifyDataSetChanged()
                                 updatedNotification()
                             }
@@ -173,7 +226,7 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
                             myHelper.log("Token Expired:$responseJObject")
                             myHelper.refreshToken()
                         } else {
-                            myHelper.toast(responseJObject.getString("message "))
+                            myHelper.toast(responseJObject.getString("message"))
                         }
                     }
                 }
@@ -234,6 +287,13 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
                 10 -> {
                     myHelper.log("Operators Waiting")
                     db.updateWaits(serverSyncAPI.myEWorkList)
+                }
+                11 -> {
+                    myHelper.log("CheckForms Completed")
+                    db.updateAdminCheckFormsCompleted(serverSyncAPI.myDataList)
+                    serverSyncAPI.myDataList.forEach {
+                        db.updateAdminCheckFormsData(it.checkFormData)
+                    }
                 }
             }
         }
