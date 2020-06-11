@@ -297,7 +297,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     
     override fun onResume() {
         super.onResume()
-        
+        // to start GPS location
         startGPS()
 //        If Navigation is Disabled Lock Side Menu
         if (!myHelper.isNavEnabled()) {
