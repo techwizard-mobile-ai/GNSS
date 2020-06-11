@@ -172,7 +172,7 @@ interface RetrofitAPI {
         @Field("email") email: String,
         @Field("password") password: String,
         @Field("role") role: Int = 1,
-        @Field("ttl") ttl: Int = 43800 // 43200 minutes = 30 days
+        @Field("ttl") ttl: String = MyEnum.TTL
     ): Call<LoginResponse>
     
     @GET(ORGS_SERVER_SYNC_LIST)

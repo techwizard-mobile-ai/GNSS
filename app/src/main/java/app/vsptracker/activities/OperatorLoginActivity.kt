@@ -114,7 +114,6 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
 
         startGPS()
         myHelper.refreshToken()
-        myHelper.log(db.getAdminCheckForms().toString())
         /**
          * If Operator is Logged in and App is Launched this Code block will be executed.
          * If Internet is Available Fetch Company Data and Replace Old Data.

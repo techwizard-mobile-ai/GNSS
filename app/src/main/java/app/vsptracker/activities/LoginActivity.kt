@@ -14,8 +14,10 @@ import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.*
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_login.*
+import okhttp3.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
     
@@ -67,7 +69,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
         
-
+        
         
         signin_email.setText(MyEnum.user)
         signin_pass.setText(MyEnum.pass)
@@ -75,7 +77,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         myHelper.hideKeyboardOnClick(login_main_layout)
         signin_signin.setOnClickListener(this)
         signin_forgot_pass.setOnClickListener(this)
-
+        
         
     }
     
@@ -93,6 +95,35 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
     
+//    private fun orgLogin1(email: String, pass: String) {
+//        val client = OkHttpClient()
+//
+//        val formBody = FormBody.Builder()
+//            .add("email", email)
+//            .add("password", pass)
+//            .build()
+//        val request = Request.Builder()
+//            .url(MyEnum.LOGIN_URL)
+//            .post(formBody)
+//            .build()
+//
+//        client.newCall(request).enqueue(object : Callback {
+//
+//
+//            override fun onResponse(call: Call, response: Response) {
+//                myHelper.log("request:${response.request}")
+//                myHelper.log("handshake:${response.handshake}")
+//                myHelper.log("protocol:${response.protocol}")
+//                myHelper.log("networkResponse:${response.networkResponse}")
+//                myHelper.log("isRedirect:${response.isRedirect}")
+//                myHelper.log("headers:${response.headers}")
+//            }
+//            override fun onFailure(call: Call, e: IOException) {
+//                myHelper.log("onFailure:${e.localizedMessage}")
+//            }
+//        })
+//    }
+    
     private fun orgLogin(email: String, pass: String) {
         myHelper.log("email:$email")
         myHelper.log("pass:$pass")
@@ -104,7 +135,9 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             call.enqueue(object : retrofit2.Callback<LoginResponse> {
                 
                 override fun onResponse(call: retrofit2.Call<LoginResponse>, response: retrofit2.Response<LoginResponse>) {
-                    myHelper.log("RetrofitResponse:${response}")
+                    
+                    myHelper.log("headers:${response.headers()}")
+                    myHelper.log("code:${response.code()}")
                     myHelper.log("RetrofitResponse:${response.body()}")
                     val loginResponse = response.body()
                     if (loginResponse!!.success) {

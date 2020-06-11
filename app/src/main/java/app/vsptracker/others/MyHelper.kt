@@ -196,6 +196,13 @@ class MyHelper(var TAG: String, val context: Context) {
         
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
+//                log("request:${response.request}")
+//                log("handshake:${response.handshake}")
+//                log("protocol:${response.protocol}")
+//                log("networkResponse:${response.networkResponse}")
+//                log("isRedirect:${response.isRedirect}")
+//                log("headers:${response.headers}")
+                
                 val responseString = response.body!!.string()
                 try {
                     val responseJObject = JSONObject(responseString)

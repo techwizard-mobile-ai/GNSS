@@ -159,9 +159,9 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
         checkFormCompleted.stopTime = System.currentTimeMillis()
         checkFormCompleted.totalTime = checkFormCompleted.stopTime - checkFormCompleted.startTime
         myHelper.log("checkFormDataList:$checkFormDataList")
-        val checkFormCompletedLocalID = db.insertAdminCheckFormsCompleted(checkFormCompleted)
-        myHelper.log("checkFormCompletedLocalID:$checkFormCompletedLocalID")
-        db.insertAdminCheckFormsData(checkFormDataList, checkFormCompletedLocalID)
+//        val checkFormCompletedLocalID = db.insertAdminCheckFormsCompleted(checkFormCompleted)
+//        myHelper.log("checkFormCompletedLocalID:$checkFormCompletedLocalID")
+//        db.insertAdminCheckFormsData(checkFormDataList, checkFormCompletedLocalID)
     
 //        val myDataPushSave = MyDataPushSave(this)
 //        myDataPushSave.uploadCompletedCheckForms()

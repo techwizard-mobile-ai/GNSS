@@ -607,7 +607,6 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val tableName = TABLE_ADMIN_CHECKFORMS_COMPLETED
         
         for (datum in data) {
-            cv.put(COL_ID, datum.id)
             cv.put(COL_ORG_ID, datum.orgId)
             cv.put(COL_SITE_ID, datum.siteId)
             cv.put(COL_OPERATOR_ID, datum.operatorId)
@@ -1280,7 +1279,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.admin_checkform_completed_local_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_COMPLETED_LOCAL_ID))
                 datum.admin_questions_id = result.getInt(result.getColumnIndex(COL_ADMIN_QUESTIONS_ID))
                 datum.answer = result.getString(result.getColumnIndex(COL_ANSWER))
-                datum.time = myHelper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
+                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
                 
                 datum.answerDataObj = myHelper.getStringToAnswerData(
                     result.getString(
@@ -1317,7 +1316,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.admin_checkform_completed_local_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_COMPLETED_LOCAL_ID))
                 datum.admin_questions_id = result.getInt(result.getColumnIndex(COL_ADMIN_QUESTIONS_ID))
                 datum.answer = result.getString(result.getColumnIndex(COL_ANSWER))
-                datum.time = myHelper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
+                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
                 
                 datum.answerDataObj = myHelper.getStringToAnswerData(
                     result.getString(
@@ -1367,7 +1366,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
                 datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
                 
-                datum.time = myHelper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
+                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
                 datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
                 datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
                 
@@ -1575,7 +1574,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
                 datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
                 datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
-                datum.time = myHelper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
+                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
                 datum.date = result.getString(result.getColumnIndex(COL_TIME))
                 datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
                 datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
@@ -1690,7 +1689,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             datum.isStartHoursCustom = result.getInt(result.getColumnIndex(COL_IS_START_HOURS_CUSTOM))
             datum.isTotalHoursCustom = result.getInt(result.getColumnIndex(COL_IS_TOTAL_HOURS_CUSTOM))
             
-            datum.time = myHelper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
+            datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
             datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
             datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
             
@@ -1748,7 +1747,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.isStartHoursCustom = result.getInt(result.getColumnIndex(COL_IS_START_HOURS_CUSTOM))
                 datum.isTotalHoursCustom = result.getInt(result.getColumnIndex(COL_IS_TOTAL_HOURS_CUSTOM))
                 
-                datum.time = myHelper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
+                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
                 datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
                 datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
                 
@@ -2316,7 +2315,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
                 datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
                 
-                datum.time = myHelper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
+                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
                 datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
                 datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
                 
@@ -2370,7 +2369,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
                 datum.eWorkId = result.getInt(result.getColumnIndex(COL_EWORK_ID))
                 
-                datum.time = myHelper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
+                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
                 datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
                 datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
                 
@@ -2425,7 +2424,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
                 datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
                 datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
-                datum.time = myHelper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
+                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
                 datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
                 datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
                 
@@ -2551,7 +2550,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
             datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
             
-            datum.time = myHelper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
+            datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
             datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
             datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
             
@@ -2606,7 +2605,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
                 datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
                 
-                datum.time = myHelper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
+                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
                 datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
                 datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
                 
@@ -2667,7 +2666,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
                 datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
                 
-                datum.time = myHelper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
+                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
                 datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
                 datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
                 
@@ -2724,7 +2723,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
             datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
             
-            datum.time = myHelper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
+            datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
             datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
             datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
             
@@ -2773,7 +2772,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
                 datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
                 
-                datum.time = myHelper.getTime(result.getLong(result.getColumnIndex(COL_TIME)))
+                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
                 datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
                 datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
                 

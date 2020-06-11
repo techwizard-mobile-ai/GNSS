@@ -127,11 +127,10 @@ class CheckFormsFragment : Fragment() {
                                         }
                                     }
                                 }
-                                db.updateAdminCheckFormsData(completedCheckForm.checkFormData)
+//                                db.updateAdminCheckFormsData(completedCheckForm.checkFormData)
                             }
-                            val myDataPushSave = MyDataPushSave(context as Activity)
-                            
-                            myDataPushSave.uploadCompletedCheckForms(true)
+//                            val myDataPushSave = MyDataPushSave(context as Activity)
+//                            myDataPushSave.uploadCompletedCheckForms(true)
                         }
                     }
                 }
