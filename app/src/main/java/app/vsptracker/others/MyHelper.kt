@@ -977,7 +977,7 @@ class MyHelper(var TAG: String, val context: Context) {
         val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
         
         val path =
-            "${getLoginAPI().org_id}/$type/$currentYear/$currentMonth/$currentDay/${getMachineSettings().siteId}/${getMachineTypeID()}/${getMachineID()}/${getOperatorAPI().id}/"
+            "checkforms/${getLoginAPI().org_id}/$type/$currentYear/$currentMonth/$currentDay/${getMachineSettings().siteId}/${getMachineTypeID()}/${getMachineID()}/${getOperatorAPI().id}/"
         
         log("path:$path")
         return path

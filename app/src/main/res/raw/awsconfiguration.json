@@ -13,7 +13,7 @@
 },
   "S3TransferUtility": {
     "Default": {
-      "Bucket": "checkforms",
+      "Bucket": "vsptracker",
       "Region": "ap-southeast-2"
     }
   }
