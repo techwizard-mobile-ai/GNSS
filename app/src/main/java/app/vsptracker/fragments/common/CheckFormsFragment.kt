@@ -19,6 +19,7 @@ import app.vsptracker.apis.delay.EWork
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyDataPushSave
+import app.vsptracker.others.MyEnum
 import app.vsptracker.others.MyHelper
 import kotlinx.android.synthetic.main.fragment_check_forms.*
 import kotlinx.android.synthetic.main.fragment_check_forms.view.*
@@ -107,8 +108,8 @@ class CheckFormsFragment : Fragment() {
                         val mAdapter = CheckFormsCompletedAdapter(context as Activity, completedCheckForms, type, supportFragmentManager1)
                         root!!.cf_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
                         root!!.cf_rv!!.adapter = mAdapter
-                        root!!.checkforms_upload.visibility = View.VISIBLE
-                        root!!.checkforms_upload.setOnClickListener {
+                        root!!.checkforms_upload.visibility = View.GONE
+/*                        root!!.checkforms_upload.setOnClickListener {
                             
                             completedCheckForms.forEach { completedCheckForm ->
                                 completedCheckForm.checkFormData.forEach { checkFormDatum ->
@@ -116,7 +117,7 @@ class CheckFormsFragment : Fragment() {
                                         if (images.localImagePath.isNotBlank() && images.awsImagePath.isBlank()) {
                                             try {
                                                 val file = myHelper.readContentToFile(Uri.parse(images.localImagePath))
-                                                val filePath = myHelper.getAWSFilePath()
+                                                val filePath = myHelper.getAWSFilePath(MyEnum.CHECKFORMS_IMAGES)
                                                 myHelper.awsFileUpload(filePath, file)
                                                 images.awsImagePath = filePath + file.name
                                                 myHelper.log("fileAdded:${checkFormDatum.answerDataObj}")
@@ -127,11 +128,11 @@ class CheckFormsFragment : Fragment() {
                                         }
                                     }
                                 }
-//                                db.updateAdminCheckFormsData(completedCheckForm.checkFormData)
+                                db.updateAdminCheckFormsData(completedCheckForm.checkFormData)
                             }
-//                            val myDataPushSave = MyDataPushSave(context as Activity)
-//                            myDataPushSave.uploadCompletedCheckForms(true)
-                        }
+                            val myDataPushSave = MyDataPushSave(context as Activity)
+                            myDataPushSave.checkUpdateServerSyncData(true)
+                        }*/
                     }
                 }
             }

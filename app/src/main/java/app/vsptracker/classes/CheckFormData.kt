@@ -40,11 +40,12 @@ class CheckFormData : Serializable {
     override fun toString(): String {
         return "CheckFormData(" +
                 "id=$id, " +
-                "time=$time" +
+                "time=$time, " +
                 "admin_checkforms_completed_id=$admin_checkforms_completed_id, " +
                 "admin_checkform_completed_local_id=$admin_checkform_completed_local_id, " +
                 "admin_questions_id=$admin_questions_id, " +
                 "answer='$answer', " +
+                "answerDataString=$answerDataString, " +
                 "answerDataObj=$answerDataObj, " +
                 "isSync=$isSync" +
                 ")"

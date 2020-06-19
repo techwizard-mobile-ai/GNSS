@@ -32,8 +32,6 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
     
     private val adapterList = ArrayList<ServerSyncModel>()
     
-    //    private val myDataList = ArrayList<MyData>()
-//    private val eWorkList = ArrayList<EWork>()
     private val serverSyncList = ArrayList<ServerSyncAPI>()
     
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +39,7 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
         val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
         layoutInflater.inflate(R.layout.activity_server_sync, contentFrameLayout)
         val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-        navigationView.menu.getItem(9).isChecked = true
+        navigationView.menu.getItem(10).isChecked = true
         
         addToList(1, "Operators Hours", db.getOperatorsHours("ASC"))
         addToList(2, "Trucks Trips", db.getTripsByTypes(3, "ASC"))
@@ -53,15 +51,14 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
         addToList(8, "Machines Stops", db.getMachinesStops("ASC"))
         addToList(9, "Machines Hours", db.getMachinesHours("ASC"))
         addToList(10, "Operators Waiting", db.getWaits("ASC"))
-//        addToList(11, "CheckForms Completed", db.getAdminCheckFormsCompleted("ASC"))
-//        addToListCheckFormsCompleted(11, "CheckForms Completed", db.getAdminCheckFormsCompleted("ASC"))
+        addToList(11, "CheckForms Completed", db.getAdminCheckFormsCompleted("ASC"))
         
         refreshData()
         
         server_sync_upload.setOnClickListener(this)
     }
     
-    fun uploadCompletedCheckForms(){
+    fun uploadCompletedCheckForms() {
         addToList(11, "CheckForms Completed", db.getAdminCheckFormsCompleted("ASC"))
     }
     
@@ -167,6 +164,10 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
             R.id.server_sync_upload -> {
                 if (adapterList.size > 0) {
                     if (myHelper.isOnline()) {
+                        val serverSyncAPI = serverSyncList.find { it.type == 11 }
+                        if (serverSyncAPI != null) {
+                            serverSyncList.find { it.type == 11 }!!.myDataList = myHelper.uploadImagesToAWS(serverSyncAPI.myDataList)
+                        }
                         pushUpdateServerSync(serverSyncList)
                     } else myHelper.showErrorDialog(resources.getString(R.string.no_internet_connection), resources.getString(R.string.no_internet_explanation))
                 } else myHelper.toast(resources.getString(R.string.no_offline_data_to_sync_to_server))
@@ -319,16 +320,10 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
         
         mDialogView.delete_conversation_yes.setOnClickListener {
             mAlertDialog.dismiss()
-//            finish()
-//            startActivity(intent)
-//            recreate()
             myHelper.startHomeActivityByType(MyData())
         }
         mDialogView.delete_conversation_cancel.setOnClickListener {
             mAlertDialog.dismiss()
-//            finish()
-//            startActivity(intent)
-//            recreate()
             myHelper.startHomeActivityByType(MyData())
         }
         

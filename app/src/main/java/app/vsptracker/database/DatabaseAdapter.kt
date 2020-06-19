@@ -414,7 +414,7 @@ const val createAdminCheckFormsSchedulesTable = "CREATE TABLE IF NOT EXISTS  $TA
         ")"
 
 const val createAdminCheckFormsTable = "CREATE TABLE IF NOT EXISTS  $TABLE_ADMIN_CHECKFORMS (" +
-        "$COL_ID  INTEGER PRIMARY KEY AUTOINCREMENT," +
+        "$COL_ID  INTEGER PRIMARY KEY ," +
         "$COL_ORG_ID INTEGER, " +
         "$COL_SITE_ID INTEGER, " +
         "$COL_MACHINE_TYPE_ID INTEGER, " +

@@ -94,10 +94,12 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
     }
     
     fun hideSaveLayout() {
+        myHelper.log("hideSaveLayout")
         cft_finish_layout.visibility = View.GONE
     }
     
     fun showSaveLayout() {
+        myHelper.log("showSaveLayout")
         cft_finish_layout.visibility = View.VISIBLE
     }
     
@@ -159,14 +161,12 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
         checkFormCompleted.stopTime = System.currentTimeMillis()
         checkFormCompleted.totalTime = checkFormCompleted.stopTime - checkFormCompleted.startTime
         myHelper.log("checkFormDataList:$checkFormDataList")
-//        val checkFormCompletedLocalID = db.insertAdminCheckFormsCompleted(checkFormCompleted)
-//        myHelper.log("checkFormCompletedLocalID:$checkFormCompletedLocalID")
-//        db.insertAdminCheckFormsData(checkFormDataList, checkFormCompletedLocalID)
-    
-//        val myDataPushSave = MyDataPushSave(this)
-//        myDataPushSave.uploadCompletedCheckForms()
-//        if (myHelper.isOnline())
-//            uploadImagesToAWS()
+        val checkFormCompletedLocalID = db.insertAdminCheckFormsCompleted(checkFormCompleted)
+        myHelper.log("checkFormCompletedLocalID:$checkFormCompletedLocalID")
+        db.insertAdminCheckFormsData(checkFormDataList, checkFormCompletedLocalID)
+        
+        val myDataPushSave = MyDataPushSave(this)
+        myDataPushSave.checkUpdateServerSyncData()
         finish()
     }
     
@@ -326,7 +326,6 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
         )
         imageFilePath = image.absolutePath
         myHelper.log("imageFilePath:$imageFilePath")
-        myHelper.log("getAWSFilePath:${myHelper.getAWSFilePath()}")
         galleryAddPic(imageFilePath)
         return image
     }

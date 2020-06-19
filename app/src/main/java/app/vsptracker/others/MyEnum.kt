@@ -4,13 +4,13 @@ class MyEnum {
     val ACCEPTED = 1
     
     companion object {
-//        val user = ""
-//        val pass = ""
-//        val loginPin = ""
+        val user = ""
+        val pass = ""
+        val loginPin = ""
         
-        val user = "zee.enterprises@mail.com"
-        val pass = "user1@123"
-        val loginPin = "OP1"
+//        val user = "zee.enterprises@mail.com"
+//        val pass = "user1@123"
+//        val loginPin = "OP1"
         
         
 //        val user = "kamil.vspt@gmail.com"
@@ -33,5 +33,7 @@ class MyEnum {
     
         const val REQUEST_ACCESS_FINE_LOCATION: Int = 1
         const val REQUEST_WRITE_EXTERNAL_STORAGE: Int = 7
+        
+        const val CHECKFORMS_IMAGES = "checkforms/images"
     }
 }

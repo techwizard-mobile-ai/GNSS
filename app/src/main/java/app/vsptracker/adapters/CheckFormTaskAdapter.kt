@@ -103,9 +103,8 @@ class CheckFormTaskAdapter(
         
         holder.itemView.cft_row.setOnClickListener {
             myHelper.hideKeyboard(holder.itemView.cft_row)
+//            resetItemView(holder, datum)
             (context as CheckFormTaskActivity).showSaveLayout()
-            myHelper.hideKeyboard(holder.itemView.cft_row)
-            resetItemView(holder, datum)
         }
         holder.itemView.cft_item_unacceptable.setOnClickListener {
             myHelper.log(datum.toString())
@@ -154,9 +153,9 @@ class CheckFormTaskAdapter(
                 myHelper.hideKeyboard(holder.itemView.cft_item_capture)
                 context.selectedQuestionID = datum.id
                 takePhoto(position)
-                context.showSaveLayout()
             }
             resetItemView(holder, datum)
+            context.showSaveLayout()
             
         }
         holder.itemView.cft_item_attachment.setOnClickListener {
@@ -166,10 +165,10 @@ class CheckFormTaskAdapter(
             } else {
                 showFileChooser(position)
                 myHelper.hideKeyboard(holder.itemView.cft_item_capture)
-                context.showSaveLayout()
                 context.selectedQuestionID = datum.id
             }
             resetItemView(holder, datum)
+            context.showSaveLayout()
         }
     }
     

@@ -27,7 +27,6 @@ import app.vsptracker.activities.common.MachineBreakdownActivity
 import app.vsptracker.activities.common.MachineStatusActivity
 import app.vsptracker.apis.RetrofitAPI
 import app.vsptracker.apis.delay.EWork
-import app.vsptracker.apis.serverSync.ServerSyncAPI
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.DeviceDetails
 import app.vsptracker.classes.GPSLocation
@@ -212,41 +211,10 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         }
         
         myHelper.requestPermissions()
-        
+
 //        if (myHelper.isOnline())
 //            uploadImagesToAWS()
     }
-    
- 
-    
-//    fun uploadImagesToAWS() {
-//        myHelper.log("updateImagesToAWS")
-//        val completedCheckForms = db.getAdminCheckFormsCompleted()
-//        completedCheckForms.forEach { completedCheckForm ->
-//            completedCheckForm.checkFormData.forEach { checkFormDatum ->
-//                myHelper.log("checkFormDatum:${checkFormDatum}")
-//                checkFormDatum.answerDataObj.imagesList.forEach { images ->
-//                    if (images.localImagePath.isNotBlank() && images.awsImagePath.isBlank()) {
-//                        try {
-//                            val file = myHelper.readContentToFile(Uri.parse(images.localImagePath))
-//                            val filePath = myHelper.getAWSFilePath()
-//                            myHelper.awsFileUpload(filePath, file)
-//                            images.awsImagePath = filePath + file.name
-//                            checkFormDatum.answerDataObj.imagesList.add(images)
-//                            myHelper.log("fileAdded:${checkFormDatum.answerDataObj}")
-//                        }
-//                        catch (e: Exception) {
-//                            myHelper.log("uploadException:${e.localizedMessage}")
-//                        }
-//                    }
-//                }
-//                checkFormDatum.isSync = 0
-//            }
-//            db.updateAdminCheckFormsData(completedCheckForm.checkFormData)
-//            completedCheckForm.isSync = 0
-//        }
-//        db.updateAdminCheckFormsCompleted(completedCheckForms)
-//    }
     
     override fun onUserInteraction() {
         super.onUserInteraction()
@@ -566,7 +534,6 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         locationManager?.removeUpdates(locationListener)
     }
     
-    
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             MyEnum.REQUEST_ACCESS_FINE_LOCATION -> {
@@ -633,6 +600,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         gpsLocation.time = location1.time
         
     }
+    
     
 }
 

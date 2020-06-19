@@ -47,13 +47,14 @@
             android:icon="@drawable/ic_hours_reporting"
             android:title="@string/hours_reporting" />
         <item
-            android:id="@+id/nav_server_sync"
-            android:icon="@drawable/ic_server_sync"
-            android:title="@string/server_sync" />
-        <item
             android:id="@+id/nav_checkforms"
             android:icon="@drawable/ic_checkform"
             android:title="@string/checkform" />
+        <item
+            android:id="@+id/nav_server_sync"
+            android:icon="@drawable/ic_server_sync"
+            android:title="@string/server_sync" />
+
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_logout"

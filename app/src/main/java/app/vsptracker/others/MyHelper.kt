@@ -232,7 +232,7 @@ class MyHelper(var TAG: String, val context: Context) {
                     }
                 }
                 catch (e: Exception) {
-                    log("refreshToken:" + e.localizedMessage)
+                    toast("refreshToken:" + e.localizedMessage)
                     val intent = Intent(context, LoginActivity::class.java)
                     context.startActivity(intent)
                 }
@@ -240,7 +240,7 @@ class MyHelper(var TAG: String, val context: Context) {
             }
             
             override fun onFailure(call: Call, e: IOException) {
-                log("Failed to execute request ${e.printStackTrace()}")
+                toast("Failed refresh token: ${e.printStackTrace()}")
                 val intent = Intent(context, LoginActivity::class.java)
                 context.startActivity(intent)
             }
@@ -876,7 +876,6 @@ class MyHelper(var TAG: String, val context: Context) {
         return gson.toJson(answerData)
     }
     
-    
     fun imageLoadFromURL(url: String, imageView: ImageView, myContext: Context) {
 
 //        log("imageLoadFromURL:$url")
@@ -969,7 +968,7 @@ class MyHelper(var TAG: String, val context: Context) {
         return "${getLoginAPI().org_id}_${getMachineSettings().siteId}_${getOperatorAPI().id}_${checkform_id}_${selectedQuestionID}_${currentTime}"
     }
     
-    fun getAWSFilePath(type: String = "images"): String {
+    fun getAWSFilePath(type: String): String {
         val calendar = Calendar.getInstance()
         
         val currentYear = calendar.get(Calendar.YEAR)
@@ -977,7 +976,7 @@ class MyHelper(var TAG: String, val context: Context) {
         val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
         
         val path =
-            "checkforms/${getLoginAPI().org_id}/$type/$currentYear/$currentMonth/$currentDay/${getMachineSettings().siteId}/${getMachineTypeID()}/${getMachineID()}/${getOperatorAPI().id}/"
+            "${getLoginAPI().org_id}/$type/$currentYear/$currentMonth/$currentDay/${getMachineSettings().siteId}/${getMachineTypeID()}/${getMachineID()}/${getOperatorAPI().id}/"
         
         log("path:$path")
         return path
@@ -1147,35 +1146,33 @@ class MyHelper(var TAG: String, val context: Context) {
         }
     }
     
+    fun uploadImagesToAWS(completedCheckForms: ArrayList<MyData>): ArrayList<MyData> {
+        completedCheckForms.forEach { completedCheckForm ->
+            completedCheckForm.checkFormData.forEach { checkFormDatum ->
+                checkFormDatum.answerDataObj.imagesList.forEach { images ->
+                    if (images.localImagePath.isNotBlank() && images.awsImagePath.isBlank()) {
+                        log("upload Image")
+                        try {
+                            val file = readContentToFile(Uri.parse(images.localImagePath))
+                            val filePath = getAWSFilePath(MyEnum.CHECKFORMS_IMAGES)
+                            awsFileUpload(filePath, file)
+                            images.awsImagePath = filePath + file.name
+                            log("fileAdded:${checkFormDatum.answerDataObj}")
+                        }
+                        catch (e: Exception) {
+                            log("uploadException:${e.localizedMessage}")
+                        }
+                    }else{
+                        log("image already updated")
+                    }
+                }
+                // save answer_data in string as this will be uploaded to server and saved in database.
+                checkFormDatum.answerDataString = getAnswerDataToString(checkFormDatum.answerDataObj)
+            }
+        }
+        return completedCheckForms
+    }
 
-//    fun uploadImagesToAWS(completedCheckForms: List<MyData>): List<MyData> {
-//        completedCheckForms.forEach { completedCheckForm ->
-//            completedCheckForm.checkFormData.forEach { checkFormDatum ->
-//                log("checkFormDatum:${checkFormDatum}")
-//                checkFormDatum.answerDataObj.imagesList.forEach { images ->
-//                    if (images.localImagePath.isNotBlank() && images.awsImagePath.isBlank()) {
-//                        try {
-//                            val file = readContentToFile(Uri.parse(images.localImagePath))
-//                            val filePath = getAWSFilePath()
-//                            awsFileUpload(filePath, file)
-//                            images.awsImagePath = filePath + file.name
-//                            checkFormDatum.answerDataObj.imagesList.add(images)
-//                            log("fileAdded:${checkFormDatum.answerDataObj}")
-//                        }
-//                        catch (e: Exception) {
-//                            log("uploadException:${e.localizedMessage}")
-//                        }
-//                    }
-//                }
-//                log("checkFormDatumAfter:${checkFormDatum}")
-////                val checkFormsDatumList = ArrayList<CheckFormData>()
-////                checkFormsDatumList.add(checkFormDatum)
-////                db.updateAdminCheckFormsData(checkFormsDatumList)
-//            }
-//        }
-//
-//        return completedCheckForms
-//    }
 
 /*
     fun isValidUsername(target: String): Boolean {

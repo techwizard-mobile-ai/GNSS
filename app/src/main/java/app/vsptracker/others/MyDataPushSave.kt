@@ -69,7 +69,6 @@ class MyDataPushSave(private val context: Context) {
      * Old data will be replaced with new one.
      */
     fun fetchOrgData() {
-//        fetchMachinesAutoLogouts()
         getServerSync()
     }
     
@@ -185,398 +184,6 @@ class MyDataPushSave(private val context: Context) {
             }
         })
     }
-    
-    /**
-     * Fetch Machines Logout Times and Save in Database.
-     * This Logout Time is different for each Site and each Machine Type.
-     * After inactivity of Operator, Logout function will be called and required actions will be taken.
-     */
-    /*   private fun fetchMachinesAutoLogouts() {
-           val call = this.retrofitAPI.getMachinesAutoLogouts(
-               myHelper.getLoginAPI().org_id,
-               myHelper.getLoginAPI().auth_token,
-               myHelper.getOperatorAPI().id,
-               myHelper.getDeviceDetailsString()
-           )
-           call.enqueue(object : retrofit2.Callback<OperatorResponse> {
-               override fun onResponse(
-                   call: retrofit2.Call<OperatorResponse>,
-                   response: retrofit2.Response<OperatorResponse>
-               ) {
-                   myHelper.log("Response:$response")
-                   val responseBody = response.body()
-                   if (responseBody!!.success && responseBody.data != null) {
-                       db.insertMachinesAutoLogouts(responseBody.data as ArrayList<OperatorAPI>)
-   //                    fetchMachinesHours()
-                       fetchMachinesTasks()
-                   } else {
-                       myHelper.hideProgressBar()
-                       myHelper.toast(responseBody.message)
-                   }
-               }
-               
-               override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
-                   myHelper.hideProgressBar()
-                   myHelper.log("Failure" + t.message)
-               }
-           })
-       }*/
-    
-    /**
-     * No Need to Sync this data as It will not work properly when Operator don't have Internet connection
-     * on Login ang Logout and data will not be Synced with Server.
-     * Secondly this data can be corrected by Operator on Login/Logout by matching it with Machine Odometer.
-     * Thirdly this data will only be used for Machine Inspection nothing more.
-     */
-/*    private fun fetchMachinesHours() {
-        val call = this.retrofitAPI.getMachinesHours(
-            myHelper.getLoginAPI().org_id,
-            myHelper.getLoginAPI().auth_token
-        )
-        call.enqueue(object : retrofit2.Callback<MyDataListResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<MyDataListResponse>,
-                response: retrofit2.Response<MyDataListResponse>
-            ) {
-                myHelper.log("Response:$response")
-                val responseBody = response.body()
-                if (responseBody!!.success && responseBody.data != null) {
-                    db.insertMachinesHours(responseBody.data as ArrayList<MyData>)
-                    fetchMachinesTasks()
-                } else {
-                    myHelper.hideProgressBar()
-                    myHelper.toast(responseBody.message)
-                }
-            }
-            
-            override fun onFailure(call: retrofit2.Call<MyDataListResponse>, t: Throwable) {
-                myHelper.hideProgressBar()
-                myHelper.log("Failure" + t.message)
-            }
-        })
-    }*/
-
-/*    private fun fetchMachinesTasks() {
-        val call = this.retrofitAPI.getMachinesTasks(
-            myHelper.getLoginAPI().org_id,
-            myHelper.getLoginAPI().auth_token
-        )
-        call.enqueue(object : retrofit2.Callback<OperatorResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<OperatorResponse>,
-                response: retrofit2.Response<OperatorResponse>
-            ) {
-                myHelper.log("Response:$response")
-                val responseBody = response.body()
-                if (responseBody!!.success && responseBody.data != null) {
-                    db.insertMachinesTasks(responseBody.data as ArrayList<OperatorAPI>)
-                    fetchMaterials()
-                } else {
-                    myHelper.run {
-                        hideProgressBar()
-                        toast(responseBody.message)
-                    }
-                }
-            }
-            
-            override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
-                myHelper.run {
-                    hideProgressBar()
-                    log("Failure" + t.message)
-                }
-            }
-        })
-    }
-    
-    private fun fetchMaterials() {
-        val call = this.retrofitAPI.getMaterials(
-            myHelper.getLoginAPI().org_id,
-            myHelper.getLoginAPI().auth_token
-        )
-        call.enqueue(object : retrofit2.Callback<OperatorResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<OperatorResponse>,
-                response: retrofit2.Response<OperatorResponse>
-            ) {
-                myHelper.log("Response:$response")
-                val responseBody = response.body()
-                if (responseBody!!.success && responseBody.data != null) {
-                    db.insertMaterials(responseBody.data as ArrayList<OperatorAPI>)
-                    fetchLocations()
-                } else {
-                    myHelper.run {
-                        hideProgressBar()
-                        toast(responseBody.message)
-                    }
-                }
-            }
-            
-            override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
-                myHelper.run {
-                    hideProgressBar()
-                    log("Failure" + t.message)
-                }
-            }
-        })
-    }
-    
-    private fun fetchLocations() {
-        val call = this.retrofitAPI.getLocations(
-            myHelper.getLoginAPI().org_id,
-            myHelper.getLoginAPI().auth_token
-        )
-        call.enqueue(object : retrofit2.Callback<OperatorResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<OperatorResponse>,
-                response: retrofit2.Response<OperatorResponse>
-            ) {
-                
-                myHelper.log("Response:$response")
-                val responseBody = response.body()
-                if (responseBody!!.success && responseBody.data != null) {
-                    db.insertLocations(responseBody.data as ArrayList<OperatorAPI>)
-                    fetchMachines()
-                } else {
-                    myHelper.hideProgressBar()
-                    myHelper.toast(responseBody.message)
-                }
-            }
-            
-            override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
-                myHelper.run {
-                    hideProgressBar()
-                    log("Failure" + t.message)
-                }
-            }
-        })
-    }
-    
-    private fun fetchMachines() {
-        val call = this.retrofitAPI.getMachines(
-            myHelper.getLoginAPI().org_id,
-            myHelper.getLoginAPI().auth_token
-        )
-        call.enqueue(object : retrofit2.Callback<OperatorResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<OperatorResponse>,
-                response: retrofit2.Response<OperatorResponse>
-            ) {
-                
-                myHelper.log("Response:$response")
-                val responseBody = response.body()
-                if (responseBody!!.success && responseBody.data != null) {
-                    db.insertMachines(responseBody.data as ArrayList<OperatorAPI>)
-                    fetchStopReasons()
-                } else {
-                    myHelper.run {
-                        hideProgressBar()
-                        toast(responseBody.message)
-                    }
-                }
-            }
-            
-            override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
-                myHelper.run {
-                    hideProgressBar()
-                    log("Failure" + t.message)
-                }
-            }
-        })
-    }
-    
-    private fun fetchStopReasons() {
-        val call = this.retrofitAPI.getStopReasons(
-            myHelper.getLoginAPI().org_id,
-            myHelper.getLoginAPI().auth_token
-        )
-        call.enqueue(object : retrofit2.Callback<OperatorResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<OperatorResponse>,
-                response: retrofit2.Response<OperatorResponse>
-            ) {
-                
-                myHelper.log("Response:$response")
-                val responseBody = response.body()
-                if (responseBody!!.success && responseBody.data != null) {
-                    db.insertStopReasons(responseBody.data as ArrayList<OperatorAPI>)
-                    fetchMachinesPlants()
-                } else {
-                    myHelper.run {
-                        hideProgressBar()
-                        toast(responseBody.message)
-                    }
-                }
-            }
-            
-            override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
-                myHelper.run {
-                    hideProgressBar()
-                    log("Failure" + t.message)
-                }
-            }
-        })
-    }
-    
-    private fun fetchMachinesPlants() {
-        
-        val call = this.retrofitAPI.getMachinesPlants(
-            myHelper.getLoginAPI().org_id,
-            myHelper.getLoginAPI().auth_token
-        )
-        call.enqueue(object : retrofit2.Callback<OperatorResponse> {
-            override fun onResponse(call: retrofit2.Call<OperatorResponse>, response: retrofit2.Response<OperatorResponse>) {
-                myHelper.log("response:$response")
-                val operatorResponse = response.body()
-                if (operatorResponse!!.success && operatorResponse.data != null) {
-                    db.insertMachinesPlants(operatorResponse.data as ArrayList<OperatorAPI>)
-                    fetchMachinesBrands()
-                } else {
-                    myHelper.run {
-                        hideProgressBar()
-                        toast(operatorResponse.message)
-                    }
-                }
-            }
-            
-            override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
-                myHelper.run {
-                    hideProgressBar()
-                    toast(t.message.toString())
-                    log("FailureResponse: ${t.message}")
-                }
-            }
-        })
-    }
-    
-    private fun fetchMachinesBrands() {
-        
-        val call = this.retrofitAPI.getMachinesBrands(
-            myHelper.getLoginAPI().auth_token
-        )
-        call.enqueue(object : retrofit2.Callback<OperatorResponse> {
-            override fun onResponse(call: retrofit2.Call<OperatorResponse>, response: retrofit2.Response<OperatorResponse>) {
-                myHelper.log("response:$response")
-                val operatorResponse = response.body()
-                if (operatorResponse!!.success && operatorResponse.data != null) {
-                    db.insertMachinesBrands(operatorResponse.data as ArrayList<OperatorAPI>)
-                    fetchMachinesTypes()
-                } else {
-                    myHelper.run {
-                        hideProgressBar()
-                        toast(operatorResponse.message)
-                    }
-                }
-            }
-            
-            override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
-                myHelper.run {
-                    hideProgressBar()
-                    toast(t.message.toString())
-                    log("FailureResponse: ${t.message}")
-                }
-            }
-        })
-    }
-    
-    private fun fetchMachinesTypes() {
-        
-        val call = this.retrofitAPI.getMachinesTypes(
-            myHelper.getLoginAPI().auth_token
-        )
-        call.enqueue(object : retrofit2.Callback<OperatorResponse> {
-            override fun onResponse(call: retrofit2.Call<OperatorResponse>, response: retrofit2.Response<OperatorResponse>) {
-                myHelper.log("response:$response")
-                val operatorResponse = response.body()
-                if (operatorResponse!!.success && operatorResponse.data != null) {
-                    db.insertMachinesTypes(operatorResponse.data as ArrayList<OperatorAPI>)
-                    fetchSites()
-                } else {
-                    myHelper.run {
-                        hideProgressBar()
-                        toast(operatorResponse.message)
-                    }
-                }
-            }
-            
-            override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
-                myHelper.run {
-                    hideProgressBar()
-                    toast(t.message.toString())
-                    log("FailureResponse: ${t.message}")
-                }
-            }
-        })
-    }
-    
-    private fun fetchSites() {
-        
-        val call = this.retrofitAPI.getSites(
-            myHelper.getLoginAPI().org_id,
-            myHelper.getLoginAPI().auth_token
-        )
-        call.enqueue(object : retrofit2.Callback<OperatorResponse> {
-            override fun onResponse(call: retrofit2.Call<OperatorResponse>, response: retrofit2.Response<OperatorResponse>) {
-                myHelper.log("response:$response")
-                val operatorResponse = response.body()
-                if (operatorResponse!!.success && operatorResponse.data != null) {
-                    // myHelper.log("Sites:${operatorResponse.data}.")
-                    db.insertSites(operatorResponse.data as ArrayList<OperatorAPI>)
-                    fetchOperators()
-                } else {
-                    myHelper.run {
-                        hideProgressBar()
-                        toast(operatorResponse.message)
-                    }
-                }
-            }
-            
-            override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
-                myHelper.run {
-                    hideProgressBar()
-                    toast(t.message.toString())
-                    log("FailureResponse: ${t.message}")
-                }
-            }
-        })
-    }
-    
-    private fun fetchOperators() {
-        
-        val call = this.retrofitAPI.getOperators(
-            myHelper.getLoginAPI().org_id,
-            myHelper.getLoginAPI().auth_token
-        )
-        call.enqueue(object : retrofit2.Callback<OperatorResponse> {
-            override fun onResponse(call: retrofit2.Call<OperatorResponse>, response: retrofit2.Response<OperatorResponse>) {
-                myHelper.log("response:$response")
-                val operatorResponse = response.body()
-                if (operatorResponse!!.success && operatorResponse.data != null) {
-                    db.insertOperators(operatorResponse.data as ArrayList<OperatorAPI>)
-                    when {
-                        !isBackgroundCall -> {
-                            val intent = Intent(context, OperatorLoginActivity::class.java)
-                            context.startActivity(intent)
-                        }
-                    }
-                    
-                } else {
-                    myHelper.run {
-                        hideProgressBar()
-                        toast(operatorResponse.message)
-                    }
-                }
-            }
-            
-            override fun onFailure(call: retrofit2.Call<OperatorResponse>, t: Throwable) {
-                myHelper.run {
-                    hideProgressBar()
-                    toast(t.message.toString())
-                    log("FailureResponse: ${t.message}")
-                }
-            }
-        })
-    }*/
-    
     fun pushInsertDelay(eWork: EWork) {
 //        when {
 //            myHelper.isOnline() -> pushDelay(eWork)
@@ -898,13 +505,7 @@ class MyDataPushSave(private val context: Context) {
     }
     
     fun pushUpdateTrip(myData: MyData) {
-//        when {
-//            myHelper.isOnline() -> pushTrip(myData)
-//            else -> {
-//                myHelper.toast(noInternetMessage)
         updateTrip(myData)
-//            }
-//        }
     }
     
     private fun pushTrip(myData: MyData) {
@@ -1099,7 +700,7 @@ class MyDataPushSave(private val context: Context) {
         return insertID
     }
     
-    private fun checkUpdateServerSyncData(showDialog: Boolean = false) {
+    fun checkUpdateServerSyncData(showDialog: Boolean = false) {
         // remove all previous data if any and make list empty
         if (myDataList.size > 0)
             myDataList.removeAll(ArrayList())
@@ -1120,14 +721,17 @@ class MyDataPushSave(private val context: Context) {
         addToList(8, "Machines Stops", db.getMachinesStops("ASC"))
         addToList(9, "Machines Hours", db.getMachinesHours("ASC"))
         addToList(10, "Operators Waiting", db.getWaits("ASC"))
+        addToList(11, "CheckForms Completed", db.getAdminCheckFormsCompleted("ASC"))
         
         
         if (myHelper.isOnline()) {
-            if (serverSyncList.size > 0)
-//                Handler().postDelayed({
-//                    //Do something after 100ms
-//                }, 5 * 1000)
+            if (serverSyncList.size > 0){
+                val serverSyncAPI = serverSyncList.find { it.type == 11 }
+                if (serverSyncAPI != null) {
+                    this.serverSyncList.find{it.type == 11}!!.myDataList = myHelper.uploadImagesToAWS(serverSyncAPI.myDataList)
+                }
                 pushUpdateServerSync(showDialog)
+            }
         } else {
             myHelper.toast(noInternetMessage)
         }
@@ -1334,8 +938,13 @@ class MyDataPushSave(private val context: Context) {
     
     
         if (myHelper.isOnline()) {
-            if (serverSyncList.size > 0)
+            if (serverSyncList.size > 0){
+                val serverSyncAPI = serverSyncList.find { it.type == 11 }
+                if (serverSyncAPI != null) {
+                    serverSyncList.find{it.type == 11}!!.myDataList = myHelper.uploadImagesToAWS(serverSyncAPI.myDataList)
+                }
                 pushUpdateServerSync(showDialog)
+            }
             else myHelper.showErrorDialog(context.resources.getString(R.string.no_offline_data_title), context.resources.getString(R.string.no_offline_data_explanation))
         } else {
             myHelper.toast(noInternetMessage)
