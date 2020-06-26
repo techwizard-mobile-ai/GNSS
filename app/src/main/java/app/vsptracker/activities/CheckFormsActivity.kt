@@ -15,6 +15,7 @@ import com.google.android.material.navigation.NavigationView
 private const val DUE_CHECKFORMS: String = "DUE_CHECKFORMS"
 private const val ALL_CHECKFORMS: String = "ALL_CHECKFORMS"
 private const val COMPLETED_CHECKFORMS: String = "COMPLETED_CHECKFORMS"
+private const val COMPLETED_SERVER_CHECKFORMS: String = "COMPLETED_SERVER_CHECKFORMS"
 
 class CheckFormsActivity : BaseActivity(), View.OnClickListener,
                            CheckFormsFragment.OnFragmentInteractionListener {
@@ -50,6 +51,10 @@ class CheckFormsActivity : BaseActivity(), View.OnClickListener,
                     val allCheckFormsFragment = CheckFormsFragment.newInstance(1, supportFragmentManager, MyData())
                     openFragment(allCheckFormsFragment, ALL_CHECKFORMS)
                 }
+                "completedServerCheckFormsFragment" -> {
+                    val completedServerCheckFormsFragment = CheckFormsFragment.newInstance(4, supportFragmentManager, MyData())
+                    openFragment(completedServerCheckFormsFragment, COMPLETED_SERVER_CHECKFORMS)
+                }
                 else -> {
                     val completedCheckFormsFragment = CheckFormsFragment.newInstance(2, supportFragmentManager, MyData())
                     openFragment(completedCheckFormsFragment, COMPLETED_CHECKFORMS)
@@ -62,6 +67,7 @@ class CheckFormsActivity : BaseActivity(), View.OnClickListener,
         val dueCheckFormsFragment = CheckFormsFragment.newInstance(0, supportFragmentManager, MyData())
         openFragment(dueCheckFormsFragment, DUE_CHECKFORMS)
     }
+    
     private fun openFragment(fragment: Fragment, FRAGMENT_TAG: String?) {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fragment_container, fragment, FRAGMENT_TAG)
@@ -86,6 +92,12 @@ class CheckFormsActivity : BaseActivity(), View.OnClickListener,
                     val completedCheckFormsFragment = CheckFormsFragment.newInstance(2, supportFragmentManager, MyData())
                     openFragment(completedCheckFormsFragment, COMPLETED_CHECKFORMS)
                     return@OnNavigationItemSelectedListener true
+                }
+                R.id.cf_completed_server -> {
+                    
+                    val completedServerCheckFormsFragment = CheckFormsFragment.newInstance(4, supportFragmentManager, MyData())
+                    openFragment(completedServerCheckFormsFragment, COMPLETED_SERVER_CHECKFORMS)
+                    
                 }
                 R.id.navf_finish -> {
                     finish()

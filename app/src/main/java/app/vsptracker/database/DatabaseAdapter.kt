@@ -1,9 +1,12 @@
+@file:Suppress("UNUSED_VARIABLE")
+
 package app.vsptracker.database
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import app.vsptracker.apis.delay.EWork
 import app.vsptracker.apis.operators.OperatorAPI
 import app.vsptracker.apis.trip.MyData
@@ -37,6 +40,7 @@ const val TABLE_ADMIN_CHECKFORMS_SCHEDULES = "admin_checkforms_schedules"
 const val TABLE_ADMIN_CHECKFORMS = "admin_checkforms"
 const val TABLE_ADMIN_CHECKFORMS_COMPLETED = "admin_checkforms_completed"
 const val TABLE_ADMIN_CHECKFORMS_DATA = "admin_checkforms_data"
+const val TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER = "admin_checkforms_completed_server"
 
 const val COL_TIME = "time"
 const val COL_DATE = "date"
@@ -115,6 +119,12 @@ const val COL_ADMIN_CHECKFORMS_COMPLETED_ID = "admin_checkforms_completed_id"
 const val COL_ADMIN_CHECKFORMS_COMPLETED_LOCAL_ID = "admin_checkforms_completed_local_id"
 const val COL_IMAGES_LIMIT = "images_limit"
 const val COL_IMAGES_QUALITY = "images_quality"
+const val COL_ATTEMPTED_QUESTIONS = "attempted_questions"
+
+// Completed CheckForm Entry Type
+// 0 : automatically completed when due
+// 1 : manually completed by operator before due time
+const val COL_ENTRY_TYPE = "entry_type"
 
 const val createMachinesHoursTable = "CREATE TABLE IF NOT EXISTS  $TABLE_MACHINES_HOURS (" +
         "$COL_ID  INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -435,6 +445,9 @@ const val createAdminCheckFormsCompletedTable = "CREATE TABLE IF NOT EXISTS  $TA
         "$COL_MACHINE_TYPE_ID  INTEGER," +
         "$COL_MACHINE_ID INTEGER," +
         "$COL_ADMIN_CHECKFORMS_ID INTEGER," +
+        "$COL_ADMIN_CHECKFORMS_SCHEDULES_ID INTEGER," +
+        "$COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE TEXT," +
+        "$COL_ENTRY_TYPE INTEGER," +
         "$COL_LOADING_GPS_LOCATION  TEXT," +
         "$COL_UNLOADING_GPS_LOCATION  TEXT," +
         "$COL_START_TIME  INTEGER," +
@@ -457,6 +470,29 @@ const val createAdminCheckFormsDataTable = "CREATE TABLE IF NOT EXISTS  $TABLE_A
         "$COL_IS_SYNC  INTEGER " +
         ")"
 
+const val createAdminCheckFormsCompletedServerTable = "CREATE TABLE IF NOT EXISTS  $TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER (" +
+        "$COL_ID  INTEGER PRIMARY KEY ," +
+        "$COL_ORG_ID INTEGER, " +
+        "$COL_SITE_ID INTEGER, " +
+        "$COL_OPERATOR_ID  TEXT," +
+        "$COL_MACHINE_TYPE_ID  INTEGER," +
+        "$COL_MACHINE_ID INTEGER," +
+        "$COL_ADMIN_CHECKFORMS_ID INTEGER," +
+        "$COL_ADMIN_CHECKFORMS_SCHEDULES_ID INTEGER," +
+        "$COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE TEXT," +
+        "$COL_ENTRY_TYPE INTEGER," +
+        "$COL_LOADING_GPS_LOCATION  TEXT," +
+        "$COL_UNLOADING_GPS_LOCATION  TEXT," +
+        "$COL_START_TIME  INTEGER," +
+        "$COL_END_TIME INTEGER," +
+        "$COL_TOTAL_TIME INTEGER," +
+        "$COL_DATE  TEXT," +
+        "$COL_TIME  INTEGER," +
+        "$COL_ATTEMPTED_QUESTIONS  INTEGER," +
+        "$COL_IS_DAY_WORKS  INTEGER" +
+        ")"
+
+const val DROP_TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER = "DROP TABLE IF EXISTS $TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER"
 const val DROP_TABLE_ADMIN_CHECKFORMS_DATA = "DROP TABLE IF EXISTS $TABLE_ADMIN_CHECKFORMS_DATA"
 const val DROP_TABLE_ADMIN_CHECKFORMS_COMPLETED = "DROP TABLE IF EXISTS $TABLE_ADMIN_CHECKFORMS_COMPLETED"
 const val DROP_TABLE_ADMIN_CHECKFORMS = "DROP TABLE IF EXISTS $TABLE_ADMIN_CHECKFORMS"
@@ -483,7 +519,7 @@ const val DROP_TABLE_MACHINES_AUTO_LOGOUTS = "DROP TABLE IF EXISTS $TABLE_MACHIN
 const val DROP_TABLE_OPERATORS_HOURS = "DROP TABLE IF EXISTS $TABLE_OPERATORS_HOURS"
 const val DROP_TABLE_QUESTIONS_TYPES = "DROP TABLE IF EXISTS $TABLE_QUESTIONS_TYPES"
 
-class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 9) {
+class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 12) {
     
     val tag = "DatabaseAdapter"
     private var myHelper: MyHelper
@@ -493,7 +529,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
     }
     
     override fun onCreate(db: SQLiteDatabase?) {
-        
+        myHelper.log("onCreate")
+        db?.execSQL(createAdminCheckFormsCompletedServerTable)
         db?.execSQL(createAdminCheckFormsDataTable)
         db?.execSQL(createAdminCheckFormsCompletedTable)
         db?.execSQL(createAdminCheckFormsTable)
@@ -522,7 +559,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
     }
     
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        
+        myHelper.log("onUpgrade")
+        db?.execSQL(DROP_TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER)
         db?.execSQL(DROP_TABLE_ADMIN_CHECKFORMS_DATA)
         db?.execSQL(DROP_TABLE_ADMIN_CHECKFORMS_COMPLETED)
         db?.execSQL(DROP_TABLE_ADMIN_CHECKFORMS)
@@ -549,6 +587,40 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         db?.execSQL(DROP_TABLE_E_WORK)
         db?.execSQL(DROP_TABLE_E_LOAD_HISTORY)
         onCreate(db)
+    }
+    
+    
+    fun insertAdminCheckFormsCompletedServer(data: ArrayList<MyData>) {
+        myHelper.log("insertAdminCheckFormsCompletedServer:${data.size}")
+        val db = this.writableDatabase
+        val cv = ContentValues()
+        val tableName = TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER
+    
+        for (datum in data) {
+            cv.put(COL_ID, datum.id)
+            cv.put(COL_ORG_ID, datum.orgId)
+            cv.put(COL_SITE_ID, datum.siteId)
+            cv.put(COL_OPERATOR_ID, datum.operatorId)
+            cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
+            cv.put(COL_MACHINE_ID, datum.machineId)
+            cv.put(COL_ADMIN_CHECKFORMS_ID, datum.admin_checkforms_id)
+            cv.put(COL_ADMIN_CHECKFORMS_SCHEDULES_ID, datum.admin_checkforms_schedules_id)
+            cv.put(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE, datum.admin_checkforms_schedules_value)
+            cv.put(COL_ENTRY_TYPE, datum.entry_type)
+            cv.put(COL_LOADING_GPS_LOCATION, datum.loadingGPSLocationString)
+            cv.put(COL_UNLOADING_GPS_LOCATION, datum.unloadingGPSLocationString)
+            cv.put(COL_START_TIME, datum.startTime)
+            cv.put(COL_END_TIME, datum.stopTime)
+            cv.put(COL_TOTAL_TIME, datum.totalTime)
+            cv.put(COL_TIME, datum.stopTime)
+            cv.put(COL_DATE, datum.date)
+            cv.put(COL_IS_DAY_WORKS, datum.isDayWorks)
+            cv.put(COL_ATTEMPTED_QUESTIONS, datum.attempted_questions)
+    
+            val insertedID = db.replace(tableName, null, cv)
+            myHelper.printInsertion(tableName, insertedID, datum)
+        }
+        
     }
     
     fun insertAdminCheckFormsData(data: ArrayList<CheckFormData>, checkFormCompletedLocalID: Long) {
@@ -584,6 +656,9 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
         cv.put(COL_MACHINE_ID, datum.machineId)
         cv.put(COL_ADMIN_CHECKFORMS_ID, datum.admin_checkforms_id)
+        cv.put(COL_ADMIN_CHECKFORMS_SCHEDULES_ID, datum.admin_checkforms_schedules_id)
+        cv.put(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE, datum.admin_checkforms_schedules_value)
+        cv.put(COL_ENTRY_TYPE, datum.entry_type)
         cv.put(COL_LOADING_GPS_LOCATION, datum.loadingGPSLocationString)
         cv.put(COL_UNLOADING_GPS_LOCATION, datum.unloadingGPSLocationString)
         cv.put(COL_START_TIME, datum.startTime)
@@ -613,6 +688,9 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
             cv.put(COL_MACHINE_ID, datum.machineId)
             cv.put(COL_ADMIN_CHECKFORMS_ID, datum.admin_checkforms_id)
+            cv.put(COL_ADMIN_CHECKFORMS_SCHEDULES_ID, datum.admin_checkforms_schedules_id)
+            cv.put(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE, datum.admin_checkforms_schedules_value)
+            cv.put(COL_ENTRY_TYPE, datum.entry_type)
             cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.loadingGPSLocation))
             cv.put(COL_UNLOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.unloadingGPSLocation))
             cv.put(COL_START_TIME, datum.startTime)
@@ -751,7 +829,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_STATUS, datum.status)
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
-            val insertedID = db.replace(tableName, null, cv)
+            @Suppress("UNUSED_VARIABLE") val insertedID = db.replace(tableName, null, cv)
 //            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
@@ -1263,6 +1341,64 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return db.insert(TABLE_E_LOAD_HISTORY, null, cv)
     }
     
+    fun getAdminCheckFormsCompletedServer(orderBy: String = "DESC"): ArrayList<MyData> {
+        val list: ArrayList<MyData> = ArrayList()
+        val db = this.readableDatabase
+        
+        val query =
+            "Select * FROM $TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER ORDER BY $COL_ID $orderBy "
+        val result = db.rawQuery(query, null)
+        
+        if (result.moveToFirst()) {
+            do {
+                val datum = MyData()
+                datum.id = result.getInt(result.getColumnIndex(COL_ID))
+                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+                datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
+                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+                datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
+                datum.admin_checkforms_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_ID))
+                datum.admin_checkforms_schedules_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_ID))
+                datum.admin_checkforms_schedules_value = result.getString(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE))
+                datum.entry_type = result.getInt(result.getColumnIndex(COL_ENTRY_TYPE))
+                
+                datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
+                datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
+                datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
+                
+                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
+                datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+                datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
+                datum.attempted_questions = result.getInt(result.getColumnIndex(COL_ATTEMPTED_QUESTIONS))
+                
+                datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
+                    result.getString(
+                        result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+                    )
+                )
+                datum.loadingGPSLocationString = result.getString(
+                    result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+                )
+                
+                datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
+                    result.getString(
+                        result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+                    )
+                )
+                
+                datum.unloadingGPSLocationString = result.getString(
+                    result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+                )
+                
+                list.add(datum)
+            } while (result.moveToNext())
+        }
+        result.close()
+        db.close()
+        return list
+    }
+    
     fun getAdminCheckFormsDataByLocalID(completedCheckFormLocalID: Int): ArrayList<CheckFormData> {
         val list: ArrayList<CheckFormData> = ArrayList()
         val db = this.readableDatabase
@@ -1338,9 +1474,121 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
     }
     
     fun getAdminCheckFormsDue(): ArrayList<MyData> {
-        val list: ArrayList<MyData> = ArrayList()
+        val dueCheckForms = ArrayList<MyData>()
+        val adminCheckForms = getAdminCheckForms()
+        myHelper.log("adminCheckForms:$adminCheckForms")
         
-        return list
+        adminCheckForms.forEach { adminCheckForm ->
+            myHelper.log("adminCheckForm:$adminCheckForm")
+            // Check If CheckForm is valid for Current, Site, Machine Type and Machine
+            if (myHelper.isValidCheckForm(adminCheckForm)) {
+                val adminCheckFormsCompleted = getAdminCheckFormsCompletedByCheckFormID(adminCheckForm.id)
+                when (adminCheckForm.admin_checkforms_schedules_id) {
+                    1 -> {
+                        // Due after every Days passed
+                        if (myHelper.isDueCheckFormAfterDaysPassed(adminCheckForm, adminCheckFormsCompleted)) {
+                            dueCheckForms.add(adminCheckForm)
+                        }
+                    }
+                    2 -> {
+                        // Due after every Machine Hours duration
+                    }
+                    3 -> {
+                        // Due at each machine start
+                    }
+                    4 -> {
+                        // Due at machine start - one time
+                        if (adminCheckFormsCompleted == null) {
+                            myHelper.log("already not completed")
+                            dueCheckForms.add(adminCheckForm)
+                        } else {
+                            // As it is one time so no need to show in due CheckForms
+                            myHelper.log("already completed")
+                        }
+                    }
+                    5 -> {
+                        // Due after Machine Hours - one time
+                        if (adminCheckFormsCompleted == null) {
+                            myHelper.log("already not completed")
+                            dueCheckForms.add(adminCheckForm)
+                        } else {
+                            // As it is one time so no need to show in due CheckForms
+                            myHelper.log("already completed")
+                        }
+                    }
+                    6 -> {
+                        // Due after Days - one time
+                        if (adminCheckFormsCompleted == null) {
+                            myHelper.log("already not completed")
+                            if (myHelper.isDueCheckFormAfterDaysPassed(adminCheckForm, adminCheckFormsCompleted)) {
+                                dueCheckForms.add(adminCheckForm)
+                            }
+                        } else {
+                            // As it is one time so no need to show in due CheckForms
+                            myHelper.log("already completed")
+                        }
+                    }
+                }
+            }
+            
+        }
+        return dueCheckForms
+    }
+    
+    fun getAdminCheckFormsCompletedByCheckFormID(checkForm_id: Int): MyData? {
+        val db = this.readableDatabase
+        
+        val query = "SELECT * FROM $TABLE_ADMIN_CHECKFORMS_COMPLETED WHERE $COL_ADMIN_CHECKFORMS_ID = $checkForm_id ORDER BY $COL_ID DESC LIMIT 1"
+        val result = db.rawQuery(query, null)
+        
+        var datum: MyData? = null
+        if (result.moveToFirst()) {
+            datum = MyData()
+            datum.id = result.getInt(result.getColumnIndex(COL_ID))
+            datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+            datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+            datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
+            datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+            datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
+            datum.admin_checkforms_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_ID))
+            datum.admin_checkforms_schedules_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_ID))
+            datum.admin_checkforms_schedules_value = result.getString(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE))
+            datum.entry_type = result.getInt(result.getColumnIndex(COL_ENTRY_TYPE))
+            
+            datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
+            datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
+            datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
+            
+            datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
+            datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+            datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
+            
+            datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
+                result.getString(
+                    result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+                )
+            )
+            datum.loadingGPSLocationString = result.getString(
+                result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+            )
+            
+            datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
+                result.getString(
+                    result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+                )
+            )
+            
+            datum.unloadingGPSLocationString = result.getString(
+                result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+            )
+            
+            datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
+            datum.checkFormData = getAdminCheckFormsDataByLocalID(datum.id)
+            
+        }
+        result.close()
+        db.close()
+        return datum
     }
     
     fun getAdminCheckFormsCompleted(orderBy: String = "DESC"): ArrayList<MyData> {
@@ -1361,6 +1609,9 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
                 datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
                 datum.admin_checkforms_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_ID))
+                datum.admin_checkforms_schedules_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_ID))
+                datum.admin_checkforms_schedules_value = result.getString(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE))
+                datum.entry_type = result.getInt(result.getColumnIndex(COL_ENTRY_TYPE))
                 
                 datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
                 datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
@@ -1448,7 +1699,9 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.questions_data = result.getString(result.getColumnIndex(COL_QUESTIONS_DATA))
                 datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
                 datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
-                list.add(datum)
+                // Check if CheckForm is valid for this Site, Machine Type and Machine
+                if (myHelper.isValidCheckForm(datum))
+                    list.add(datum)
             } while (result.moveToNext())
         }
         result.close()
@@ -1512,7 +1765,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         
         val query =
             "Select * from $TABLE_QUESTIONS WHERE $COL_ID  IN ( $ids ) ORDER BY $orderBy"
-        
+
 //        myHelper.log("query:$query")
         val result = db.rawQuery(query, null)
         
@@ -3064,7 +3317,6 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             myHelper.log("updateAdminCheckFormsData:$data")
         }
     }
-    
     
     fun updateAdminCheckFormsCompleted(data: ArrayList<MyData>) {
         

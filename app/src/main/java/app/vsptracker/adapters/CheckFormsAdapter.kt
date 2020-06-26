@@ -11,6 +11,7 @@ import app.vsptracker.R
 import app.vsptracker.activities.CheckFormTaskActivity
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.database.DatabaseAdapter
+import app.vsptracker.others.MyEnum
 import app.vsptracker.others.MyHelper
 import kotlinx.android.synthetic.main.list_row_check_forms.view.*
 
@@ -20,11 +21,11 @@ class CheckFormsAdapter(
     private val type: Int
 ) : RecyclerView.Adapter<CheckFormsAdapter
 .ViewHolder>() {
-
+    
     private val tag = this::class.java.simpleName
     lateinit var myHelper: MyHelper
     private lateinit var db: DatabaseAdapter
-
+    
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -35,14 +36,14 @@ class CheckFormsAdapter(
         db = DatabaseAdapter(context)
         return ViewHolder(v)
     }
-
+    
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
+        
         val datum = dataList[position]
         myHelper.log(datum.toString())
         
-        when(type){
+        when (type) {
             0 -> {
                 // Due checkforms
                 holder.itemView.cf_start.background = context.getDrawable(R.drawable.bdue_background)
@@ -58,17 +59,17 @@ class CheckFormsAdapter(
         
         var applicable = ""
         
-        if(datum.siteId <  1){
+        if (datum.siteId < 1) {
             applicable = "All Sites"
-        }else{
+        } else {
             val siteName = db.getSiteByID(datum.siteId).name
-            if(datum.machineTypeId < 1){
+            if (datum.machineTypeId < 1) {
                 applicable = "$siteName\n  [ All Machines Types ]"
-            }else{
+            } else {
                 val machineTypeName = db.getMachineTypeByID(datum.machineTypeId).name
-                if(datum.machineId < 1){
+                if (datum.machineId < 1) {
                     applicable = "$siteName\n  [All $machineTypeName ]"
-                }else{
+                } else {
                     myHelper.log("All Machines: ${db.getMachines()}")
                     myHelper.log("Machine:${db.getMachineByID(datum.machineId)}")
                     val machineNumber = db.getMachineByID(datum.machineId).number
@@ -79,30 +80,38 @@ class CheckFormsAdapter(
         holder.itemView.cf_applicable.text = ":  $applicable"
         
         val checkFormSchedule = db.getAdminCheckFormScheduleByID(datum.admin_checkforms_schedules_id)
-        holder.itemView.cf_schedule.text = ":  ${checkFormSchedule.name}[${datum.admin_checkforms_schedules_value}]"
+        var schedules = ""
+        if (datum.admin_checkforms_schedules_id == MyEnum.ADMIN_CHECKFORMS_SCHEDULES_ID_MACHINE_START || datum.admin_checkforms_schedules_id == MyEnum.ADMIN_CHECKFORMS_SCHEDULES_ID_MACHINE_START_ONE_TIME) {
+            schedules = "${checkFormSchedule.name}"
+        } else {
+            schedules = "${checkFormSchedule.name}[${datum.admin_checkforms_schedules_value}]"
+        }
+        
+        holder.itemView.cf_schedule.text = ":  $schedules"
         
         val totalQuestions = myHelper.getQuestionsIDsList(datum.questions_data).size
         holder.itemView.cf_questions.text = ":  $totalQuestions"
         
         holder.itemView.cf_start.setOnClickListener {
-            when(totalQuestions){
-                0 ->{
+            when (totalQuestions) {
+                0 -> {
                     myHelper.showErrorDialog("There are no questions in this checkform.")
                 }
-                else ->{
+                else -> {
                     val intent = Intent(context, CheckFormTaskActivity::class.java)
                     intent.putExtra("checkform_id", datum.id)
+                    intent.putExtra("entry_type", type)
                     context.startActivity(intent)
                 }
             }
-
+            
         }
     }
-
+    
     override fun getItemCount(): Int {
         return dataList.size
     }
-
+    
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     
 }

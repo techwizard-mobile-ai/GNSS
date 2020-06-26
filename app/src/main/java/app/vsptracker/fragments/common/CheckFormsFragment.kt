@@ -64,6 +64,7 @@ class CheckFormsFragment : Fragment() {
             1 -> title = getString(R.string.all_checkforms)
             2 -> title = getString(R.string.completed_checkforms)
             3 -> title = "${db.getAdminCheckFormByID(checkFormCompleted.admin_checkforms_id).name} Details"
+            4 -> title = getString(R.string.server_checkforms)
         }
         
         cf_title.text = title
@@ -147,6 +148,21 @@ class CheckFormsFragment : Fragment() {
                         val mAdapter = CheckFormsDataAdapter(context as Activity, checkFormData)
                         root!!.cf_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
                         root!!.cf_rv!!.adapter = mAdapter
+                    }
+                }
+            }
+            4 -> {
+                val completedServerCheckForms = db.getAdminCheckFormsCompletedServer()
+                when (completedServerCheckForms.size) {
+                    0 -> {
+                        no_cf.text = getString(R.string.no_completed_server_checkforms)
+                        no_cf.visibility = View.VISIBLE
+                    }
+                    else -> {
+                        val mAdapter = CheckFormsCompletedAdapter(context as Activity, completedServerCheckForms, type, supportFragmentManager1)
+                        root!!.cf_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
+                        root!!.cf_rv!!.adapter = mAdapter
+                        root!!.checkforms_upload.visibility = View.GONE
                     }
                 }
             }

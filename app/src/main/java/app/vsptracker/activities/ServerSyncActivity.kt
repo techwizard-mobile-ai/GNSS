@@ -57,11 +57,7 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
         
         server_sync_upload.setOnClickListener(this)
     }
-    
-    fun uploadCompletedCheckForms() {
-        addToList(11, "CheckForms Completed", db.getAdminCheckFormsCompleted("ASC"))
-    }
-    
+   
     fun refreshData() {
         
         myHelper.log("adapterListSize:${adapterList.size}")
@@ -177,6 +173,7 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
     
     private fun pushUpdateServerSync(serverSyncList: ArrayList<ServerSyncAPI>) {
         myHelper.showDialog()
+        myHelper.log("pushUpdateServerSync:$serverSyncList")
         val client = OkHttpClient()
         val formBody = FormBody.Builder()
             .add("token", myHelper.getLoginAPI().auth_token)

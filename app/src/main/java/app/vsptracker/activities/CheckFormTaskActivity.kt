@@ -32,6 +32,7 @@ import java.io.IOException
 
 
 class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
+    private lateinit var checkForm: MyData
     private val MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: Int = 7
     internal lateinit var imageToUploadUri: Uri
     private lateinit var imageFilePath: String
@@ -41,6 +42,7 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
     private var questionsList = ArrayList<MyData>()
     private val tag = this::class.java.simpleName
     var checkform_id = 0
+    var entry_type = 0
     var checkFormDataList = ArrayList<CheckFormData>()
     lateinit var checkFormCompleted: MyData
     
@@ -59,11 +61,12 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
         val bundle: Bundle? = intent.extras
         if (bundle != null) {
             checkform_id = bundle.getInt("checkform_id")
+            entry_type = bundle.getInt("entry_type")
             myHelper.log("checkform_id:$checkform_id")
         }
         
+        checkForm = db.getAdminCheckFormByID(checkform_id)
         initCheckFormCompleted()
-        val checkForm = db.getAdminCheckFormByID(checkform_id)
         cft_title.text = checkForm.name
         
         questionsList = db.getQuestionsByIDs(
@@ -86,6 +89,10 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
         checkFormCompleted.machineTypeId = myHelper.getMachineTypeID()
         checkFormCompleted.machineId = myHelper.getMachineID()
         checkFormCompleted.admin_checkforms_id = checkform_id
+        checkFormCompleted.admin_checkforms_schedules_id = checkForm.admin_checkforms_schedules_id
+        checkFormCompleted.admin_checkforms_schedules_value = checkForm.admin_checkforms_schedules_value
+        checkFormCompleted.entry_type = entry_type
+        checkFormCompleted.entry_type = entry_type
         checkFormCompleted.loadingGPSLocation = gpsLocation
         checkFormCompleted.loadingGPSLocationString = myHelper.getGPSLocationToString(gpsLocation)
         checkFormCompleted.startTime = System.currentTimeMillis()
@@ -167,7 +174,10 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
         
         val myDataPushSave = MyDataPushSave(this)
         myDataPushSave.checkUpdateServerSyncData()
-        finish()
+        val intent = Intent(this@CheckFormTaskActivity, CheckFormsActivity::class.java)
+        startActivity(intent)
+        finishAffinity()
+        
     }
     
     @SuppressLint("InflateParams")

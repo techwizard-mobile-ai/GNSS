@@ -982,11 +982,11 @@ class MyHelper(var TAG: String, val context: Context) {
         return path
     }
     
-    fun showErrorDialog(title: String , explanation: String = "") {
+    fun showErrorDialog(title: String, explanation: String = "") {
         
         val mDialogView = LayoutInflater.from(context).inflate(R.layout.dialog_error, null)
         mDialogView.error_title.text = title
-        if(explanation.isNotBlank()){
+        if (explanation.isNotBlank()) {
             mDialogView.error_explanation.text = explanation
             mDialogView.error_explanation.visibility = View.VISIBLE
         }
@@ -1162,7 +1162,7 @@ class MyHelper(var TAG: String, val context: Context) {
                         catch (e: Exception) {
                             log("uploadException:${e.localizedMessage}")
                         }
-                    }else{
+                    } else {
                         log("image already updated")
                     }
                 }
@@ -1172,7 +1172,46 @@ class MyHelper(var TAG: String, val context: Context) {
         }
         return completedCheckForms
     }
-
+    
+    /**
+     * Check if CheckForm is for all sites, OR all Machine Types OR All Machines OR for this Machine
+     */
+    fun isValidCheckForm(adminCheckForm: MyData): Boolean {
+        var isValidDueCheckForm = false
+        
+        
+        if (adminCheckForm.siteId == 0) {
+            // If CheckForm is for all sites then add CheckForm
+            isValidDueCheckForm = true
+        } else if (adminCheckForm.siteId == getMachineSettings().siteId) {
+            // If CheckForm is for this Site then continue other checks
+            if (adminCheckForm.machineTypeId == 0) {
+                // If CheckForm is for all Machine Types then Add CheckForm
+                isValidDueCheckForm = true
+            } else if (adminCheckForm.machineTypeId == getMachineTypeID()) {
+                // If CheckForm is for this Machine Type ID then continue other checks
+                if (adminCheckForm.machineId == 0) {
+                    // CheckForm is for All Machines then add CheckForm
+                    isValidDueCheckForm = true
+                } else if (adminCheckForm.machineId == getMachineID()) {
+                    isValidDueCheckForm = true
+                }
+            }
+        }
+        
+        log("isValidDueCheckForm:$isValidDueCheckForm")
+        
+        return isValidDueCheckForm
+    }
+    
+    /**
+     * Check if CheckForm is Due after days passed.
+     */
+    fun isDueCheckFormAfterDaysPassed(adminCheckForm: MyData, adminCheckFormsCompleted: MyData?): Boolean {
+        var isDueCheckFormAfterDaysPassed = false
+        
+        return isDueCheckFormAfterDaysPassed
+    }
 
 /*
     fun isValidUsername(target: String): Boolean {
@@ -1190,43 +1229,7 @@ class MyHelper(var TAG: String, val context: Context) {
         view.setLayoutParams(layoutParams)
     }
     */
-/*
-    fun refreshToken1() {
-
-        this.retrofit = Retrofit.Builder()
-            .baseUrl(RetrofitAPI.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        this.retrofitAPI = retrofit.create(RetrofitAPI::class.java)
-
-        val call = this.retrofitAPI.getLogin(getLoginAPI().email, "user@123")
-        call.enqueue(object : retrofit2.Callback<LoginResponse> {
-
-            override fun onResponse(call: retrofit2.Call<LoginResponse>, response: retrofit2.Response<LoginResponse>) {
-                log("RetrofitResponse:$response")
-//                val loginResponse = response.body()
-//                if(loginResponse!!.success){
-//                    log("SendReponse:${loginResponse.data}.")
-//                    setLoginAPI(loginResponse.data)
-//                    val intent = Intent(context, context.javaClass)
-//                    intent.putExtra("myData", MyData())
-//                    context.startActivity(intent)
-//                    toast("Please Try Again.")
-//                }else{
-//                    toast(loginResponse.message)
-//                    val intent = Intent(context, LoginActivity::class.java)
-//                    context.startActivity(intent)
-//                }
-//                myHelper.setLoginAPI(loginResponse.data)
-            }
-
-            override fun onFailure(call: retrofit2.Call<LoginResponse>, t: Throwable) {
-                log("API Failure:" + t)
-            }
-        })
-    }
-*/
-
+    
 }
 
 

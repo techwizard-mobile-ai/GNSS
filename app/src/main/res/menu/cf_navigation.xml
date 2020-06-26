@@ -17,6 +17,11 @@
         android:title="@string/completed" />
 
     <item
+        android:id="@+id/cf_completed_server"
+        android:icon="@drawable/ic_cf_completed_server"
+        android:title="@string/server" />
+
+    <item
         android:id="@+id/navf_finish"
         android:icon="@drawable/ic_action_cancel_presentation"
         android:title="@string/finish" />

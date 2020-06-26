@@ -247,6 +247,14 @@ class MyData : Serializable {
     @Expose
     var images_quality: Int = 0
     
+    @SerializedName("entry_type")
+    @Expose
+    var entry_type: Int = 0
+    
+    @SerializedName("attempted_questions")
+    @Expose
+    var attempted_questions: Int = 0
+    
     var isMapOpened: Boolean = false
     override fun toString(): String {
         return "\n\nMyData(" +
@@ -256,6 +264,10 @@ class MyData : Serializable {
                 "operatorId=$operatorId, " +
                 "name=$name, " +
                 "isSync=$isSync, " +
+                "admin_checkforms_id=$admin_checkforms_id, " +
+                "admin_checkforms_schedules_id=$admin_checkforms_schedules_id, " +
+                "admin_checkforms_schedules_value=$admin_checkforms_schedules_value, " +
+                "entry_type=$entry_type, " +
                 "checkformData=$checkFormData" +
                 ")"
     }

@@ -61,7 +61,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
         myHelper = MyHelper(tag, this)
         myHelper.setProgressBar(signin_pb)
         db = DatabaseAdapter(this)
-
+        
         myDataPushSave = MyDataPushSave(this)
         
         gpsLocation = GPSLocation()
@@ -97,19 +97,29 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
         
         startGPS()
         
+        // If Company credentials are saved then fetched Company Data otherwise redirect to Company Login Page.
+        if (!myHelper.getLoginAPI().email.isNullOrBlank() && !myHelper.getLoginAPI().pass.isNullOrBlank()) {
+            fetchOrgData()
+        }else{
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+        }
+        
+        // Refresh AccessToken if there is Internet connection
         if (myHelper.isOnline())
             myHelper.refreshToken()
+        
         /**
          * If Operator is Logged in and App is Launched this Code block will be executed.
          * If Internet is Available Fetch Company Data and Replace Old Data.
          * Call launchHomeForLoggedIn() method.
          */
-
+        
         when {
             myHelper.getOperatorAPI().id > 0 -> {
-                when {
-                    myHelper.isOnline() -> fetchOrgData()
-                }
+//                when {
+//                    myHelper.isOnline() -> fetchOrgData()
+//                }
                 launchHomeForLoggedIn()
             }
         }

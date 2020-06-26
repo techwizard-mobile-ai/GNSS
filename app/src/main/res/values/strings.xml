@@ -286,8 +286,8 @@
     <string name="remove_image">Remove Image</string>
     <string name="image_showing_issue">Image showing Issue</string>
     <string name="no_questions_to_show">No Questions to show.</string>
-    <string name="no_completed_checkforms">No Completed CheckForms</string>
-    <string name="no_due_checkforms">Under development.</string>
+    <string name="no_completed_checkforms">No Completed CheckForms.</string>
+    <string name="no_due_checkforms">No Due CheckForms.</string>
     <string name="exit_checkform_task">Exit Checkform Task</string>
     <string name="go_to_app_permissions">Go to App Permissions</string>
     <string name="error_message">Error message.</string>
@@ -310,5 +310,11 @@
 
     <string name="no_offline_data_title">No offline data!</string>
     <string name="no_offline_data_explanation">All data is already synced to server.</string>
+
+    <string name="checkform_id">Checkform ID</string>
+    <string name="entry_type">Entry Type</string>
+    <string name="server">Server</string>
+    <string name="no_completed_server_checkforms">No Server Completed CheckForms.</string>
+    <string name="server_checkforms">Server CheckForms</string>
 
 </resources>
