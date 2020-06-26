@@ -6,7 +6,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
 import app.vsptracker.apis.delay.EWork
 import app.vsptracker.apis.operators.OperatorAPI
 import app.vsptracker.apis.trip.MyData
@@ -595,7 +594,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val db = this.writableDatabase
         val cv = ContentValues()
         val tableName = TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER
-    
+        
         for (datum in data) {
             cv.put(COL_ID, datum.id)
             cv.put(COL_ORG_ID, datum.orgId)
@@ -616,7 +615,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_DATE, datum.date)
             cv.put(COL_IS_DAY_WORKS, datum.isDayWorks)
             cv.put(COL_ATTEMPTED_QUESTIONS, datum.attempted_questions)
-    
+            
             val insertedID = db.replace(tableName, null, cv)
             myHelper.printInsertion(tableName, insertedID, datum)
         }
@@ -1346,7 +1345,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val db = this.readableDatabase
         
         val query =
-            "Select * FROM $TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER ORDER BY $COL_ID $orderBy "
+            "Select * FROM $TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER WHERE $COL_MACHINE_ID = ${myHelper.getMachineID()} ORDER BY $COL_ID $orderBy "
         val result = db.rawQuery(query, null)
         
         if (result.moveToFirst()) {
@@ -1482,7 +1481,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             myHelper.log("adminCheckForm:$adminCheckForm")
             // Check If CheckForm is valid for Current, Site, Machine Type and Machine
             if (myHelper.isValidCheckForm(adminCheckForm)) {
-                val adminCheckFormsCompleted = getAdminCheckFormsCompletedByCheckFormID(adminCheckForm.id)
+                val adminCheckFormsCompleted = getAdminCheckFormsCompletedServer(adminCheckForm.id)
                 when (adminCheckForm.admin_checkforms_schedules_id) {
                     1 -> {
                         // Due after every Days passed
@@ -1535,10 +1534,11 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return dueCheckForms
     }
     
-    fun getAdminCheckFormsCompletedByCheckFormID(checkForm_id: Int): MyData? {
+    fun getAdminCheckFormsCompletedServer(checkForm_id: Int): MyData? {
         val db = this.readableDatabase
         
-        val query = "SELECT * FROM $TABLE_ADMIN_CHECKFORMS_COMPLETED WHERE $COL_ADMIN_CHECKFORMS_ID = $checkForm_id ORDER BY $COL_ID DESC LIMIT 1"
+        val query = "SELECT * FROM $TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER " +
+                "WHERE $COL_ADMIN_CHECKFORMS_ID = $checkForm_id AND $COL_MACHINE_ID = ${myHelper.getMachineID()} ORDER BY $COL_ID DESC LIMIT 1"
         val result = db.rawQuery(query, null)
         
         var datum: MyData? = null
@@ -1577,14 +1577,10 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                     result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
                 )
             )
-            
             datum.unloadingGPSLocationString = result.getString(
                 result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
             )
-            
-            datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
-            datum.checkFormData = getAdminCheckFormsDataByLocalID(datum.id)
-            
+            datum.attempted_questions = result.getInt(result.getColumnIndex(COL_ATTEMPTED_QUESTIONS))
         }
         result.close()
         db.close()

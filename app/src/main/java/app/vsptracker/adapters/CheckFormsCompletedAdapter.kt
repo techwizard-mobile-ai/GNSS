@@ -78,9 +78,6 @@ class CheckFormsCompletedAdapter(
         }
         holder.itemView.cf_applicable.text = ":  $applicable"
         
-
-    
-    
         val checkFormSchedule = db.getAdminCheckFormScheduleByID(adminCheckForm.admin_checkforms_schedules_id)
         var schedules = ""
         if (datum.admin_checkforms_schedules_id == MyEnum.ADMIN_CHECKFORMS_SCHEDULES_ID_MACHINE_START || datum.admin_checkforms_schedules_id == MyEnum.ADMIN_CHECKFORMS_SCHEDULES_ID_MACHINE_START_ONE_TIME) {

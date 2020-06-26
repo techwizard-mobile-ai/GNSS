@@ -512,7 +512,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     }
     
     private fun startGPS() {
-        
+        myHelper.log("startGPS")
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
         try {
             locationManager?.requestLocationUpdates(

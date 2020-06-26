@@ -18,8 +18,6 @@ import app.vsptracker.adapters.CheckFormsDataAdapter
 import app.vsptracker.apis.delay.EWork
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.database.DatabaseAdapter
-import app.vsptracker.others.MyDataPushSave
-import app.vsptracker.others.MyEnum
 import app.vsptracker.others.MyHelper
 import kotlinx.android.synthetic.main.fragment_check_forms.*
 import kotlinx.android.synthetic.main.fragment_check_forms.view.*

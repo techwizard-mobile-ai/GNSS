@@ -241,8 +241,9 @@ class MyHelper(var TAG: String, val context: Context) {
             
             override fun onFailure(call: Call, e: IOException) {
                 toast("Failed refresh token: ${e.printStackTrace()}")
-                val intent = Intent(context, LoginActivity::class.java)
-                context.startActivity(intent)
+                // Failure could be due to Network, so no need to redirect user to Company Login Screen.
+//                val intent = Intent(context, LoginActivity::class.java)
+//                context.startActivity(intent)
             }
         })
     }

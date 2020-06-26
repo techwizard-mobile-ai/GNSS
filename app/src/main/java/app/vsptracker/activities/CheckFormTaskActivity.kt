@@ -66,7 +66,6 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
         }
         
         checkForm = db.getAdminCheckFormByID(checkform_id)
-        initCheckFormCompleted()
         cft_title.text = checkForm.name
         
         questionsList = db.getQuestionsByIDs(
@@ -79,10 +78,13 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
         cft_rv.adapter = mAdapter
         cft_finish.setOnClickListener(this)
         cft_skip.setOnClickListener(this)
+        
+        initCheckFormCompleted()
     }
     
     private fun initCheckFormCompleted() {
         checkFormCompleted = MyData()
+        
         checkFormCompleted.orgId = myHelper.getLoginAPI().org_id
         checkFormCompleted.siteId = myHelper.getMachineSettings().siteId
         checkFormCompleted.operatorId = myHelper.getOperatorAPI().id
@@ -92,14 +94,14 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
         checkFormCompleted.admin_checkforms_schedules_id = checkForm.admin_checkforms_schedules_id
         checkFormCompleted.admin_checkforms_schedules_value = checkForm.admin_checkforms_schedules_value
         checkFormCompleted.entry_type = entry_type
-        checkFormCompleted.entry_type = entry_type
         checkFormCompleted.loadingGPSLocation = gpsLocation
         checkFormCompleted.loadingGPSLocationString = myHelper.getGPSLocationToString(gpsLocation)
+        myHelper.log("loadingGPSLocationString:${checkFormCompleted.loadingGPSLocationString}")
         checkFormCompleted.startTime = System.currentTimeMillis()
         if (myHelper.isDailyModeStarted()) checkFormCompleted.isDayWorks = 1 else checkFormCompleted.isDayWorks = 0
         
     }
-    
+  
     fun hideSaveLayout() {
         myHelper.log("hideSaveLayout")
         cft_finish_layout.visibility = View.GONE

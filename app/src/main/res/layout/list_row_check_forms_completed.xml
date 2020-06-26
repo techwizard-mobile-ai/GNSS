@@ -20,6 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
+            android:paddingBottom="@dimen/_10sdp"
             android:orientation="vertical">
 
             <LinearLayout style="@style/load_history_row_item">
@@ -208,7 +209,6 @@
                 android:text="@string/details"
                 android:layout_width="wrap_content"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:layout_marginBottom="@dimen/_10sdp"
                 android:padding="@dimen/_1sdp"
                 android:textSize="@dimen/_8sdp"
                 android:paddingStart="@dimen/_10sdp"
