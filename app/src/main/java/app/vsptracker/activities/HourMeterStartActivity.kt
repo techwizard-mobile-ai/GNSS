@@ -41,7 +41,7 @@ class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
         myData = MyData()
         myHelper.hideKeyboardOnClick(hour_meter_main_layout)
         
-        var reading = db.getMachineHours(myHelper.getMachineID()).totalHours
+        var reading = db.getMachineHours().totalHours
         if (reading.isEmpty()) {
             reading = "0.0"
         }
@@ -107,7 +107,10 @@ class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
                 myHelper.setMachineTotalTime(newMinutes)
 //                myHelper.pushIsMachineRunning( 1)
                 myHelper.setIsNavEnabled(true)
-                myHelper.startHomeActivityByType(myData)
+//                myHelper.startHomeActivityByType(myData)
+    
+                val dueCheckForms = db.getAdminCheckFormsDue()
+                myHelper.checkDueCheckForms(dueCheckForms)
                 
                 myHelper.startMachine()
                 finishAffinity()

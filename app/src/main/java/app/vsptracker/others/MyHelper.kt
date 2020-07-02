@@ -27,6 +27,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import app.vsptracker.BuildConfig
 import app.vsptracker.R
+import app.vsptracker.activities.CheckFormsActivity
 import app.vsptracker.activities.HourMeterStopActivity
 import app.vsptracker.activities.LoginActivity
 import app.vsptracker.activities.Map1Activity
@@ -731,6 +732,7 @@ class MyHelper(var TAG: String, val context: Context) {
     //    machineTypeId = 2 scrapper
     //    machineTypeId = 3 truck
     fun startHomeActivityByType(myData: MyData) {
+        
         val lastJourney = getLastJourney()
         log("lastJourney:$lastJourney")
         when (getMachineTypeID()) {
@@ -1208,10 +1210,81 @@ class MyHelper(var TAG: String, val context: Context) {
     /**
      * Check if CheckForm is Due after days passed.
      */
-    fun isDueCheckFormAfterDaysPassed(adminCheckForm: MyData, adminCheckFormsCompleted: MyData?): Boolean {
+    fun isDueCheckFormAfterDaysPassed(
+        adminCheckForm: MyData,
+        adminCheckFormsCompleted: MyData?,
+        firstMachineHours: MyData
+    ): Boolean {
         var isDueCheckFormAfterDaysPassed = false
+        var lastDaysReading: Double = 0.0
+        log("adminCheckFormsCompleted:$adminCheckFormsCompleted")
+        log("firstMachineHours:$firstMachineHours")
+        try {
+            
+            // Compare Machine Hours First reading with Admin CheckForms Completed Value and take whatever is higher
+            // As this value will be compared with minimum days required for CheckForm to be Due
+            if (adminCheckFormsCompleted != null){
+                if (adminCheckFormsCompleted.admin_checkforms_schedules_value != null && firstMachineHours.startTime > 0) {
+                    lastDaysReading =
+                        if ((adminCheckFormsCompleted.admin_checkforms_schedules_value!!.toDouble()) > (firstMachineHours.startTime) / MyEnum.ONE_DAY) adminCheckFormsCompleted.admin_checkforms_schedules_value!!.toDouble() else (firstMachineHours.startTime / MyEnum.ONE_DAY).toDouble()
+                    log("adminCheckFormsCompleted_startTime:${getDateTime(adminCheckFormsCompleted!!.admin_checkforms_schedules_value!!.toLong())}")
+                }
+            }else{
+                lastDaysReading = (firstMachineHours.startTime / MyEnum.ONE_DAY).toDouble()
+            }
+            
+            val daysRequiredByAdminCheckForms = adminCheckForm.admin_checkforms_schedules_value!!.toDouble()
+            log("firstMachineHours_startTime:${getDateTime(firstMachineHours.startTime)}")
+            log("daysRequiredByAdminCheckForms:$daysRequiredByAdminCheckForms")
+            log("if lastDaysReading > daysRequiredByAdminCheckForms:${lastDaysReading < daysRequiredByAdminCheckForms}")
+            if (lastDaysReading < daysRequiredByAdminCheckForms) {
+                isDueCheckFormAfterDaysPassed = true
+            }
+        }
+        catch (e: Exception) {
+            log("isDueCheckFormAfterDaysPassed_exception:${e.localizedMessage}")
+        }
         
         return isDueCheckFormAfterDaysPassed
+    }
+    
+    /**
+     * Check if CheckForm is Due after Machine Hours completed.
+     */
+    fun isDueCheckFormAfterMachineHoursCompleted(adminCheckForm: MyData, adminCheckFormsCompleted: MyData?): Boolean {
+        var isDueCheckFormAfterMachineHoursCompleted = false
+        var lastMachineHourReading: Double = 0.0
+//        log("lastMachineHourReading:$lastMachineHourReading")
+        try {
+            if (adminCheckFormsCompleted != null) {
+                lastMachineHourReading = adminCheckFormsCompleted.admin_checkforms_schedules_value!!.toDouble()
+            }
+//            log("lastMachineHourReading:$lastMachineHourReading")
+            val currentMachineHourReading = getMeterTimeForFinish().toDouble()
+//            log("currentMachineHourReading:$currentMachineHourReading")
+            val machineHoursForDueCheckForm = currentMachineHourReading - lastMachineHourReading
+//            log("machineHoursForDueCheckForm:$machineHoursForDueCheckForm")
+            val machineHoursRequiredByAdminCheckForms = adminCheckForm.admin_checkforms_schedules_value!!.toDouble()
+//            log("machineHoursRequiredByAdminCheckForms:$machineHoursRequiredByAdminCheckForms")
+//            log("if:${machineHoursForDueCheckForm > machineHoursRequiredByAdminCheckForms}")
+            if (machineHoursForDueCheckForm > machineHoursRequiredByAdminCheckForms) {
+                isDueCheckFormAfterMachineHoursCompleted = true
+            }
+        }
+        catch (e: Exception) {
+            log("isDueCheckFormAfterMachineHoursCompletedException:${e.localizedMessage}")
+        }
+        
+        return isDueCheckFormAfterMachineHoursCompleted
+    }
+    
+    fun checkDueCheckForms(dueCheckForms: java.util.ArrayList<MyData>) {
+        if(dueCheckForms.size > 0){
+            val intent = Intent(context, CheckFormsActivity::class.java)
+            context.startActivity(intent)
+        }else{
+            startHomeActivityByType(MyData())
+        }
     }
 
 /*

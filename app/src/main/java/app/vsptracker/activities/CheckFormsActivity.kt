@@ -9,6 +9,7 @@ import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.fragments.common.CheckFormsFragment
+import app.vsptracker.others.MyEnum
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 
@@ -44,27 +45,27 @@ class CheckFormsActivity : BaseActivity(), View.OnClickListener,
         if (menuFragment != null) {
             when (menuFragment) {
                 "dueCheckFormsFragment" -> {
-                    val dueCheckFormsFragment = CheckFormsFragment.newInstance(0, supportFragmentManager, MyData())
+                    val dueCheckFormsFragment = CheckFormsFragment.newInstance(MyEnum.ADMIN_CHECKFORMS_DUE, supportFragmentManager, MyData())
                     openFragment(dueCheckFormsFragment, DUE_CHECKFORMS)
                 }
                 "allCheckFormsFragment" -> {
-                    val allCheckFormsFragment = CheckFormsFragment.newInstance(1, supportFragmentManager, MyData())
+                    val allCheckFormsFragment = CheckFormsFragment.newInstance(MyEnum.ADMIN_CHECKFORMS_ALL, supportFragmentManager, MyData())
                     openFragment(allCheckFormsFragment, ALL_CHECKFORMS)
                 }
                 "completedServerCheckFormsFragment" -> {
-                    val completedServerCheckFormsFragment = CheckFormsFragment.newInstance(4, supportFragmentManager, MyData())
+                    val completedServerCheckFormsFragment = CheckFormsFragment.newInstance(MyEnum.ADMIN_CHECKFORMS_COMPLETED_SERVER, supportFragmentManager, MyData())
                     openFragment(completedServerCheckFormsFragment, COMPLETED_SERVER_CHECKFORMS)
                 }
                 else -> {
-                    val completedCheckFormsFragment = CheckFormsFragment.newInstance(2, supportFragmentManager, MyData())
+                    val completedCheckFormsFragment = CheckFormsFragment.newInstance(MyEnum.ADMIN_CHECKFORMS_COMPLETED, supportFragmentManager, MyData())
                     openFragment(completedCheckFormsFragment, COMPLETED_CHECKFORMS)
                 }
             }
         } else {
-            val dueCheckFormsFragment = CheckFormsFragment.newInstance(0, supportFragmentManager, MyData())
+            val dueCheckFormsFragment = CheckFormsFragment.newInstance(MyEnum.ADMIN_CHECKFORMS_DUE, supportFragmentManager, MyData())
             openFragment(dueCheckFormsFragment, DUE_CHECKFORMS)
         }
-        val dueCheckFormsFragment = CheckFormsFragment.newInstance(0, supportFragmentManager, MyData())
+        val dueCheckFormsFragment = CheckFormsFragment.newInstance(MyEnum.ADMIN_CHECKFORMS_DUE, supportFragmentManager, MyData())
         openFragment(dueCheckFormsFragment, DUE_CHECKFORMS)
     }
     
@@ -79,23 +80,23 @@ class CheckFormsActivity : BaseActivity(), View.OnClickListener,
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.cf_due -> {
-                    val dueCheckFormsFragment = CheckFormsFragment.newInstance(0, supportFragmentManager, MyData())
+                    val dueCheckFormsFragment = CheckFormsFragment.newInstance(MyEnum.ADMIN_CHECKFORMS_DUE, supportFragmentManager, MyData())
                     openFragment(dueCheckFormsFragment, DUE_CHECKFORMS)
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.cf_all -> {
-                    val allCheckFormsFragment = CheckFormsFragment.newInstance(1, supportFragmentManager, MyData())
+                    val allCheckFormsFragment = CheckFormsFragment.newInstance(MyEnum.ADMIN_CHECKFORMS_ALL, supportFragmentManager, MyData())
                     openFragment(allCheckFormsFragment, ALL_CHECKFORMS)
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.cf_completed -> {
-                    val completedCheckFormsFragment = CheckFormsFragment.newInstance(2, supportFragmentManager, MyData())
+                    val completedCheckFormsFragment = CheckFormsFragment.newInstance(MyEnum.ADMIN_CHECKFORMS_COMPLETED, supportFragmentManager, MyData())
                     openFragment(completedCheckFormsFragment, COMPLETED_CHECKFORMS)
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.cf_completed_server -> {
                     
-                    val completedServerCheckFormsFragment = CheckFormsFragment.newInstance(4, supportFragmentManager, MyData())
+                    val completedServerCheckFormsFragment = CheckFormsFragment.newInstance(MyEnum.ADMIN_CHECKFORMS_COMPLETED_SERVER, supportFragmentManager, MyData())
                     openFragment(completedServerCheckFormsFragment, COMPLETED_SERVER_CHECKFORMS)
                     
                 }

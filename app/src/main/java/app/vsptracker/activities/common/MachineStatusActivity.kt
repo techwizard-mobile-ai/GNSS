@@ -47,7 +47,7 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
             machine_status_logout.visibility = View.VISIBLE
             drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
             machine_status_back.visibility = View.GONE
-            startReading = db.getMachineHours(myHelper.getMachineID()).totalHours
+            startReading = db.getMachineHours().totalHours
 //            sfinish_reading.setText()
         
         } else {
@@ -193,7 +193,10 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
         } else {
             val lastJourney = myHelper.getLastJourney()
             myHelper.log("lastJourney:$lastJourney")
-            myHelper.startHomeActivityByType(MyData())
+//            myHelper.startHomeActivityByType(MyData())
+    
+            val dueCheckForms = db.getAdminCheckFormsDue()
+            myHelper.checkDueCheckForms(dueCheckForms)
             
         }
     }

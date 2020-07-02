@@ -208,8 +208,12 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
                 startActivity(intent)
                 finishAffinity()
             }
-            else ->
-                myHelper.startHomeActivityByType(MyData())
+            else ->{
+                val dueCheckForms = db.getAdminCheckFormsDue()
+                myHelper.checkDueCheckForms(dueCheckForms)
+                
+            }
+            
         }
     }
     

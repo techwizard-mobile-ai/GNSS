@@ -188,6 +188,7 @@ class MyDataPushSave(private val context: Context) {
             }
         })
     }
+    
     fun pushInsertDelay(eWork: EWork) {
 //        when {
 //            myHelper.isOnline() -> pushDelay(eWork)
@@ -729,10 +730,10 @@ class MyDataPushSave(private val context: Context) {
         
         
         if (myHelper.isOnline()) {
-            if (serverSyncList.size > 0){
+            if (serverSyncList.size > 0) {
                 val serverSyncAPI = serverSyncList.find { it.type == 11 }
                 if (serverSyncAPI != null) {
-                    this.serverSyncList.find{it.type == 11}!!.myDataList = myHelper.uploadImagesToAWS(serverSyncAPI.myDataList)
+                    this.serverSyncList.find { it.type == 11 }!!.myDataList = myHelper.uploadImagesToAWS(serverSyncAPI.myDataList)
                 }
                 pushUpdateServerSync(showDialog)
             }
@@ -832,7 +833,6 @@ class MyDataPushSave(private val context: Context) {
 //                      here I am getting complete list of data with type. Now I have to update each entry in
 //                      App Database and change their status from isSync 0 to 1 as these entries are successfully updated in Portal Database.
                         updateServerSync(data)
-                        
                     } else {
                         if (responseJObject.getString("message ") == "Token has expired") {
                             myHelper.log("Token Expired:$responseJObject")
@@ -911,23 +911,26 @@ class MyDataPushSave(private val context: Context) {
                     serverSyncAPI.myDataList.forEach {
                         db.updateAdminCheckFormsData(it.checkFormData)
                     }
+                    // As Completed CheckForms are fetched from Server, making this API call will update
+                    // Company Completed CheckForms Data
+                    fetchOrgData()
                 }
             }
         }
     }
     
     fun uploadCompletedCheckForms(showDialog: Boolean = false) {
-    
+        
         
         if (myDataList.size > 0)
             myDataList.removeAll(ArrayList())
-    
+        
         if (eWorkList.size > 0)
             eWorkList.removeAll(ArrayList())
-    
+        
         if (serverSyncList.size > 0)
             serverSyncList.removeAll(ArrayList())
-    
+        
         addToList(1, "Operators Hours", db.getOperatorsHours("ASC"))
         addToList(2, "Trucks Trips", db.getTripsByTypes(3, "ASC"))
         addToList(3, "Scrapers Trips", db.getTripsByTypes(2, "ASC"))
@@ -939,17 +942,19 @@ class MyDataPushSave(private val context: Context) {
         addToList(9, "Machines Hours", db.getMachinesHours("ASC"))
         addToList(10, "Operators Waiting", db.getWaits("ASC"))
         addToList(11, "Completed CheckForms", db.getAdminCheckFormsCompleted("ASC"))
-    
-    
+        
+        
         if (myHelper.isOnline()) {
-            if (serverSyncList.size > 0){
+            if (serverSyncList.size > 0) {
                 val serverSyncAPI = serverSyncList.find { it.type == 11 }
                 if (serverSyncAPI != null) {
-                    serverSyncList.find{it.type == 11}!!.myDataList = myHelper.uploadImagesToAWS(serverSyncAPI.myDataList)
+                    serverSyncList.find { it.type == 11 }!!.myDataList = myHelper.uploadImagesToAWS(serverSyncAPI.myDataList)
                 }
                 pushUpdateServerSync(showDialog)
-            }
-            else myHelper.showErrorDialog(context.resources.getString(R.string.no_offline_data_title), context.resources.getString(R.string.no_offline_data_explanation))
+            } else myHelper.showErrorDialog(
+                context.resources.getString(R.string.no_offline_data_title),
+                context.resources.getString(R.string.no_offline_data_explanation)
+            )
         } else {
             myHelper.toast(noInternetMessage)
         }

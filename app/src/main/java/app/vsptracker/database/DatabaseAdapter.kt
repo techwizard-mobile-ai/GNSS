@@ -1478,22 +1478,30 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         myHelper.log("adminCheckForms:$adminCheckForms")
         
         adminCheckForms.forEach { adminCheckForm ->
-            myHelper.log("adminCheckForm:$adminCheckForm")
+            myHelper.log("getMeterTimeForFinish1:${myHelper.getMeterTimeForFinish()}")
+//            myHelper.log("adminCheckForm:$adminCheckForm")
             // Check If CheckForm is valid for Current, Site, Machine Type and Machine
             if (myHelper.isValidCheckForm(adminCheckForm)) {
                 val adminCheckFormsCompleted = getAdminCheckFormsCompletedServer(adminCheckForm.id)
+    
+                myHelper.log("Case:${adminCheckForm.admin_checkforms_schedules_id}")
                 when (adminCheckForm.admin_checkforms_schedules_id) {
+                    
                     1 -> {
                         // Due after every Days passed
-                        if (myHelper.isDueCheckFormAfterDaysPassed(adminCheckForm, adminCheckFormsCompleted)) {
+                        if (myHelper.isDueCheckFormAfterDaysPassed(adminCheckForm, adminCheckFormsCompleted, getMachineHours("ASC"))) {
                             dueCheckForms.add(adminCheckForm)
                         }
                     }
                     2 -> {
                         // Due after every Machine Hours duration
+                        if (myHelper.isDueCheckFormAfterMachineHoursCompleted(adminCheckForm, adminCheckFormsCompleted)) {
+                            dueCheckForms.add(adminCheckForm)
+                        }
                     }
                     3 -> {
                         // Due at each machine start
+                        dueCheckForms.add(adminCheckForm)
                     }
                     4 -> {
                         // Due at machine start - one time
@@ -1509,7 +1517,9 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                         // Due after Machine Hours - one time
                         if (adminCheckFormsCompleted == null) {
                             myHelper.log("already not completed")
-                            dueCheckForms.add(adminCheckForm)
+                            if (myHelper.isDueCheckFormAfterMachineHoursCompleted(adminCheckForm, adminCheckFormsCompleted)) {
+                                dueCheckForms.add(adminCheckForm)
+                            }
                         } else {
                             // As it is one time so no need to show in due CheckForms
                             myHelper.log("already completed")
@@ -1519,7 +1529,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                         // Due after Days - one time
                         if (adminCheckFormsCompleted == null) {
                             myHelper.log("already not completed")
-                            if (myHelper.isDueCheckFormAfterDaysPassed(adminCheckForm, adminCheckFormsCompleted)) {
+                            if (myHelper.isDueCheckFormAfterDaysPassed(adminCheckForm, adminCheckFormsCompleted, getMachineHours("ASC"))) {
                                 dueCheckForms.add(adminCheckForm)
                             }
                         } else {
@@ -1534,6 +1544,9 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return dueCheckForms
     }
     
+    /**
+     * Get Latest Completed CheckForm for selected Machine from AdminCheckForms.
+     */
     fun getAdminCheckFormsCompletedServer(checkForm_id: Int): MyData? {
         val db = this.readableDatabase
         
@@ -1907,11 +1920,11 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return list
     }
     
-    fun getMachineHours(machineId: Int): MyData {
+    fun getMachineHours(orderBy: String = "DESC"): MyData {
         
         
         val db = this.readableDatabase
-        val query = "Select * from $TABLE_MACHINES_HOURS WHERE $COL_MACHINE_ID = $machineId ORDER BY $COL_ID DESC LIMIT 1"
+        val query = "Select * from $TABLE_MACHINES_HOURS WHERE $COL_MACHINE_ID = ${myHelper.getMachineID()} ORDER BY $COL_ID $orderBy LIMIT 1"
         val result = db.rawQuery(query, null)
         val datum = MyData()
         if (result.moveToFirst()) {

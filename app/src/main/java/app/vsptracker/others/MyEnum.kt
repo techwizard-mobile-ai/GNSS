@@ -39,5 +39,13 @@ class MyEnum {
         // constant should be declared here for any value and used in app
         const val ADMIN_CHECKFORMS_SCHEDULES_ID_MACHINE_START = 3
         const val ADMIN_CHECKFORMS_SCHEDULES_ID_MACHINE_START_ONE_TIME = 4
+        
+        const val ADMIN_CHECKFORMS_DUE = 0
+        const val ADMIN_CHECKFORMS_ALL = 1
+        const val ADMIN_CHECKFORMS_COMPLETED = 2
+        const val ADMIN_CHECKFORMS_COMPLETED_DETAILS = 3
+        const val ADMIN_CHECKFORMS_COMPLETED_SERVER = 4
+        
+        const val ONE_DAY = 86400000 // Milliseconds in a day
     }
 }

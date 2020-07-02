@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import app.vsptracker.R
 import app.vsptracker.activities.CheckFormTaskActivity
+import app.vsptracker.activities.CheckFormsActivity
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyEnum
@@ -44,11 +45,11 @@ class CheckFormsAdapter(
         myHelper.log(datum.toString())
         
         when (type) {
-            0 -> {
+            MyEnum.ADMIN_CHECKFORMS_DUE -> {
                 // Due checkforms
                 holder.itemView.cf_start.background = context.getDrawable(R.drawable.bdue_background)
             }
-            1 -> {
+            MyEnum.ADMIN_CHECKFORMS_ALL -> {
                 // All checkforms
                 holder.itemView.cf_start.background = context.getDrawable(R.drawable.bnext_background)
             }
@@ -101,6 +102,8 @@ class CheckFormsAdapter(
                     val intent = Intent(context, CheckFormTaskActivity::class.java)
                     intent.putExtra("checkform_id", datum.id)
                     intent.putExtra("entry_type", type)
+                    intent.putExtra("gpsLocation", (context as CheckFormsActivity).gpsLocation)
+                    myHelper.log("sentGPSLocation:${(context as CheckFormsActivity).gpsLocation}")
                     context.startActivity(intent)
                 }
             }

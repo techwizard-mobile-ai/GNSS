@@ -18,6 +18,7 @@ import app.vsptracker.adapters.CheckFormsDataAdapter
 import app.vsptracker.apis.delay.EWork
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.database.DatabaseAdapter
+import app.vsptracker.others.MyEnum
 import app.vsptracker.others.MyHelper
 import kotlinx.android.synthetic.main.fragment_check_forms.*
 import kotlinx.android.synthetic.main.fragment_check_forms.view.*
@@ -57,18 +58,19 @@ class CheckFormsFragment : Fragment() {
         myHelper.log("type: $type")
         
         var title = ""
-        when (type) {
-            0 -> title = getString(R.string.due_checkforms)
-            1 -> title = getString(R.string.all_checkforms)
-            2 -> title = getString(R.string.completed_checkforms)
-            3 -> title = "${db.getAdminCheckFormByID(checkFormCompleted.admin_checkforms_id).name} Details"
-            4 -> title = getString(R.string.server_checkforms)
-        }
+//        when (type) {
+//            MyEnum.ADMIN_CHECKFORMS_DUE -> title = getString(R.string.due_checkforms)
+//            MyEnum.ADMIN_CHECKFORMS_ALL -> title = getString(R.string.all_checkforms)
+//            MyEnum.ADMIN_CHECKFORMS_COMPLETED -> title = getString(R.string.completed_checkforms)
+//            MyEnum.ADMIN_CHECKFORMS_COMPLETED_DETAILS -> title = "${db.getAdminCheckFormByID(checkFormCompleted.admin_checkforms_id).name} Details"
+//            MyEnum.ADMIN_CHECKFORMS_COMPLETED_SERVER -> title = getString(R.string.server_checkforms)
+//        }
+//
+//        cf_title.text = title
         
-        cf_title.text = title
-        
         when (type) {
-            0 -> {
+            MyEnum.ADMIN_CHECKFORMS_DUE -> {
+                title = getString(R.string.due_checkforms)
                 val dueCheckForms = db.getAdminCheckFormsDue()
                 when (dueCheckForms.size) {
                     0 -> {
@@ -82,7 +84,8 @@ class CheckFormsFragment : Fragment() {
                     }
                 }
             }
-            1 -> {
+            MyEnum.ADMIN_CHECKFORMS_ALL -> {
+                title = getString(R.string.all_checkforms)
                 val allCheckForms = db.getAdminCheckForms()
                 when (allCheckForms.size) {
                     0 -> {
@@ -96,7 +99,8 @@ class CheckFormsFragment : Fragment() {
                     }
                 }
             }
-            2 -> {
+            MyEnum.ADMIN_CHECKFORMS_COMPLETED -> {
+                title = getString(R.string.completed_checkforms)
                 val completedCheckForms = db.getAdminCheckFormsCompleted()
                 when (completedCheckForms.size) {
                     0 -> {
@@ -135,7 +139,8 @@ class CheckFormsFragment : Fragment() {
                     }
                 }
             }
-            3 -> {
+            MyEnum.ADMIN_CHECKFORMS_COMPLETED_DETAILS -> {
+                title = "${db.getAdminCheckFormByID(checkFormCompleted.admin_checkforms_id).name} Details"
                 val checkFormData = db.getAdminCheckFormsDataByLocalID(checkFormCompleted.id)
                 when (checkFormData.size) {
                     0 -> {
@@ -149,7 +154,8 @@ class CheckFormsFragment : Fragment() {
                     }
                 }
             }
-            4 -> {
+            MyEnum.ADMIN_CHECKFORMS_COMPLETED_SERVER -> {
+                title = getString(R.string.server_checkforms)
                 val completedServerCheckForms = db.getAdminCheckFormsCompletedServer()
                 when (completedServerCheckForms.size) {
                     0 -> {
@@ -165,6 +171,8 @@ class CheckFormsFragment : Fragment() {
                 }
             }
         }
+    
+        cf_title.text = title
         
     }
     

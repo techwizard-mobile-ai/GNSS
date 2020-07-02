@@ -119,22 +119,24 @@ class CheckFormsCompletedAdapter(
             }
             else -> holder.itemView.cfc_mode.text = context.getString(R.string.standard_mode_text)
         }
-    
+        
+
+        
         var attemptedQuestions = 0
         when(type){
-            3 ->{
+            MyEnum.ADMIN_CHECKFORMS_COMPLETED ->{
                 holder.itemView.cfc_sync.text = if (datum.isSync == 1) context.getString(R.string.yes) else context.getString(R.string.no)
                 holder.itemView.cfc_sync_layout.visibility = View.VISIBLE
                 holder.itemView.cf_details.visibility = View.VISIBLE
                 holder.itemView.cf_details.setOnClickListener {
-                    val machineStopFragment = CheckFormsFragment.newInstance(3, supportFragmentManager1, datum )
+                    val machineStopFragment = CheckFormsFragment.newInstance(MyEnum.ADMIN_CHECKFORMS_COMPLETED_DETAILS, supportFragmentManager1, datum )
                     openFragment(machineStopFragment, "COMPLETED_CHECKFORMS_DETAILS")
                     myHelper.log(datum.toString())
                 }
                 attemptedQuestions = datum.checkFormData.size
             }
-            
-            4-> {
+    
+            MyEnum.ADMIN_CHECKFORMS_COMPLETED_SERVER-> {
                 holder.itemView.cfc_sync_layout.visibility = View.GONE
                 holder.itemView.cf_details.visibility = View.GONE
                 attemptedQuestions = datum.attempted_questions

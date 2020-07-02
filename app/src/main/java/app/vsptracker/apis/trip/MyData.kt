@@ -257,20 +257,19 @@ class MyData : Serializable {
     
     var isMapOpened: Boolean = false
     override fun toString(): String {
-        return "\n\nMyData(" +
+        return "MyData(" +
                 "id=$id, " +
                 "orgId=$orgId, " +
                 "siteId=$siteId, " +
                 "operatorId=$operatorId, " +
-                "name=$name, " +
-                "isSync=$isSync, " +
-                "admin_checkforms_id=$admin_checkforms_id, " +
-                "admin_checkforms_schedules_id=$admin_checkforms_schedules_id, " +
+                "machineTypeId=$machineTypeId, " +
+                "machineId=$machineId, " +
                 "admin_checkforms_schedules_value=$admin_checkforms_schedules_value, " +
-                "entry_type=$entry_type, " +
-                "checkformData=$checkFormData" +
+                "startTime=$startTime, " +
+                "stopTime=$stopTime, " +
+                "startHours='$startHours', " +
+                "totalHours='$totalHours', " +
+                "totalTime=$totalTime" +
                 ")"
     }
-    
-    
 }

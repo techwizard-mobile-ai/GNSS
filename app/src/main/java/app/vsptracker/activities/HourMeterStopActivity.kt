@@ -62,6 +62,7 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
         
         myData.loadingGPSLocation = meter.hourStartGPSLocation
         
+        myHelper.log("getMeterTimeForFinish:${myHelper.getMeterTimeForFinish()}")
         sfinish_reading.setText(myHelper.getMeterTimeForFinish())
         
         myHelper.log("onCreate:$myData")

@@ -21,6 +21,7 @@ import app.vsptracker.adapters.CheckFormTaskAdapter
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.AnswerData
 import app.vsptracker.classes.CheckFormData
+import app.vsptracker.classes.GPSLocation
 import app.vsptracker.classes.Images
 import app.vsptracker.others.MyDataPushSave
 import com.google.android.material.navigation.NavigationView
@@ -62,6 +63,7 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
         if (bundle != null) {
             checkform_id = bundle.getInt("checkform_id")
             entry_type = bundle.getInt("entry_type")
+            gpsLocation = bundle.getSerializable("gpsLocation") as GPSLocation
             myHelper.log("checkform_id:$checkform_id")
         }
         
