@@ -87,19 +87,37 @@
                     style="@style/eload_text" />
 
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/cft_photo_info"
-                android:visibility="gone"
+            <LinearLayout
+                android:id="@+id/cft_photo_info_layout"
                 android:layout_width="match_parent"
-                android:drawableStart="@drawable/ic_info_"
-                android:layout_marginBottom="@dimen/_3sdp"
-                android:layout_marginStart="@dimen/_8sdp"
-                android:textColor="@color/red"
-                android:drawablePadding="@dimen/_5sdp"
-                android:textSize="@dimen/_12sdp"
-                android:text="@string/attach_image"
-                style="@style/eload_text" />
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/cft_photo_limit_info"
+                    android:layout_width="match_parent"
+                    android:drawableStart="@drawable/ic_info_"
+                    android:layout_marginBottom="@dimen/_3sdp"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:textColor="@color/red"
+                    android:drawablePadding="@dimen/_5sdp"
+                    android:textSize="@dimen/_12sdp"
+                    android:text="@string/attach_image"
+                    style="@style/eload_text" />
+                <TextView
+                    android:id="@+id/cft_photo_attached_info"
+                    android:layout_width="match_parent"
+                    android:drawableStart="@drawable/ic_image_remove"
+                    android:layout_marginBottom="@dimen/_3sdp"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:textColor="@color/blue"
+                    android:drawablePadding="@dimen/_5sdp"
+                    android:textSize="@dimen/_12sdp"
+                    android:text="@string/attach_image"
+                    style="@style/eload_text" />
+            </LinearLayout>
+
+
 
             <HorizontalScrollView
                 android:id="@+id/photo_layout_main"

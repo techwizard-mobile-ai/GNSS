@@ -941,12 +941,15 @@ class MyHelper(var TAG: String, val context: Context) {
     /**
      * Attached selected Image to Image Layout
      * When Long Clicked on Image, Remove that Image from Images List and Image Layout.
+     * If isCompletedCheckFormsDetails = true, then this method is called for showing images
+     * of completed checkforms. No need to remove image on Long Clicked
      */
     fun addImageToPhotoLayout(
         context: Context,
         imageBitmap: Bitmap?,
         imageURI: Uri?,
-        imagesList: ArrayList<Images>
+        imagesList: ArrayList<Images>,
+        isCompletedCheckFormsDetails: Boolean = false
     ): LinearLayout? {
         val linearLayout = LinearLayout(context)
         val layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -962,7 +965,7 @@ class MyHelper(var TAG: String, val context: Context) {
         
         imageView.layoutParams = imageViewParam
         imageView.contentDescription = context.resources.getString(R.string.image_showing_issue)
-
+        
         val imagePath = Images("", "");
         if (imageBitmap != null) {
             imageLoad(imageBitmap, imageView)
@@ -974,23 +977,25 @@ class MyHelper(var TAG: String, val context: Context) {
         
         linearLayout.addView(imageView, 0)
         
-        imageView.setOnLongClickListener {
-            
-            var position = -1
-            for (i in 0 until imagesList.size) {
-                if (imagesList[i].localImagePath.equals(imagePath.localImagePath, true)){
-                    position = i
-                }
+        // If this method is used for Viewing images of Completed CheckForms then there is no need to Remove Image
+        if (!isCompletedCheckFormsDetails)
+            imageView.setOnLongClickListener {
                 
+                var position = -1
+                for (i in 0 until imagesList.size) {
+                    if (imagesList[i].localImagePath.equals(imagePath.localImagePath, true)) {
+                        position = i
+                    }
+                    
+                }
+                // Remove Image from Image List
+                if (position != -1)
+                    imagesList.removeAt(position)
+                // Remove Image from Image Layout
+                linearLayout.removeView(imageView)
+                toast("Image removed.")
+                return@setOnLongClickListener true
             }
-            // Remove Image from Image List
-            if (position != -1)
-                imagesList.removeAt(position)
-            // Remove Image from Image Layout
-            linearLayout.removeView(imageView)
-            toast("Image removed.")
-            return@setOnLongClickListener true
-        }
         return linearLayout
     }
     

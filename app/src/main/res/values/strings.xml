@@ -294,6 +294,7 @@
 
     <!--    Place holder string-->
     <string name="images_limit">Images Limit: %1$d</string>
+    <string name="images_attached_info">Long click on attached images to remove. </string>
 
     <string name="storage_permission_title">Storage permission disabled!</string>
     <string name="storage_permission_explanation">Image attachments and photos capture requires Storage permission.</string>

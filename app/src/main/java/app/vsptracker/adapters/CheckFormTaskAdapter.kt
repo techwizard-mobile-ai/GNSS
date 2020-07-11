@@ -227,7 +227,7 @@ class CheckFormTaskAdapter(
         itemView.cft_comment.visibility = View.GONE
         itemView.cft_photo_layout.visibility = View.GONE
         itemView.photo_layout_main.visibility = View.GONE
-        itemView.cft_photo_info.visibility = View.GONE
+        itemView.cft_photo_info_layout.visibility = View.GONE
         myHelper.hideKeyboard(itemView.cft_item_acceptable)
         (context as CheckFormTaskActivity).showSaveLayout()
     }
@@ -236,8 +236,9 @@ class CheckFormTaskAdapter(
         itemView.cft_photo_layout.visibility = View.VISIBLE
         itemView.photo_layout_main.visibility = View.VISIBLE
         itemView.photo_layout.visibility = View.VISIBLE
-        itemView.cft_photo_info.text = context.resources.getString(R.string.images_limit, imagesLimit)
-        itemView.cft_photo_info.visibility = View.VISIBLE
+        itemView.cft_photo_limit_info.text = context.resources.getString(R.string.images_limit, imagesLimit)
+        itemView.cft_photo_attached_info.text = context.resources.getString(R.string.images_attached_info)
+        itemView.cft_photo_info_layout.visibility = View.VISIBLE
         
     }
     

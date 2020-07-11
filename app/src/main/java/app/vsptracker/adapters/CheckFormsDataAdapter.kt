@@ -66,7 +66,7 @@ class CheckFormsDataAdapter(
                     holder.itemView.photo_layout_main.visibility = View.VISIBLE
                     holder.itemView.photo_layout.visibility = View.VISIBLE
                     datum.answerDataObj.imagesList.forEach {
-                        holder.itemView.photo_layout.addView(myHelper.addImageToPhotoLayout(context, null, Uri.parse(it.localImagePath), datum.answerDataObj.imagesList))
+                        holder.itemView.photo_layout.addView(myHelper.addImageToPhotoLayout(context, null, Uri.parse(it.localImagePath), datum.answerDataObj.imagesList, true))
                     }
                 }else{
                     holder.itemView.photo_layout_main.visibility = View.GONE
