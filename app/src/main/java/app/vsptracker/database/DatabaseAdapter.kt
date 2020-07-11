@@ -4,6 +4,7 @@ package app.vsptracker.database
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor.FIELD_TYPE_STRING
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import app.vsptracker.apis.delay.EWork
@@ -1483,7 +1484,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             // Check If CheckForm is valid for Current, Site, Machine Type and Machine
             if (myHelper.isValidCheckForm(adminCheckForm)) {
                 val adminCheckFormsCompleted = getAdminCheckFormsCompletedServer(adminCheckForm.id)
-    
+                
                 myHelper.log("Case:${adminCheckForm.admin_checkforms_schedules_id}")
                 when (adminCheckForm.admin_checkforms_schedules_id) {
                     
@@ -1705,7 +1706,13 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.admin_checkforms_schedules_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_ID))
                 datum.admin_checkforms_schedules_value = result.getString(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE))
                 datum.name = result.getString(result.getColumnIndex(COL_NAME))
-                datum.questions_data = result.getString(result.getColumnIndex(COL_QUESTIONS_DATA))
+                
+                // If not Questions are added to CheckForm then populate questions_data with empty String
+                if (result.getType(result.getColumnIndex(COL_QUESTIONS_DATA)) == FIELD_TYPE_STRING) {
+                    datum.questions_data = result.getString(result.getColumnIndex(COL_QUESTIONS_DATA))
+                } else {
+                    datum.questions_data = ""
+                }
                 datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
                 datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
                 // Check if CheckForm is valid for this Site, Machine Type and Machine

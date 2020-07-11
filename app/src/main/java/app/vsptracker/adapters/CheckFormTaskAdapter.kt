@@ -96,16 +96,18 @@ class CheckFormTaskAdapter(
             override fun beforeTextChanged(
                 s: CharSequence, start: Int, count: Int,
                 after: Int
-            ) {}
+            ) {
+            }
             
             override fun afterTextChanged(s: Editable) {}
         })
         
         holder.itemView.cft_row.setOnClickListener {
-            myHelper.hideKeyboard(holder.itemView.cft_row)
-//            resetItemView(holder, datum)
+            myHelper.hideKeyboard(it)
+            hideCommentsPhotoLayout(it)
             (context as CheckFormTaskActivity).showSaveLayout()
         }
+        
         holder.itemView.cft_item_unacceptable.setOnClickListener {
             myHelper.log(datum.toString())
             (context as CheckFormTaskActivity).addCheckFormData(datum.id, MyEnum.UNACCEPTED, holder.itemView.cft_comment.text.toString())
@@ -158,6 +160,7 @@ class CheckFormTaskAdapter(
             context.showSaveLayout()
             
         }
+        
         holder.itemView.cft_item_attachment.setOnClickListener {
             
             if (datum.images_limit <= (context as CheckFormTaskActivity).getAttachedImagesSize(datum.id)) {
@@ -232,19 +235,24 @@ class CheckFormTaskAdapter(
     private fun showPhotoLayout(itemView: View, imagesLimit: Int) {
         itemView.cft_photo_layout.visibility = View.VISIBLE
         itemView.photo_layout_main.visibility = View.VISIBLE
+        itemView.photo_layout.visibility = View.VISIBLE
         itemView.cft_photo_info.text = context.resources.getString(R.string.images_limit, imagesLimit)
         itemView.cft_photo_info.visibility = View.VISIBLE
         
     }
     
+    /**
+     * This function is used when scrolling RecyclerView, It will highlight Acceptable / Unacceptable Option when
+     * any option is already selected for Question.
+     */
     private fun resetItemView(holder: ViewHolder, datum: MyData) {
         holder.setIsRecyclable(false)
         
         val data = (context as CheckFormTaskActivity).checkFormDataList.find { it.admin_questions_id == datum.id }
-    
+        
         when (data) {
             null -> {
-    
+                
                 holder.itemView.cft_item_acceptable.background = context.getDrawable(R.drawable.bnext_border)
                 holder.itemView.cft_item_acceptable.setTextColor(ContextCompat.getColor(context, R.color.light_colorPrimary))
                 holder.itemView.cft_item_unacceptable.background = context.getDrawable(R.drawable.bdue_border)
@@ -255,8 +263,8 @@ class CheckFormTaskAdapter(
                 
             }
             else -> {
-                when(data.answer){
-                    MyEnum.UNACCEPTED ->{
+                when (data.answer) {
+                    MyEnum.UNACCEPTED -> {
                         holder.itemView.cft_item_acceptable.background = context.getDrawable(R.drawable.bnext_border)
                         holder.itemView.cft_item_acceptable.setTextColor(ContextCompat.getColor(context, R.color.light_colorPrimary))
                         holder.itemView.cft_item_unacceptable.background = context.getDrawable(R.drawable.bdue_background)
@@ -265,33 +273,44 @@ class CheckFormTaskAdapter(
                         when (datum.admin_questions_types_id) {
                             2 -> {
                                 //show comments section
-                                showCommentsLayout(holder.itemView)
+//                                showCommentsLayout(holder.itemView)
                             }
                             3 -> {
                                 //show photo section
-                                showPhotoLayout(holder.itemView, datum.images_limit)
+//                                showPhotoLayout(holder.itemView, datum.images_limit)
                                 context.showSaveLayout()
                                 myHelper.hideKeyboard(holder.itemView.cft_item_acceptable)
-    
+                                
                                 holder.itemView.photo_layout.removeAllViews()
                                 data.answerDataObj.imagesList.forEach {
-                                    holder.itemView.photo_layout.addView(myHelper.addImageToPhotoLayout(context, null, Uri.parse(it.localImagePath)))
+                                    holder.itemView.photo_layout.addView(myHelper.addImageToPhotoLayout(
+                                        context,
+                                        null,
+                                        Uri.parse(it.localImagePath),
+                                        data.answerDataObj.imagesList
+                                    ))
                                 }
-                                holder.itemView.photo_layout.visibility = View.VISIBLE
+//                                holder.itemView.photo_layout.visibility = View.VISIBLE
                             }
                             4 -> {
                                 //show photo, comments section
-                                showCommentsLayout(holder.itemView)
-                                showPhotoLayout(holder.itemView, datum.images_limit)
+//                                showCommentsLayout(holder.itemView)
+//                                showPhotoLayout(holder.itemView, datum.images_limit)
                                 holder.itemView.photo_layout.removeAllViews()
                                 data.answerDataObj.imagesList.forEach {
-                                    holder.itemView.photo_layout.addView(myHelper.addImageToPhotoLayout(context, null, Uri.parse(it.localImagePath)))
+                                    holder.itemView.photo_layout.addView(myHelper.addImageToPhotoLayout(
+                                        context,
+                                        null,
+                                        Uri.parse(it.localImagePath),
+                                        data.answerDataObj.imagesList
+                                    ))
                                 }
-                                holder.itemView.photo_layout.visibility = View.VISIBLE
+//                                holder.itemView.photo_layout.visibility = View.VISIBLE
                             }
                         }
+                        
                     }
-                    MyEnum.ACCEPTED ->{
+                    MyEnum.ACCEPTED -> {
                         holder.itemView.cft_item_acceptable.background = context.getDrawable(R.drawable.bnext_background)
                         holder.itemView.cft_item_acceptable.setTextColor(ContextCompat.getColor(context, R.color.white))
                         holder.itemView.cft_item_unacceptable.background = context.getDrawable(R.drawable.bdue_border)

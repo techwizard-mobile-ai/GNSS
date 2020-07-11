@@ -224,6 +224,7 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         var filePath: Uri? = null
+        var checkFormData = CheckFormData()
         if (requestCode == PICK_FILE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
             filePath = data.data
             val takeFlags = (Intent.FLAG_GRANT_READ_URI_PERMISSION
@@ -237,10 +238,15 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
             myHelper.log("mime:$mime")
             val types = mime!!.split("/").toTypedArray()
             if (types[0].equals("image", ignoreCase = true)) {
-                
-                cft_rv.findViewHolderForAdapterPosition(mAdapterPosition)!!.itemView.photo_layout.addView(myHelper.addImageToPhotoLayout(this, null, filePath))
+    
                 val imagePath = filePath.toString()
-                addImageToCheckFormData(selectedQuestionID, imagePath)
+                checkFormData = addImageToCheckFormData(selectedQuestionID, imagePath)
+                cft_rv.findViewHolderForAdapterPosition(mAdapterPosition)!!.itemView.photo_layout.addView(myHelper.addImageToPhotoLayout(
+                    this,
+                    null,
+                    filePath,
+                    checkFormData.answerDataObj.imagesList
+                ))
                 cft_rv.findViewHolderForAdapterPosition(mAdapterPosition)!!.itemView.photo_layout.visibility = View.VISIBLE
                 myHelper.toast("Image attached successfully.")
                 
@@ -248,12 +254,13 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
         } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             
             myHelper.log("onResult:$imageToUploadUri")
-            addImageToCheckFormData(selectedQuestionID, imageToUploadUri.toString())
+            checkFormData = addImageToCheckFormData(selectedQuestionID, imageToUploadUri.toString())
             cft_rv.findViewHolderForAdapterPosition(mAdapterPosition)!!.itemView.photo_layout.addView(
                 myHelper.addImageToPhotoLayout(
                     this,
                     null,
-                    imageToUploadUri
+                    imageToUploadUri,
+                    checkFormData.answerDataObj.imagesList
                 )
             )
             cft_rv.findViewHolderForAdapterPosition(mAdapterPosition)!!.itemView.photo_layout.visibility = View.VISIBLE
@@ -294,7 +301,7 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
         }
     }
     
-    fun addImageToCheckFormData(questionID: Int, imagePath: String) {
+    fun addImageToCheckFormData(questionID: Int, imagePath: String): CheckFormData {
         
         val checkFormData = CheckFormData()
         checkFormData.time = System.currentTimeMillis().toString()
@@ -317,6 +324,7 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
             checkFormDataList[index] = checkFormData
         }
         myHelper.log("addImageToCheckFormData:$checkFormData")
+        return checkFormData
     }
     
     fun getAttachedImagesSize(questionID: Int): Int {

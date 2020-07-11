@@ -938,8 +938,16 @@ class MyHelper(var TAG: String, val context: Context) {
         }
     }
     
-    fun addImageToPhotoLayout(context: Context, imageBitmap: Bitmap?, imageURI: Uri?): LinearLayout? {
-//        log("Uri:$imageURI")
+    /**
+     * Attached selected Image to Image Layout
+     * When Long Clicked on Image, Remove that Image from Images List and Image Layout.
+     */
+    fun addImageToPhotoLayout(
+        context: Context,
+        imageBitmap: Bitmap?,
+        imageURI: Uri?,
+        imagesList: ArrayList<Images>
+    ): LinearLayout? {
         val linearLayout = LinearLayout(context)
         val layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         
@@ -955,13 +963,34 @@ class MyHelper(var TAG: String, val context: Context) {
         imageView.layoutParams = imageViewParam
         imageView.contentDescription = context.resources.getString(R.string.image_showing_issue)
 
-//        imageView.setImageBitmap(imageURI)
-        if (imageBitmap != null)
+        val imagePath = Images("", "");
+        if (imageBitmap != null) {
             imageLoad(imageBitmap, imageView)
-        else
+            imagePath.localImagePath = imageBitmap.toString()
+        } else {
             imageLoad(imageURI, imageView)
+            imagePath.localImagePath = imageURI.toString()
+        }
         
         linearLayout.addView(imageView, 0)
+        
+        imageView.setOnLongClickListener {
+            
+            var position = -1
+            for (i in 0 until imagesList.size) {
+                if (imagesList[i].localImagePath.equals(imagePath.localImagePath, true)){
+                    position = i
+                }
+                
+            }
+            // Remove Image from Image List
+            if (position != -1)
+                imagesList.removeAt(position)
+            // Remove Image from Image Layout
+            linearLayout.removeView(imageView)
+            toast("Image removed.")
+            return@setOnLongClickListener true
+        }
         return linearLayout
     }
     
@@ -1223,13 +1252,13 @@ class MyHelper(var TAG: String, val context: Context) {
             
             // Compare Machine Hours First reading with Admin CheckForms Completed Value and take whatever is higher
             // As this value will be compared with minimum days required for CheckForm to be Due
-            if (adminCheckFormsCompleted != null){
+            if (adminCheckFormsCompleted != null) {
                 if (adminCheckFormsCompleted.admin_checkforms_schedules_value != null && firstMachineHours.startTime > 0) {
                     lastDaysReading =
                         if ((adminCheckFormsCompleted.admin_checkforms_schedules_value!!.toDouble()) > (firstMachineHours.startTime) / MyEnum.ONE_DAY) adminCheckFormsCompleted.admin_checkforms_schedules_value!!.toDouble() else (firstMachineHours.startTime / MyEnum.ONE_DAY).toDouble()
                     log("adminCheckFormsCompleted_startTime:${getDateTime(adminCheckFormsCompleted!!.admin_checkforms_schedules_value!!.toLong())}")
                 }
-            }else{
+            } else {
                 lastDaysReading = (firstMachineHours.startTime / MyEnum.ONE_DAY).toDouble()
             }
             
@@ -1279,10 +1308,10 @@ class MyHelper(var TAG: String, val context: Context) {
     }
     
     fun checkDueCheckForms(dueCheckForms: java.util.ArrayList<MyData>) {
-        if(dueCheckForms.size > 0){
+        if (dueCheckForms.size > 0) {
             val intent = Intent(context, CheckFormsActivity::class.java)
             context.startActivity(intent)
-        }else{
+        } else {
             startHomeActivityByType(MyData())
         }
     }
