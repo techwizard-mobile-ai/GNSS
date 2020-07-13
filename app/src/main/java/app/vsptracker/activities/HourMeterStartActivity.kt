@@ -56,6 +56,8 @@ class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
         ms_minus.setOnClickListener(this)
         ms_plus.setOnClickListener(this)
         ms_continue.setOnClickListener(this)
+        // Disable map if Hour meter is not set
+        myHelper.setIsNavEnabled(false)
 //        ms_reading.setText(myHelper.getRoundedDecimal(myHelper.getMachineTotalTime()/60.0).toString())
 //        ms_reading.setText(myHelper.getMeterTimeForStart())
     
@@ -113,6 +115,7 @@ class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
                 myHelper.checkDueCheckForms(dueCheckForms)
                 
                 myHelper.startMachine()
+                myHelper.setIsNavEnabled(true)
                 finishAffinity()
             }
         }

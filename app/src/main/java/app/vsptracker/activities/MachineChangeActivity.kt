@@ -91,7 +91,9 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
             false
         }
 
-//        if(myHelper.getMachineID() > 0){
+        
+        if(myHelper.getMachineID() == 0)
+            myHelper.setIsNavEnabled(false)
 //            val myData = MyData()
 //
 //            if(myHelper.getMeter().isMachineStartTimeCustom)
@@ -165,9 +167,10 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
                                 myHelper.setMachineTypeID(selectedMachineType.id)
                                 myHelper.setMachineNumber(selectedMachineNumber.number)
                                 myHelper.setMachineID(selectedMachineNumber.id)
-                                myHelper.setIsNavEnabled(false)
+//                                myHelper.setIsNavEnabled(false)
                                 val data = MyData()
                                 myHelper.setLastJourney(data)
+                                myHelper.setIsNavEnabled(true)
                                 val intent = Intent(this, HourMeterStartActivity::class.java)
                                 startActivity(intent)
                                 

@@ -241,7 +241,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     private val mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             
-            if (myHelper.isNavEnabled())
+            if (myHelper.isNavEnabled()){
                 when (item.itemId) {
                     R.id.navb_map -> {
                         if (!myHelper.getIsMapOpened()) {
@@ -260,6 +260,10 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                         }
                     }
                 }
+            }else{
+                myHelper.toast(getString(R.string.proceed_to_next_screen))
+            }
+            
             false
         }
     

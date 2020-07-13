@@ -317,5 +317,6 @@
     <string name="server">Server</string>
     <string name="no_completed_server_checkforms">No Server Completed CheckForms.</string>
     <string name="server_checkforms">Server CheckForms</string>
+    <string name="proceed_to_next_screen">Proceed to next screen to use this feature.</string>
 
 </resources>
