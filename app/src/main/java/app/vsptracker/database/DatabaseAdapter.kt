@@ -2725,14 +2725,134 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return list
     }
     
+    // eWorkType 1 = General Digging
+    // eWorkType 2 = Trenching
+    // eWorkType 3 = Scraper Trimming
+    // eWorkActionType 1 = Side Casting
+    // eWorkActionType 2 = Off Loading
+    fun getCurrentLoginEWorks(workType: Int, orderBy: String = "DESC"): ArrayList<EWork> {
+        
+        val list: ArrayList<EWork> = ArrayList()
+        val db = this.readableDatabase
+        
+        val query =
+            "Select * from $TABLE_E_WORK WHERE $COL_EWORK_TYPE = $workType AND  $COL_START_TIME > ${myHelper.getMeter().hourStartTime} AND $COL_OPERATOR_ID  = ${myHelper.getOperatorAPI().id} ORDER BY $COL_ID $orderBy"
+        val result = db.rawQuery(query, null)
+        
+        
+        if (result.moveToFirst()) {
+            do {
+                val datum = EWork()
+                datum.id = result.getInt(result.getColumnIndex(COL_ID))
+                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+                datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
+                datum.workType = result.getInt(result.getColumnIndex(COL_EWORK_TYPE))
+                datum.workActionType = result.getInt(result.getColumnIndex(COL_EWORK_ACTION_TYPE))
+                datum.totalLoads = result.getInt(result.getColumnIndex(COL_TOTAL_LOADS))
+                datum.materialId = result.getInt(result.getColumnIndex(COL_LOADING_MATERIAL_ID))
+                datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
+                datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
+                datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
+                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
+                datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+                datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
+                
+                datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
+                    result.getString(
+                        result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+                    )
+                )
+                datum.loadingGPSLocationString = result.getString(
+                    result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+                )
+                datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
+                    result.getString(
+                        result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+                    )
+                )
+                datum.unloadingGPSLocationString = result.getString(
+                    result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+                )
+                datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
+                datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
+//                myHelper.log("getEWorks:$datum")
+                list.add(datum)
+            } while (result.moveToNext())
+        }
+        
+        result.close()
+        db.close()
+        return list
+    }
+    
     fun getELoadHistory(orderBy: String = "DESC"): ArrayList<MyData> {
         
         val list: ArrayList<MyData> = ArrayList()
         val db = this.readableDatabase
         
         val query =
-//            "Select * from $TABLE_E_LOAD_HISTORY WHERE $COL_MACHINE_TYPE_ID = ${myHelper.getMachineTypeID()} ORDER BY $COL_ID DESC"
             "Select * from $TABLE_E_LOAD_HISTORY ORDER BY $COL_ID $orderBy"
+        val result = db.rawQuery(query, null)
+        
+        if (result.moveToFirst()) {
+            do {
+                val datum = MyData()
+                datum.id = result.getInt(result.getColumnIndex(COL_ID))
+                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+                datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
+                datum.loadTypeId = result.getInt(result.getColumnIndex(COL_LOAD_TYPE_ID))
+                
+                datum.loading_material_id =
+                    result.getInt(result.getColumnIndex(COL_LOADING_MATERIAL_ID))
+                datum.loading_location_id =
+                    result.getInt(result.getColumnIndex(COL_LOADING_LOCATION_ID))
+                datum.unloadingWeight =
+                    result.getDouble(result.getColumnIndex(COL_UNLOADING_WEIGHT))
+                
+                datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
+                datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
+                datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
+                datum.time = result.getString(result.getColumnIndex(COL_TIME))
+                datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+                datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
+                
+                datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
+                    result.getString(
+                        result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+                    )
+                )
+                datum.loadingGPSLocationString = result.getString(
+                    result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+                )
+                datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
+                    result.getString(
+                        result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+                    )
+                )
+                datum.unloadingGPSLocationString = result.getString(
+                    result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+                )
+                datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
+                datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
+                list.add(datum)
+            } while (result.moveToNext())
+        }
+        result.close()
+        db.close()
+        return list
+    }
+    
+    fun getCurrentLoginELoadHistory(orderBy: String = "DESC"): ArrayList<MyData> {
+        
+        val list: ArrayList<MyData> = ArrayList()
+        val db = this.readableDatabase
+        
+        val query =
+            "Select * from $TABLE_E_LOAD_HISTORY WHERE $COL_START_TIME > ${myHelper.getMeter().hourStartTime} AND $COL_OPERATOR_ID  = ${myHelper.getOperatorAPI().id} ORDER BY $COL_ID $orderBy"
         val result = db.rawQuery(query, null)
         
         if (result.moveToFirst()) {
@@ -2846,7 +2966,6 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         
         val list: ArrayList<MyData> = ArrayList()
         val db = this.readableDatabase
-//        val query = "Select * from $TABLE_TRIP  WHERE $COL_MACHINE_TYPE_ID = ${myHelper.getMachineTypeID()} ORDER BY $COL_ID DESC"
         val query = "Select * from $TABLE_TRIP  ORDER BY $COL_ID DESC"
         val result = db.rawQuery(query, null)
         
@@ -2903,8 +3022,74 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         
         val list: ArrayList<MyData> = ArrayList()
         val db = this.readableDatabase
-//        val query = "Select * from $TABLE_TRIP  WHERE $COL_MACHINE_TYPE_ID = ${myHelper.getMachineTypeID()} ORDER BY $COL_ID DESC"
         val query = "Select * from $TABLE_TRIP   WHERE $COL_MACHINE_TYPE_ID = $type ORDER BY $COL_ID $orderBy"
+        val result = db.rawQuery(query, null)
+        
+        if (result.moveToFirst()) {
+            do {
+                val datum = MyData()
+                datum.id = result.getInt(result.getColumnIndex(COL_ID))
+                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+                datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
+                datum.recordID = result.getLong(result.getColumnIndex(COL_ID))
+                datum.tripType = result.getInt(result.getColumnIndex(COL_TRIP_TYPE))
+                datum.trip0ID = result.getString(result.getColumnIndex(COL_TRIP0_ID))
+                
+                datum.loading_machine_id = result.getInt(result.getColumnIndex(COL_LOADING_MACHINE_ID))
+                
+                datum.loading_material_id = result.getInt(result.getColumnIndex(COL_LOADING_MATERIAL_ID))
+                
+                datum.loading_location_id = result.getInt(result.getColumnIndex(COL_LOADING_LOCATION_ID))
+                
+                datum.unloadingWeight =
+                    result.getDouble(result.getColumnIndex(COL_UNLOADING_WEIGHT))
+                datum.unloading_task_id = result.getInt(result.getColumnIndex(COL_UNLOADING_TASK_ID))
+                datum.unloading_material_id = result.getInt(result.getColumnIndex(COL_UNLOADING_MATERIAL_ID))
+                datum.unloading_location_id = result.getInt(result.getColumnIndex(COL_UNLOADING_LOCATION_ID))
+                
+                datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
+                datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
+                datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
+                
+                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
+                datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+                datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
+                
+                datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
+                    result.getString(
+                        result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+                    )
+                )
+                datum.loadingGPSLocationString = result.getString(
+                    result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+                )
+                
+                datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
+                    result.getString(
+                        result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+                    )
+                )
+                datum.unloadingGPSLocationString = result.getString(
+                    result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+                )
+                datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
+                datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
+                list.add(datum)
+            } while (result.moveToNext())
+        }
+        
+        result.close()
+        db.close()
+        return list
+    }
+    
+    fun getCurrentLoginTrips(orderBy: String = "DESC"): ArrayList<MyData> {
+        
+        val list: ArrayList<MyData> = ArrayList()
+        val db = this.readableDatabase
+        val query = "Select * from $TABLE_TRIP   WHERE $COL_START_TIME > ${myHelper.getMeter().hourStartTime} AND $COL_OPERATOR_ID  = ${myHelper.getOperatorAPI().id} ORDER BY $COL_ID $orderBy"
         val result = db.rawQuery(query, null)
         
         if (result.moveToFirst()) {

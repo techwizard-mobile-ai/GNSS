@@ -42,12 +42,12 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
         navigationView.menu.getItem(10).isChecked = true
         
         addToList(1, "Operators Hours", db.getOperatorsHours("ASC"))
-        addToList(2, "Trucks Trips", db.getTripsByTypes(3, "ASC"))
-        addToList(3, "Scrapers Trips", db.getTripsByTypes(2, "ASC"))
-        addToList(4, "Scrapers Trimmings", db.getEWorks(3, "ASC"))
+        addToList(2, "Trucks Trips", db.getTripsByTypes(MyEnum.TRUCK, "ASC"))
+        addToList(3, "Scrapers Trips", db.getTripsByTypes(MyEnum.SCRAPER, "ASC"))
+        addToList(4, "Scrapers Trimmings", db.getEWorks(MyEnum.SCRAPER_TRIMMING, "ASC"))
         addToList(5, "Excavators Prod. Digging", db.getELoadHistory("ASC"))
-        addToList(6, "Excavators Trenching", db.getEWorks(2, "ASC"))
-        addToList(7, "Excavators Gen. Digging", db.getEWorks(1, "ASC"))
+        addToList(6, "Excavators Trenching", db.getEWorks(MyEnum.EXCAVATOR_TRENCHING, "ASC"))
+        addToList(7, "Excavators Gen. Digging", db.getEWorks(MyEnum.EXCAVATOR_GEN_DIGGING, "ASC"))
         addToList(8, "Machines Stops", db.getMachinesStops("ASC"))
         addToList(9, "Machines Hours", db.getMachinesHours("ASC"))
         addToList(10, "Operators Waiting", db.getWaits("ASC"))

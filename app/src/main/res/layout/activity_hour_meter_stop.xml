@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,76 +11,210 @@
 
     <LinearLayout
         android:id="@+id/hm_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="wrap_content">
+        android:orientation="vertical">
+
         <TextView
             android:id="@+id/hm_stop_top_title"
             style="@style/activity_title"
             android:text="@string/hour_meter" />
-    <TextView
-        android:id="@+id/hm_stop_top"
-        style="@style/home_tv"
-        android:gravity="center"
-        android:text="@string/hour_meter_finish" />
 
-    <LinearLayout
-        style="@style/default_linearlayout"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="0dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-        <ImageView
-            android:id="@+id/sfinish_minus"
-            android:layout_width="@dimen/_30sdp"
-            android:layout_height="@dimen/_30sdp"
-            android:src="@drawable/ic_subtract"
-            tools:ignore="ContentDescription" />
-        <EditText
-            android:id="@+id/sfinish_reading"
-            style="@style/tv_background"
-            android:layout_width="wrap_content"
-            android:layout_marginStart="@dimen/_10sdp"
-            android:layout_marginEnd="@dimen/_10sdp"
-            android:hint="@string/hour_meter_finish"
-            android:inputType="numberDecimal"
-            android:text="@string/activity_hour_meter_stop_sfinish_reading_text"
-            android:textColor="@color/black"
-            tools:ignore="Autofill" />
+        <TextView
+            android:id="@+id/hm_stop_top"
+            style="@style/home_tv"
+            android:gravity="center"
+            android:text="@string/hour_meter_finish" />
+
+        <LinearLayout
+            style="@style/default_linearlayout"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="0dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/sfinish_minus"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:src="@drawable/ic_subtract"
+                tools:ignore="ContentDescription" />
+
+            <EditText
+                android:id="@+id/sfinish_reading"
+                style="@style/tv_background"
+                android:layout_width="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:hint="@string/hour_meter_finish"
+                android:inputType="numberDecimal"
+                android:text="@string/activity_hour_meter_stop_sfinish_reading_text"
+                android:textColor="@color/black"
+                tools:ignore="Autofill" />
 
 
-
-        <ImageView
-            android:id="@+id/sfinish_plus"
-            android:layout_width="@dimen/_30sdp"
-            android:layout_height="@dimen/_30sdp"
-            android:src="@drawable/ic_add"
-            tools:ignore="ContentDescription" />
+            <ImageView
+                android:id="@+id/sfinish_plus"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:src="@drawable/ic_add"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
     </LinearLayout>
-    </LinearLayout>
+
+    <Button
+        android:id="@+id/hm_stop_logout"
+        style="@style/next_button"
+        android:layout_below="@id/hm_layout"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:text="@string/logout" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_below="@id/hm_stop_logout"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
         android:orientation="vertical">
-        <Button
-            android:id="@+id/hm_stop_summary"
-            style="@style/next_button"
-            android:visibility="gone"
-            android:layout_marginTop="@dimen/_50sdp"
-            android:text="@string/work_summary" />
 
-        <Button
-            android:id="@+id/hm_stop_logout"
-            style="@style/next_button"
-            android:layout_marginTop="@dimen/_50sdp"
-            android:text="@string/logout" />
+        <androidx.cardview.widget.CardView
+            style="?attr/cardStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_5sdp"
+            card_view:cardCornerRadius="@dimen/_8sdp"
+            card_view:cardElevation="@dimen/_8sdp"
+            card_view:cardMaxElevation="@dimen/_10sdp"
+            card_view:contentPadding="@dimen/_5sdp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <LinearLayout style="@style/load_history_row_item">
+
+                    <TextView
+                        style="@style/load_history_text"
+                        android:text="@string/operator" />
+
+                    <TextView
+                        android:id="@+id/hm_summary_operator"
+                        style="@style/load_history_desc" />
+                </LinearLayout>
+
+                <LinearLayout style="@style/load_history_row_item">
+
+                    <TextView
+                        style="@style/load_history_text"
+                        android:text="@string/login" />
+
+                    <TextView
+                        android:id="@+id/hm_summary_login"
+                        style="@style/load_history_desc" />
+                </LinearLayout>
+
+                <LinearLayout style="@style/load_history_row_item">
+
+                    <TextView
+                        style="@style/load_history_text"
+                        android:text="@string/machine" />
+
+                    <TextView
+                        android:id="@+id/hm_summary_machine"
+                        style="@style/load_history_desc" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/sm_summary_trips_layout"
+                    android:visibility="gone"
+                    style="@style/load_history_row_item">
+
+                    <TextView
+                        style="@style/load_history_text"
+                        android:text="@string/trips1" />
+
+                    <TextView
+                        android:id="@+id/hm_summary_trips"
+                        style="@style/load_history_desc" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/sm_summary_trimming_layout"
+                    android:visibility="gone"
+                    style="@style/load_history_row_item">
+
+                    <TextView
+                        style="@style/load_history_text"
+                        android:text="@string/trimming" />
+
+                    <TextView
+                        android:id="@+id/hm_summary_trimming"
+                        style="@style/load_history_desc" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/sm_summary_prod_dig_layout"
+                    android:visibility="gone"
+                    style="@style/load_history_row_item">
+
+                    <TextView
+                        style="@style/load_history_text"
+                        android:text="@string/prod_dig" />
+
+                    <TextView
+                        android:id="@+id/hm_summary_prod_dig"
+                        style="@style/load_history_desc" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/sm_summary_trenching_layout"
+                    android:visibility="gone"
+                    style="@style/load_history_row_item">
+
+                    <TextView
+                        style="@style/load_history_text"
+                        android:text="@string/trenching" />
+
+                    <TextView
+                        android:id="@+id/hm_summary_trenching"
+                        style="@style/load_history_desc" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/sm_summary_gen_dig_layout"
+                    android:visibility="gone"
+                    style="@style/load_history_row_item">
+
+                    <TextView
+                        style="@style/load_history_text"
+                        android:text="@string/gen_dig" />
+
+                    <TextView
+                        android:id="@+id/hm_summary_gen_dig"
+                        style="@style/load_history_desc" />
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/load_history_row_item">
+
+                    <TextView
+                        style="@style/load_history_text"
+                        android:text="@string/working_time" />
+
+                    <TextView
+                        android:id="@+id/hm_summary_working_time"
+                        style="@style/load_history_desc" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
     </LinearLayout>
-
-
-
 
 </RelativeLayout>

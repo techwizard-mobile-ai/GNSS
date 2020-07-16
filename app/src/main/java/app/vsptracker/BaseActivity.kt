@@ -110,18 +110,8 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         toggle.syncState()
         navView.setNavigationItemSelectedListener(this)
         
-        
-        when (myHelper.getMachineTypeID()) {
-            1 -> {
-                toolbar_title.text = "Excavator # ${myHelper.getMachineNumber()} : ${myHelper.getOperatorAPI().name}"
-            }
-            2 -> {
-                toolbar_title.text = "Scraper # ${myHelper.getMachineNumber()} : ${myHelper.getOperatorAPI().name}"
-            }
-            3 -> {
-                toolbar_title.text = "Truck # ${myHelper.getMachineNumber()} :  ${myHelper.getOperatorAPI().name}"
-            }
-        }
+    
+        toolbar_title.text = "${myHelper.getMachineDetails()} : ${myHelper.getOperatorAPI().name}"
         
         base_machine_status.setOnClickListener {
             val intent = Intent(this@BaseActivity, MachineStatusActivity::class.java)

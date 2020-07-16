@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.apis.delay.EWork
+import app.vsptracker.classes.GPSLocation
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_delay.*
 
@@ -33,7 +34,11 @@ class DelayActivity : BaseActivity(),
         eWork = EWork()
 //        startGPS()
 
-        val startLocation = gpsLocation
+        var startLocation = gpsLocation
+        val bundle: Bundle? = intent.extras
+        if (bundle != null) {
+            startLocation = bundle.getSerializable("gpsLocation") as GPSLocation
+        }
 
         if (!myHelper.isDelayStarted()) {
 

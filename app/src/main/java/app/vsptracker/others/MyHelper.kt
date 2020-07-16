@@ -58,6 +58,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import kotlinx.android.synthetic.main.app_bar_base.*
 import kotlinx.android.synthetic.main.dialog_error.view.*
 import kotlinx.android.synthetic.main.dialog_permissions.view.*
 import okhttp3.*
@@ -417,7 +418,7 @@ class MyHelper(var TAG: String, val context: Context) {
         )
     }
     
-    private fun getMinutesFromMillisec(totalTime: Long): Long {
+    internal fun getMinutesFromMillisec(totalTime: Long): Long {
         return (totalTime / 1000 / 60)
     }
     
@@ -541,7 +542,7 @@ class MyHelper(var TAG: String, val context: Context) {
         sessionManager.setMeter(meter)
     }
     
-    private fun getMachineStartTime(): Long {
+    internal fun getMachineStartTime(): Long {
         val meter = sessionManager.getMeter()
         
         log("meter:$meter")
@@ -713,15 +714,15 @@ class MyHelper(var TAG: String, val context: Context) {
     
     fun startHistoryByType() {
         when (getMachineTypeID()) {
-            1 -> {
+            MyEnum.EXCAVATOR -> {
                 val intent = Intent(context, EHistoryActivity::class.java)
                 context.startActivity(intent)
             }
-            2 -> {
+            MyEnum.SCRAPER -> {
                 val intent = Intent(context, SHistoryActivity::class.java)
                 context.startActivity(intent)
             }
-            3 -> {
+            MyEnum.TRUCK -> {
                 val intent = Intent(context, THistoryActivity::class.java)
                 context.startActivity(intent)
             }
@@ -736,7 +737,7 @@ class MyHelper(var TAG: String, val context: Context) {
         val lastJourney = getLastJourney()
         log("lastJourney:$lastJourney")
         when (getMachineTypeID()) {
-            1 -> {
+            MyEnum.EXCAVATOR -> {
                 val intent = Intent(context, EHomeActivity::class.java)
                 intent.putExtra("myData", myData)
                 context.startActivity(intent)
@@ -752,7 +753,7 @@ class MyHelper(var TAG: String, val context: Context) {
             //    repeatJourney 1 = Repeat Journey without Back Load
             //    repeatJourney 2 = Repeat Journey with Back Load
             
-            2 -> {
+            MyEnum.SCRAPER -> {
                 val intent: Intent = if (lastJourney.repeatJourney > 0 && (lastJourney.nextAction == 0 || lastJourney.nextAction == 2)) {
                     // Launch Load Screen
                     Intent(context, RLoadActivity::class.java)
@@ -765,7 +766,7 @@ class MyHelper(var TAG: String, val context: Context) {
                 }
                 context.startActivity(intent)
             }
-            3 -> {
+            MyEnum.TRUCK -> {
 //                val intent = Intent(context, THomeActivity::class.java)
                 val intent: Intent = if (lastJourney.repeatJourney > 0 && (lastJourney.nextAction == 0 || lastJourney.nextAction == 2)) {
                     // Launch Load Screen
@@ -786,17 +787,17 @@ class MyHelper(var TAG: String, val context: Context) {
     fun startLoadAfterActivityByType(myData: MyData) {
         
         when (getMachineTypeID()) {
-            1 -> {
+            MyEnum.EXCAVATOR -> {
                 val intent = Intent(context, EHomeActivity::class.java)
                 intent.putExtra("myData", myData)
                 context.startActivity(intent)
             }
-            2 -> {
+            MyEnum.SCRAPER -> {
                 val intent = Intent(context, SUnloadAfterActivity::class.java)
                 intent.putExtra("myData", myData)
                 context.startActivity(intent)
             }
-            3 -> {
+            MyEnum.TRUCK -> {
                 val intent = Intent(context, TUnloadAfterActivity::class.java)
                 intent.putExtra("myData", myData)
                 context.startActivity(intent)
@@ -1321,6 +1322,21 @@ class MyHelper(var TAG: String, val context: Context) {
         }
     }
 
+    fun getMachineDetails(): String {
+        var machineDetails = ""
+        when (getMachineTypeID()) {
+            MyEnum.EXCAVATOR -> {
+                machineDetails = "Excavator # ${getMachineNumber()}"
+            }
+            MyEnum.SCRAPER -> {
+                machineDetails = "Scraper # ${getMachineNumber()}"
+            }
+            MyEnum.TRUCK -> {
+                machineDetails = "Truck # ${getMachineNumber()}"
+            }
+        }
+        return machineDetails
+    }
 /*
     fun isValidUsername(target: String): Boolean {
         return if (TextUtils.isEmpty(target)) {

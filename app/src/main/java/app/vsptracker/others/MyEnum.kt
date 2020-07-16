@@ -47,5 +47,13 @@ class MyEnum {
         const val ADMIN_CHECKFORMS_COMPLETED_SERVER = 4
         
         const val ONE_DAY = 86400000 // Milliseconds in a day
+        
+        const val EXCAVATOR = 1
+        const val SCRAPER = 2
+        const val TRUCK = 3
+        
+        const val EXCAVATOR_GEN_DIGGING = 1
+        const val EXCAVATOR_TRENCHING = 2
+        const val SCRAPER_TRIMMING = 3
     }
 }

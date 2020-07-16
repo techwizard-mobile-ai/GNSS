@@ -318,5 +318,8 @@
     <string name="no_completed_server_checkforms">No Server Completed CheckForms.</string>
     <string name="server_checkforms">Server CheckForms</string>
     <string name="proceed_to_next_screen">Proceed to next screen to use this feature.</string>
+    <string name="machine">Machine</string>
+    <string name="trips1">Trips</string>
+    <string name="working_time">Working Time</string>
 
 </resources>
