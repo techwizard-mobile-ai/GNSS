@@ -21,4 +21,5 @@
 #-renamesourcefileattribute SourceFile
 
  -keep class androidx.core.app.CoreComponentFactory { *; }
-
+#-keep public class mobile.bullstop.io.malik.apis.** { *; }
+#-keep public class app.vsptracker.others.** { *; }

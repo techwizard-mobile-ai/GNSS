@@ -255,21 +255,21 @@ class MyData : Serializable {
     @Expose
     var attempted_questions: Int = 0
     
+    @SerializedName("aws_path")
+    @Expose
+    var aws_path: String = ""
+    
     var isMapOpened: Boolean = false
     override fun toString(): String {
         return "MyData(" +
                 "id=$id, " +
                 "orgId=$orgId, " +
                 "siteId=$siteId, " +
-                "operatorId=$operatorId, " +
-                "machineTypeId=$machineTypeId, " +
-                "machineId=$machineId, " +
-                "admin_checkforms_schedules_value=$admin_checkforms_schedules_value, " +
-                "startTime=$startTime, " +
-                "stopTime=$stopTime, " +
-                "startHours='$startHours', " +
-                "totalHours='$totalHours', " +
-                "totalTime=$totalTime" +
+                "status=$status, " +
+                "isDeleted=$isDeleted, " +
+                "aws_path='$aws_path'" +
                 ")"
     }
+    
+    
 }

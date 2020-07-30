@@ -41,6 +41,7 @@ const val TABLE_ADMIN_CHECKFORMS = "admin_checkforms"
 const val TABLE_ADMIN_CHECKFORMS_COMPLETED = "admin_checkforms_completed"
 const val TABLE_ADMIN_CHECKFORMS_DATA = "admin_checkforms_data"
 const val TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER = "admin_checkforms_completed_server"
+const val TABLE_ORGS_MAPS = "orgs_maps"
 
 const val COL_TIME = "time"
 const val COL_DATE = "date"
@@ -120,6 +121,7 @@ const val COL_ADMIN_CHECKFORMS_COMPLETED_LOCAL_ID = "admin_checkforms_completed_
 const val COL_IMAGES_LIMIT = "images_limit"
 const val COL_IMAGES_QUALITY = "images_quality"
 const val COL_ATTEMPTED_QUESTIONS = "attempted_questions"
+const val COL_AWS_PATH = "aws_path"
 
 // Completed CheckForm Entry Type
 // 0 : automatically completed when due
@@ -492,6 +494,15 @@ const val createAdminCheckFormsCompletedServerTable = "CREATE TABLE IF NOT EXIST
         "$COL_IS_DAY_WORKS  INTEGER" +
         ")"
 
+const val createOrgsMapsTable = "CREATE TABLE IF NOT EXISTS $TABLE_ORGS_MAPS ( " +
+        "$COL_ID INTEGER PRIMARY KEY, " +
+        "$COL_ORG_ID INTEGER, " +
+        "$COL_SITE_ID INTEGER, " +
+        "$COL_AWS_PATH TEXT, " +
+        "$COL_STATUS INTEGER, " +
+        "$COL_IS_DELETED INTEGER" +
+        " )"
+
 const val DROP_TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER = "DROP TABLE IF EXISTS $TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER"
 const val DROP_TABLE_ADMIN_CHECKFORMS_DATA = "DROP TABLE IF EXISTS $TABLE_ADMIN_CHECKFORMS_DATA"
 const val DROP_TABLE_ADMIN_CHECKFORMS_COMPLETED = "DROP TABLE IF EXISTS $TABLE_ADMIN_CHECKFORMS_COMPLETED"
@@ -518,6 +529,7 @@ const val DROP_TABLE_E_LOAD_HISTORY = "DROP TABLE IF EXISTS $TABLE_E_LOAD_HISTOR
 const val DROP_TABLE_MACHINES_AUTO_LOGOUTS = "DROP TABLE IF EXISTS $TABLE_MACHINES_AUTO_LOGOUTS"
 const val DROP_TABLE_OPERATORS_HOURS = "DROP TABLE IF EXISTS $TABLE_OPERATORS_HOURS"
 const val DROP_TABLE_QUESTIONS_TYPES = "DROP TABLE IF EXISTS $TABLE_QUESTIONS_TYPES"
+const val DROP_TABLE_ORGS_MAPS = "DROP TABLE IF EXISTS $TABLE_ORGS_MAPS"
 
 class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 12) {
     
@@ -530,6 +542,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
     
     override fun onCreate(db: SQLiteDatabase?) {
         myHelper.log("onCreate")
+        db?.execSQL(createOrgsMapsTable)
         db?.execSQL(createAdminCheckFormsCompletedServerTable)
         db?.execSQL(createAdminCheckFormsDataTable)
         db?.execSQL(createAdminCheckFormsCompletedTable)
@@ -560,6 +573,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
     
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         myHelper.log("onUpgrade")
+        db?.execSQL(DROP_TABLE_ORGS_MAPS)
         db?.execSQL(DROP_TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER)
         db?.execSQL(DROP_TABLE_ADMIN_CHECKFORMS_DATA)
         db?.execSQL(DROP_TABLE_ADMIN_CHECKFORMS_COMPLETED)
@@ -589,6 +603,25 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         onCreate(db)
     }
     
+    
+    fun insertOrgsMaps(data: ArrayList<MyData>) {
+        
+        val db = this.writableDatabase
+        val cv = ContentValues()
+        val tableName = TABLE_ORGS_MAPS
+        
+        for (datum in data) {
+            cv.put(COL_ID, datum.id)
+            cv.put(COL_ORG_ID, datum.orgId)
+            cv.put(COL_SITE_ID, datum.siteId)
+            cv.put(COL_AWS_PATH, datum.aws_path)
+            cv.put(COL_STATUS, datum.status)
+            cv.put(COL_IS_DELETED, datum.isDeleted)
+            
+            val insertedID = db.replace(tableName, null, cv)
+            myHelper.printInsertion(tableName, insertedID, datum)
+        }
+    }
     
     fun insertAdminCheckFormsCompletedServer(data: ArrayList<MyData>) {
         myHelper.log("insertAdminCheckFormsCompletedServer:${data.size}")
@@ -1339,6 +1372,54 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         cv.put(COL_IS_SYNC, myData.isSync)
         // myHelper.log("insertID:$insertID")
         return db.insert(TABLE_E_LOAD_HISTORY, null, cv)
+    }
+    
+    fun getOrgsMap(): MyData? {
+        
+        val db = this.readableDatabase
+        
+        val query =
+            "Select * FROM $TABLE_ORGS_MAPS  WHERE $COL_ORG_ID = ${myHelper.getLoginAPI().org_id} AND $COL_SITE_ID = ${myHelper.getMachineSettings().siteId} AND  $COL_IS_DELETED = 0 AND $COL_STATUS = 1  ORDER BY $COL_ID DESC "
+        val result = db.rawQuery(query, null)
+        var datum: MyData? = null
+        if (result.moveToFirst()) {
+            
+            datum = MyData()
+            datum.id = result.getInt(result.getColumnIndex(COL_ID))
+            datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+            datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+            datum.aws_path = result.getString(result.getColumnIndex(COL_AWS_PATH))
+            datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+            datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+        }
+        result.close()
+        db.close()
+        return datum
+    }
+    
+    fun getOrgsMaps(): ArrayList<MyData> {
+        val list: ArrayList<MyData> = ArrayList()
+        val db = this.readableDatabase
+
+//        val query = "Select * FROM $TABLE_ORGS_MAPS  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1  ORDER BY $COL_ID DESC "
+        val query = "Select * FROM $TABLE_ORGS_MAPS ORDER BY $COL_ID DESC "
+        val result = db.rawQuery(query, null)
+        
+        if (result.moveToFirst()) {
+            do {
+                val datum = MyData()
+                datum.id = result.getInt(result.getColumnIndex(COL_ID))
+                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+                datum.aws_path = result.getString(result.getColumnIndex(COL_AWS_PATH))
+                datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+                list.add(datum)
+            } while (result.moveToNext())
+        }
+        result.close()
+        db.close()
+        return list
     }
     
     fun getAdminCheckFormsCompletedServer(orderBy: String = "DESC"): ArrayList<MyData> {
@@ -3089,7 +3170,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         
         val list: ArrayList<MyData> = ArrayList()
         val db = this.readableDatabase
-        val query = "Select * from $TABLE_TRIP   WHERE $COL_START_TIME > ${myHelper.getMeter().hourStartTime} AND $COL_OPERATOR_ID  = ${myHelper.getOperatorAPI().id} ORDER BY $COL_ID $orderBy"
+        val query =
+            "Select * from $TABLE_TRIP   WHERE $COL_START_TIME > ${myHelper.getMeter().hourStartTime} AND $COL_OPERATOR_ID  = ${myHelper.getOperatorAPI().id} ORDER BY $COL_ID $orderBy"
         val result = db.rawQuery(query, null)
         
         if (result.moveToFirst()) {

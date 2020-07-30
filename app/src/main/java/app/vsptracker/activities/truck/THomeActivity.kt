@@ -44,7 +44,8 @@ class THomeActivity : BaseActivity(), View.OnClickListener {
                 myHelper.setToDoLayout(thome_unload_button)
             }
         }
-
+        myHelper.log("Maps:${db.getOrgsMaps()}")
+        myHelper.log("Map:${db.getOrgsMap()}")
         thome_logout.setOnClickListener(this)
         thome_load.setOnClickListener(this)
         thome_unload.setOnClickListener(this)
