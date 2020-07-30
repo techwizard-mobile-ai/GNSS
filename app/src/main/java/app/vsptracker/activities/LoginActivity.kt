@@ -14,10 +14,11 @@ import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.*
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_login.*
-import okhttp3.*
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.io.IOException
+import java.security.SecureRandom
+import javax.net.ssl.*
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
     
@@ -49,6 +50,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         this.retrofit = Retrofit.Builder()
             .baseUrl(RetrofitAPI.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .client(myHelper.unSafeOkHttpClient().build())
             .build()
         this.retrofitAPI = retrofit.create(RetrofitAPI::class.java)
         
@@ -80,7 +82,6 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         
         
     }
-    
     override fun onClick(view: View?) {
         when (view!!.id) {
             R.id.signin_signin -> {
@@ -175,7 +176,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     fun fetchJSON() {
         // myHelper.log("fetchJson")
 
-        val client = OkHttpClient()
+//        val client = OkHttpClient()
+        val client = myHelper.unSafeOkHttpClient().build()
         val formBody = FormBody.Builder()
             .add("email", "zee.enterprises@mail.com")
             .add("password", "user1@123")

@@ -69,6 +69,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
         this.retrofit = Retrofit.Builder()
             .baseUrl(RetrofitAPI.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .client(myHelper.unSafeOkHttpClient().build())
             .build()
         this.retrofitAPI = retrofit.create(RetrofitAPI::class.java)
         
@@ -108,7 +109,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
         // Refresh AccessToken if there is Internet connection
         if (myHelper.isOnline())
             myHelper.refreshToken()
-        
+            myHelper.log("refreshToken()")
         /**
          * If Operator is Logged in and App is Launched this Code block will be executed.
          * If Internet is Available Fetch Company Data and Replace Old Data.

@@ -67,9 +67,11 @@ import retrofit2.Retrofit
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.security.SecureRandom
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import javax.net.ssl.*
 import kotlin.collections.ArrayList
 import kotlin.math.roundToLong
 
@@ -184,7 +186,9 @@ class MyHelper(var TAG: String, val context: Context) {
     }
     
     fun refreshToken() {
-        val client = OkHttpClient()
+        log("inside refreshToken")
+//        val client = OkHttpClient()
+        val client = unSafeOkHttpClient().build()
         val formBody = FormBody.Builder()
             .add("email", getLoginAPI().email)
             .add("password", getLoginAPI().pass)
@@ -207,8 +211,9 @@ class MyHelper(var TAG: String, val context: Context) {
                 
                 val responseString = response.body!!.string()
                 try {
+                    log("inside refreshToken try")
                     val responseJObject = JSONObject(responseString)
-                    log("RefreshToken:$responseString")
+                    log("RefreshTokenResponse:$responseString")
                     val success = responseJObject.getBoolean("success")
                     if (success) {
                         val gson = GsonBuilder().create()
@@ -234,7 +239,9 @@ class MyHelper(var TAG: String, val context: Context) {
                     }
                 }
                 catch (e: Exception) {
-                    toast("refreshToken:" + e.localizedMessage)
+                    
+                    toast("refreshTokenException:" + e.localizedMessage)
+                    log("refreshTokenException:" + e.localizedMessage)
                     val intent = Intent(context, LoginActivity::class.java)
                     context.startActivity(intent)
                 }
@@ -243,6 +250,7 @@ class MyHelper(var TAG: String, val context: Context) {
             
             override fun onFailure(call: Call, e: IOException) {
                 toast("Failed refresh token: ${e.printStackTrace()}")
+                log("Failed refresh token: ${e.printStackTrace()}")
                 // Failure could be due to Network, so no need to redirect user to Company Login Screen.
 //                val intent = Intent(context, LoginActivity::class.java)
 //                context.startActivity(intent)
@@ -1314,12 +1322,13 @@ class MyHelper(var TAG: String, val context: Context) {
     }
     
     fun checkDueCheckForms(dueCheckForms: java.util.ArrayList<MyData>) {
-        if (dueCheckForms.size > 0) {
-            val intent = Intent(context, CheckFormsActivity::class.java)
-            context.startActivity(intent)
-        } else {
+        // TODO show due Checkfroms at start
+//        if (dueCheckForms.size > 0) {
+//            val intent = Intent(context, CheckFormsActivity::class.java)
+//            context.startActivity(intent)
+//        } else {
             startHomeActivityByType(MyData())
-        }
+//        }
     }
 
     fun getMachineDetails(): String {
@@ -1354,6 +1363,38 @@ class MyHelper(var TAG: String, val context: Context) {
     }
     */
     
+    
+    fun unSafeOkHttpClient() :OkHttpClient.Builder {
+        val okHttpClient = OkHttpClient.Builder()
+        try {
+            // Create a trust manager that does not validate certificate chains
+            val trustAllCerts:  Array<TrustManager> = arrayOf(object : X509TrustManager {
+                override fun checkClientTrusted(p0: Array<out java.security.cert.X509Certificate>?, authType: String?) {}
+                override fun checkServerTrusted(p0: Array<out java.security.cert.X509Certificate>?, authType: String?) {}
+                override fun getAcceptedIssuers(): Array<out java.security.cert.X509Certificate>? = arrayOf()
+            })
+            
+            // Install the all-trusting trust manager
+            val  sslContext = SSLContext.getInstance("SSL")
+            sslContext.init(null, trustAllCerts, SecureRandom())
+            
+            // Create an ssl socket factory with our all-trusting manager
+            val sslSocketFactory = sslContext.socketFactory
+            if (trustAllCerts.isNotEmpty() &&  trustAllCerts.first() is X509TrustManager) {
+                okHttpClient.sslSocketFactory(sslSocketFactory, trustAllCerts.first() as X509TrustManager)
+//                okHttpClient.hostnameVerifier { _, _ -> true }
+                okHttpClient.hostnameVerifier(object : HostnameVerifier {
+                    override fun verify(hostname: String?, session: SSLSession?): Boolean {
+                        return true
+                    }
+                })
+            }
+            
+            return okHttpClient
+        } catch (e: Exception) {
+            return okHttpClient
+        }
+    }
 }
 
 
