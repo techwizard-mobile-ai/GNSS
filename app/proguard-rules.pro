@@ -75,3 +75,5 @@
 # Application classes that will be serialized/deserialized over Gson
  -keep class app.vsptracker.apis.** { *; }
 # ----------------------------------------  GSON Rules Ended  ------------------------------------------
+
+-keep class app.vsptracker.classes.** { *; }
