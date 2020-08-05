@@ -8,6 +8,12 @@ import java.io.Serializable
 
 class MyData : Serializable {
     
+    var isDownloaded: Int = 0
+    
+    @SerializedName("updated_at")
+    @Expose
+    var updated_at: String = ""
+    
     @SerializedName("id")
     @Expose
     var id: Int = 0
@@ -259,15 +265,15 @@ class MyData : Serializable {
     @Expose
     var aws_path: String = ""
     
+    
     var isMapOpened: Boolean = false
     override fun toString(): String {
         return "MyData(" +
                 "id=$id, " +
-                "orgId=$orgId, " +
-                "siteId=$siteId, " +
-                "status=$status, " +
-                "isDeleted=$isDeleted, " +
                 "aws_path='$aws_path'" +
+                "time='$time'" +
+                "isDownloaded='$isDownloaded'" +
+                "updated_at='$updated_at'" +
                 ")"
     }
     

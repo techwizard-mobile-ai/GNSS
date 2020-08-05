@@ -5,26 +5,26 @@ import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
 import app.vsptracker.BaseActivity
-import app.vsptracker.others.MyHelper
 import app.vsptracker.R
 import app.vsptracker.activities.common.LMachineActivity
 import app.vsptracker.activities.common.UnloadTaskActivity
+import app.vsptracker.others.MyHelper
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_thome.*
 
 class THomeActivity : BaseActivity(), View.OnClickListener {
     private val tag = this::class.java.simpleName
-
-
+    
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        
         val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
         layoutInflater.inflate(R.layout.activity_thome, contentFrameLayout)
         val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
         navigationView.menu.getItem(0).isChecked = true
-
+        
         myHelper = MyHelper(tag, this)
 
 //        var bundle :Bundle ?=intent.extras
@@ -32,10 +32,10 @@ class THomeActivity : BaseActivity(), View.OnClickListener {
 //            myData = bundle!!.getSerializable("myData") as MyData
 //            myHelper.log("myData:$myData")
 //        }
-
+        
         myData = myHelper.getLastJourney()
         myHelper.log("myData:$myData")
-
+        
         when (myHelper.getNextAction()) {
             0, 2 -> {
                 myHelper.setToDoLayout(thome_load_button)
@@ -44,13 +44,16 @@ class THomeActivity : BaseActivity(), View.OnClickListener {
                 myHelper.setToDoLayout(thome_unload_button)
             }
         }
-        myHelper.log("Maps:${db.getOrgsMaps()}")
-        myHelper.log("Map:${db.getOrgsMap()}")
+
+//        myHelper.log("updated_at:${db.getCurrentOrgsMap()?.updated_at}")
+//        myHelper.log("timestamp:${myHelper.getTimestampFromDate(db.getCurrentOrgsMap()!!.updated_at)}")
+//        myHelper.log("currentTime:${System.currentTimeMillis()}")
+//        myHelper.log("duration:${myHelper.getFormattedTime(System.currentTimeMillis() - db.getCurrentOrgsMap()!!.time.toLong())}")
         thome_logout.setOnClickListener(this)
         thome_load.setOnClickListener(this)
         thome_unload.setOnClickListener(this)
     }
-
+    
     override fun onResume() {
         super.onResume()
         base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
@@ -60,7 +63,7 @@ class THomeActivity : BaseActivity(), View.OnClickListener {
 //        super.onPause()
 //        stopGPS()
 //    }
-
+    
     override fun onClick(view: View?) {
         when (view!!.id) {
             R.id.thome_load -> {
@@ -78,11 +81,11 @@ class THomeActivity : BaseActivity(), View.OnClickListener {
 //                myHelper.log("LocationLat:${latitude}")
 //                myHelper.log("LocationLongg:${longitude}")
 //                myHelper.log("Loads:${db.getTrips()}")
-
+                
                 myHelper.logout(this)
             }
         }
-
+        
     }
-
+    
 }

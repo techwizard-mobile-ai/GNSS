@@ -110,9 +110,15 @@ class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
 //                myHelper.pushIsMachineRunning( 1)
                 myHelper.setIsNavEnabled(true)
 //                myHelper.startHomeActivityByType(myData)
+                
+                myHelper.awsFileDownload(db.getCurrentOrgsMap())
     
                 val dueCheckForms = db.getAdminCheckFormsDue()
+                
+                
                 myHelper.checkDueCheckForms(dueCheckForms)
+                
+                
                 
                 myHelper.startMachine()
                 myHelper.setIsNavEnabled(true)

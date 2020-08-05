@@ -27,7 +27,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import app.vsptracker.BuildConfig
 import app.vsptracker.R
-import app.vsptracker.activities.CheckFormsActivity
 import app.vsptracker.activities.HourMeterStopActivity
 import app.vsptracker.activities.LoginActivity
 import app.vsptracker.activities.Map1Activity
@@ -48,6 +47,7 @@ import app.vsptracker.apis.operators.OperatorAPI
 import app.vsptracker.apis.serverSync.ServerSyncAPI
 import app.vsptracker.apis.serverSync.ServerSyncDataAPI
 import app.vsptracker.apis.trip.MyData
+import app.vsptracker.aws.MyService
 import app.vsptracker.aws.Util
 import app.vsptracker.classes.*
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver
@@ -58,7 +58,6 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import kotlinx.android.synthetic.main.app_bar_base.*
 import kotlinx.android.synthetic.main.dialog_error.view.*
 import kotlinx.android.synthetic.main.dialog_permissions.view.*
 import okhttp3.*
@@ -139,6 +138,28 @@ class MyHelper(var TAG: String, val context: Context) {
         
         val observer: TransferObserver = transferUtility!!.upload(path + file.name, file)
         log("awsFileUpload:$observer")
+    }
+    
+    fun awsFileDownload(currentOrgsMap: MyData?) {
+        log("awsFileDownload")
+        if (currentOrgsMap !== null)
+            if (!currentOrgsMap.aws_path.isNullOrEmpty() && currentOrgsMap.isDownloaded == 0) {
+                if(isOnline()){
+                    toast(context.getString(R.string.downloading_site_map))
+                    log("startDownload:$currentOrgsMap")
+                    val key = currentOrgsMap.aws_path
+                    val file = File(getKMLFileName(currentOrgsMap.aws_path))
+                    val context: Context = context.applicationContext
+                    val intent = Intent(context, MyService::class.java)
+                    intent.putExtra(MyService.INTENT_KEY_NAME, key)
+                    intent.putExtra("currentOrgsMap", currentOrgsMap)
+                    intent.putExtra(MyService.INTENT_TRANSFER_OPERATION, MyService.TRANSFER_OPERATION_DOWNLOAD)
+                    intent.putExtra(MyService.INTENT_FILE, file)
+                    context.startService(intent)
+                }else{
+                    toast(context.getString(R.string.map_not_updated))
+                }
+            }
     }
     
     fun getFcmToken(): String = sessionManager.getFcmToken()
@@ -443,10 +464,26 @@ class MyHelper(var TAG: String, val context: Context) {
         return minutes
     }
     
+    /**
+     * This method will get formatted date and it will return unix timestamp.
+     * e.g date: 2020-07-24 22:45:42 and it will return timestamp: 1595612742000
+     */
+    fun getTimestampFromDate(date: String): Long {
+        var timestamp: Long = 0L
+        try {
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+            val parsedDate = dateFormat.parse(date)
+            timestamp = parsedDate.time
+        }
+        catch (e: Exception) {
+            log("getTimestampFromData:${e.localizedMessage}")
+        }
+        return timestamp
+    }
+    
     fun getDateTime(s: Long): String {
         return try {
             val sdf = SimpleDateFormat("dd MMM yyyy HH:mm")
-            //            val sdf = SimpleDateFormat("HH:mm")
             val netDate = Date(s)
             sdf.format(netDate)
         }
@@ -744,6 +781,10 @@ class MyHelper(var TAG: String, val context: Context) {
         
         val lastJourney = getLastJourney()
         log("lastJourney:$lastJourney")
+        // on start of Application, set isMapOpened to false, this is to reset map flag
+        setIsMapOpened(false)
+        // TODO Here check if updated map is not downloaded for selected site, then download selected site map from AWS
+        
         when (getMachineTypeID()) {
             MyEnum.EXCAVATOR -> {
                 val intent = Intent(context, EHomeActivity::class.java)
@@ -1327,10 +1368,10 @@ class MyHelper(var TAG: String, val context: Context) {
 //            val intent = Intent(context, CheckFormsActivity::class.java)
 //            context.startActivity(intent)
 //        } else {
-            startHomeActivityByType(MyData())
+        startHomeActivityByType(MyData())
 //        }
     }
-
+    
     fun getMachineDetails(): String {
         var machineDetails = ""
         when (getMachineTypeID()) {
@@ -1364,23 +1405,23 @@ class MyHelper(var TAG: String, val context: Context) {
     */
     
     
-    fun unSafeOkHttpClient() :OkHttpClient.Builder {
+    fun unSafeOkHttpClient(): OkHttpClient.Builder {
         val okHttpClient = OkHttpClient.Builder()
         try {
             // Create a trust manager that does not validate certificate chains
-            val trustAllCerts:  Array<TrustManager> = arrayOf(object : X509TrustManager {
+            val trustAllCerts: Array<TrustManager> = arrayOf(object : X509TrustManager {
                 override fun checkClientTrusted(p0: Array<out java.security.cert.X509Certificate>?, authType: String?) {}
                 override fun checkServerTrusted(p0: Array<out java.security.cert.X509Certificate>?, authType: String?) {}
                 override fun getAcceptedIssuers(): Array<out java.security.cert.X509Certificate>? = arrayOf()
             })
             
             // Install the all-trusting trust manager
-            val  sslContext = SSLContext.getInstance("SSL")
+            val sslContext = SSLContext.getInstance("SSL")
             sslContext.init(null, trustAllCerts, SecureRandom())
             
             // Create an ssl socket factory with our all-trusting manager
             val sslSocketFactory = sslContext.socketFactory
-            if (trustAllCerts.isNotEmpty() &&  trustAllCerts.first() is X509TrustManager) {
+            if (trustAllCerts.isNotEmpty() && trustAllCerts.first() is X509TrustManager) {
                 okHttpClient.sslSocketFactory(sslSocketFactory, trustAllCerts.first() as X509TrustManager)
 //                okHttpClient.hostnameVerifier { _, _ -> true }
                 okHttpClient.hostnameVerifier(object : HostnameVerifier {
@@ -1391,10 +1432,16 @@ class MyHelper(var TAG: String, val context: Context) {
             }
             
             return okHttpClient
-        } catch (e: Exception) {
+        }
+        catch (e: Exception) {
             return okHttpClient
         }
     }
+    
+    fun getKMLFileName(awsPath: String): String {
+        return context.getExternalFilesDir(null).toString() + "/kml_maps/" + awsPath.substringAfterLast("kml_maps")
+    }
+    
 }
 
 

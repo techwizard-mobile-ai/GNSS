@@ -122,6 +122,8 @@ const val COL_IMAGES_LIMIT = "images_limit"
 const val COL_IMAGES_QUALITY = "images_quality"
 const val COL_ATTEMPTED_QUESTIONS = "attempted_questions"
 const val COL_AWS_PATH = "aws_path"
+const val COL_UPDATED_AT = "updated_at"
+const val COL_IS_DOWNLOADED = "is_downloaded"
 
 // Completed CheckForm Entry Type
 // 0 : automatically completed when due
@@ -500,7 +502,10 @@ const val createOrgsMapsTable = "CREATE TABLE IF NOT EXISTS $TABLE_ORGS_MAPS ( "
         "$COL_SITE_ID INTEGER, " +
         "$COL_AWS_PATH TEXT, " +
         "$COL_STATUS INTEGER, " +
-        "$COL_IS_DELETED INTEGER" +
+        "$COL_IS_DELETED INTEGER, " +
+        "$COL_TIME  INTEGER," +
+        "$COL_IS_DOWNLOADED  INTEGER DEFAULT 0, " +
+        "$COL_UPDATED_AT TEXT " +
         " )"
 
 const val DROP_TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER = "DROP TABLE IF EXISTS $TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER"
@@ -531,7 +536,7 @@ const val DROP_TABLE_OPERATORS_HOURS = "DROP TABLE IF EXISTS $TABLE_OPERATORS_HO
 const val DROP_TABLE_QUESTIONS_TYPES = "DROP TABLE IF EXISTS $TABLE_QUESTIONS_TYPES"
 const val DROP_TABLE_ORGS_MAPS = "DROP TABLE IF EXISTS $TABLE_ORGS_MAPS"
 
-class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 13) {
+class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 14) {
     
     val tag = "DatabaseAdapter"
     private var myHelper: MyHelper
@@ -603,6 +608,16 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         onCreate(db)
     }
     
+    fun updateMap(datum: MyData): Boolean {
+        var updateMap = true
+    
+        val existedOrgsMap = getOrgsMapByID(datum.id)
+        if(existedOrgsMap !== null){
+            if(existedOrgsMap.updated_at.equals(datum.updated_at))
+                updateMap = false
+        }
+        return updateMap
+    }
     
     fun insertOrgsMaps(data: ArrayList<MyData>) {
         
@@ -617,9 +632,15 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_AWS_PATH, datum.aws_path)
             cv.put(COL_STATUS, datum.status)
             cv.put(COL_IS_DELETED, datum.isDeleted)
+            cv.put(COL_TIME, myHelper.getTimestampFromDate(datum.updated_at))
+            cv.put(COL_IS_DOWNLOADED, datum.isDownloaded)
+            cv.put(COL_UPDATED_AT, datum.updated_at)
             
-            val insertedID = db.replace(tableName, null, cv)
-            myHelper.printInsertion(tableName, insertedID, datum)
+            if (updateMap(datum)) {
+                val insertedID = db.replace(tableName, null, cv)
+                myHelper.printInsertion(tableName, insertedID, datum)
+            }
+            
         }
     }
     
@@ -797,7 +818,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
             val insertedID = db.replace(tableName, null, cv)
-            myHelper.printInsertion(tableName, insertedID, datum)
+//            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -1374,7 +1395,10 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return db.insert(TABLE_E_LOAD_HISTORY, null, cv)
     }
     
-    fun getOrgsMap(): MyData? {
+    /**
+     * This method will return Orgs Map details for selected site
+     */
+    fun getCurrentOrgsMap(): MyData? {
         
         val db = this.readableDatabase
         
@@ -1391,6 +1415,9 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             datum.aws_path = result.getString(result.getColumnIndex(COL_AWS_PATH))
             datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
             datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+            datum.isDownloaded = result.getInt(result.getColumnIndex(COL_IS_DOWNLOADED))
+            datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
+            datum.updated_at = result.getString(result.getColumnIndex(COL_UPDATED_AT))
         }
         result.close()
         db.close()
@@ -1414,12 +1441,41 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.aws_path = result.getString(result.getColumnIndex(COL_AWS_PATH))
                 datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
                 datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
+                datum.isDownloaded = result.getInt(result.getColumnIndex(COL_IS_DOWNLOADED))
+                datum.updated_at = result.getString(result.getColumnIndex(COL_UPDATED_AT))
                 list.add(datum)
             } while (result.moveToNext())
         }
         result.close()
         db.close()
         return list
+    }
+    
+    fun getOrgsMapByID(id: Int): MyData? {
+        
+        val db = this.readableDatabase
+        
+        val query = "Select * FROM $TABLE_ORGS_MAPS  WHERE $COL_ID = $id  ORDER BY $COL_ID DESC LIMIT 1"
+        val result = db.rawQuery(query, null)
+        
+        var datum: MyData? = null
+        
+        if (result.moveToFirst()) {
+            datum = MyData()
+            datum.id = result.getInt(result.getColumnIndex(COL_ID))
+            datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+            datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+            datum.aws_path = result.getString(result.getColumnIndex(COL_AWS_PATH))
+            datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+            datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+            datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
+            datum.isDownloaded = result.getInt(result.getColumnIndex(COL_IS_DOWNLOADED))
+            datum.updated_at = result.getString(result.getColumnIndex(COL_UPDATED_AT))
+        }
+        result.close()
+//        db.close()
+        return datum
     }
     
     fun getAdminCheckFormsCompletedServer(orderBy: String = "DESC"): ArrayList<MyData> {
@@ -3611,5 +3667,16 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             val updatedID = db.update(TABLE_ADMIN_CHECKFORMS_COMPLETED, cv, "$COL_ID = ${datum.id}", null)
             myHelper.log("updateAdminCheckFormsCompleted:updateID:$updatedID")
         }
+    }
+    
+    
+    fun updateOrgsMap(datum: MyData) {
+        
+        val db = this.writableDatabase
+        val cv = ContentValues()
+        
+        cv.put(COL_IS_DOWNLOADED, datum.isDownloaded)
+        val updatedID = db.update(TABLE_ORGS_MAPS, cv, "$COL_ID = ${datum.id}", null)
+        myHelper.log("updateOrgsMap:updateID:$updatedID")
     }
 }

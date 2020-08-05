@@ -231,6 +231,8 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     
     private val mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
+    
+           
             
             if (myHelper.isNavEnabled()){
                 when (item.itemId) {

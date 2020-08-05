@@ -321,5 +321,7 @@
     <string name="machine">Machine</string>
     <string name="trips1">Trips</string>
     <string name="working_time">Working Time</string>
+    <string name="downloading_site_map">Downloading Site Map</string>
+    <string name="map_not_updated">Site map not updated \n due to Internet connection problem. Please connect internet and login again to download site updated map.</string>
 
 </resources>

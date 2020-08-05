@@ -2,8 +2,12 @@ package app.vsptracker.aws
 
 import android.app.Service
 import android.content.Intent
+import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
+import app.vsptracker.apis.trip.MyData
+import app.vsptracker.database.DatabaseAdapter
+import app.vsptracker.others.MyHelper
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState
@@ -13,13 +17,26 @@ import java.io.File
 
 class MyService : Service() {
     private var transferUtility: TransferUtility? = null
+    lateinit var myHelper : MyHelper
+    lateinit var  db: DatabaseAdapter
+    private val tag = "MyService"
+    private lateinit var currentOrgsMap : MyData
     override fun onCreate() {
         super.onCreate()
         val util = Util()
         transferUtility = util.getTransferUtility(this)
+        myHelper = MyHelper(tag, this)
+        db = DatabaseAdapter(this)
     }
     
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        
+        var bundle : Bundle?=intent.extras
+        if(bundle != null){
+            currentOrgsMap = bundle!!.getSerializable("currentOrgsMap") as MyData
+            myHelper.log("currentOrgsMap:$currentOrgsMap")
+        }
+        
         val key = intent.getStringExtra(INTENT_KEY_NAME)
         val file = intent.getSerializableExtra(INTENT_FILE) as File
         val transferOperation = intent.getStringExtra(INTENT_TRANSFER_OPERATION)
@@ -74,6 +91,12 @@ class MyService : Service() {
         
         override fun onStateChanged(id: Int, state: TransferState) {
             Log.d(TAG, "onStateChanged: $id, $state")
+            if(state === TransferState.COMPLETED){
+                // KML File downloaded successfully, update database for downloaded file
+                Log.d(TAG,"downloaded:$currentOrgsMap")
+                currentOrgsMap.isDownloaded = 1
+                db.updateOrgsMap(currentOrgsMap)
+            }
             if (notifyDownloadActivityNeeded) {
 //                DownloadActivity.initData()
                 notifyDownloadActivityNeeded = false

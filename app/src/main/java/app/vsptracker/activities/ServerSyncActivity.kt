@@ -41,6 +41,7 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
         val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
         navigationView.menu.getItem(10).isChecked = true
         
+        // TODO convert this to a method which will be used in all other activities / classes for adding data which need to be synced.
         addToList(1, "Operators Hours", db.getOperatorsHours("ASC"))
         addToList(2, "Trucks Trips", db.getTripsByTypes(MyEnum.TRUCK, "ASC"))
         addToList(3, "Scrapers Trips", db.getTripsByTypes(MyEnum.SCRAPER, "ASC"))

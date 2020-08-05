@@ -272,7 +272,7 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
         
         if (serverSyncList.size > 0)
             serverSyncList.removeAll(ArrayList())
-        
+        // TODO convert this to a method which will be used in all other activities / classes for adding data which need to be synced.
         addToList(1, "Operators Hours", db.getOperatorsHours("ASC"))
         addToList(2, "Trucks Trips", db.getTripsByTypes(3, "ASC"))
         addToList(3, "Scrapers Trips", db.getTripsByTypes(2, "ASC"))
