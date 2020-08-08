@@ -54,7 +54,12 @@ class Material : Serializable {
 
     @SerializedName("number")
     var number: String = ""
-
+    
+    
+    @SerializedName("priority")
+    @Expose
+    var priority: Int = -1
+    
     constructor()
 
     constructor(id: Int, name: String) {

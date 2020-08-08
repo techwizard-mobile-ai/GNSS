@@ -81,10 +81,15 @@ class OperatorAPI : Serializable {
     @Expose
     var updatedAt: String? = null
     
+    @SerializedName("priority")
+    @Expose
+    var priority: Int = -1
+    
     override fun toString(): String {
         return "OperatorAPI(" +
                 "id=$id, " +
                 "name=$name, " +
+                "priority=$priority, " +
                 "status=$status, " +
                 "isDeleted=$isDeleted, " +
                 ")"

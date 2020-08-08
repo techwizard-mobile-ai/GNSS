@@ -22,7 +22,6 @@ import kotlinx.android.synthetic.main.activity_map1.*
 import java.io.File
 import java.io.FileInputStream
 
-
 private const val ZOOM_LEVEL: Float = 19.0f
 
 class Map1Activity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
@@ -139,8 +138,8 @@ class Map1Activity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
 //                        layer.addLayerToMap()
                         val currentOrgsMap = db.getCurrentOrgsMap()
                         if (currentOrgsMap !== null  && !currentOrgsMap.aws_path.isNullOrEmpty()) {
-                            
                             val file = File(myHelper.getKMLFileName(currentOrgsMap.aws_path))
+                            myHelper.log("fileName:${currentOrgsMap.aws_path}")
                             val inputStream: FileInputStream = file.inputStream()
                             val layer = KmlLayer(map, inputStream, applicationContext)
                             layer.addLayerToMap()

@@ -129,6 +129,7 @@ const val COL_IS_DOWNLOADED = "is_downloaded"
 // 0 : automatically completed when due
 // 1 : manually completed by operator before due time
 const val COL_ENTRY_TYPE = "entry_type"
+const val COL_PRIORITY = "priority"
 
 const val createMachinesHoursTable = "CREATE TABLE IF NOT EXISTS  $TABLE_MACHINES_HOURS (" +
         "$COL_ID  INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -220,6 +221,7 @@ const val createMaterialsTable = "CREATE TABLE IF NOT EXISTS $TABLE_MATERIALS ("
         "$COL_SITE_ID INTEGER, " +
         "$COL_MACHINE_TYPE_ID INTEGER, " +
         "$COL_NAME TEXT, " +
+        "$COL_PRIORITY INTEGER, " +
         "$COL_STATUS INTEGER, " +
         "$COL_IS_DELETED INTEGER" +
         " )"
@@ -230,6 +232,7 @@ const val createLocationsTable = "CREATE TABLE IF NOT EXISTS $TABLE_LOCATIONS ("
         "$COL_ORG_ID INTEGER, " +
         "$COL_SITE_ID INTEGER, " +
         "$COL_NAME TEXT, " +
+        "$COL_PRIORITY INTEGER, " +
         "$COL_STATUS INTEGER, " +
         "$COL_IS_DELETED INTEGER" +
         " )"
@@ -536,7 +539,7 @@ const val DROP_TABLE_OPERATORS_HOURS = "DROP TABLE IF EXISTS $TABLE_OPERATORS_HO
 const val DROP_TABLE_QUESTIONS_TYPES = "DROP TABLE IF EXISTS $TABLE_QUESTIONS_TYPES"
 const val DROP_TABLE_ORGS_MAPS = "DROP TABLE IF EXISTS $TABLE_ORGS_MAPS"
 
-class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 14) {
+class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 15) {
     
     val tag = "DatabaseAdapter"
     private var myHelper: MyHelper
@@ -1102,11 +1105,12 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_SITE_ID, datum.siteId)
             cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
             cv.put(COL_NAME, datum.name)
+            cv.put(COL_PRIORITY, datum.priority)
             cv.put(COL_STATUS, datum.status)
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
             val insertedID = db.replace(tableName, null, cv)
-//            myHelper.printInsertion(tableName, insertedID, datum)
+            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -1142,11 +1146,12 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_ORG_ID, datum.orgId)
             cv.put(COL_SITE_ID, datum.siteId)
             cv.put(COL_NAME, datum.name)
+            cv.put(COL_PRIORITY, datum.priority)
             cv.put(COL_STATUS, datum.status)
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
             val insertedID = db.replace(tableName, null, cv)
-//            myHelper.printInsertion(tableName, insertedID, datum)
+            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -2541,6 +2546,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
                 datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
                 datum.name = result.getString(result.getColumnIndex(COL_NAME))
+                datum.priority = result.getInt(result.getColumnIndex(COL_PRIORITY))
                 datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
 //                list.add(datum)
             
@@ -2557,7 +2563,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val db = this.readableDatabase
         
         val query =
-            "Select * from $TABLE_MATERIALS  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1  AND $COL_MACHINE_TYPE_ID = ${myHelper.getMachineTypeID()} AND $COL_SITE_ID = ${myHelper.getMachineSettings().siteId} ORDER BY $COL_ID DESC"
+            "Select * from $TABLE_MATERIALS  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1  AND $COL_MACHINE_TYPE_ID = ${myHelper.getMachineTypeID()} AND $COL_SITE_ID = ${myHelper.getMachineSettings().siteId} ORDER BY $COL_PRIORITY < 0, $COL_PRIORITY ASC"
         val result = db.rawQuery(query, null)
         
         if (result.moveToFirst()) {
@@ -2567,6 +2573,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
                 datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
                 datum.name = result.getString(result.getColumnIndex(COL_NAME))
+                datum.priority = result.getInt(result.getColumnIndex(COL_PRIORITY))
                 datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
                 list.add(datum)
                 
@@ -2659,6 +2666,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
                 datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
                 datum.name = result.getString(result.getColumnIndex(COL_NAME))
+                datum.priority = result.getInt(result.getColumnIndex(COL_PRIORITY))
                 datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
 //                list.add(datum)
             
@@ -2676,7 +2684,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val db = this.readableDatabase
         
         val query =
-            "Select * from $TABLE_LOCATIONS  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 AND $COL_SITE_ID = ${myHelper.getMachineSettings().siteId} ORDER BY $COL_ID DESC"
+            "Select * from $TABLE_LOCATIONS  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 AND $COL_SITE_ID = ${myHelper.getMachineSettings().siteId} ORDER BY $COL_PRIORITY <0, $COL_PRIORITY ASC"
         val result = db.rawQuery(query, null)
         
         
@@ -2687,6 +2695,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
                 datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
                 datum.name = result.getString(result.getColumnIndex(COL_NAME))
+                datum.priority = result.getInt(result.getColumnIndex(COL_PRIORITY))
                 datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
                 list.add(datum)
                 
