@@ -395,7 +395,7 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
                 myHelper.run {
                     hideDialog()
                     toast(e.message.toString())
-                    log("Exception: ${e.printStackTrace()}")
+                    log("Exception: ${e.message}")
                 }
             }
         })

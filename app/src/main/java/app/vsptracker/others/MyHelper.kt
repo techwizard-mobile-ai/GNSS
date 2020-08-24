@@ -229,7 +229,7 @@ class MyHelper(var TAG: String, val context: Context) {
 //                log("networkResponse:${response.networkResponse}")
 //                log("isRedirect:${response.isRedirect}")
 //                log("headers:${response.headers}")
-                
+        
                 val responseString = response.body!!.string()
                 try {
                     log("inside refreshToken try")
@@ -240,7 +240,7 @@ class MyHelper(var TAG: String, val context: Context) {
                         val gson = GsonBuilder().create()
                         val loginAPI = gson.fromJson(responseJObject.getString("data"), LoginAPI::class.java)
                         loginAPI.pass = getLoginAPI().pass
-                        
+                
                         val app = gson.fromJson(responseJObject.getString("app"), AppAPI::class.java)
                         log("app:$app")
                         setLatestVSPTVersion(app)
@@ -260,15 +260,15 @@ class MyHelper(var TAG: String, val context: Context) {
                     }
                 }
                 catch (e: Exception) {
-                    
+            
                     toast("refreshTokenException:" + e.localizedMessage)
                     log("refreshTokenException:" + e.localizedMessage)
                     val intent = Intent(context, LoginActivity::class.java)
                     context.startActivity(intent)
                 }
-                
+        
             }
-            
+    
             override fun onFailure(call: Call, e: IOException) {
                 toast("Failed refresh token: ${e.printStackTrace()}")
                 log("Failed refresh token: ${e.printStackTrace()}")
@@ -801,7 +801,7 @@ class MyHelper(var TAG: String, val context: Context) {
             //    repeatJourney 0 = No Repeat Journey
             //    repeatJourney 1 = Repeat Journey without Back Load
             //    repeatJourney 2 = Repeat Journey with Back Load
-            
+    
             MyEnum.SCRAPER -> {
                 val intent: Intent = if (lastJourney.repeatJourney > 0 && (lastJourney.nextAction == 0 || lastJourney.nextAction == 2)) {
                     // Launch Load Screen
@@ -828,7 +828,7 @@ class MyHelper(var TAG: String, val context: Context) {
                     Intent(context, THomeActivity::class.java)
                 }
                 context.startActivity(intent)
-                
+        
             }
         }
     }
@@ -850,7 +850,7 @@ class MyHelper(var TAG: String, val context: Context) {
                 val intent = Intent(context, TUnloadAfterActivity::class.java)
                 intent.putExtra("myData", myData)
                 context.startActivity(intent)
-                
+        
             }
         }
     }
@@ -946,7 +946,7 @@ class MyHelper(var TAG: String, val context: Context) {
 //                                myHelper.hideDialog()
                         return false
                     }
-                    
+    
                     override fun onResourceReady(
                         resource: Drawable?,
                         model: Any?,
@@ -957,7 +957,7 @@ class MyHelper(var TAG: String, val context: Context) {
 //                                myHelper.hideDialog()
                         return false
                     }
-                    
+    
                 })
                 .into(imageView)
         } else {
@@ -1406,7 +1406,20 @@ class MyHelper(var TAG: String, val context: Context) {
     
     
     fun unSafeOkHttpClient(): OkHttpClient.Builder {
-        val okHttpClient = OkHttpClient.Builder()
+        var okHttpClient = OkHttpClient.Builder()
+        
+        okHttpClient
+            .connectTimeout(3, TimeUnit.MINUTES)
+            .readTimeout(3, TimeUnit.MINUTES)
+            .writeTimeout(3, TimeUnit.MINUTES)
+            .retryOnConnectionFailure(false)
+            .addNetworkInterceptor(object : Interceptor {
+                @Throws(IOException::class)
+                override fun intercept(chain: Interceptor.Chain): Response {
+                    val request = chain.request().newBuilder().addHeader("Connection", "close").build()
+                    return chain.proceed(request)
+                }
+            })
         try {
             // Create a trust manager that does not validate certificate chains
             val trustAllCerts: Array<TrustManager> = arrayOf(object : X509TrustManager {
