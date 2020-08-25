@@ -140,7 +140,6 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
             }
             R.id.signin_signin -> {
                 val pin = signin_pin.text.toString()
-                // myHelper.log("pin:" + pin)
                 if (pin.length < 3) {
                     myHelper.toast("PIN Minimum Length should be 3 Characters")
                 } else {

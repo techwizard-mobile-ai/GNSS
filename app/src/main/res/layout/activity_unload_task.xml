@@ -14,6 +14,7 @@
         android:layout_marginBottom="@dimen/_5sdp"
         android:text="Select Task" />
     <LinearLayout
+        android:id="@+id/layout_stockpile_fill"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight=".4"
@@ -50,6 +51,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/layout_respread_offsite"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/_10sdp"
@@ -85,6 +87,31 @@
                 android:src="@drawable/task_off_site" />
 
         </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/layout_crushingmachine"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:layout_weight="0.3"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/ultask_crushing_machine"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.4"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/task_crushing_plant" />
+
+        </LinearLayout>
+
+
     </LinearLayout>
 
 

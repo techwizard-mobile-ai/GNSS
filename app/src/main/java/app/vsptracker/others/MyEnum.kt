@@ -55,5 +55,17 @@ class MyEnum {
         const val EXCAVATOR_GEN_DIGGING = 1
         const val EXCAVATOR_TRENCHING = 2
         const val SCRAPER_TRIMMING = 3
+        
+        const val TASK_STOCKPILE = "Stockpile"
+        const val TASK_FILL = "Fill"
+        const val TASK_RESPREAD = "Respread"
+        const val TASK_OFFSITE = "Off site"
+        const val TASK_CRUSHINGPLANT = "Crushing Plant"
+        
+    
+        
+        
+        
+        
     }
 }

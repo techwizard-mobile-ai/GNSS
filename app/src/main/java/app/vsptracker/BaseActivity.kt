@@ -202,14 +202,10 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         }
         
         myHelper.requestPermissions()
-
-//        if (myHelper.isOnline())
-//            uploadImagesToAWS()
     }
     
     override fun onUserInteraction() {
         super.onUserInteraction()
-//        myHelper.log("\nonUserInteraction")
         if (autoLogoutTime > 0) {
             stopHandler()
             startHandler()
@@ -232,8 +228,6 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     private val mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
     
-           
-            
             if (myHelper.isNavEnabled()){
                 when (item.itemId) {
                     R.id.navb_map -> {
