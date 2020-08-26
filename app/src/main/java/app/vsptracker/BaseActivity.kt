@@ -62,7 +62,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     private lateinit var retrofit: Retrofit
     internal lateinit var retrofitAPI: RetrofitAPI
     lateinit var myDataPushSave: MyDataPushSave
-
+    
     var autoLogoutTime = 0L
     
     
@@ -125,12 +125,10 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         menu = bottomNavigation.menu
         menu[0].isCheckable = false
         
-        val navigationView: NavigationView = findViewById(R.id.base_nav_view)
-        val headerView: View = navigationView.getHeaderView(0)
+        val headerView: View = navView.getHeaderView(0)
         val navHeaderDeviceDetails: TextView = headerView.findViewById(R.id.nav_header_device_details)
         val navTitle: TextView = headerView.findViewById(R.id.nav_header_title)
 //        val navSubTitle : TextView = headerView.findViewById(R.id.nav_header_sub_title)
-        
         val deviceDetails = DeviceDetails()
         navHeaderDeviceDetails.text = "VSPT_VERSION: ${deviceDetails.VSPT_VERSION_NAME} (${deviceDetails.VSPT_VERSION_CODE})\n" +
                 "Mfr. : ${deviceDetails.MANUFACTURER}\n" +
@@ -140,13 +138,11 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         
         val appAPI = myHelper.getLatestVSPTVersion()
         
-        var versionTitle = ""
-        if (appAPI.version_code > deviceDetails.VSPT_VERSION_CODE) {
-            versionTitle = "Latest Version:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${appAPI.version_name} (${appAPI.version_code})<br/>" +
+        val versionTitle = if (appAPI.version_code > deviceDetails.VSPT_VERSION_CODE) {
+            "Latest Version:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${appAPI.version_name} (${appAPI.version_code})<br/>" +
                     "Installed Version: <font color=#FF382A>${deviceDetails.VSPT_VERSION_NAME} (${deviceDetails.VSPT_VERSION_CODE})</font>"
-            
         } else {
-            versionTitle = "Latest Version:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${appAPI.version_name} (${appAPI.version_code})<br/>" +
+            "Latest Version:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${appAPI.version_name} (${appAPI.version_code})<br/>" +
                     "Installed Version:&nbsp;${deviceDetails.VSPT_VERSION_NAME} (${deviceDetails.VSPT_VERSION_CODE})"
         }
         
@@ -157,8 +153,8 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 //        which is different for Machine Type for Different sites then user should be Auto logout from App
 //        and all data should be sent to server.
         val machinesAutoLogout = db.getMachinesAutoLogout()
-        myHelper.log("machinesAutoLogout:"+db.getMachinesAutoLogout()[0].toString())
-    
+        myHelper.log("machinesAutoLogout:" + db.getMachinesAutoLogout()[0].toString())
+        
         if (machinesAutoLogout.size > 0) {
             try {
                 autoLogoutTime = machinesAutoLogout[0].autoLogoutTime!!.toLong() * 60 * 1000 //converting minutes in Milliseconds
@@ -195,9 +191,57 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             val intent = Intent(this, OperatorLoginActivity::class.java)
             startActivity(intent)
         }
-        
         myHelper.requestPermissions()
     }
+    
+    fun startWorkManager() {
+        myHelper.log("App_Check:startWorkManager")
+//        val myWorkRequest = OneTimeWorkRequestBuilder<MyWork>()
+//            .setInitialDelay(10, TimeUnit.MINUTES)
+//            .setBackoffCriteria(
+//                BackoffPolicy.LINEAR,
+//                OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
+//                TimeUnit.MILLISECONDS)
+//            .addTag(APP_AUTO_LOGOUT)
+//            .build()
+//
+//        // by id
+//        workManager.cancelWorkById(syncWorker.id)
+//        // by name
+//        workManager.cancelUniqueWork("sync")
+//        // by tag
+//        workManager.cancelAllWorkByTag("syncTag")
+        
+    }
+    fun cancelWorkManager(){
+        myHelper.log("App_Check:cancelWorkManager")
+    }
+    override fun onPause() {
+        super.onPause()
+//        myHelper.log("App_Check:onPause")
+        startWorkManager()
+//        val activityManager: ActivityManager = getSystemService(ACTIVITY_SERVICE) as ActivityManager
+//        val taskList: List<ActivityManager.RunningTaskInfo> = activityManager.getRunningTasks(10)
+//        if (taskList.isNotEmpty()) {
+//            val runningTaskInfo: ActivityManager.RunningTaskInfo = taskList[0]
+//            if (runningTaskInfo.topActivity != null && !runningTaskInfo.topActivity!!.className.contains("app.vsptracker")) {
+//                //You are App is being killed so here you can add some code
+//                myHelper.log("App_Check:App is being killed.")
+//            } else {
+//                myHelper.log("App_Check:App not killed.")
+//            }
+//        }
+    }
+    
+//    override fun onStart() {
+//        super.onStart()
+//        myHelper.log("App_Check:onStart")
+//
+//    }
+//    override fun onRestart() {
+//        super.onRestart()
+//        myHelper.log("App_Check:onRestart")
+//    }
     
     override fun onUserInteraction() {
         super.onUserInteraction()
@@ -222,8 +266,8 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     
     private val mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
-    
-            if (myHelper.isNavEnabled()){
+            
+            if (myHelper.isNavEnabled()) {
                 when (item.itemId) {
                     R.id.navb_map -> {
                         if (!myHelper.getIsMapOpened()) {
@@ -242,7 +286,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                         }
                     }
                 }
-            }else{
+            } else {
                 myHelper.toast(getString(R.string.proceed_to_next_screen))
             }
             
@@ -251,7 +295,8 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     
     override fun onResume() {
         super.onResume()
-        // to start GPS location
+//        myHelper.log("App_Check:onResume")
+        cancelWorkManager()
         startGPS()
 //        If Navigation is Disabled Lock Side Menu
         if (!myHelper.isNavEnabled()) {
@@ -262,11 +307,11 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             base_machine_status_layout.visibility = View.VISIBLE
             
             when (myHelper.getMachineStoppedReason()) {
-                "Weather" -> {
+                MyEnum.STOP_REASON_WEATHER -> {
                     Glide.with(this).load(ContextCompat.getDrawable(this, R.drawable.ic_action_beach_access))
                         .into(base_machine_status_icon)
                 }
-                "Other 1" -> {
+                MyEnum.STOP_REASON_OTHER1 -> {
                     Glide.with(this).load(ContextCompat.getDrawable(this, R.drawable.ic_action_restaurant))
                         .into(base_machine_status_icon)
                 }
@@ -294,12 +339,12 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         
         if (myHelper.isDelayStarted()) {
             menu.findItem(R.id.navb_delay).title = "Stop Waiting"
-            menu.findItem(R.id.navb_delay).icon = getDrawable(R.drawable.ic_started)
+            menu.findItem(R.id.navb_delay).icon = ContextCompat.getDrawable(this, R.drawable.ic_started)
             menu.findItem(R.id.navb_delay).isChecked = true
             
         } else {
             menu.findItem(R.id.navb_delay).title = "Start Waiting"
-            menu.findItem(R.id.navb_delay).icon = getDrawable(R.drawable.ic_stopped)
+            menu.findItem(R.id.navb_delay).icon = ContextCompat.getDrawable(this, R.drawable.ic_stopped)
             menu.findItem(R.id.navb_map).isChecked = true
         }
         
@@ -324,13 +369,13 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 myHelper.setIsMapOpened(false)
             }
             R.id.nav_day_works -> {
-                
+        
                 val intent = Intent(this, DayWorksActivity::class.java)
                 startActivity(intent)
                 myHelper.setIsMapOpened(false)
             }
             R.id.nav_machine_breakdown -> {
-                
+        
                 val intent = Intent(this, MachineBreakdownActivity::class.java)
                 startActivity(intent)
                 myHelper.setIsMapOpened(false)
@@ -340,13 +385,13 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 myHelper.setIsMapOpened(false)
             }
             R.id.nav_stop_machine -> {
-                
+        
                 val intent = Intent(this, MachineStatusActivity::class.java)
                 startActivity(intent)
                 myHelper.setIsMapOpened(false)
             }
             R.id.nav_night_mode -> {
-                
+        
                 myHelper.log("theme:" + applicationContext.theme)
                 myHelper.log("theme1:$theme")
                 if (myHelper.isNightMode()) {
@@ -362,7 +407,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 startActivity(intent)
                 myHelper.setIsMapOpened(false)
             }
-            
+    
             R.id.nav_load_history -> {
                 myHelper.startHistoryByType()
                 myHelper.setIsMapOpened(false)
@@ -371,13 +416,13 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 doEmail()
                 myHelper.setIsMapOpened(false)
             }
-            
+    
             R.id.nav_delay -> {
                 val intent = Intent(this, DelayActivity::class.java)
                 startActivity(intent)
                 myHelper.setIsMapOpened(false)
             }
-            
+    
             R.id.nav_hours_reporting -> {
                 val intent = Intent(this, HoursReportingActivity::class.java)
                 startActivity(intent)
@@ -407,22 +452,11 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         }
     }
     
-    override fun onPause() {
-        super.onPause()
-//        stopGPS()
-        myHelper.log("onPause")
-    }
-    
-    override fun onStop() {
-        super.onStop()
-        myHelper.log("onStop")
-    }
-    
     private fun startDelay() {
         if (!myHelper.isDelayStarted()) {
             myHelper.toast("Waiting Started.")
             myHelper.startDelay(gpsLocation)
-            menu.findItem(R.id.navb_delay).icon = getDrawable(R.drawable.ic_started)
+            menu.findItem(R.id.navb_delay).icon = ContextCompat.getDrawable(this, R.drawable.ic_started)
             menu.findItem(R.id.navb_delay).title = "Stop Waiting"
             menu.findItem(R.id.navb_delay).isChecked = true
             val intent = Intent(this@BaseActivity, DelayActivity::class.java)
@@ -444,7 +478,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             eWork.loadingGPSLocation = meter.delayStartGPSLocation
             eWork.unloadingGPSLocation = meter.delayStopGPSLocation
             
-            menu.findItem(R.id.navb_delay).icon = getDrawable(R.drawable.ic_stopped)
+            menu.findItem(R.id.navb_delay).icon = ContextCompat.getDrawable(this, R.drawable.ic_stopped)
             menu.findItem(R.id.navb_delay).title = "Start Waiting"
             menu.findItem(R.id.navb_map).isChecked = true
             
@@ -539,7 +573,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 }
                 return
             }
-            
+    
             MyEnum.REQUEST_WRITE_EXTERNAL_STORAGE -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] != PackageManager.PERMISSION_GRANTED)) {
                     myHelper.log("Permission denied.")

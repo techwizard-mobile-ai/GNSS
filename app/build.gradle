@@ -92,9 +92,11 @@ dependencies {
     implementation 'com.google.maps.android:android-maps-utils:1.2.1'
 
 //BEGIN AWS DEPENDENCIES
-    implementation "com.amazonaws:aws-android-sdk-s3:2.16.13"
-    implementation("com.amazonaws:aws-android-sdk-mobile-client:2.16.13") { transitive = true }
+    implementation 'com.amazonaws:aws-android-sdk-s3:2.17.1'
+    implementation('com.amazonaws:aws-android-sdk-mobile-client:2.17.1') { transitive = true }
 //END AWS DEPENDENCIES
+    implementation 'androidx.work:work-runtime:2.4.0'
+    implementation 'androidx.work:work-runtime-ktx:2.5.0-alpha01'
 }
 apply plugin: 'com.google.gms.google-services'
 
