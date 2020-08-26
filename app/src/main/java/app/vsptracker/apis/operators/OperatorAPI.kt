@@ -88,8 +88,9 @@ class OperatorAPI : Serializable {
     override fun toString(): String {
         return "OperatorAPI(" +
                 "id=$id, " +
-                "name=$name, " +
-                "priority=$priority, " +
+                "site_id=$siteId, " +
+                "machineTypeId=$machineTypeId, " +
+                "autoLogoutTime=$autoLogoutTime, " +
                 "status=$status, " +
                 "isDeleted=$isDeleted, " +
                 ")"

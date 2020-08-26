@@ -98,7 +98,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/ultask_crushing_machine"
+            android:id="@+id/ultask_crushing_plant"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.4"

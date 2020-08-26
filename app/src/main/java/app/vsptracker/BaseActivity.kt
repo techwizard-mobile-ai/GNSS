@@ -63,10 +63,6 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     internal lateinit var retrofitAPI: RetrofitAPI
     lateinit var myDataPushSave: MyDataPushSave
 
-
-//    var logoutStartTime = 0L
-//    val autoLogoutTime = 1 * 30 * 1000L
-    
     var autoLogoutTime = 0L
     
     
@@ -111,9 +107,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         toggle.syncState()
         navView.setNavigationItemSelectedListener(this)
         
-    
         toolbar_title.text = "${myHelper.getMachineDetails()} : ${myHelper.getOperatorAPI().name}"
-        
         base_machine_status.setOnClickListener {
             val intent = Intent(this@BaseActivity, MachineStatusActivity::class.java)
             startActivity(intent)
@@ -125,7 +119,6 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         }
         
         myHelper.hideKeyboardOnClick(base_content_frame)
-        
         bottomNavigation = findViewById(R.id.base_navigationView)
         bottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         
@@ -163,10 +156,12 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 //        MachineAutoLogout is time set by administrator. If App is not in use for time greater than AutoLogoutTime
 //        which is different for Machine Type for Different sites then user should be Auto logout from App
 //        and all data should be sent to server.
-        if (db.getMachinesAutoLogout().size > 0) {
+        val machinesAutoLogout = db.getMachinesAutoLogout()
+        myHelper.log("machinesAutoLogout:"+db.getMachinesAutoLogout()[0].toString())
+    
+        if (machinesAutoLogout.size > 0) {
             try {
-                myHelper.log(db.getMachinesAutoLogout()[0].toString())
-                autoLogoutTime = db.getMachinesAutoLogout()[0].autoLogoutTime!!.toLong() * 60 * 1000 //converting minutes in Milliseconds
+                autoLogoutTime = machinesAutoLogout[0].autoLogoutTime!!.toLong() * 60 * 1000 //converting minutes in Milliseconds
             }
             catch (e: Exception) {
                 myHelper.log("autoLogoutTimeException: ${e.message}")
@@ -186,9 +181,9 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             )
             if (difference > 0 && autoLogoutTime > 0) {
                 myHelper.log("Logout Time Completed.")
-                val intent = Intent(this, HourMeterStopActivity::class.java)
-                intent.putExtra("isAutoLogoutCall", true)
-                startActivity(intent)
+//                val intent = Intent(this, HourMeterStopActivity::class.java)
+//                intent.putExtra("isAutoLogoutCall", true)
+//                startActivity(intent)
             } else {
                 myHelper.log("AutoLogout not functional---------------")
             }
@@ -414,7 +409,13 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     
     override fun onPause() {
         super.onPause()
-        stopGPS()
+//        stopGPS()
+        myHelper.log("onPause")
+    }
+    
+    override fun onStop() {
+        super.onStop()
+        myHelper.log("onStop")
     }
     
     private fun startDelay() {
@@ -590,7 +591,5 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         gpsLocation.time = location1.time
         
     }
-    
-    
 }
 

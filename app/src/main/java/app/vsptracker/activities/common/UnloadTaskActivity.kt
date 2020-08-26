@@ -23,7 +23,7 @@ class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
     private var fillId = 0
     private var respreadId = 0
     private var offSiteId = 0
-    private var crushingMachineId = 0
+    private var crushingPlantId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +54,7 @@ class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
         var isFill = false
         var isRespread = false
         var isOffSite = false
-        var isCrushingMachine = false
+        var isCrushingPlant = false
         
         for (task in tasks){
 //            when(task.machineTaskId){
@@ -76,8 +76,8 @@ class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
                     offSiteId = task.id
                 }
                 MyEnum.TASK_CRUSHINGPLANT -> {
-                    isCrushingMachine = true
-                    crushingMachineId = task.id
+                    isCrushingPlant = true
+                    crushingPlantId = task.id
                 }
             }
         }
@@ -111,7 +111,7 @@ class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
             layout_respread_offsite.visibility = View.GONE
         }
     
-        if(!isCrushingMachine){
+        if(!isCrushingPlant){
             layout_crushingmachine.visibility = View.GONE
         }
         
@@ -119,7 +119,7 @@ class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
         ultask_off_site.setOnClickListener(this)
         ultask_respread.setOnClickListener(this)
         ultask_stockpile.setOnClickListener(this)
-        ultask_crushing_machine.setOnClickListener(this)
+        ultask_crushing_plant.setOnClickListener(this)
     }
 
     override fun onResume() {
@@ -148,8 +148,8 @@ class UnloadTaskActivity : BaseActivity(), View.OnClickListener {
             R.id.ultask_stockpile -> {
                 taskClickedAction(stockPileId)
             }
-            R.id.ultask_crushing_machine -> {
-                taskClickedAction(crushingMachineId)
+            R.id.ultask_crushing_plant -> {
+                taskClickedAction(crushingPlantId)
             }
         }
     }
