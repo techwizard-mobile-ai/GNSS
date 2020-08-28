@@ -1,12 +1,10 @@
 package app.vsptracker.others
 
 class MyEnum {
-    val ACCEPTED = 1
-    
     companion object {
-        val user = ""
-        val pass = ""
-        val loginPin = ""
+        const val user = ""
+        const val pass = ""
+        const val loginPin = ""
         
 //        val user = "zee.enterprises@mail.com"
 //        val pass = "user1@123"
@@ -62,9 +60,9 @@ class MyEnum {
         const val TASK_OFFSITE = "Off site"
         const val TASK_CRUSHINGPLANT = "Crushing Plant"
         
-        const val APP_AUTO_LOGOUT = "vspt_machine_auto_logout"
-        
         const val STOP_REASON_WEATHER = "Weather"
         const val STOP_REASON_OTHER1 = "Other 1"
+        
+        const val WORKER_AUTO_LOGOUT = "vspt_machine_auto_logout"
     }
 }

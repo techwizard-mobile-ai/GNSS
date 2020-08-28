@@ -35,6 +35,7 @@ class CustomGridLMachine(private val mContext: Context, private val arrayList: A
             grid = (convertView as View?)!!
         }
         val textView = grid.findViewById(R.id.grid_text) as TextView
+        textView.visibility = View.VISIBLE
         textView.text = arrayList[position].number
         return grid
     }

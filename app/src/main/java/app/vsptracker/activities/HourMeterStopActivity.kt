@@ -82,7 +82,7 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
         if (bundle != null) {
             isAutoLogoutCall = bundle.getBoolean("isAutoLogoutCall")
             if (isAutoLogoutCall) {
-                myHelper.log("isAutoLogoutCall:$isAutoLogoutCall")
+                myHelper.log("App_Check:isAutoLogoutCall:$isAutoLogoutCall")
                 logout(isAutoLogoutCall)
             }
         }
@@ -134,7 +134,6 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
                     myHelper.toast("Please Enter Valid Meter Value.")
                     sfinish_reading.setText(myHelper.getRoundedDecimal(value.toDouble()).toString())
                 }
-                
             }
             
             R.id.sfinish_plus -> {
@@ -240,9 +239,7 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
             
             myDataPushSave.pushInsertMachineHour(myData, false)
         }
-        
         checkUpdateServerSyncData()
-        
     }
     
     /**

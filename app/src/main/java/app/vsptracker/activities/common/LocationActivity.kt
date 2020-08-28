@@ -52,7 +52,7 @@ class LocationActivity : BaseActivity(), View.OnClickListener {
         val gv = findViewById<GridView>(R.id.l_gridview)
         val locations = db.getLocations()
 //        myHelper.log("Locations:$locations")
-        val adapter = CustomGrid(this@LocationActivity, locations)
+        val adapter = CustomGrid(this@LocationActivity, locations, false)
 
 
         gv.adapter = adapter

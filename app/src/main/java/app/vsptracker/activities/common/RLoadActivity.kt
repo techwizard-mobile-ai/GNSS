@@ -9,7 +9,6 @@ import android.widget.FrameLayout
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
-import app.vsptracker.others.MyCountDownTimer
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_rload.*
@@ -35,7 +34,6 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
         myData = myHelper.getLastJourney()
         myHelper.log("myData:$myData")
     
-//        myTimer1 = MyCountDownTimer(startTime, interval)
         when (myData.nextAction) {
             0 -> {
                 trload_load.text = getString(R.string.load)

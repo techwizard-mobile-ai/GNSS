@@ -2187,18 +2187,18 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         return list
     }
     
-    fun getTasks(): ArrayList<OperatorAPI> {
+    fun getTasks(): ArrayList<Material> {
         
-        val list: ArrayList<OperatorAPI> = ArrayList()
+        val list: ArrayList<Material> = ArrayList()
         val db = this.readableDatabase
         
         val query =
-            "Select * from $TABLE_MACHINES_TASKS WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 AND $COL_MACHINE_TYPE_ID = ${myHelper.getMachineTypeID()} AND $COL_SITE_ID = ${myHelper.getMachineSettings().siteId}  ORDER BY $COL_ID DESC"
+            "Select * from $TABLE_MACHINES_TASKS WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 AND $COL_MACHINE_TYPE_ID = ${myHelper.getMachineTypeID()} AND $COL_SITE_ID = ${myHelper.getMachineSettings().siteId}  ORDER BY $COL_ID ASC"
         val result = db.rawQuery(query, null)
         
         if (result.moveToFirst()) {
             do {
-                val datum = OperatorAPI()
+                val datum = Material()
                 datum.id = result.getInt(result.getColumnIndex(COL_ID))
                 datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
                 datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))

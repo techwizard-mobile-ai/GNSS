@@ -35,7 +35,6 @@ class MaterialActivity : BaseActivity(), View.OnClickListener {
         
         myHelper = MyHelper(tag, this)
         
-        
         val bundle: Bundle? = intent.extras
         if (bundle != null) {
             myData = bundle.getSerializable("myData") as MyData
@@ -58,7 +57,7 @@ class MaterialActivity : BaseActivity(), View.OnClickListener {
         val materials: ArrayList<Material> = db.getMaterials()
         myHelper.log("Materials:$materials")
         
-        val adapter = CustomGrid(this@MaterialActivity, materials)
+        val adapter = CustomGrid(this@MaterialActivity, materials, false)
         
         gv.adapter = adapter
         gv.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->

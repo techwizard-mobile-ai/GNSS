@@ -3,6 +3,7 @@ package app.vsptracker.activities
 import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
@@ -97,39 +98,55 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
         }
         
         startGPS()
-        
-        // If Company credentials are saved then fetched Company Data otherwise redirect to Company Login Page.
-        if (!myHelper.getLoginAPI().email.isNullOrBlank() && !myHelper.getLoginAPI().pass.isNullOrBlank()) {
-            fetchOrgData()
-        }else{
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-        }
-        
-        // Refresh AccessToken if there is Internet connection
-        if (myHelper.isOnline())
-            myHelper.refreshToken()
-            myHelper.log("refreshToken()")
-        /**
-         * If Operator is Logged in and App is Launched this Code block will be executed.
-         * If Internet is Available Fetch Company Data and Replace Old Data.
-         * Call launchHomeForLoggedIn() method.
-         */
-        
-        when {
-            myHelper.getOperatorAPI().id > 0 -> {
+//        val bundle: Bundle? = intent.extras
+//        if (bundle != null) {
+//            var isAutoLogoutCall = false
+//            isAutoLogoutCall = bundle.getBoolean("isAutoLogoutCall")
+//            myHelper.log("App_Check:isAutoLogoutCall1:$isAutoLogoutCall")
+//            if (isAutoLogoutCall) {
+//                myHelper.log("App_Check:startActivity:HourMeterStopActivity")
+//                val intent = Intent(this, HourMeterStopActivity::class.java)
+//                intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
+//                intent.putExtra("isAutoLogoutCall", true)
+//                startActivity(intent)
+//                finishAffinity()
+//            }
+//        } else {
+            // If Company credentials are saved then fetched Company Data otherwise redirect to Company Login Page.
+            if (!myHelper.getLoginAPI().email.isNullOrBlank() && !myHelper.getLoginAPI().pass.isNullOrBlank()) {
+                fetchOrgData()
+            } else {
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+            }
+            
+            // Refresh AccessToken if there is Internet connection
+            if (myHelper.isOnline()) {
+                myHelper.log("refreshToken()")
+                myHelper.refreshToken()
+            }
+            /**
+             * If Operator is Logged in and App is Launched this Code block will be executed.
+             * If Internet is Available Fetch Company Data and Replace Old Data.
+             * Call launchHomeForLoggedIn() method.
+             */
+            
+            when {
+                myHelper.getOperatorAPI().id > 0 -> {
 //                when {
 //                    myHelper.isOnline() -> fetchOrgData()
 //                }
-                launchHomeForLoggedIn()
+                    launchHomeForLoggedIn()
+                }
             }
-        }
+            
+            signin_pin.setText(MyEnum.loginPin)
+            myHelper.hideKeyboardOnClick(login_main_layout)
+            signin_signin.setOnClickListener(this)
+            company_signin.setOnClickListener(this)
+//        }
         
-        signin_pin.setText(MyEnum.loginPin)
         
-        myHelper.hideKeyboardOnClick(login_main_layout)
-        signin_signin.setOnClickListener(this)
-        company_signin.setOnClickListener(this)
     }
     
     override fun onClick(view: View?) {
@@ -208,7 +225,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
                 startActivity(intent)
                 finishAffinity()
             }
-            else ->{
+            else -> {
                 val dueCheckForms = db.getAdminCheckFormsDue()
                 myHelper.checkDueCheckForms(dueCheckForms)
                 

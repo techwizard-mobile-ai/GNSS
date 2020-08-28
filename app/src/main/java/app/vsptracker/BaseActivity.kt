@@ -22,6 +22,7 @@ import androidx.core.text.HtmlCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.get
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.work.WorkManager
 import app.vsptracker.activities.*
 import app.vsptracker.activities.common.MachineBreakdownActivity
 import app.vsptracker.activities.common.MachineStatusActivity
@@ -35,6 +36,8 @@ import app.vsptracker.others.MyDataPushSave
 import app.vsptracker.others.MyEnum
 import app.vsptracker.others.MyHelper
 import app.vsptracker.others.Utils
+import app.vsptracker.others.autologout.AlarmService
+import app.vsptracker.others.autologout.MyAlarmManager
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
@@ -42,6 +45,7 @@ import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.app_bar_base.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
 
 
 open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -65,6 +69,8 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     
     var autoLogoutTime = 0L
     
+    private lateinit var workManager : WorkManager
+    
     
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +81,8 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         setContentView(R.layout.activity_base)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-        
+    
+        workManager = WorkManager.getInstance(application)
         
         myHelper = MyHelper(tag1, this)
         if (myHelper.getIsMachineStopped() || myHelper.getMachineID() < 1) {
@@ -153,7 +160,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 //        which is different for Machine Type for Different sites then user should be Auto logout from App
 //        and all data should be sent to server.
         val machinesAutoLogout = db.getMachinesAutoLogout()
-        myHelper.log("machinesAutoLogout:" + db.getMachinesAutoLogout()[0].toString())
+//        myHelper.log("machinesAutoLogout:" + db.getMachinesAutoLogout()[0].toString())
         
         if (machinesAutoLogout.size > 0) {
             try {
@@ -194,53 +201,102 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         myHelper.requestPermissions()
     }
     
-    fun startWorkManager() {
-        myHelper.log("App_Check:startWorkManager")
-//        val myWorkRequest = OneTimeWorkRequestBuilder<MyWork>()
-//            .setInitialDelay(10, TimeUnit.MINUTES)
+//    fun startWorkManager() {
+//        myHelper.log("App_Check:startWorkManager")
+//        Toast.makeText(this, "do work method", Toast.LENGTH_LONG).show()
+//        val myWorkRequest = OneTimeWorkRequestBuilder<AutoLogoutWorker>()
+//            .setInitialDelay(1, TimeUnit.MINUTES)
 //            .setBackoffCriteria(
 //                BackoffPolicy.LINEAR,
 //                OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
 //                TimeUnit.MILLISECONDS)
-//            .addTag(APP_AUTO_LOGOUT)
+//            .addTag(MyEnum.WORKER_AUTO_LOGOUT)
 //            .build()
-//
-//        // by id
-//        workManager.cancelWorkById(syncWorker.id)
-//        // by name
-//        workManager.cancelUniqueWork("sync")
-//        // by tag
-//        workManager.cancelAllWorkByTag("syncTag")
-        
-    }
-    fun cancelWorkManager(){
-        myHelper.log("App_Check:cancelWorkManager")
-    }
-    override fun onPause() {
-        super.onPause()
-//        myHelper.log("App_Check:onPause")
-        startWorkManager()
-//        val activityManager: ActivityManager = getSystemService(ACTIVITY_SERVICE) as ActivityManager
-//        val taskList: List<ActivityManager.RunningTaskInfo> = activityManager.getRunningTasks(10)
-//        if (taskList.isNotEmpty()) {
-//            val runningTaskInfo: ActivityManager.RunningTaskInfo = taskList[0]
-//            if (runningTaskInfo.topActivity != null && !runningTaskInfo.topActivity!!.className.contains("app.vsptracker")) {
-//                //You are App is being killed so here you can add some code
-//                myHelper.log("App_Check:App is being killed.")
-//            } else {
-//                myHelper.log("App_Check:App not killed.")
-//            }
-//        }
-    }
+//        workManager.enqueue(myWorkRequest)
     
-//    override fun onStart() {
-//        super.onStart()
-//        myHelper.log("App_Check:onStart")
+//        val timeToTrigger = System.currentTimeMillis() + 10 * 1000
+//        val pendingShowList = PendingIntent.getActivity(this, 1, Intent(this, OperatorLoginActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT)
+//        val pendingIntent = PendingIntent.getBroadcast(this, 1, Intent(this, AlarmReceiver::class.java), PendingIntent.FLAG_UPDATE_CURRENT)
 //
+//        val manager = AlarmManager();
+//        manager.setAlarmClock(AlarmManager.AlarmClockInfo(timeToTrigger, pendingShowList), pendingIntent)
+    
+//         var alarmMgr: AlarmManager? = null
+//         lateinit var alarmIntent: PendingIntent
+//
+//        alarmMgr = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+//        alarmIntent = Intent(this, OperatorLoginActivity::class.java).let { intent ->
+//            PendingIntent.getBroadcast(this, 0, intent, 0)
+//        }
+//
+//        alarmMgr?.set(
+//            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+//            SystemClock.elapsedRealtime() + 60 * 1000,
+//            alarmIntent
+//        )
+    
+//        val alarmManager =
+//            this.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
+//        val pendingIntent =
+//            PendingIntent.getActivity(this, 1, Intent(this, OperatorLoginActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT)
+////        if (pendingIntent != null && alarmManager != null) {
+////            alarmManager.cancel(pendingIntent)
+////        }
+//        alarmManager?.set(
+//            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+//            SystemClock.elapsedRealtime() + 60 * 1000,
+//            pendingIntent
+//        )
+    
+//        val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+//        val startTime: Calendar = Calendar.getInstance()
+//        startTime.add(Calendar.MINUTE, 1)
+////        startTime.add(Calendar.SECOND, 10)
+//        val intent = Intent(this@BaseActivity, OperatorLoginActivity::class.java)
+//        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+//        val pendingIntent = PendingIntent.getActivity(this@BaseActivity, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+//        alarmManager[AlarmManager.RTC, startTime.timeInMillis] = pendingIntent
+    
+//        val alarmIntent = Intent(this, OperatorLoginActivity::class.java)
+//        val pendingIntent = PendingIntent.getActivity(
+//            this, 0,
+//            alarmIntent, 0
+//        )
+//        val manager = getSystemService(ALARM_SERVICE) as AlarmManager
+//        val interval = 1000 * 60 * 1
+//        manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval.toLong(), pendingIntent)
+//        val calendar = Calendar.getInstance()
+//        calendar.add(Calendar.SECOND, 10)
+//        MyAlarmManager.setAlarm(applicationContext, calendar.timeInMillis, "App_Check:Test Message!")
+    
+//        val alarmIntent = Intent(this, AlarmService::class.java)
+//        startService(alarmIntent)
 //    }
-//    override fun onRestart() {
-//        super.onRestart()
-//        myHelper.log("App_Check:onRestart")
+//    fun cancelWorkManager(){
+////        MyAlarmManager.cancelAlarm(applicationContext)
+//
+////        var outputWorkInfos = workManager.getWorkInfosByTagLiveData(MyEnum.WORKER_AUTO_LOGOUT)
+////        myHelper.log("App_Check:before_outputWorkInfos:$outputWorkInfos")
+////        myHelper.log("App_Check:cancelAllWorkByTag")
+////        workManager.cancelAllWorkByTag(MyEnum.WORKER_AUTO_LOGOUT)
+////        outputWorkInfos = workManager.getWorkInfosByTagLiveData(MyEnum.WORKER_AUTO_LOGOUT)
+////        myHelper.log("App_Check:after_outputWorkInfos:$outputWorkInfos")
+//    }
+//    override fun onPause() {
+//        super.onPause()
+////        myHelper.log("App_Check:onPause")
+//        startWorkManager()
+////        val activityManager: ActivityManager = getSystemService(ACTIVITY_SERVICE) as ActivityManager
+////        val taskList: List<ActivityManager.RunningTaskInfo> = activityManager.getRunningTasks(10)
+////        if (taskList.isNotEmpty()) {
+////            val runningTaskInfo: ActivityManager.RunningTaskInfo = taskList[0]
+////            if (runningTaskInfo.topActivity != null && !runningTaskInfo.topActivity!!.className.contains("app.vsptracker")) {
+////                //You are App is being killed so here you can add some code
+////                myHelper.log("App_Check:App is being killed.")
+////            } else {
+////                myHelper.log("App_Check:App not killed.")
+////            }
+////        }
 //    }
     
     override fun onUserInteraction() {
@@ -296,7 +352,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     override fun onResume() {
         super.onResume()
 //        myHelper.log("App_Check:onResume")
-        cancelWorkManager()
+//        cancelWorkManager()
         startGPS()
 //        If Navigation is Disabled Lock Side Menu
         if (!myHelper.isNavEnabled()) {

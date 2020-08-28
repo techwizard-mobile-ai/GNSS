@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,107 +12,25 @@
         android:id="@+id/task_title"
         style="@style/activity_title"
         android:layout_marginBottom="@dimen/_5sdp"
-        android:text="Select Task" />
-    <LinearLayout
-        android:id="@+id/layout_stockpile_fill"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true" />
+    <GridView
+        android:id="@+id/tasks_gridview"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight=".4"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:layout_above="@id/tasks_back"
+        android:layout_below="@id/task_title"
+        android:layout_margin="@dimen/_5sdp"
+        android:columnWidth="@dimen/_120sdp"
+        android:gravity="center"
+        android:horizontalSpacing="0dp"
+        android:numColumns="auto_fit"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="0dp" />
+    <Button
+        android:id="@+id/tasks_back"
+        style="@style/back_button_single"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true" />
 
-        <LinearLayout
-            android:id="@+id/ultask_stockpile"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.4"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/task_stockpile" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ultask_fill"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_10sdp"
-            android:layout_weight="0.4"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/task_fill" />
-
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout_respread_offsite"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:layout_marginBottom="@dimen/_10sdp"
-        android:layout_weight="0.4"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:id="@+id/ultask_respread"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.4"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/task_respread" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ultask_off_site"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_10sdp"
-            android:layout_weight="0.4"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/task_off_site" />
-
-        </LinearLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/layout_crushingmachine"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:layout_marginBottom="@dimen/_10sdp"
-        android:layout_weight="0.3"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:id="@+id/ultask_crushing_plant"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.4"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/task_crushing_plant" />
-
-        </LinearLayout>
-
-
-    </LinearLayout>
-
-
-</LinearLayout>
+</RelativeLayout>

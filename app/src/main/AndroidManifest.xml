@@ -20,6 +20,26 @@
         android:screenOrientation="landscape"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
+
+        <receiver android:name=".others.autologout.AlarmReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".others.autologout.AlarmService"
+            android:exported="false"
+            android:label="Alarm Service"
+            android:stopWithTask="false">
+            <intent-filter>
+                <action android:name="com.example.tas9.alarmmanager.AlarmService" />
+            </intent-filter>
+        </service>
+
+        <service
+        android:name=".others.autologout.MyIntentService"
+        android:enabled="true"
+        android:stopWithTask="false" />
         <activity android:name=".activities.CheckFormTaskActivity" />
         <activity android:name=".activities.CheckFormsActivity" />
         <activity android:name=".activities.ServerSyncActivity" />

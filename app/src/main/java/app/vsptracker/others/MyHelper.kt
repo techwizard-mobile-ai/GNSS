@@ -968,10 +968,18 @@ class MyHelper(var TAG: String, val context: Context) {
         
     }
     
+    fun imageLoad(drawableID: Int, imageView: ImageView) {
+        try {
+            Glide.with(context).load(drawableID).into(imageView)
+        }
+        catch (exception: Exception) {
+            toast("$exception")
+        }
+    }
+    
     fun imageLoad(filePath: Uri?, imageView: ImageView) {
         try {
             Glide.with(context).load(filePath).into(imageView)
-//            toast("Image Attached Successfully.")
         }
         catch (exception: Exception) {
             toast("$exception")
@@ -1454,6 +1462,7 @@ class MyHelper(var TAG: String, val context: Context) {
     fun getKMLFileName(awsPath: String): String {
         return context.getExternalFilesDir(null).toString() + "/kml_maps/" + awsPath.substringAfterLast("kml_maps")
     }
+
     
 }
 
