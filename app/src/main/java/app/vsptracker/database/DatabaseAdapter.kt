@@ -162,6 +162,7 @@ const val createMachinesTasksTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES
         "$COL_MACHINE_TYPE_ID INTEGER, " +
         "$COL_MACHINE_TASK_ID INTEGER, " +
         "$COL_NAME TEXT, " +
+        "$COL_PRIORITY INTEGER, " +
         "$COL_STATUS INTEGER, " +
         "$COL_IS_DELETED INTEGER" +
         " )"
@@ -539,7 +540,7 @@ const val DROP_TABLE_OPERATORS_HOURS = "DROP TABLE IF EXISTS $TABLE_OPERATORS_HO
 const val DROP_TABLE_QUESTIONS_TYPES = "DROP TABLE IF EXISTS $TABLE_QUESTIONS_TYPES"
 const val DROP_TABLE_ORGS_MAPS = "DROP TABLE IF EXISTS $TABLE_ORGS_MAPS"
 
-class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 15) {
+class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 16) {
     
     val tag = "DatabaseAdapter"
     private var myHelper: MyHelper
@@ -977,6 +978,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
             cv.put(COL_MACHINE_TASK_ID, datum.machineTaskId)
             cv.put(COL_NAME, datum.name)
+            cv.put(COL_PRIORITY, datum.priority)
             cv.put(COL_STATUS, datum.status)
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
@@ -2193,7 +2195,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val db = this.readableDatabase
         
         val query =
-            "Select * from $TABLE_MACHINES_TASKS WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 AND $COL_MACHINE_TYPE_ID = ${myHelper.getMachineTypeID()} AND $COL_SITE_ID = ${myHelper.getMachineSettings().siteId}  ORDER BY $COL_ID ASC"
+            "Select * from $TABLE_MACHINES_TASKS WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 AND $COL_MACHINE_TYPE_ID = ${myHelper.getMachineTypeID()} AND $COL_SITE_ID = ${myHelper.getMachineSettings().siteId}  ORDER BY $COL_PRIORITY < 0, $COL_PRIORITY ASC"
         val result = db.rawQuery(query, null)
         
         if (result.moveToFirst()) {
@@ -2205,6 +2207,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
                 datum.machineTaskId = result.getInt(result.getColumnIndex(COL_MACHINE_TASK_ID))
                 datum.name = result.getString(result.getColumnIndex(COL_NAME))
+                datum.priority = result.getInt(result.getColumnIndex(COL_PRIORITY))
                 datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
                 datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
                 list.add(datum)
@@ -2233,6 +2236,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
             datum.machineTaskId = result.getInt(result.getColumnIndex(COL_MACHINE_TASK_ID))
             datum.name = result.getString(result.getColumnIndex(COL_NAME))
+            datum.priority = result.getInt(result.getColumnIndex(COL_PRIORITY))
             datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
             datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
 
