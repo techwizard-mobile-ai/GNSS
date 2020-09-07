@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.adapters.ServerSyncAdapter
-import app.vsptracker.apis.delay.EWork
 import app.vsptracker.apis.serverSync.ServerSyncAPI
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.ServerSyncModel
@@ -40,25 +39,58 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
         layoutInflater.inflate(R.layout.activity_server_sync, contentFrameLayout)
         val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
         navigationView.menu.getItem(10).isChecked = true
-        
+    
         // TODO convert this to a method which will be used in all other activities / classes for adding data which need to be synced.
-        addToList(1, "Operators Hours", db.getOperatorsHours("ASC"))
-        addToList(2, "Trucks Trips", db.getTripsByTypes(MyEnum.TRUCK, "ASC"))
-        addToList(3, "Scrapers Trips", db.getTripsByTypes(MyEnum.SCRAPER, "ASC"))
-        addToList(4, "Scrapers Trimmings", db.getEWorks(MyEnum.SCRAPER_TRIMMING, "ASC"))
-        addToList(5, "Excavators Prod. Digging", db.getELoadHistory("ASC"))
-        addToList(6, "Excavators Trenching", db.getEWorks(MyEnum.EXCAVATOR_TRENCHING, "ASC"))
-        addToList(7, "Excavators Gen. Digging", db.getEWorks(MyEnum.EXCAVATOR_GEN_DIGGING, "ASC"))
-        addToList(8, "Machines Stops", db.getMachinesStops("ASC"))
-        addToList(9, "Machines Hours", db.getMachinesHours("ASC"))
-        addToList(10, "Operators Waiting", db.getWaits("ASC"))
-        addToList(11, "CheckForms Completed", db.getAdminCheckFormsCompleted("ASC"))
-        
+        myDataPushSave.addToList(1, "Operators Hours", db.getOperatorsHours("ASC"))?.let {
+            serverSyncList.add(it)
+            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+        }
+        myDataPushSave.addToList(2, "Trucks Trips", db.getTripsByTypes(MyEnum.TRUCK, "ASC"))?.let {
+            serverSyncList.add(it)
+            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+        }
+        myDataPushSave.addToList(3, "Scrapers Trips", db.getTripsByTypes(MyEnum.SCRAPER, "ASC"))?.let {
+            serverSyncList.add(it)
+            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+        }
+        myDataPushSave.addToList(4, "Scrapers Trimmings", db.getEWorks(MyEnum.SCRAPER_TRIMMING, "ASC"))?.let {
+            serverSyncList.add(it)
+            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+        }
+        myDataPushSave.addToList(5, "Excavators Prod. Digging", db.getELoadHistory("ASC"))?.let {
+            serverSyncList.add(it)
+            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+        }
+        myDataPushSave.addToList(6, "Excavators Trenching", db.getEWorks(MyEnum.EXCAVATOR_TRENCHING, "ASC"))?.let {
+            serverSyncList.add(it)
+            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+        }
+        myDataPushSave.addToList(7, "Excavators Gen. Digging", db.getEWorks(MyEnum.EXCAVATOR_GEN_DIGGING, "ASC"))?.let {
+            serverSyncList.add(it)
+            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+        }
+        myDataPushSave.addToList(8, "Machines Stops", db.getMachinesStops("ASC"))?.let {
+            serverSyncList.add(it)
+            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+        }
+        myDataPushSave.addToList(9, "Machines Hours", db.getMachinesHours("ASC"))?.let {
+            serverSyncList.add(it)
+            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+        }
+        myDataPushSave.addToList(10, "Operators Waiting", db.getWaits("ASC"))?.let {
+            serverSyncList.add(it)
+            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+        }
+        myDataPushSave.addToList(11, "CheckForms Completed", db.getAdminCheckFormsCompleted("ASC"))?.let {
+            serverSyncList.add(it)
+            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+        }
+    
         refreshData()
-        
+    
         server_sync_upload.setOnClickListener(this)
     }
-   
+    
     fun refreshData() {
         
         myHelper.log("adapterListSize:${adapterList.size}")
@@ -73,88 +105,7 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
             ss_rv.visibility = View.GONE
         }
     }
-    
-    /**
-     * This method will check if there are any Remaining entries which are not Synced.
-     * If there are any remaining entries then it will add that data to List.
-     * This list will be added to RecyclerView to Display to User.
-     */
-    private fun addToList(type: Int, name: String, list: ArrayList<MyData>) {
-        val total = list.size
-        val synced = list.filter { it.isSync == 1 }.size
-        val remaining = list.filter { it.isSync == 0 }
-        myHelper.log("$name:$total, isSynced:$synced, isRemaining:${remaining.size}")
-        myHelper.log("completedCheckForms:$list")
-        if (remaining.isNotEmpty()) {
-            adapterList.add(ServerSyncModel(name, total, synced, remaining.size))
-            val serverSyncAPI = ServerSyncAPI()
-            serverSyncAPI.type = type
-            serverSyncAPI.name = name
-            serverSyncAPI.myDataList.addAll(remaining)
-            serverSyncList.add(serverSyncAPI)
-        }
-    }
-    
-    /**
-     * method addToList Over Riding
-     */
-    @JvmName("MyData")
-    private fun addToList(type: Int, name: String, list: ArrayList<EWork>) {
-        val total = list.size
-        val synced = list.filter { it.isSync == 1 }.size
-        val remaining = list.filter { it.isSync == 0 }
-        myHelper.log("$name:$total, isSynced:$synced, isRemaining:${remaining.size}")
-        if (remaining.isNotEmpty()) {
-            adapterList.add(ServerSyncModel(name, total, synced, remaining.size))
-            
-            val serverSyncAPI = ServerSyncAPI()
-            serverSyncAPI.type = type
-            serverSyncAPI.name = name
-            serverSyncAPI.myEWorkList.addAll(remaining)
-            serverSyncList.add(serverSyncAPI)
-        }
-    }
-    
-    private fun removeItem(myData: MyData): Boolean {
-        if (myData.isSync == 0) {
-            myData.checkFormData.forEach { checkFormDatum ->
-                checkFormDatum.answerDataObj.imagesList.forEach { images ->
-                    if (images.localImagePath.isNotBlank() && images.awsImagePath.isBlank()) {
-                        return true
-                    }
-                }
-            }
-            return false
-        } else {
-            return true
-        }
-    }
-    
-    private fun addToListCheckFormsCompleted(type: Int, name: String, list: ArrayList<MyData>) {
-        val total = list.size
-        val synced = list.filter { it.isSync == 1 }.size
-        myHelper.log("totalList:$list")
-        myHelper.log("syncedList:$synced")
-//        val remaining = ArrayList<MyData>()
-        
-        for (i in 0 until list.size - 1) {
-            if (removeItem(list[i])) {
-                list.remove(list[i])
-            }
-        }
-        
-        myHelper.log("list:${list.size}")
-        if (list.isNotEmpty()) {
-            
-            adapterList.add(ServerSyncModel(name, total, synced, total - synced))
-            val serverSyncAPI = ServerSyncAPI()
-            serverSyncAPI.type = type
-            serverSyncAPI.name = name
-            serverSyncAPI.myDataList.addAll(list)
-            serverSyncList.add(serverSyncAPI)
-        }
-    }
-    
+
     override fun onClick(view: View?) {
         when (view!!.id) {
             R.id.server_sync_upload -> {
@@ -219,7 +170,7 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
                                 updatedNotification()
                             }
                         }
-                        
+                
                     } else {
                         if (responseJObject.getString("message ") == "Token has expired") {
                             myHelper.log("Token Expired:$responseJObject")
@@ -233,7 +184,7 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
                     myHelper.log("${e.message}")
                 }
             }
-            
+    
             override fun onFailure(call: Call, e: IOException) {
                 myHelper.run {
                     hideDialog()
@@ -243,61 +194,6 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
             }
         })
     }
-    
-/*    private fun updateServerSync(data: List<ServerSyncAPI>): Boolean {
-        data.forEach { serverSyncAPI ->
-            when (serverSyncAPI.type) {
-                1 -> {
-                    myHelper.log("Operators Hours")
-                    db.updateOperatorsHours(serverSyncAPI.myDataList)
-                }
-                2 -> {
-                    myHelper.log("Trucks Trips")
-                    db.updateTrips(serverSyncAPI.myDataList)
-                }
-                3 -> {
-                    myHelper.log("Scrapers Trips")
-                    db.updateTrips(serverSyncAPI.myDataList)
-                }
-                4 -> {
-                    myHelper.log("Scrapers Trimming")
-                    db.updateEWorks(serverSyncAPI.myEWorkList)
-                }
-                5 -> {
-                    myHelper.log("Excavators Production Digging")
-                    db.updateELoads(serverSyncAPI.myDataList)
-                }
-                6 -> {
-                    myHelper.log("Excavators Trenching")
-                    db.updateEWorks(serverSyncAPI.myEWorkList)
-                }
-                7 -> {
-                    myHelper.log("Excavators General Digging")
-                    db.updateEWorks(serverSyncAPI.myEWorkList)
-                }
-                8 -> {
-                    myHelper.log("Machines Stops:${serverSyncAPI.myDataList}")
-                    db.updateMachinesStops(serverSyncAPI.myDataList)
-                }
-                9 -> {
-                    myHelper.log("Machines Hours:${serverSyncAPI.myDataList}")
-                    db.updateMachinesHours(serverSyncAPI.myDataList)
-                }
-                10 -> {
-                    myHelper.log("Operators Waiting")
-                    db.updateWaits(serverSyncAPI.myEWorkList)
-                }
-                11 -> {
-                    myHelper.log("CheckForms Completed")
-                    db.updateAdminCheckFormsCompleted(serverSyncAPI.myDataList)
-                    serverSyncAPI.myDataList.forEach {
-                        db.updateAdminCheckFormsData(it.checkFormData)
-                    }
-                }
-            }
-        }
-        return true
-    }*/
     
     @SuppressLint("InflateParams")
     private fun updatedNotification() {

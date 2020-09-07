@@ -9,6 +9,7 @@ import app.vsptracker.apis.serverSync.ServerSyncAPI
 import app.vsptracker.apis.serverSync.ServerSyncResponse
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.Material
+import app.vsptracker.classes.ServerSyncModel
 import app.vsptracker.database.DatabaseAdapter
 import com.google.gson.GsonBuilder
 import okhttp3.*
@@ -49,13 +50,6 @@ class MyDataPushSave(private val context: Context) {
         .build()
     private val retrofitAPI = retrofit.create(RetrofitAPI::class.java)
     var isBackgroundCall = true
-    
-    /**
-     * These array will be populated if there is any ServerSync Data
-     * For Each time old data will be removed after server sync
-     */
-    private var myDataList = ArrayList<MyData>()
-    private var eWorkList = ArrayList<EWork>()
     private var serverSyncList = ArrayList<ServerSyncAPI>()
     
     /**
@@ -360,29 +354,23 @@ class MyDataPushSave(private val context: Context) {
     }
     
     fun checkUpdateServerSyncData(showDialog: Boolean = false) {
-        // remove all previous data if any and make list empty
-        if (myDataList.size > 0)
-            myDataList.removeAll(ArrayList())
-        
-        if (eWorkList.size > 0)
-            eWorkList.removeAll(ArrayList())
-        
         if (serverSyncList.size > 0)
             serverSyncList.removeAll(ArrayList())
+    
         // TODO convert this to a method which will be used in all other activities / classes for adding data which need to be synced.
-        addToList(1, "Operators Hours", db.getOperatorsHours("ASC"))
-        addToList(2, "Trucks Trips", db.getTripsByTypes(MyEnum.TRUCK, "ASC"))
-        addToList(3, "Scrapers Trips", db.getTripsByTypes(MyEnum.SCRAPER, "ASC"))
-        addToList(4, "Scrapers Trimmings", db.getEWorks(MyEnum.SCRAPER_TRIMMING, "ASC"))
-        addToList(5, "Excavators Prod. Digging", db.getELoadHistory("ASC"))
-        addToList(6, "Excavators Trenching", db.getEWorks(MyEnum.EXCAVATOR_TRENCHING, "ASC"))
-        addToList(7, "Excavators Gen. Digging", db.getEWorks(MyEnum.EXCAVATOR_GEN_DIGGING, "ASC"))
-        addToList(8, "Machines Stops", db.getMachinesStops("ASC"))
-        addToList(9, "Machines Hours", db.getMachinesHours("ASC"))
-        addToList(10, "Operators Waiting", db.getWaits("ASC"))
-        addToList(11, "CheckForms Completed", db.getAdminCheckFormsCompleted("ASC"))
-        
-        
+        addToList(1, "Operators Hours", db.getOperatorsHours("ASC"))?.let { serverSyncList.add(it) }
+        addToList(2, "Trucks Trips", db.getTripsByTypes(MyEnum.TRUCK, "ASC"))?.let { serverSyncList.add(it) }
+        addToList(3, "Scrapers Trips", db.getTripsByTypes(MyEnum.SCRAPER, "ASC"))?.let { serverSyncList.add(it) }
+        addToList(4, "Scrapers Trimmings", db.getEWorks(MyEnum.SCRAPER_TRIMMING, "ASC"))?.let { serverSyncList.add(it) }
+        addToList(5, "Excavators Prod. Digging", db.getELoadHistory("ASC"))?.let { serverSyncList.add(it) }
+        addToList(6, "Excavators Trenching", db.getEWorks(MyEnum.EXCAVATOR_TRENCHING, "ASC"))?.let { serverSyncList.add(it) }
+        addToList(7, "Excavators Gen. Digging", db.getEWorks(MyEnum.EXCAVATOR_GEN_DIGGING, "ASC"))?.let { serverSyncList.add(it) }
+        addToList(8, "Machines Stops", db.getMachinesStops("ASC"))?.let { serverSyncList.add(it) }
+        addToList(9, "Machines Hours", db.getMachinesHours("ASC"))?.let { serverSyncList.add(it) }
+        addToList(10, "Operators Waiting", db.getWaits("ASC"))?.let { serverSyncList.add(it) }
+        addToList(11, "CheckForms Completed", db.getAdminCheckFormsCompleted("ASC"))?.let { serverSyncList.add(it) }
+    
+    
         if (myHelper.isOnline()) {
             if (serverSyncList.size > 0) {
                 val serverSyncAPI = serverSyncList.find { it.type == 11 }
@@ -402,40 +390,41 @@ class MyDataPushSave(private val context: Context) {
      * If there are any remaining entries then it will add that data to List.
      * This list will be added to RecyclerView to Display to User.
      */
-    private fun addToList(type: Int, name: String, list: ArrayList<MyData>) {
+    @JvmName("MyData")
+    fun addToList(type: Int, name: String, list: ArrayList<MyData>): ServerSyncAPI? {
         val total = list.size
         val synced = list.filter { it.isSync == 1 }.size
         val remaining = list.filter { it.isSync == 0 }
         myHelper.log("$name:$total, isSynced:$synced, isRemaining:${remaining.size}")
+        var serverSyncAPI: ServerSyncAPI? = null
         if (remaining.isNotEmpty()) {
-            myDataList.addAll(remaining)
-            
-            val serverSyncAPI = ServerSyncAPI()
+            serverSyncAPI = ServerSyncAPI()
+            serverSyncAPI.servserSyncModel = ServerSyncModel(name, total, synced, remaining.size)
             serverSyncAPI.type = type
             serverSyncAPI.name = name
             serverSyncAPI.myDataList.addAll(remaining)
-            serverSyncList.add(serverSyncAPI)
         }
+        return serverSyncAPI
     }
     
     /**
      * method addToList Over Riding
      */
-    @JvmName("MyData")
-    private fun addToList(type: Int, name: String, list: ArrayList<EWork>) {
+    @JvmName("EWork")
+    fun addToList(type: Int, name: String, list: ArrayList<EWork>): ServerSyncAPI? {
         val total = list.size
         val synced = list.filter { it.isSync == 1 }.size
         val remaining = list.filter { it.isSync == 0 }
         myHelper.log("$name:$total, isSynced:$synced, isRemaining:${remaining.size}")
+        var serverSyncAPI: ServerSyncAPI? = null
         if (remaining.isNotEmpty()) {
-            eWorkList.addAll(remaining)
-            
-            val serverSyncAPI = ServerSyncAPI()
+            serverSyncAPI = ServerSyncAPI()
+            serverSyncAPI.servserSyncModel = ServerSyncModel(name, total, synced, remaining.size)
             serverSyncAPI.type = type
             serverSyncAPI.name = name
             serverSyncAPI.myEWorkList.addAll(remaining)
-            serverSyncList.add(serverSyncAPI)
         }
+        return serverSyncAPI
     }
     
     private fun pushUpdateServerSync(showDialog: Boolean = false) {

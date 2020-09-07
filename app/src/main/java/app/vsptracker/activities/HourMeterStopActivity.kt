@@ -10,7 +10,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.drawerlayout.widget.DrawerLayout
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
-import app.vsptracker.apis.delay.EWork
 import app.vsptracker.apis.serverSync.ServerSyncAPI
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.ServerSyncModel
@@ -29,8 +28,6 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
     private val tag = this::class.java.simpleName
     
     private val adapterList = ArrayList<ServerSyncModel>()
-    private val myDataList = ArrayList<MyData>()
-    private val eWorkList = ArrayList<EWork>()
     private val serverSyncList = ArrayList<ServerSyncAPI>()
     private var isAutoLogoutCall = false
     
@@ -235,75 +232,28 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
     
     
     private fun checkUpdateServerSyncData() {
-        // remove all previous data if any and make list empty
-        if (myDataList.size > 0)
-            myDataList.removeAll(ArrayList())
-        
-        if (eWorkList.size > 0)
-            eWorkList.removeAll(ArrayList())
-        
+    
         if (serverSyncList.size > 0)
             serverSyncList.removeAll(ArrayList())
         // TODO convert this to a method which will be used in all other activities / classes for adding data which need to be synced.
-        addToList(1, "Operators Hours", db.getOperatorsHours("ASC"))
-        addToList(2, "Trucks Trips", db.getTripsByTypes(3, "ASC"))
-        addToList(3, "Scrapers Trips", db.getTripsByTypes(2, "ASC"))
-        addToList(4, "Scrapers Trimmings", db.getEWorks(3, "ASC"))
-        addToList(5, "Excavators Prod. Digging", db.getELoadHistory("ASC"))
-        addToList(6, "Excavators Trenching", db.getEWorks(2, "ASC"))
-        addToList(7, "Excavators Gen. Digging", db.getEWorks(1, "ASC"))
-        addToList(8, "Machines Stops", db.getMachinesStops("ASC"))
-        addToList(9, "Machines Hours", db.getMachinesHours("ASC"))
-        addToList(10, "Operators Waiting", db.getWaits("ASC"))
-        
-        
+        myDataPushSave.addToList(1, "Operators Hours", db.getOperatorsHours("ASC"))?.let { serverSyncList.add(it) }
+        myDataPushSave.addToList(2, "Trucks Trips", db.getTripsByTypes(3, "ASC"))?.let { serverSyncList.add(it) }
+        myDataPushSave.addToList(3, "Scrapers Trips", db.getTripsByTypes(2, "ASC"))?.let { serverSyncList.add(it) }
+        myDataPushSave.addToList(4, "Scrapers Trimmings", db.getEWorks(3, "ASC"))?.let { serverSyncList.add(it) }
+        myDataPushSave.addToList(5, "Excavators Prod. Digging", db.getELoadHistory("ASC"))?.let { serverSyncList.add(it) }
+        myDataPushSave.addToList(6, "Excavators Trenching", db.getEWorks(2, "ASC"))?.let { serverSyncList.add(it) }
+        myDataPushSave.addToList(7, "Excavators Gen. Digging", db.getEWorks(1, "ASC"))?.let { serverSyncList.add(it) }
+        myDataPushSave.addToList(8, "Machines Stops", db.getMachinesStops("ASC"))?.let { serverSyncList.add(it) }
+        myDataPushSave.addToList(9, "Machines Hours", db.getMachinesHours("ASC"))?.let { serverSyncList.add(it) }
+        myDataPushSave.addToList(10, "Operators Waiting", db.getWaits("ASC"))?.let { serverSyncList.add(it) }
+    
+    
         if (myHelper.isOnline() && serverSyncList.size > 0) {
             pushUpdateServerSync()
         } else {
             myHelper.clearLoginData()
             finishAffinity()
             myHelper.toast(MyEnum.NO_INTERNET_MESSAGE)
-        }
-    }
-    
-    /**
-     * This method will check if there are any Remaining entries which are not Synced.
-     * If there are any remaining entries then it will add that data to List.
-     * This list will be added to RecyclerView to Display to User.
-     */
-    private fun addToList(type: Int, name: String, list: ArrayList<MyData>) {
-        val total = list.size
-        val synced = list.filter { it.isSync == 1 }.size
-        val remaining = list.filter { it.isSync == 0 }
-        myHelper.log("$name:$total, isSynced:$synced, isRemaining:${remaining.size}")
-        if (remaining.isNotEmpty()) {
-            myDataList.addAll(remaining)
-            
-            val serverSyncAPI = ServerSyncAPI()
-            serverSyncAPI.type = type
-            serverSyncAPI.name = name
-            serverSyncAPI.myDataList.addAll(remaining)
-            serverSyncList.add(serverSyncAPI)
-        }
-    }
-    
-    /**
-     * method addToList Over Riding
-     */
-    @JvmName("MyData")
-    private fun addToList(type: Int, name: String, list: ArrayList<EWork>) {
-        val total = list.size
-        val synced = list.filter { it.isSync == 1 }.size
-        val remaining = list.filter { it.isSync == 0 }
-        myHelper.log("$name:$total, isSynced:$synced, isRemaining:${remaining.size}")
-        if (remaining.isNotEmpty()) {
-            eWorkList.addAll(remaining)
-            
-            val serverSyncAPI = ServerSyncAPI()
-            serverSyncAPI.type = type
-            serverSyncAPI.name = name
-            serverSyncAPI.myEWorkList.addAll(remaining)
-            serverSyncList.add(serverSyncAPI)
         }
     }
     
@@ -374,52 +324,4 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
             }
         })
     }
-    
-/*    private fun updateServerSync(data: List<ServerSyncAPI>): Boolean {
-        data.forEach { serverSyncAPI ->
-            when (serverSyncAPI.type) {
-                1 -> {
-                    myHelper.log("Operators Hours")
-                    db.updateOperatorsHours(serverSyncAPI.myDataList)
-                }
-                2 -> {
-                    myHelper.log("Trucks Trips")
-                    db.updateTrips(serverSyncAPI.myDataList)
-                }
-                3 -> {
-                    myHelper.log("Scrapers Trips")
-                    db.updateTrips(serverSyncAPI.myDataList)
-                }
-                4 -> {
-                    myHelper.log("Scrapers Trimming")
-                    db.updateEWorks(serverSyncAPI.myEWorkList)
-                }
-                5 -> {
-                    myHelper.log("Excavators Production Digging")
-                    db.updateELoads(serverSyncAPI.myDataList)
-                }
-                6 -> {
-                    myHelper.log("Excavators Trenching")
-                    db.updateEWorks(serverSyncAPI.myEWorkList)
-                }
-                7 -> {
-                    myHelper.log("Excavators General Digging")
-                    db.updateEWorks(serverSyncAPI.myEWorkList)
-                }
-                8 -> {
-                    myHelper.log("Machines Stops:${serverSyncAPI.myDataList}")
-                    db.updateMachinesStops(serverSyncAPI.myDataList)
-                }
-                9 -> {
-                    myHelper.log("Machines Hours:${serverSyncAPI.myDataList}")
-                    db.updateMachinesHours(serverSyncAPI.myDataList)
-                }
-                10 -> {
-                    myHelper.log("Operators Waiting")
-                    db.updateWaits(serverSyncAPI.myEWorkList)
-                }
-            }
-        }
-        return true
-    }*/
 }
