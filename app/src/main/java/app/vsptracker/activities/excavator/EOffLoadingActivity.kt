@@ -111,7 +111,7 @@ class EOffLoadingActivity : BaseActivity(), View.OnClickListener {
                     eWork.operatorId = myHelper.getOperatorAPI().id
                     eWork.machineTypeId = myHelper.getMachineTypeID()
 
-                    if (myDataPushSave.pushUpdateEWork(eWork) > 0) {
+                    if (myDataPushSave.updateEWork(eWork) > 0) {
                         myHelper.toast(
                             "$workTitle is Stopped.\n" +
                                     "MyData Saved Successfully.\n" +

@@ -10,7 +10,7 @@ import app.vsptracker.others.MyHelper
 import java.util.*
 
 
-class AlarmService : Service() {
+class RebootService : Service() {
     
     private val TAG = "AlarmService"
     
@@ -42,7 +42,7 @@ class AlarmService : Service() {
     }
     
     private fun sendBroadcast() {
-        val intent = Intent(this, AlarmReceiver::class.java)
+        val intent = Intent(this, RebootReceiver::class.java)
         //intent.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         val pendingIntent = PendingIntent.getBroadcast(
             this.applicationContext, 234324243, intent, 0

@@ -7,7 +7,6 @@ import android.app.TaskStackBuilder
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.graphics.Color
 import android.os.Build
 import android.util.Log
@@ -17,7 +16,7 @@ import app.vsptracker.R
 import app.vsptracker.activities.OperatorLoginActivity
 import app.vsptracker.activities.truck.THomeActivity
 
-public class AlarmReceiver : BroadcastReceiver() {
+public class RebootReceiver : BroadcastReceiver() {
     
     
     override fun onReceive(context: Context, intent: Intent?) {
@@ -53,7 +52,7 @@ public class AlarmReceiver : BroadcastReceiver() {
         }
         val builder: NotificationCompat.Builder = NotificationCompat.Builder(appContext, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher)
-            .setContentTitle("You are still logged in.")
+            .setContentTitle("You are still logged in RebootReceiver .")
             .setAutoCancel(false)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setContentText("Please logout from VSP Tracker if you are not working")
@@ -81,7 +80,7 @@ public class AlarmReceiver : BroadcastReceiver() {
     }
     
     private fun restartService(context: Context) {
-        val restartServiceIntent = Intent(context, AlarmService::class.java)
+        val restartServiceIntent = Intent(context, RebootService::class.java)
         context.startService(restartServiceIntent)
     }
     

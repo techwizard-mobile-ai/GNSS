@@ -36,8 +36,7 @@ import app.vsptracker.others.MyDataPushSave
 import app.vsptracker.others.MyEnum
 import app.vsptracker.others.MyHelper
 import app.vsptracker.others.Utils
-import app.vsptracker.others.autologout.AlarmService
-import app.vsptracker.others.autologout.MyAlarmManager
+import app.vsptracker.others.autologout.ForegroundService
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
@@ -45,7 +44,6 @@ import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.app_bar_base.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.*
 
 
 open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -66,11 +64,8 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     private lateinit var retrofit: Retrofit
     internal lateinit var retrofitAPI: RetrofitAPI
     lateinit var myDataPushSave: MyDataPushSave
-    
     var autoLogoutTime = 0L
-    
-    private lateinit var workManager : WorkManager
-    
+    private lateinit var workManager: WorkManager
     
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,7 +76,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         setContentView(R.layout.activity_base)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-    
+        
         workManager = WorkManager.getInstance(application)
         
         myHelper = MyHelper(tag1, this)
@@ -201,8 +196,9 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         myHelper.requestPermissions()
     }
     
-//    fun startWorkManager() {
-//        myHelper.log("App_Check:startWorkManager")
+    fun startWorkManager() {
+        myHelper.log("App_Check:startWorkManager")
+        ForegroundService.startService(this, getString(R.string.machine_hours_running), getString(R.string.please_logout_if_not_working), 10)
 //        Toast.makeText(this, "do work method", Toast.LENGTH_LONG).show()
 //        val myWorkRequest = OneTimeWorkRequestBuilder<AutoLogoutWorker>()
 //            .setInitialDelay(1, TimeUnit.MINUTES)
@@ -213,14 +209,14 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 //            .addTag(MyEnum.WORKER_AUTO_LOGOUT)
 //            .build()
 //        workManager.enqueue(myWorkRequest)
-    
+
 //        val timeToTrigger = System.currentTimeMillis() + 10 * 1000
 //        val pendingShowList = PendingIntent.getActivity(this, 1, Intent(this, OperatorLoginActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT)
 //        val pendingIntent = PendingIntent.getBroadcast(this, 1, Intent(this, AlarmReceiver::class.java), PendingIntent.FLAG_UPDATE_CURRENT)
 //
 //        val manager = AlarmManager();
 //        manager.setAlarmClock(AlarmManager.AlarmClockInfo(timeToTrigger, pendingShowList), pendingIntent)
-    
+
 //         var alarmMgr: AlarmManager? = null
 //         lateinit var alarmIntent: PendingIntent
 //
@@ -234,7 +230,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 //            SystemClock.elapsedRealtime() + 60 * 1000,
 //            alarmIntent
 //        )
-    
+
 //        val alarmManager =
 //            this.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
 //        val pendingIntent =
@@ -247,7 +243,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 //            SystemClock.elapsedRealtime() + 60 * 1000,
 //            pendingIntent
 //        )
-    
+
 //        val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
 //        val startTime: Calendar = Calendar.getInstance()
 //        startTime.add(Calendar.MINUTE, 1)
@@ -256,7 +252,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 //        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
 //        val pendingIntent = PendingIntent.getActivity(this@BaseActivity, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 //        alarmManager[AlarmManager.RTC, startTime.timeInMillis] = pendingIntent
-    
+
 //        val alarmIntent = Intent(this, OperatorLoginActivity::class.java)
 //        val pendingIntent = PendingIntent.getActivity(
 //            this, 0,
@@ -268,36 +264,21 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 //        val calendar = Calendar.getInstance()
 //        calendar.add(Calendar.SECOND, 10)
 //        MyAlarmManager.setAlarm(applicationContext, calendar.timeInMillis, "App_Check:Test Message!")
-    
+
 //        val alarmIntent = Intent(this, AlarmService::class.java)
 //        startService(alarmIntent)
-//    }
-//    fun cancelWorkManager(){
-////        MyAlarmManager.cancelAlarm(applicationContext)
-//
-////        var outputWorkInfos = workManager.getWorkInfosByTagLiveData(MyEnum.WORKER_AUTO_LOGOUT)
-////        myHelper.log("App_Check:before_outputWorkInfos:$outputWorkInfos")
-////        myHelper.log("App_Check:cancelAllWorkByTag")
-////        workManager.cancelAllWorkByTag(MyEnum.WORKER_AUTO_LOGOUT)
-////        outputWorkInfos = workManager.getWorkInfosByTagLiveData(MyEnum.WORKER_AUTO_LOGOUT)
-////        myHelper.log("App_Check:after_outputWorkInfos:$outputWorkInfos")
-//    }
-//    override fun onPause() {
-//        super.onPause()
-////        myHelper.log("App_Check:onPause")
-//        startWorkManager()
-////        val activityManager: ActivityManager = getSystemService(ACTIVITY_SERVICE) as ActivityManager
-////        val taskList: List<ActivityManager.RunningTaskInfo> = activityManager.getRunningTasks(10)
-////        if (taskList.isNotEmpty()) {
-////            val runningTaskInfo: ActivityManager.RunningTaskInfo = taskList[0]
-////            if (runningTaskInfo.topActivity != null && !runningTaskInfo.topActivity!!.className.contains("app.vsptracker")) {
-////                //You are App is being killed so here you can add some code
-////                myHelper.log("App_Check:App is being killed.")
-////            } else {
-////                myHelper.log("App_Check:App not killed.")
-////            }
-////        }
-//    }
+    }
+    
+    fun cancelWorkManager() {
+        myHelper.log("App_Check:cancelWorkManager")
+//        ForegroundService.stopService(this)
+        workManager.cancelAllWorkByTag(MyEnum.WORKER_AUTO_LOGOUT)
+    }
+    
+    override fun onPause() {
+        super.onPause()
+        startWorkManager()
+    }
     
     override fun onUserInteraction() {
         super.onUserInteraction()
@@ -352,7 +333,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     override fun onResume() {
         super.onResume()
 //        myHelper.log("App_Check:onResume")
-//        cancelWorkManager()
+        cancelWorkManager()
         startGPS()
 //        If Navigation is Disabled Lock Side Menu
         if (!myHelper.isNavEnabled()) {
@@ -553,9 +534,8 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             
             eWork.loadingGPSLocationString = myHelper.getGPSLocationToString(eWork.loadingGPSLocation)
             eWork.unloadingGPSLocationString = myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
-            myDataPushSave.pushInsertDelay(eWork)
+            myDataPushSave.insertDelay(eWork)
 
-//            val meter = myHelper.getMeter()
             myHelper.toast("Waiting Stopped.\nStart Time: ${myHelper.getTime(meter.delayStartTime)}Hrs.\nTotal Time: ${myHelper.getFormattedTime(meter.delayTotalTime)}")
             var dataNew = MyData()
             val bundle: Bundle? = this.intent.extras
@@ -565,10 +545,6 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             intent.putExtra("myData", dataNew)
             finishFromChild(DelayActivity())
 
-//            when {
-//                myHelper.isOnline() -> pushDelay(eWork)
-//            }
-//            saveDelay(eWork)
         }
     }
     

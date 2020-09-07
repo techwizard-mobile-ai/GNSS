@@ -122,7 +122,7 @@ class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
 //                    val updatedID = db.updateEWork(eWork)
 //                    eWorkID = updatedID
 //                    myHelper.log("updatedID :$updatedID ")
-                    if (myDataPushSave.pushUpdateEWork(eWork) > 0) {
+                    if (myDataPushSave.updateEWork(eWork) > 0) {
                         myHelper.toast(
                             "$workTitle is Stopped.\n" +
                                     "Data Saved Successfully.\n" +

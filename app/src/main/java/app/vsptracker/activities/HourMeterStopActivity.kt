@@ -1,8 +1,6 @@
 package app.vsptracker.activities
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -10,14 +8,8 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
-import app.vsptracker.activities.excavator.EHistoryActivity
-import app.vsptracker.activities.scrapper.SHistoryActivity
-import app.vsptracker.activities.truck.THistoryActivity
-import app.vsptracker.adapters.DelayHistoryAdapter
 import app.vsptracker.apis.delay.EWork
 import app.vsptracker.apis.serverSync.ServerSyncAPI
 import app.vsptracker.apis.trip.MyData
@@ -27,8 +19,6 @@ import com.google.android.material.navigation.NavigationView
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_hour_meter_stop.*
-import kotlinx.android.synthetic.main.app_bar_base.*
-import kotlinx.android.synthetic.main.fragment_delay_history.view.*
 import kotlinx.android.synthetic.main.logout_notification.view.*
 import okhttp3.*
 import org.json.JSONObject
@@ -43,6 +33,7 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
     private val eWorkList = ArrayList<EWork>()
     private val serverSyncList = ArrayList<ServerSyncAPI>()
     private var isAutoLogoutCall = false
+    
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,30 +77,30 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
                 logout(isAutoLogoutCall)
             }
         }
-    
+        
         hm_summary_operator.text = ":  ${myHelper.getOperatorAPI().name}"
         hm_summary_login.text = ":  ${myHelper.getDateTime(myHelper.getMeter().hourStartTime)}"
         hm_summary_machine.text = ":  ${myHelper.getMachineDetails()}"
         hm_summary_working_time.text = ":  ${myHelper.getFormattedTime(System.currentTimeMillis() - myHelper.getMeter().hourStartTime)}"
-    
+        
         when (myHelper.getMachineTypeID()) {
             MyEnum.EXCAVATOR -> {
                 sm_summary_prod_dig_layout.visibility = View.VISIBLE
                 hm_summary_prod_dig.text = ":  ${db.getCurrentLoginELoadHistory().size}"
-                
+        
                 sm_summary_trenching_layout.visibility = View.VISIBLE
                 hm_summary_trenching.text = ":  ${db.getCurrentLoginEWorks(MyEnum.EXCAVATOR_TRENCHING).size}"
-                
+        
                 sm_summary_gen_dig_layout.visibility = View.VISIBLE
                 hm_summary_gen_dig.text = ":  ${db.getCurrentLoginEWorks(MyEnum.EXCAVATOR_GEN_DIGGING).size}"
             }
             MyEnum.SCRAPER -> {
                 sm_summary_trips_layout.visibility = View.VISIBLE
                 hm_summary_trips.text = ":  ${db.getCurrentLoginTrips().size}"
-                
+        
                 sm_summary_trimming_layout.visibility = View.VISIBLE
                 hm_summary_trimming.text = ":  ${db.getCurrentLoginEWorks(MyEnum.SCRAPER_TRIMMING).size}"
-            
+        
             }
             MyEnum.TRUCK -> {
                 sm_summary_trips_layout.visibility = View.VISIBLE
@@ -135,13 +126,13 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
                     sfinish_reading.setText(myHelper.getRoundedDecimal(value.toDouble()).toString())
                 }
             }
-            
+    
             R.id.sfinish_plus -> {
                 val value = myHelper.getMeterValidValue(sfinish_reading.text.toString()).toFloat()
                 val newValue = value + 0.1
                 sfinish_reading.setText(myHelper.getRoundedDecimal(newValue).toString())
             }
-            
+    
             R.id.hm_stop_logout -> {
                 if (!myHelper.isOnline()) {
                     updatedNotification()
@@ -242,22 +233,6 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
         checkUpdateServerSyncData()
     }
     
-    /**
-     * This method will do following actions.
-     * 1. Delete Operator Login PIN and end session.
-     * 2. Clear Last Journey Data and End Trip Loop.
-     * 3. Clear App previous Activities.
-     * 4. Redirect to Operator Login Activity.
-     */
-    private fun clearLoginData() {
-        myHelper.setOperatorAPI(MyData())
-        val data = MyData()
-        myHelper.setLastJourney(data)
-        
-        val intent = Intent(this, OperatorLoginActivity::class.java)
-        startActivity(intent)
-        finishAffinity()
-    }
     
     private fun checkUpdateServerSyncData() {
         // remove all previous data if any and make list empty
@@ -285,8 +260,9 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
         if (myHelper.isOnline() && serverSyncList.size > 0) {
             pushUpdateServerSync()
         } else {
-            clearLoginData()
-            myHelper.toast(myDataPushSave.noInternetMessage)
+            myHelper.clearLoginData()
+            finishAffinity()
+            myHelper.toast(MyEnum.NO_INTERNET_MESSAGE)
         }
     }
     
@@ -334,7 +310,7 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
     private fun pushUpdateServerSync() {
         myHelper.showDialog()
 //        val client = OkHttpClient()
-    
+        
         val client = myHelper.unSafeOkHttpClient().build()
         val formBody = FormBody.Builder()
             .add("token", myHelper.getLoginAPI().auth_token)
@@ -367,13 +343,14 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
                         myHelper.log("data:${data}")
 //                      here I am getting complete list of data with type. Now I have to update each entry in
 //                      App Database and change their status from isSync 0 to 1 as these entries are successfully updated in Portal Database.
-                        if (updateServerSync(data)) {
+                        if (myDataPushSave.updateServerSync(data)) {
                             runOnUiThread {
                                 myHelper.toast("All Data Uploaded to Server Successfully.")
-                                clearLoginData()
+                                myHelper.clearLoginData()
+                                finishAffinity()
                             }
                         }
-                        
+                
                     } else {
                         if (responseJObject.getString("message ") == "Token has expired") {
                             myHelper.log("Token Expired:$responseJObject")
@@ -387,7 +364,7 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
                     myHelper.log("${e.message}")
                 }
             }
-            
+    
             override fun onFailure(call: Call, e: IOException) {
                 myHelper.run {
                     hideDialog()
@@ -398,7 +375,7 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
         })
     }
     
-    private fun updateServerSync(data: List<ServerSyncAPI>): Boolean {
+/*    private fun updateServerSync(data: List<ServerSyncAPI>): Boolean {
         data.forEach { serverSyncAPI ->
             when (serverSyncAPI.type) {
                 1 -> {
@@ -444,5 +421,5 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
             }
         }
         return true
-    }
+    }*/
 }

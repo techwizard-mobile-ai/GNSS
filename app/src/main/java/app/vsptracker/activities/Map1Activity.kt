@@ -137,7 +137,7 @@ class Map1Activity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
 //                        val layer = KmlLayer(map, resourceID, applicationContext)
 //                        layer.addLayerToMap()
                         val currentOrgsMap = db.getCurrentOrgsMap()
-                        if (currentOrgsMap !== null  && !currentOrgsMap.aws_path.isNullOrEmpty()) {
+                        if (currentOrgsMap !== null && !currentOrgsMap.aws_path.isNullOrEmpty()) {
                             val file = File(myHelper.getKMLFileName(currentOrgsMap.aws_path))
                             myHelper.log("fileName:${currentOrgsMap.aws_path}")
                             val inputStream: FileInputStream = file.inputStream()

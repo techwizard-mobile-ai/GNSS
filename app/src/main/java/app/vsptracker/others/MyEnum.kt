@@ -64,5 +64,7 @@ class MyEnum {
         const val STOP_REASON_OTHER1 = "Other 1"
         
         const val WORKER_AUTO_LOGOUT = "vspt_machine_auto_logout"
+        
+        const val NO_INTERNET_MESSAGE = "No Internet connection.\nData not uploaded to server but saved in App."
     }
 }

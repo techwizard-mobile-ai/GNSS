@@ -7,10 +7,14 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-feature android:name="android.hardware.camera"
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="false" />
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -21,25 +25,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
 
-        <receiver android:name=".others.autologout.AlarmReceiver">
+        <service android:name=".others.autologout.ForegroundService" />
+
+        <receiver android:name=".others.autologout.RebootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
-        <service android:name=".others.autologout.AlarmService"
+        <service
+            android:name=".others.autologout.RebootService"
             android:exported="false"
             android:label="Alarm Service"
             android:stopWithTask="false">
-            <intent-filter>
-                <action android:name="com.example.tas9.alarmmanager.AlarmService" />
-            </intent-filter>
         </service>
 
-        <service
-        android:name=".others.autologout.MyIntentService"
-        android:enabled="true"
-        android:stopWithTask="false" />
         <activity android:name=".activities.CheckFormTaskActivity" />
         <activity android:name=".activities.CheckFormsActivity" />
         <activity android:name=".activities.ServerSyncActivity" />
@@ -47,11 +47,11 @@
         <activity android:name=".activities.common.MachineBreakdownActivity" />
         <activity
             android:name=".activities.OperatorLoginActivity"
-            android:theme="@style/splashScreenTheme"
-            >
+            android:theme="@style/splashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -92,8 +92,8 @@
         <activity android:name=".activities.MachineTypeActivity" />
         <activity android:name=".activities.notused.LoadUnloadActivity" />
         <activity android:name=".activities.notused.FinishActivity" />
-        <activity android:name=".activities.excavator.ELoadActivity"/>
-        <activity android:name=".activities.LoginActivity"/>
+        <activity android:name=".activities.excavator.ELoadActivity" />
+        <activity android:name=".activities.LoginActivity" />
         <!-- <activity android:name=".activities.notused.EHomeOldActivity" /> -->
         <activity
             android:name=".BaseActivity"
@@ -106,19 +106,23 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
+
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
             android:enabled="true" />
         <service
             android:name=".aws.MyService"
             android:enabled="true" />
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_launcher" />
-        <service android:name=".others.MyFirebaseMessagingService"
+        <service
+            android:name=".others.MyFirebaseMessagingService"
             tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -131,8 +135,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths">
-            </meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
         <receiver android:name=".others.VSPTWidget">
             <intent-filter>

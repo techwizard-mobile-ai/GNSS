@@ -110,7 +110,7 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                 
                 
                 myData.unloadingWeight = trul_weight.text.toString().toDouble()
-                myDataPushSave.pushUpdateTrip(myData)
+                myDataPushSave.updateTrip(myData)
                 
                 stopDelay()
             }

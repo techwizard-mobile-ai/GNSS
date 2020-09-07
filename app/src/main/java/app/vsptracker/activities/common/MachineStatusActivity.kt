@@ -111,7 +111,7 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
                     operatorAPI.totalTime = operatorAPI.stopTime - operatorAPI.startTime
                     operatorAPI.loadingGPSLocationString = myHelper.getGPSLocationToString(operatorAPI.loadingGPSLocation)
                     operatorAPI.unloadingGPSLocationString = myHelper.getGPSLocationToString(operatorAPI.unloadingGPSLocation)
-                    myDataPushSave.pushInsertOperatorHour(operatorAPI)
+                    myDataPushSave.insertOperatorHour(operatorAPI)
                     
                     myHelper.stopDelay(gpsLocation)
                     myHelper.stopDailyMode()
@@ -155,7 +155,7 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
                     machineData.isDayWorks = 0
                 }
                 
-                myDataPushSave.pushUpdateMachineStop(machineData)
+                myDataPushSave.updateMachineStop(machineData)
                 
                 val meter = myHelper.getMeter()
                 meter.hourStartGPSLocation = gpsLocation

@@ -108,7 +108,7 @@ class DayWorksActivity : BaseActivity(), View.OnClickListener {
         operatorAPI.totalTime = operatorAPI.stopTime - operatorAPI.startTime
         operatorAPI.loadingGPSLocationString = myHelper.getGPSLocationToString(operatorAPI.loadingGPSLocation)
         operatorAPI.unloadingGPSLocationString = myHelper.getGPSLocationToString(operatorAPI.unloadingGPSLocation)
-        myDataPushSave.pushInsertOperatorHour(operatorAPI)
+        myDataPushSave.insertOperatorHour(operatorAPI)
 
 //        This method is called when Mode is changed. So Reset Start Time of Operator Hour
         val operator = myHelper.getOperatorAPI()

@@ -30,6 +30,7 @@ import app.vsptracker.R
 import app.vsptracker.activities.HourMeterStopActivity
 import app.vsptracker.activities.LoginActivity
 import app.vsptracker.activities.Map1Activity
+import app.vsptracker.activities.OperatorLoginActivity
 import app.vsptracker.activities.common.RLoadActivity
 import app.vsptracker.activities.common.RUnloadActivity
 import app.vsptracker.activities.excavator.EHistoryActivity
@@ -144,7 +145,7 @@ class MyHelper(var TAG: String, val context: Context) {
         log("awsFileDownload")
         if (currentOrgsMap !== null)
             if (!currentOrgsMap.aws_path.isNullOrEmpty() && currentOrgsMap.isDownloaded == 0) {
-                if(isOnline()){
+                if (isOnline()) {
                     toast(context.getString(R.string.downloading_site_map))
                     log("startDownload:$currentOrgsMap")
                     val key = currentOrgsMap.aws_path
@@ -156,7 +157,7 @@ class MyHelper(var TAG: String, val context: Context) {
                     intent.putExtra(MyService.INTENT_TRANSFER_OPERATION, MyService.TRANSFER_OPERATION_DOWNLOAD)
                     intent.putExtra(MyService.INTENT_FILE, file)
                     context.startService(intent)
-                }else{
+                } else {
                     toast(context.getString(R.string.map_not_updated))
                 }
             }
@@ -1462,7 +1463,28 @@ class MyHelper(var TAG: String, val context: Context) {
     fun getKMLFileName(awsPath: String): String {
         return context.getExternalFilesDir(null).toString() + "/kml_maps/" + awsPath.substringAfterLast("kml_maps")
     }
-
+    
+    /**
+     * This method will do following actions.
+     * 1. Delete Operator Login PIN and end session.
+     * 2. Clear Last Journey Data and End Trip Loop.
+     * 3. Clear App previous Activities.
+     * 4. Redirect to Operator Login Activity.
+     */
+    fun clearLoginData() {
+        setOperatorAPI(MyData())
+        val data = MyData()
+        setLastJourney(data)
+        
+        val intent = Intent(context, OperatorLoginActivity::class.java)
+        context.startActivity(intent)
+//        context.finishAffinity()
+    }
+    
+    fun autoLogout(){
+    
+    }
+    
     
 }
 

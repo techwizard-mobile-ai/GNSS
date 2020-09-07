@@ -106,7 +106,6 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
         myHelper.log("$name:$total, isSynced:$synced, isRemaining:${remaining.size}")
         if (remaining.isNotEmpty()) {
             adapterList.add(ServerSyncModel(name, total, synced, remaining.size))
-//            eWorkList.addAll(remaining)
             
             val serverSyncAPI = ServerSyncAPI()
             serverSyncAPI.type = type
@@ -213,7 +212,7 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
                         myHelper.log("data:${data}")
 //                      here I am getting complete list of data with type. Now I have to update each entry in
 //                      App Database and change their status from isSync 0 to 1 as these entries are successfully updated in Portal Database.
-                        if (updateServerSync(data)) {
+                        if (myDataPushSave.updateServerSync(data)) {
                             runOnUiThread {
 //                                myHelper.toast("All Data Uploaded to Server Successfully.")
                                 mAdapter.notifyDataSetChanged()
@@ -245,7 +244,7 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
         })
     }
     
-    private fun updateServerSync(data: List<ServerSyncAPI>): Boolean {
+/*    private fun updateServerSync(data: List<ServerSyncAPI>): Boolean {
         data.forEach { serverSyncAPI ->
             when (serverSyncAPI.type) {
                 1 -> {
@@ -298,7 +297,7 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
             }
         }
         return true
-    }
+    }*/
     
     @SuppressLint("InflateParams")
     private fun updatedNotification() {
@@ -325,6 +324,5 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
             mAlertDialog.dismiss()
             myHelper.startHomeActivityByType(MyData())
         }
-        
     }
 }
