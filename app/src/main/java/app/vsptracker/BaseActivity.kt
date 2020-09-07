@@ -90,7 +90,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         this.retrofit = Retrofit.Builder()
             .baseUrl(RetrofitAPI.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
-            .client(myHelper.unSafeOkHttpClient().build())
+            .client(myHelper.skipSSLOkHttpClient().build())
             .build()
         this.retrofitAPI = retrofit.create(RetrofitAPI::class.java)
         

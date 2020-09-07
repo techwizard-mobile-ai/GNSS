@@ -259,9 +259,7 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
     
     private fun pushUpdateServerSync() {
         myHelper.showDialog()
-//        val client = OkHttpClient()
-        
-        val client = myHelper.unSafeOkHttpClient().build()
+        val client = myHelper.skipSSLOkHttpClient().build()
         val formBody = FormBody.Builder()
             .add("token", myHelper.getLoginAPI().auth_token)
             .add("operator_id", myHelper.getOperatorAPI().id.toString())

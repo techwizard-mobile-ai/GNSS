@@ -14,11 +14,8 @@ import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.*
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_login.*
-import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.security.SecureRandom
-import javax.net.ssl.*
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
     
@@ -50,7 +47,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         this.retrofit = Retrofit.Builder()
             .baseUrl(RetrofitAPI.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
-            .client(myHelper.unSafeOkHttpClient().build())
+            .client(myHelper.skipSSLOkHttpClient().build())
             .build()
         this.retrofitAPI = retrofit.create(RetrofitAPI::class.java)
         

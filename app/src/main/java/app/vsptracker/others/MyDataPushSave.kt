@@ -46,7 +46,7 @@ class MyDataPushSave(private val context: Context) {
     private val retrofit = Retrofit.Builder()
         .baseUrl(RetrofitAPI.BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
-        .client(myHelper.unSafeOkHttpClient().build())
+        .client(myHelper.skipSSLOkHttpClient().build())
         .build()
     private val retrofitAPI = retrofit.create(RetrofitAPI::class.java)
     var isBackgroundCall = true
@@ -428,19 +428,9 @@ class MyDataPushSave(private val context: Context) {
     }
     
     private fun pushUpdateServerSync(showDialog: Boolean = false) {
-//        val client = OkHttpClient()
         if (showDialog)
             myHelper.showDialog()
-//        val client = OkHttpClient.Builder()
-//            .connectTimeout(2, TimeUnit.MINUTES)
-//            .readTimeout(2, TimeUnit.MINUTES)
-//            .writeTimeout(2, TimeUnit.MINUTES) //.sslSocketFactory(sslSocketFactory, trustManager)
-//            .followRedirects(false)
-//            .followSslRedirects(false)
-//            .retryOnConnectionFailure(false)
-//            .cache(null) //new Cache(sContext.getCacheDir(),10*1024*1024)
-//            .build()
-        val client = myHelper.unSafeOkHttpClient().build()
+        val client = myHelper.skipSSLOkHttpClient().build()
         
         val formBody = FormBody.Builder()
             .add("token", myHelper.getLoginAPI().auth_token)

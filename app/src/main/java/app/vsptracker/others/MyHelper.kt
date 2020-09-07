@@ -209,8 +209,7 @@ class MyHelper(var TAG: String, val context: Context) {
     
     fun refreshToken() {
         log("inside refreshToken")
-//        val client = OkHttpClient()
-        val client = unSafeOkHttpClient().build()
+        val client = skipSSLOkHttpClient().build()
         val formBody = FormBody.Builder()
             .add("email", getLoginAPI().email)
             .add("password", getLoginAPI().pass)
@@ -1413,9 +1412,13 @@ class MyHelper(var TAG: String, val context: Context) {
     }
     */
     
-    
-    fun unSafeOkHttpClient(): OkHttpClient.Builder {
-        var okHttpClient = OkHttpClient.Builder()
+    /**
+     * There are issue on Lollipop version devices due to SSL checking. Currently SSL are not utilized and neither
+     * we have purchased premium SSL. So SSL checking in current scenario and not implemented. So we are skipping SSL
+     * checking to support Lollipop devices.
+     */
+    fun skipSSLOkHttpClient(): OkHttpClient.Builder {
+        val okHttpClient = OkHttpClient.Builder()
         
         okHttpClient
             .connectTimeout(3, TimeUnit.MINUTES)

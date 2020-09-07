@@ -3,7 +3,6 @@ package app.vsptracker.activities
 import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
@@ -70,7 +69,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
         this.retrofit = Retrofit.Builder()
             .baseUrl(RetrofitAPI.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
-            .client(myHelper.unSafeOkHttpClient().build())
+            .client(myHelper.skipSSLOkHttpClient().build())
             .build()
         this.retrofitAPI = retrofit.create(RetrofitAPI::class.java)
         
