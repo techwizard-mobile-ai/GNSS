@@ -15,13 +15,13 @@
         <TextView
             android:id="@+id/elhr_number"
             style="@style/eload_text"
-            android:layout_weight=".3"
+            android:layout_weight=".12"
             android:text="@string/list_row_eoffloading_elhr_number_text" />
 
         <TextView
             android:id="@+id/elhr_time"
             style="@style/eload_text"
-            android:layout_weight=".3"
+            android:layout_weight=".38"
             android:text="@string/list_row_eoffloading_elhr_time_text" />
     </LinearLayout>
 
