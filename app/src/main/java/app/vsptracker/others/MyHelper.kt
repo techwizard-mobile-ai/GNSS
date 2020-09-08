@@ -866,12 +866,11 @@ class MyHelper(var TAG: String, val context: Context) {
     }
     
     @Suppress("DEPRECATION")
-    fun showDialog() {
+    fun showDialog(message: String = "Loading please wait ...") {
         try {
             dialog = ProgressDialog.show(
-                context, "VSP Tracker", "Loading Please wait...", true, false
+                context, "VSP Tracker", message, true, false
             )
-            
         }
         catch (exception: Exception) {
             log("showDialogException:$exception")

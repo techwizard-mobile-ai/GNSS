@@ -15,13 +15,9 @@ import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.ServerSyncModel
 import app.vsptracker.others.MyEnum
 import com.google.android.material.navigation.NavigationView
-import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_hour_meter_stop.*
 import kotlinx.android.synthetic.main.logout_notification.view.*
-import okhttp3.*
-import org.json.JSONObject
-import java.io.IOException
 
 class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
     
@@ -227,99 +223,6 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
             
             myDataPushSave.pushInsertMachineHour(myData, false)
         }
-        checkUpdateServerSyncData()
-    }
-    
-    
-    private fun checkUpdateServerSyncData() {
-    
-        if (serverSyncList.size > 0)
-            serverSyncList.removeAll(ArrayList())
-        // TODO convert this to a method which will be used in all other activities / classes for adding data which need to be synced.
-        myDataPushSave.addToList(1, "Operators Hours", db.getOperatorsHours("ASC"))?.let { serverSyncList.add(it) }
-        myDataPushSave.addToList(2, "Trucks Trips", db.getTripsByTypes(3, "ASC"))?.let { serverSyncList.add(it) }
-        myDataPushSave.addToList(3, "Scrapers Trips", db.getTripsByTypes(2, "ASC"))?.let { serverSyncList.add(it) }
-        myDataPushSave.addToList(4, "Scrapers Trimmings", db.getEWorks(3, "ASC"))?.let { serverSyncList.add(it) }
-        myDataPushSave.addToList(5, "Excavators Prod. Digging", db.getELoadHistory("ASC"))?.let { serverSyncList.add(it) }
-        myDataPushSave.addToList(6, "Excavators Trenching", db.getEWorks(2, "ASC"))?.let { serverSyncList.add(it) }
-        myDataPushSave.addToList(7, "Excavators Gen. Digging", db.getEWorks(1, "ASC"))?.let { serverSyncList.add(it) }
-        myDataPushSave.addToList(8, "Machines Stops", db.getMachinesStops("ASC"))?.let { serverSyncList.add(it) }
-        myDataPushSave.addToList(9, "Machines Hours", db.getMachinesHours("ASC"))?.let { serverSyncList.add(it) }
-        myDataPushSave.addToList(10, "Operators Waiting", db.getWaits("ASC"))?.let { serverSyncList.add(it) }
-    
-    
-        if (myHelper.isOnline() && serverSyncList.size > 0) {
-            pushUpdateServerSync()
-        } else {
-            myHelper.clearLoginData()
-            finishAffinity()
-            myHelper.toast(MyEnum.NO_INTERNET_MESSAGE)
-        }
-    }
-    
-    private fun pushUpdateServerSync() {
-        myHelper.showDialog()
-        val client = myHelper.skipSSLOkHttpClient().build()
-        val formBody = FormBody.Builder()
-            .add("token", myHelper.getLoginAPI().auth_token)
-            .add("operator_id", myHelper.getOperatorAPI().id.toString())
-            .add("device_details", myHelper.getDeviceDetailsString())
-            .add("data", myHelper.getServerSyncDataAPIString(serverSyncList))
-            .build()
-        
-        val request = Request.Builder()
-            .url("https://vsptracker.app/api/v1/orgsserversync/store")
-            .post(formBody)
-            .build()
-        
-        client.newCall(request).enqueue(object : Callback {
-            override fun onResponse(call: Call, response: Response) {
-                myHelper.hideDialog()
-                val responseString = response.body!!.string()
-                val responseJObject = JSONObject(responseString)
-                val success = responseJObject.getBoolean("success")
-                try {
-                    if (success) {
-                        val gson = GsonBuilder().create()
-//                      this data is used for convert data arraylist into object to convert in gson
-//                      here converting back
-                        val data1 = responseJObject.getString("data")
-//                      this is complete data sent to server
-//                      val dataArray = dataObj.getJSONArray("data")
-//                      val dataArray = JSONArray(data1)
-                        val data = gson.fromJson(data1, Array<ServerSyncAPI>::class.java).toList()
-                        myHelper.log("data:${data}")
-//                      here I am getting complete list of data with type. Now I have to update each entry in
-//                      App Database and change their status from isSync 0 to 1 as these entries are successfully updated in Portal Database.
-                        if (myDataPushSave.updateServerSync(data)) {
-                            runOnUiThread {
-                                myHelper.toast("All Data Uploaded to Server Successfully.")
-                                myHelper.clearLoginData()
-                                finishAffinity()
-                            }
-                        }
-                
-                    } else {
-                        if (responseJObject.getString("message ") == "Token has expired") {
-                            myHelper.log("Token Expired:$responseJObject")
-                            myHelper.refreshToken()
-                        } else {
-                            myHelper.toast(responseJObject.getString("message "))
-                        }
-                    }
-                }
-                catch (e: Exception) {
-                    myHelper.log("${e.message}")
-                }
-            }
-    
-            override fun onFailure(call: Call, e: IOException) {
-                myHelper.run {
-                    hideDialog()
-                    toast(e.message.toString())
-                    log("Exception: ${e.message}")
-                }
-            }
-        })
+        myDataPushSave.checkUpdateServerSyncData(true, true)
     }
 }

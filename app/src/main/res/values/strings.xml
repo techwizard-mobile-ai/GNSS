@@ -325,5 +325,7 @@
     <string name="map_not_updated">Site map not updated \n due to Internet connection problem. Please connect internet and login again to download site updated map.</string>
     <string name="machine_hours_running">Machine hours running.</string>
     <string name="please_logout_if_not_working">Please logout if you are not working.</string>
+    <string name="all_data_uploaded">All data uploaded to server successfully.</string>
+    <string name="logging_out_message">Logging out please wait …</string>
 
 </resources>

@@ -1,7 +1,9 @@
 package app.vsptracker.others
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import app.vsptracker.R
 import app.vsptracker.activities.OperatorLoginActivity
 import app.vsptracker.apis.RetrofitAPI
 import app.vsptracker.apis.delay.EWork
@@ -11,6 +13,7 @@ import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.Material
 import app.vsptracker.classes.ServerSyncModel
 import app.vsptracker.database.DatabaseAdapter
+import com.amazonaws.mobile.auth.core.internal.util.ThreadUtils.runOnUiThread
 import com.google.gson.GsonBuilder
 import okhttp3.*
 import org.json.JSONObject
@@ -353,11 +356,10 @@ class MyDataPushSave(private val context: Context) {
         return insertID
     }
     
-    fun checkUpdateServerSyncData(showDialog: Boolean = false) {
+    fun checkUpdateServerSyncData(showDialog: Boolean = false, isLogoutCall: Boolean = false) {
         if (serverSyncList.size > 0)
             serverSyncList.removeAll(ArrayList())
-    
-        // TODO convert this to a method which will be used in all other activities / classes for adding data which need to be synced.
+        
         addToList(1, "Operators Hours", db.getOperatorsHours("ASC"))?.let { serverSyncList.add(it) }
         addToList(2, "Trucks Trips", db.getTripsByTypes(MyEnum.TRUCK, "ASC"))?.let { serverSyncList.add(it) }
         addToList(3, "Scrapers Trips", db.getTripsByTypes(MyEnum.SCRAPER, "ASC"))?.let { serverSyncList.add(it) }
@@ -368,9 +370,12 @@ class MyDataPushSave(private val context: Context) {
         addToList(8, "Machines Stops", db.getMachinesStops("ASC"))?.let { serverSyncList.add(it) }
         addToList(9, "Machines Hours", db.getMachinesHours("ASC"))?.let { serverSyncList.add(it) }
         addToList(10, "Operators Waiting", db.getWaits("ASC"))?.let { serverSyncList.add(it) }
-        addToList(11, "CheckForms Completed", db.getAdminCheckFormsCompleted("ASC"))?.let { serverSyncList.add(it) }
-    
-    
+        // Uploading Completed CheckForms images to AWS might take time so skip Completed CheckForms upload to server and
+        // uploading images to AWS Bucket when operator logout from app.
+        if (!isLogoutCall)
+            addToList(11, "CheckForms Completed", db.getAdminCheckFormsCompleted("ASC"))?.let { serverSyncList.add(it) }
+        
+        
         if (myHelper.isOnline()) {
             if (serverSyncList.size > 0) {
                 val serverSyncAPI = serverSyncList.find { it.type == 11 }
@@ -378,7 +383,7 @@ class MyDataPushSave(private val context: Context) {
                 if (serverSyncAPI != null) {
                     this.serverSyncList.find { it.type == 11 }!!.myDataList = myHelper.uploadImagesToAWS(serverSyncAPI.myDataList)
                 }
-                pushUpdateServerSync(showDialog)
+                pushUpdateServerSync(showDialog, isLogoutCall)
             }
         } else {
             myHelper.toast(MyEnum.NO_INTERNET_MESSAGE)
@@ -427,9 +432,14 @@ class MyDataPushSave(private val context: Context) {
         return serverSyncAPI
     }
     
-    private fun pushUpdateServerSync(showDialog: Boolean = false) {
-        if (showDialog)
-            myHelper.showDialog()
+    private fun pushUpdateServerSync(showDialog: Boolean = false, isLogoutCall: Boolean = false) {
+        if (showDialog) {
+            if (isLogoutCall) {
+                myHelper.showDialog(context.getString(R.string.logging_out_message))
+            } else {
+                myHelper.showDialog()
+            }
+        }
         val client = myHelper.skipSSLOkHttpClient().build()
         
         val formBody = FormBody.Builder()
@@ -443,8 +453,6 @@ class MyDataPushSave(private val context: Context) {
             .url("https://vsptracker.app/api/v1/orgsserversync/store")
             .post(formBody)
             .build()
-        
-        
         
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
@@ -466,7 +474,18 @@ class MyDataPushSave(private val context: Context) {
                         myHelper.log("data:${data}")
 //                      here I am getting complete list of data with type. Now I have to update each entry in
 //                      App Database and change their status from isSync 0 to 1 as these entries are successfully updated in Portal Database.
-                        updateServerSync(data)
+                        if (isLogoutCall) {
+                            if (updateServerSync(data)) {
+                                runOnUiThread {
+                                    myHelper.toast(context.getString(R.string.all_data_uploaded))
+                                    myHelper.clearLoginData()
+                                    (context as Activity).finishAffinity()
+                                }
+                            }
+                        } else {
+                            updateServerSync(data)
+                        }
+                
                     } else {
                         if (responseJObject.getString("message ") == "Token has expired") {
                             myHelper.log("Token Expired:$responseJObject")
@@ -553,7 +572,8 @@ class MyDataPushSave(private val context: Context) {
                 }
             }
             return true
-        }catch (e :Exception){
+        }
+        catch (e: Exception) {
             myHelper.log("updateServerSyncException:${e.localizedMessage}")
             myHelper.toast("updateServerSyncException:${e.localizedMessage}")
             return false
