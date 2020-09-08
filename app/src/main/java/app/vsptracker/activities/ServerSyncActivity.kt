@@ -86,12 +86,11 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
             it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
         }
     
-        refreshData()
-    
+        refreshAdapter()
         server_sync_upload.setOnClickListener(this)
     }
     
-    fun refreshData() {
+    fun refreshAdapter() {
         
         myHelper.log("adapterListSize:${adapterList.size}")
         if (adapterList.size > 0) {

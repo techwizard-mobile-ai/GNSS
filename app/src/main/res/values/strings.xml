@@ -327,5 +327,5 @@
     <string name="please_logout_if_not_working">Please logout if you are not working.</string>
     <string name="all_data_uploaded">All data uploaded to server successfully.</string>
     <string name="logging_out_message">Logging out please wait …</string>
-
+    <string name="data_not_pushed">No Internet connection.\nData saved in App but not uploaded to server.</string>
 </resources>

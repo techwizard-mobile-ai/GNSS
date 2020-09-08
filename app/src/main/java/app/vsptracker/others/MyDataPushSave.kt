@@ -386,7 +386,7 @@ class MyDataPushSave(private val context: Context) {
                 pushUpdateServerSync(showDialog, isLogoutCall)
             }
         } else {
-            myHelper.toast(MyEnum.NO_INTERNET_MESSAGE)
+            myHelper.toast(context.getString(R.string.data_not_pushed))
         }
     }
     
