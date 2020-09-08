@@ -32,7 +32,7 @@ class EOffLoadingAdapter(
         val myData = dataList[position]
 
         holder.itemView.elhr_number.text = "Load # " + (dataList.size - position)
-        holder.itemView.elhr_time.text = ":  " + myData.time + " Hrs"
+        holder.itemView.elhr_time.text = ":  " + myData.date + " Hrs"
     }
 
 

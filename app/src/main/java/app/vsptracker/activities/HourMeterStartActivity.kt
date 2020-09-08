@@ -107,21 +107,12 @@ class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
                 val newMinutes = myHelper.getRoundedInt(minutes)
                 myHelper.log("Minutes: $newMinutes")
                 myHelper.setMachineTotalTime(newMinutes)
-//                myHelper.pushIsMachineRunning( 1)
                 myHelper.setIsNavEnabled(true)
-//                myHelper.startHomeActivityByType(myData)
-                
                 myHelper.awsFileDownload(db.getCurrentOrgsMap())
-    
                 val dueCheckForms = db.getAdminCheckFormsDue()
-                
-                
-                myHelper.checkDueCheckForms(dueCheckForms)
-                
-                
-                
                 myHelper.startMachine()
-                myHelper.setIsNavEnabled(true)
+                // Either Due checkforms OR Home activity will be started
+                myHelper.checkDueCheckForms(dueCheckForms)
                 finishAffinity()
             }
         }

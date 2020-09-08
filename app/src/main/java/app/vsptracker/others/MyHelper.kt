@@ -783,7 +783,6 @@ class MyHelper(var TAG: String, val context: Context) {
         log("lastJourney:$lastJourney")
         // on start of Application, set isMapOpened to false, this is to reset map flag
         setIsMapOpened(false)
-        // TODO Here check if updated map is not downloaded for selected site, then download selected site map from AWS
         
         when (getMachineTypeID()) {
             MyEnum.EXCAVATOR -> {

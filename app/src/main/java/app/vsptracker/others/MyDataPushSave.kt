@@ -323,7 +323,7 @@ class MyDataPushSave(private val context: Context) {
         myHelper.log("insertID:$insertID")
         
         if (insertID > 0 && pushToServer)
-            checkUpdateServerSyncData(true)
+            checkUpdateServerSyncData()
         return insertID
     }
     
@@ -332,7 +332,7 @@ class MyDataPushSave(private val context: Context) {
         myHelper.log("updateEworkID:$updatedID")
         
         if (updatedID > 0)
-            checkUpdateServerSyncData(true)
+            checkUpdateServerSyncData()
         return updatedID
     }
     
@@ -340,7 +340,7 @@ class MyDataPushSave(private val context: Context) {
         val insertID = db.insertELoad(myData)
         myHelper.log("insertELoadID:$insertID")
         if (insertID > 0)
-            checkUpdateServerSyncData(true)
+            checkUpdateServerSyncData()
         return insertID
     }
     
