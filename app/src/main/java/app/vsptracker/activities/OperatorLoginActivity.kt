@@ -185,6 +185,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
      * 2. If Machine is stopped go to MachineStatusActivity to Start Machine.
      * 3. If above conditions are false Go to HourMeterStartActivity
      * as new Machine is Selected and Hours to be set and Machine Time to be started.
+     * Note: Machine status will be updated in all activities before launching Home Activity
      */
     private fun launchHome() {
         when {
@@ -211,6 +212,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
      * 1. If Machine is Not already selected Go to MachineTypeActivity to Select Site and Machine.
      * 2. If Machine is stopped go to MachineStatusActivity to Start Machine.
      * 3. If above conditions are false Launch Home Screen for selected Machine Type.
+     * Note: Machine status will be updated in all activities before launching Home Activity
      */
     private fun launchHomeForLoggedIn() {
         when {
@@ -227,6 +229,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
             else -> {
                 val dueCheckForms = db.getAdminCheckFormsDue()
                 myHelper.checkDueCheckForms(dueCheckForms)
+                myDataPushSave.checkUpdateServerSyncData(MyEnum.SERVER_SYNC_UPDATE_MACHINE_STATUS)
                 
             }
             

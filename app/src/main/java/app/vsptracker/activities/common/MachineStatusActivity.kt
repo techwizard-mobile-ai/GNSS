@@ -13,6 +13,7 @@ import app.vsptracker.activities.HourMeterStartActivity
 import app.vsptracker.activities.OperatorLoginActivity
 import app.vsptracker.adapters.MachineStatusAdapter
 import app.vsptracker.apis.trip.MyData
+import app.vsptracker.others.MyEnum
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_machine_status.*
@@ -127,7 +128,7 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
                     myHelper.logout(this)
                 }
             }
-            
+    
             R.id.machine_status_start -> {
                 val machineData = db.getMachineStopByID(myHelper.getMeter().machineDbID)
                 val currentTime = System.currentTimeMillis()
@@ -135,34 +136,34 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
                 machineData.totalTime = currentTime - machineData.startTime
                 machineData.time = currentTime.toString()
                 machineData.date = myHelper.getDate(currentTime)
-                
+        
                 machineData.recordID = myHelper.getMeter().machineDbID
                 machineData.unloadingGPSLocation = gpsLocation
-                
+        
                 machineData.loadingGPSLocationString = myHelper.getGPSLocationToString(machineData.loadingGPSLocation)
                 machineData.unloadingGPSLocationString = myHelper.getGPSLocationToString(machineData.unloadingGPSLocation)
-                
+        
                 machineData.orgId = myHelper.getLoginAPI().org_id
                 machineData.siteId = myHelper.getMachineSettings().siteId
                 machineData.operatorId = myHelper.getOperatorAPI().id
                 machineData.machineTypeId = myHelper.getMachineTypeID()
                 machineData.machineId = myHelper.getMachineID()
                 machineData.machine_stop_reason_id = myHelper.getMachineStoppedReasonID()
-                
+        
                 if (myHelper.isDailyModeStarted()) {
                     machineData.isDayWorks = 1
                 } else {
                     machineData.isDayWorks = 0
                 }
-                
+        
                 myDataPushSave.updateMachineStop(machineData)
-                
+        
                 val meter = myHelper.getMeter()
                 meter.hourStartGPSLocation = gpsLocation
                 meter.hourStartTime = currentTime
                 meter.machineStartTime = currentTime
                 meter.startHours = myHelper.getMeterValidValue(sfinish_reading.text.toString())
-                
+        
                 if (!startReading.equals(meter.startHours, true)) {
                     meter.isMachineStartTimeCustom = true
                     myHelper.log("Custom Time : True, Original reading:${myHelper.getMeterTimeForStart()}, New Reading: ${meter.startHours}")
@@ -170,7 +171,7 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
                     meter.isMachineStartTimeCustom = false
                     myHelper.log("Custom Time : False, Original reading:${myHelper.getMeterTimeForStart()}, New Reading: ${meter.startHours}")
                 }
-                
+        
                 myHelper.setMeter(meter)
                 val value = meter.startHours.toDouble()
                 val minutes = value * 60
@@ -178,7 +179,8 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
                 myHelper.log("Minutes: $newMinutes")
                 myHelper.setMachineTotalTime(newMinutes)
                 updateMachineStatus()
-                
+                // update Machine status to server
+                myDataPushSave.checkUpdateServerSyncData(MyEnum.SERVER_SYNC_UPDATE_MACHINE_STATUS)
             }
         }
     }

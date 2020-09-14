@@ -250,15 +250,13 @@ class MyDataPushSave(private val context: Context) {
     }
     
     /**
-     * Machine Stop Entry is Pushed when Machine is Started Again.
-     * When Machine is Started, Entry will be pushed to Portal and then
      * it will update Machine Stop Entry in Database.
+     * and there is separate call in method which is calling this method to update
+     * machine status on Server
      */
     fun updateMachineStop(machineData: MyData) {
         val updateID = db.updateMachineStop(machineData)
         myHelper.log("updateMachineStopID:$updateID")
-        if (updateID > 0)
-            checkUpdateServerSyncData()
     }
     
     /**
@@ -398,7 +396,9 @@ class MyDataPushSave(private val context: Context) {
             addToList(11, myHelper.getTypeName(11), db.getAdminCheckFormsCompleted("ASC"))?.let { serverSyncList.add(it) }
         
         if (myHelper.isOnline()) {
-            if (serverSyncList.size > 0) {
+            // Check if there is data to sync with server OR it is API call to update machine status on server then must
+            // make API call
+            if (serverSyncList.size > 0 || type == MyEnum.SERVER_SYNC_UPDATE_MACHINE_STATUS) {
                 val serverSyncAPI = serverSyncList.find { it.type == 11 }
                 // If type is Completed CheckForms then upload remaining CheckForms Answer images to AWS
                 if (serverSyncAPI != null) {
@@ -458,19 +458,24 @@ class MyDataPushSave(private val context: Context) {
         val showDialog = type == MyEnum.SERVER_SYNC_DATA_DIALOG
         if (showDialog)
             myHelper.showDialog(context.getString(R.string.uploading_data_message))
-        
+    
         val client = myHelper.skipSSLOkHttpClient().build()
         val data = myHelper.getServerSyncDataAPIString(serverSyncList)
-        val operatorID = myHelper.getOperatorAPI().id.toString()
+        val operatorID = myHelper.getOperatorAPI().id
         val deviceDetails = myHelper.getDeviceDetailsString()
-        
+        val machineID = myHelper.getMachineID().toString()
+        // Operator ID = 0 when Logging out from App
+        val isMachineRunning = if (myHelper.getIsMachineStopped() || operatorID == 0) "0" else "1"
+        myHelper.log("operatorID:$operatorID machineID:$machineID is_running:$isMachineRunning")
         val formBody = FormBody.Builder()
             .add("token", myHelper.getLoginAPI().auth_token)
-            .add("operator_id", operatorID)
+            .add("operator_id", operatorID.toString())
             .add("device_details", deviceDetails)
+            .add("machine_id", machineID)
+            .add("is_running", isMachineRunning)
             .add("data", data)
             .build()
-        
+    
         val request = Request.Builder()
             .url("${MyEnum.BASE_URL}orgsserversync/store")
             .post(formBody)

@@ -9,6 +9,7 @@ import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.apis.trip.MyDataListResponse
 import app.vsptracker.database.DatabaseAdapter
+import app.vsptracker.others.MyEnum
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_hour_meter_start.*
@@ -82,7 +83,7 @@ class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
                 val newValue = value + 0.1
                 ms_reading.setText(myHelper.getRoundedDecimal(newValue).toString())
             }
-            
+    
             R.id.ms_continue -> {
                 val meter = myHelper.getMeter()
                 meter.hourStartGPSLocation = gpsLocation
@@ -90,7 +91,7 @@ class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
                 meter.hourStartTime = currentTime
                 meter.machineStartTime = currentTime
                 meter.startHours = myHelper.getMeterValidValue(ms_reading.text.toString())
-                
+        
                 if (!startReading.equals(meter.startHours, true)) {
                     meter.isMachineStartTimeCustom = true
                     myHelper.log("Custom Time : True, Original reading:${myHelper.getMeterTimeForStart()}, New Reading: ${meter.startHours}")
@@ -98,10 +99,10 @@ class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
                     meter.isMachineStartTimeCustom = false
                     myHelper.log("Custom Time : False, Original reading:${myHelper.getMeterTimeForStart()}, New Reading: ${meter.startHours}")
                 }
-                
-                
+        
+        
                 myHelper.setMeter(meter)
-                
+        
                 val value = meter.startHours.toDouble()
                 val minutes = value * 60
                 val newMinutes = myHelper.getRoundedInt(minutes)
@@ -113,6 +114,7 @@ class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
                 myHelper.startMachine()
                 // Either Due checkforms OR Home activity will be started
                 myHelper.checkDueCheckForms(dueCheckForms)
+                myDataPushSave.checkUpdateServerSyncData(MyEnum.SERVER_SYNC_UPDATE_MACHINE_STATUS)
                 finishAffinity()
             }
         }
