@@ -53,16 +53,21 @@ class MyEnum {
         const val EXCAVATOR_GEN_DIGGING = 1
         const val EXCAVATOR_TRENCHING = 2
         const val SCRAPER_TRIMMING = 3
-        
+    
         const val TASK_STOCKPILE = "Stockpile"
         const val TASK_FILL = "Fill"
         const val TASK_RESPREAD = "Respread"
         const val TASK_OFFSITE = "Off site"
         const val TASK_CRUSHINGPLANT = "Crushing Plant"
-        
+    
         const val STOP_REASON_WEATHER = "Weather"
         const val STOP_REASON_OTHER1 = "Other 1"
-        
+    
         const val WORKER_AUTO_LOGOUT = "vspt_machine_auto_logout"
+        const val WORKDER_SERVER_SYNC = "vspt_server_sync"
+    
+        const val SERVER_SYNC_DATA_BACKGROUND = 1 // Do all tasks in background
+        const val SERVER_SYNC_DATA_LOGOUT = 2 // Do all tasks in background but don't exclude CheckFormsCompleted as it is logout call
+        const val SERVER_SYNC_DATA_DIALOG = 3 // Do all tasks and Show Dialog as user has to wait for response
     }
 }

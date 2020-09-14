@@ -39,58 +39,65 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
         layoutInflater.inflate(R.layout.activity_server_sync, contentFrameLayout)
         val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
         navigationView.menu.getItem(10).isChecked = true
+        populateLists()
     
-        // TODO convert this to a method which will be used in all other activities / classes for adding data which need to be synced.
-        myDataPushSave.addToList(1, "Operators Hours", db.getOperatorsHours("ASC"))?.let {
-            serverSyncList.add(it)
-            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
-        }
-        myDataPushSave.addToList(2, "Trucks Trips", db.getTripsByTypes(MyEnum.TRUCK, "ASC"))?.let {
-            serverSyncList.add(it)
-            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
-        }
-        myDataPushSave.addToList(3, "Scrapers Trips", db.getTripsByTypes(MyEnum.SCRAPER, "ASC"))?.let {
-            serverSyncList.add(it)
-            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
-        }
-        myDataPushSave.addToList(4, "Scrapers Trimmings", db.getEWorks(MyEnum.SCRAPER_TRIMMING, "ASC"))?.let {
-            serverSyncList.add(it)
-            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
-        }
-        myDataPushSave.addToList(5, "Excavators Prod. Digging", db.getELoadHistory("ASC"))?.let {
-            serverSyncList.add(it)
-            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
-        }
-        myDataPushSave.addToList(6, "Excavators Trenching", db.getEWorks(MyEnum.EXCAVATOR_TRENCHING, "ASC"))?.let {
-            serverSyncList.add(it)
-            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
-        }
-        myDataPushSave.addToList(7, "Excavators Gen. Digging", db.getEWorks(MyEnum.EXCAVATOR_GEN_DIGGING, "ASC"))?.let {
-            serverSyncList.add(it)
-            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
-        }
-        myDataPushSave.addToList(8, "Machines Stops", db.getMachinesStops("ASC"))?.let {
-            serverSyncList.add(it)
-            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
-        }
-        myDataPushSave.addToList(9, "Machines Hours", db.getMachinesHours("ASC"))?.let {
-            serverSyncList.add(it)
-            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
-        }
-        myDataPushSave.addToList(10, "Operators Waiting", db.getWaits("ASC"))?.let {
-            serverSyncList.add(it)
-            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
-        }
-        myDataPushSave.addToList(11, "CheckForms Completed", db.getAdminCheckFormsCompleted("ASC"))?.let {
-            serverSyncList.add(it)
-            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
-        }
-    
-        refreshAdapter()
         server_sync_upload.setOnClickListener(this)
     }
     
-    fun refreshAdapter() {
+    private fun populateLists() {
+        if (serverSyncList.size > 0)
+            serverSyncList.removeAll(ArrayList())
+        if (adapterList.size > 0)
+            adapterList.removeAll(ArrayList())
+        
+        myDataPushSave.addToList(1, myHelper.getTypeName(1), db.getOperatorsHours("ASC"))?.let {
+            serverSyncList.add(it)
+            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+        }
+        myDataPushSave.addToList(2, myHelper.getTypeName(2), db.getTripsByTypes(MyEnum.TRUCK, "ASC"))?.let {
+            serverSyncList.add(it)
+            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+        }
+        myDataPushSave.addToList(3, myHelper.getTypeName(3), db.getTripsByTypes(MyEnum.SCRAPER, "ASC"))?.let {
+            serverSyncList.add(it)
+            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+        }
+        myDataPushSave.addToList(4, myHelper.getTypeName(4), db.getEWorks(MyEnum.SCRAPER_TRIMMING, "ASC"))?.let {
+            serverSyncList.add(it)
+            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+        }
+        myDataPushSave.addToList(5, myHelper.getTypeName(5), db.getELoadHistory("ASC"))?.let {
+            serverSyncList.add(it)
+            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+        }
+        myDataPushSave.addToList(6, myHelper.getTypeName(6), db.getEWorks(MyEnum.EXCAVATOR_TRENCHING, "ASC"))?.let {
+            serverSyncList.add(it)
+            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+        }
+        myDataPushSave.addToList(7, myHelper.getTypeName(7), db.getEWorks(MyEnum.EXCAVATOR_GEN_DIGGING, "ASC"))?.let {
+            serverSyncList.add(it)
+            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+        }
+        myDataPushSave.addToList(8, myHelper.getTypeName(8), db.getMachinesStops("ASC"))?.let {
+            serverSyncList.add(it)
+            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+        }
+        myDataPushSave.addToList(9, myHelper.getTypeName(9), db.getMachinesHours("ASC"))?.let {
+            serverSyncList.add(it)
+            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+        }
+        myDataPushSave.addToList(10, myHelper.getTypeName(10), db.getWaits("ASC"))?.let {
+            serverSyncList.add(it)
+            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+        }
+        myDataPushSave.addToList(11, myHelper.getTypeName(11), db.getAdminCheckFormsCompleted("ASC"))?.let {
+            serverSyncList.add(it)
+            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+        }
+        refreshAdapter()
+    }
+    
+    private fun refreshAdapter() {
         
         myHelper.log("adapterListSize:${adapterList.size}")
         if (adapterList.size > 0) {
@@ -104,7 +111,7 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
             ss_rv.visibility = View.GONE
         }
     }
-
+    
     override fun onClick(view: View?) {
         when (view!!.id) {
             R.id.server_sync_upload -> {
@@ -122,7 +129,7 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
     }
     
     private fun pushUpdateServerSync(serverSyncList: ArrayList<ServerSyncAPI>) {
-        myHelper.showDialog()
+        myHelper.showDialog(getString(R.string.uploading_data_message))
         myHelper.log("pushUpdateServerSync:$serverSyncList")
         val client = myHelper.skipSSLOkHttpClient().build()
         val formBody = FormBody.Builder()

@@ -326,6 +326,17 @@
     <string name="machine_hours_running">Machine hours running.</string>
     <string name="please_logout_if_not_working">Please logout if you are not working.</string>
     <string name="all_data_uploaded">All data uploaded to server successfully.</string>
-    <string name="logging_out_message">Logging out please wait …</string>
+    <string name="uploading_data_message">Uploading data please wait …</string>
+    <string name="loading_data_message">Loading data please wait …</string>
     <string name="data_not_pushed">No Internet connection.\nData saved in App but not uploaded to server.</string>
+    <string name="trucks_trips">Trucks Trips</string>
+    <string name="scrapers_trips">Scrapers Trips</string>
+    <string name="scrapers_trimmings">Scrapers Trimmings</string>
+    <string name="excavators_prod_digging">Excavators Prod. Digging</string>
+    <string name="excavators_trenching">Excavators Trenching</string>
+    <string name="excavators_gen_digging">Excavators Gen. Digging</string>
+    <string name="machines_stops1">Machines Stops</string>
+    <string name="machines_hours1">Machines Hours</string>
+    <string name="operators_waitings">Operators Waiting</string>
+    <string name="checkforms_completed">CheckForms Completed</string>
 </resources>

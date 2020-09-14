@@ -268,13 +268,7 @@ class MyData : Serializable {
     
     var isMapOpened: Boolean = false
     override fun toString(): String {
-        return "MyData(" +
-                "id=$id, " +
-                "aws_path='$aws_path'" +
-                "time='$time'" +
-                "isDownloaded='$isDownloaded'" +
-                "updated_at='$updated_at'" +
-                ")"
+        return "MyData(id=$id, orgId=$orgId, siteId=$siteId, operatorId=$operatorId, name=$name, machineTypeId=$machineTypeId, machineId=$machineId, startTime=$startTime, stopTime=$stopTime, recordID=$recordID)"
     }
     
     

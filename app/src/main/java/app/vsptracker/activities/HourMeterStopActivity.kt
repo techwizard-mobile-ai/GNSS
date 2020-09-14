@@ -220,9 +220,12 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
             }
             myData.isSync = 0
             myData.unloadingGPSLocation = gpsLocation
-            
+    
             myDataPushSave.pushInsertMachineHour(myData, false)
         }
-        myDataPushSave.checkUpdateServerSyncData(true, true)
+        myDataPushSave.checkUpdateServerSyncData(MyEnum.SERVER_SYNC_DATA_LOGOUT)
+        myHelper.clearLoginData()
+//        finishAffinity()
+    
     }
 }

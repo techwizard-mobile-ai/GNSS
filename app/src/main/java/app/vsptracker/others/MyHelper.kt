@@ -7,6 +7,8 @@ import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
@@ -865,7 +867,7 @@ class MyHelper(var TAG: String, val context: Context) {
     }
     
     @Suppress("DEPRECATION")
-    fun showDialog(message: String = "Loading please wait ...") {
+    fun showDialog(message: String = context.getString(R.string.loading_data_message)) {
         try {
             dialog = ProgressDialog.show(
                 context, "VSP Tracker", message, true, false
@@ -1476,16 +1478,34 @@ class MyHelper(var TAG: String, val context: Context) {
         setOperatorAPI(MyData())
         val data = MyData()
         setLastJourney(data)
-        
+    
         val intent = Intent(context, OperatorLoginActivity::class.java)
+        intent.flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
         context.startActivity(intent)
 //        context.finishAffinity()
     }
     
-    fun autoLogout(){
+    fun autoLogout() {
     
     }
     
+    fun getTypeName(type: Int): String {
+        var typeName = ""
+        when (type) {
+            1 -> typeName = context.getString(R.string.operators_hours)
+            2 -> typeName = context.getString(R.string.trucks_trips)
+            3 -> typeName = context.getString(R.string.scrapers_trips)
+            4 -> typeName = context.getString(R.string.scrapers_trimmings)
+            5 -> typeName = context.getString(R.string.excavators_prod_digging)
+            6 -> typeName = context.getString(R.string.excavators_trenching)
+            7 -> typeName = context.getString(R.string.excavators_gen_digging)
+            8 -> typeName = context.getString(R.string.machines_stops1)
+            9 -> typeName = context.getString(R.string.machines_hours1)
+            10 -> typeName = context.getString(R.string.operators_waitings)
+            11 -> typeName = context.getString(R.string.checkforms_completed)
+        }
+        return typeName
+    }
     
 }
 

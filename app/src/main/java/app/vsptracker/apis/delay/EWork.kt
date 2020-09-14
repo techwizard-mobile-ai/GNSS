@@ -108,14 +108,14 @@ class EWork : Serializable {
     @SerializedName("server_sync")
     @Expose
     var isSync: Int = 0
-    
     override fun toString(): String {
-        return "\nEWork(" +
+        return "EWork(" +
                 "orgId=$orgId, " +
-                "loadingGPSLocationString='$loadingGPSLocationString', " +
-                "loadingGPSLocation=$loadingGPSLocation, " +
-                "unloadingGPSLocationString='$unloadingGPSLocationString', " +
-                "unloadingGPSLocation=$unloadingGPSLocation" +
+                "siteId=$siteId, " +
+                "operatorId=$operatorId, " +
+                "machineId=$machineId, " +
+                "startTime=$startTime, " +
+                "stopTime=$stopTime" +
                 ")"
     }
     

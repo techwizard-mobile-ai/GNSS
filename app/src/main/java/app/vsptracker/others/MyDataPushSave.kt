@@ -1,8 +1,8 @@
 package app.vsptracker.others
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import androidx.work.*
 import app.vsptracker.R
 import app.vsptracker.activities.OperatorLoginActivity
 import app.vsptracker.apis.RetrofitAPI
@@ -13,6 +13,7 @@ import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.Material
 import app.vsptracker.classes.ServerSyncModel
 import app.vsptracker.database.DatabaseAdapter
+import app.vsptracker.others.autologout.ServerSyncCoroutineWorker
 import com.amazonaws.mobile.auth.core.internal.util.ThreadUtils.runOnUiThread
 import com.google.gson.GsonBuilder
 import okhttp3.*
@@ -20,6 +21,7 @@ import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 /**
  * This class will be used for All APIs Calls and Database Actions. It will do following Actions.
@@ -54,6 +56,8 @@ class MyDataPushSave(private val context: Context) {
     private val retrofitAPI = retrofit.create(RetrofitAPI::class.java)
     var isBackgroundCall = true
     private var serverSyncList = ArrayList<ServerSyncAPI>()
+    
+    val workManager = WorkManager.getInstance(context)
     
     /**
      * All Company Data will be fetched from Server using API Calls by this Class only.
@@ -345,36 +349,53 @@ class MyDataPushSave(private val context: Context) {
     }
     
     fun insertEWorkOffLoad(eWork: EWork): Long {
-        
+    
         eWork.orgId = myHelper.getLoginAPI().org_id
         eWork.operatorId = myHelper.getOperatorAPI().id
         eWork.machineTypeId = myHelper.getMachineTypeID()
         eWork.machineId = myHelper.getMachineID()
-        
+    
         val insertID = db.insertEWorkOffLoad(eWork)
         myHelper.log("insertEWorkOffLoadID:$insertID")
         return insertID
     }
     
-    fun checkUpdateServerSyncData(showDialog: Boolean = false, isLogoutCall: Boolean = false) {
+    fun checkUpdateServerSyncData(type: Int = MyEnum.SERVER_SYNC_DATA_BACKGROUND) {
+        val data = Data.Builder()
+        //Add parameter in Data class. just like bundle. You can also add Boolean and Number in parameter.
+        data.putInt("type", type)
+        val myWorkRequest = OneTimeWorkRequestBuilder<ServerSyncCoroutineWorker>()
+            .setBackoffCriteria(
+                BackoffPolicy.LINEAR,
+                OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
+                TimeUnit.MILLISECONDS
+            )
+            .setInputData(data.build())
+            .addTag(MyEnum.WORKDER_SERVER_SYNC)
+            .build()
+        // Run the worker synchronously
+        workManager.enqueue(myWorkRequest)
+        
+    }
+    
+    fun checkUpdateServerSyncDataCoroutine(type: Int) {
         if (serverSyncList.size > 0)
             serverSyncList.removeAll(ArrayList())
         
-        addToList(1, "Operators Hours", db.getOperatorsHours("ASC"))?.let { serverSyncList.add(it) }
-        addToList(2, "Trucks Trips", db.getTripsByTypes(MyEnum.TRUCK, "ASC"))?.let { serverSyncList.add(it) }
-        addToList(3, "Scrapers Trips", db.getTripsByTypes(MyEnum.SCRAPER, "ASC"))?.let { serverSyncList.add(it) }
-        addToList(4, "Scrapers Trimmings", db.getEWorks(MyEnum.SCRAPER_TRIMMING, "ASC"))?.let { serverSyncList.add(it) }
-        addToList(5, "Excavators Prod. Digging", db.getELoadHistory("ASC"))?.let { serverSyncList.add(it) }
-        addToList(6, "Excavators Trenching", db.getEWorks(MyEnum.EXCAVATOR_TRENCHING, "ASC"))?.let { serverSyncList.add(it) }
-        addToList(7, "Excavators Gen. Digging", db.getEWorks(MyEnum.EXCAVATOR_GEN_DIGGING, "ASC"))?.let { serverSyncList.add(it) }
-        addToList(8, "Machines Stops", db.getMachinesStops("ASC"))?.let { serverSyncList.add(it) }
-        addToList(9, "Machines Hours", db.getMachinesHours("ASC"))?.let { serverSyncList.add(it) }
-        addToList(10, "Operators Waiting", db.getWaits("ASC"))?.let { serverSyncList.add(it) }
+        addToList(1, myHelper.getTypeName(1), db.getOperatorsHours("ASC"))?.let { serverSyncList.add(it) }
+        addToList(2, myHelper.getTypeName(2), db.getTripsByTypes(MyEnum.TRUCK, "ASC"))?.let { serverSyncList.add(it) }
+        addToList(3, myHelper.getTypeName(3), db.getTripsByTypes(MyEnum.SCRAPER, "ASC"))?.let { serverSyncList.add(it) }
+        addToList(4, myHelper.getTypeName(4), db.getEWorks(MyEnum.SCRAPER_TRIMMING, "ASC"))?.let { serverSyncList.add(it) }
+        addToList(5, myHelper.getTypeName(5), db.getELoadHistory("ASC"))?.let { serverSyncList.add(it) }
+        addToList(6, myHelper.getTypeName(6), db.getEWorks(MyEnum.EXCAVATOR_TRENCHING, "ASC"))?.let { serverSyncList.add(it) }
+        addToList(7, myHelper.getTypeName(7), db.getEWorks(MyEnum.EXCAVATOR_GEN_DIGGING, "ASC"))?.let { serverSyncList.add(it) }
+        addToList(8, myHelper.getTypeName(8), db.getMachinesStops("ASC"))?.let { serverSyncList.add(it) }
+        addToList(9, myHelper.getTypeName(9), db.getMachinesHours("ASC"))?.let { serverSyncList.add(it) }
+        addToList(10, myHelper.getTypeName(10), db.getWaits("ASC"))?.let { serverSyncList.add(it) }
         // Uploading Completed CheckForms images to AWS might take time so skip Completed CheckForms upload to server and
         // uploading images to AWS Bucket when operator logout from app.
-        if (!isLogoutCall)
-            addToList(11, "CheckForms Completed", db.getAdminCheckFormsCompleted("ASC"))?.let { serverSyncList.add(it) }
-        
+        if (type != MyEnum.SERVER_SYNC_DATA_LOGOUT)
+            addToList(11, myHelper.getTypeName(11), db.getAdminCheckFormsCompleted("ASC"))?.let { serverSyncList.add(it) }
         
         if (myHelper.isOnline()) {
             if (serverSyncList.size > 0) {
@@ -383,7 +404,7 @@ class MyDataPushSave(private val context: Context) {
                 if (serverSyncAPI != null) {
                     this.serverSyncList.find { it.type == 11 }!!.myDataList = myHelper.uploadImagesToAWS(serverSyncAPI.myDataList)
                 }
-                pushUpdateServerSync(showDialog, isLogoutCall)
+                pushUpdateServerSync(type)
             }
         } else {
             myHelper.toast(context.getString(R.string.data_not_pushed))
@@ -432,25 +453,26 @@ class MyDataPushSave(private val context: Context) {
         return serverSyncAPI
     }
     
-    private fun pushUpdateServerSync(showDialog: Boolean = false, isLogoutCall: Boolean = false) {
-        if (showDialog) {
-            if (isLogoutCall) {
-                myHelper.showDialog(context.getString(R.string.logging_out_message))
-            } else {
-                myHelper.showDialog()
-            }
-        }
+    private fun pushUpdateServerSync(type: Int) {
+        myHelper.log("pushUpdateServerSync:$type")
+        val showDialog = type == MyEnum.SERVER_SYNC_DATA_DIALOG
+        if (showDialog)
+            myHelper.showDialog(context.getString(R.string.uploading_data_message))
+        
         val client = myHelper.skipSSLOkHttpClient().build()
+        val data = myHelper.getServerSyncDataAPIString(serverSyncList)
+        val operatorID = myHelper.getOperatorAPI().id.toString()
+        val deviceDetails = myHelper.getDeviceDetailsString()
         
         val formBody = FormBody.Builder()
             .add("token", myHelper.getLoginAPI().auth_token)
-            .add("operator_id", myHelper.getOperatorAPI().id.toString())
-            .add("device_details", myHelper.getDeviceDetailsString())
-            .add("data", myHelper.getServerSyncDataAPIString(serverSyncList))
+            .add("operator_id", operatorID)
+            .add("device_details", deviceDetails)
+            .add("data", data)
             .build()
         
         val request = Request.Builder()
-            .url("https://vsptracker.app/api/v1/orgsserversync/store")
+            .url("${MyEnum.BASE_URL}orgsserversync/store")
             .post(formBody)
             .build()
         
@@ -474,16 +496,12 @@ class MyDataPushSave(private val context: Context) {
                         myHelper.log("data:${data}")
 //                      here I am getting complete list of data with type. Now I have to update each entry in
 //                      App Database and change their status from isSync 0 to 1 as these entries are successfully updated in Portal Database.
-                        if (isLogoutCall) {
-                            if (updateServerSync(data)) {
+                        if (updateServerSync(data)) {
+                            if (showDialog) {
                                 runOnUiThread {
                                     myHelper.toast(context.getString(R.string.all_data_uploaded))
-                                    myHelper.clearLoginData()
-                                    (context as Activity).finishAffinity()
                                 }
                             }
-                        } else {
-                            updateServerSync(data)
                         }
                 
                     } else {
