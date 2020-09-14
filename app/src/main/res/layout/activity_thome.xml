@@ -28,6 +28,7 @@
             android:id="@+id/thome_load"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_gravity="center">
 
             <TextView
@@ -54,6 +55,7 @@
             android:id="@+id/thome_unload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/_40sdp">
 

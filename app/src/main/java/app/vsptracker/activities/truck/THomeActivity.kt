@@ -39,9 +39,11 @@ class THomeActivity : BaseActivity(), View.OnClickListener {
         when (myHelper.getNextAction()) {
             0, 2 -> {
                 myHelper.setToDoLayout(thome_load_button)
+                thome_load.visibility = View.VISIBLE
             }
             1, 3 -> {
                 myHelper.setToDoLayout(thome_unload_button)
+                thome_unload.visibility = View.VISIBLE
             }
         }
 

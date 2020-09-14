@@ -33,19 +33,21 @@ class SHomeActivity : BaseActivity(), View.OnClickListener {
 
         when (myHelper.getNextAction()) {
             0, 2 -> {
-                myHelper.setToDoLayout(thome_load_button)
+                myHelper.setToDoLayout(shome_load_button)
+                shome_load.visibility = View.VISIBLE
             }
             1, 3 -> {
-                myHelper.setToDoLayout(thome_unload_button)
+                myHelper.setToDoLayout(shome_unload_button)
+                shome_unload.visibility = View.VISIBLE
             }
         }
-
+    
         shome_logout.setOnClickListener(this)
-        thome_load.setOnClickListener(this)
-        thome_unload.setOnClickListener(this)
+        shome_load.setOnClickListener(this)
+        shome_unload.setOnClickListener(this)
         shome_trimming.setOnClickListener(this)
-
-
+    
+    
     }
     override fun onResume() {
         super.onResume()
@@ -53,20 +55,20 @@ class SHomeActivity : BaseActivity(), View.OnClickListener {
     }
     override fun onClick(view: View?) {
         when (view!!.id) {
-
-            R.id.shome_trimming ->{
+    
+            R.id.shome_trimming -> {
                 val intent = Intent(this, ESideCastingActivity::class.java)
                 myData.eWorkType = 3
                 myData.eWorkActionType = 1
                 intent.putExtra("myData", myData)
                 startActivity(intent)
             }
-            R.id.thome_load -> {
+            R.id.shome_load -> {
                 val intent = Intent(this, MaterialActivity::class.java)
                 intent.putExtra("myData", myData)
                 startActivity(intent)
             }
-            R.id.thome_unload -> {
+            R.id.shome_unload -> {
 //                val intent = Intent(this, LocationActivity::class.java)
                 val intent = Intent(this, UnloadTaskActivity::class.java)
                 intent.putExtra("myData", myData)

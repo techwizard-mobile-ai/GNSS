@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".activities.scrapper.SHomeActivity"
-    >
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_marginBottom="@dimen/_20sdp">
 
     <TextView
         android:id="@+id/shome_title"
         style="@style/activity_title"
         android:visibility="gone"
         android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
         android:text="@string/select_action" />
 
 
@@ -22,16 +19,17 @@
         style="@style/default_linearlayout"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_16sdp"
-        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:layout_marginBottom="@dimen/_20sdp"
         android:layout_below="@id/shome_title">
 
         <FrameLayout
-            android:id="@+id/thome_load"
+            android:id="@+id/shome_load"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_gravity="center">
 
             <TextView
@@ -45,17 +43,18 @@
                 android:textColor="@android:color/white" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/thome_load_button"
+                android:id="@+id/shome_load_button"
                 android:layout_width="@dimen/_100sdp"
                 android:layout_height="@dimen/_100sdp"
                 android:backgroundTint="@color/colorPrimary"
                 android:src="@android:color/transparent" />
         </FrameLayout>
         <FrameLayout
-            android:id="@+id/thome_unload"
+            android:id="@+id/shome_unload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:visibility="gone"
             android:layout_marginTop="@dimen/_40sdp">
 
             <TextView
@@ -69,7 +68,7 @@
                 android:textColor="@android:color/white" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/thome_unload_button"
+                android:id="@+id/shome_unload_button"
                 android:layout_width="@dimen/_100sdp"
                 android:layout_height="@dimen/_100sdp"
                 android:backgroundTint="@color/colorPrimary"
@@ -85,33 +84,9 @@
             />
 
     </LinearLayout>
-    <!--    <LinearLayout-->
-    <!--            android:orientation="horizontal"-->
-    <!--            android:layout_centerInParent="true"-->
-    <!--            android:gravity="center_vertical"-->
-    <!--            style="@style/default_linearlayout">-->
-
-    <!--            <Button-->
-    <!--                    android:id="@+id/shome_unload"-->
-    <!--                    style="@style/back_button"-->
-    <!--                    android:text="Unload"-->
-    <!--                    android:layout_width="0dp"-->
-    <!--                    android:layout_weight=".3"-->
-    <!--            />-->
-    <!--            <Button-->
-    <!--                    android:id="@+id/shome_load"-->
-    <!--                    android:layout_width="0dp"-->
-    <!--                    android:layout_weight="0.3"-->
-    <!--                    style="@style/next_button"-->
-    <!--                    android:layout_marginEnd="0dp"-->
-    <!--                    android:text="Load"-->
-    <!--            />-->
-
-    <!--    </LinearLayout>-->
     <Button
         android:id="@+id/shome_logout"
         style="@style/next_button_single"
-        android:layout_marginBottom="@dimen/_20sdp"
         android:layout_alignParentBottom="true" />
 </RelativeLayout>
-</ScrollView>
+
