@@ -69,25 +69,29 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
 //            myHelper.hideKeyboard(machine_type_main_layout)
 //            false
 //        })
-        
-        
-        machine_type_main_layout.setOnTouchListener { _, _ ->
+    
+        machine_type_main_layout.setOnTouchListener { view, _ ->
+            view.performClick()
             myHelper.hideKeyboard(machine_type_main_layout)
             false
         }
-        mt_site.setOnTouchListener { _, _ ->
+        mt_site.setOnTouchListener { view, _ ->
+            view.performClick()
             myHelper.hideKeyboard(machine_type)
             false
         }
-        machine_type.setOnTouchListener { _, _ ->
+        machine_type.setOnTouchListener { view, _ ->
+            view.performClick()
             myHelper.hideKeyboard(machine_type)
             false
         }
-        machine_location.setOnTouchListener { _, _ ->
+        machine_location.setOnTouchListener { view, _ ->
+            view.performClick()
             myHelper.hideKeyboard(machine_location)
             false
         }
-        machine_number1.setOnTouchListener { _, _ ->
+        machine_number1.setOnTouchListener { view, _ ->
+            view.performClick()
             myHelper.hideKeyboard(machine_number1)
             false
         }
@@ -95,26 +99,6 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
     
         if (myHelper.getMachineID() == 0)
             myHelper.setIsNavEnabled(false)
-//            val myData = MyData()
-//
-//            if(myHelper.getMeter().isMachineStartTimeCustom)
-//                myData.isStartHoursCustom = 1
-//
-//            myData.startHours = myHelper.getMeter().startHours
-//            myData.machineTypeId = myHelper.getMachineTypeID()
-//
-//            myData.totalHours = myHelper.getMeterTimeForFinishCustom(myData.startHours)
-//
-//            val meter = myHelper.getMeter()
-//            myData.startTime = meter.hourStartTime
-//            myData.stopTime = System.currentTimeMillis()
-//
-//            myData.loadingGPSLocation = meter.hourStartGPSLocation
-//            myData.unloadingGPSLocation = gpsLocation
-//
-//            saveMachineHour(myData)
-
-//        }
         machine_save.setOnClickListener(this)
     }
     
