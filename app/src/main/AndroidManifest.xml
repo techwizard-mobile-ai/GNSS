@@ -25,16 +25,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
 
-        <service android:name=".others.autologout.ForegroundService" />
+        <service android:name="app.vsptracker.others.autologout.ForegroundService" />
 
-        <receiver android:name=".others.autologout.RebootReceiver">
+        <receiver android:name="app.vsptracker.others.autologout.RebootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
         <service
-            android:name=".others.autologout.RebootService"
+            android:name="app.vsptracker.others.autologout.RebootService"
             android:exported="false"
             android:label="Alarm Service"
             android:stopWithTask="false">

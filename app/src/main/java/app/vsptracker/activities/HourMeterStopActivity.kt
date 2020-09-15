@@ -164,67 +164,67 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
     }
     
     private fun logout(isAutoLogoutCall: Boolean = false) {
-        
-        val operatorAPI = myHelper.getOperatorAPI()
-        operatorAPI.unloadingGPSLocation = gpsLocation
-        operatorAPI.orgId = myHelper.getLoginAPI().org_id
-        operatorAPI.siteId = myHelper.getMachineSettings().siteId
-        operatorAPI.operatorId = operatorAPI.id
-        when {
-            myHelper.isDailyModeStarted() -> operatorAPI.isDayWorks = 1
-            else -> operatorAPI.isDayWorks = 0
-        }
-        operatorAPI.stopTime = System.currentTimeMillis()
-        operatorAPI.totalTime = operatorAPI.stopTime - operatorAPI.startTime
-        operatorAPI.loadingGPSLocationString = myHelper.getGPSLocationToString(operatorAPI.loadingGPSLocation)
-        operatorAPI.unloadingGPSLocationString = myHelper.getGPSLocationToString(operatorAPI.unloadingGPSLocation)
-//        Calling db.insertOperatorHour because this time, data will not be pushed to server as whole data
-//        will be pushed to server and a Dialog Box will appear in this activity.
-//        Using pushInsertOperatorHour method there could be multiple OkHttp Requests to server.
-//        myDataPushSave.pushInsertOperatorHour(operatorAPI)
-        db.insertOperatorHour(operatorAPI)
-        
-        myHelper.log("isMachineStopped:${myHelper.getIsMachineStopped()}")
-//        If machine is already stopped in Machine Breakdown OR Machine Stop Adapter
-//        then Machine Hour is already inserted. But If machine is not stopped then stop machine and
-//        Insert Machine Hour
-        if (!myHelper.getIsMachineStopped()) {
-            myHelper.log("Machine is not stopped.")
-            val totalHours = myHelper.getMeterValidValue(sfinish_reading.text.toString())
-            if (!myHelper.getMeterTimeForFinish().equals(totalHours, true)) {
-                val meter = myHelper.getMeter()
-                meter.isMachineStopTimeCustom = true
-                myData.isTotalHoursCustom = 1
-                myData.startHours = meter.startHours
-                myHelper.setMeter(meter)
-                myHelper.log("Custom Time : True, Original reading:${myHelper.getMeterTimeForFinish()}, New Reading: $totalHours")
-            } else {
-                val meter = myHelper.getMeter()
-                meter.isMachineStopTimeCustom = false
-                myData.isTotalHoursCustom = 0
-                myData.startHours = meter.startHours
-                myHelper.setMeter(meter)
-                myHelper.log("Custom Time : False, Original reading:${myHelper.getMeterTimeForFinish()}, New Reading: $totalHours")
-            }
-            val value = totalHours.toDouble()
-            val minutes = value * 60
-            val newMinutes = myHelper.getRoundedInt(minutes)
-            myHelper.log("Minutes: $newMinutes")
-            myHelper.setMachineTotalTime(newMinutes)
-            myData.totalHours = totalHours
-            myHelper.log("Before saveMachineHour:$myData")
-            if (isAutoLogoutCall) {
-                myData.machine_stop_reason_id = -3
-            } else {
-                myData.machine_stop_reason_id = -1
-            }
-            myData.isSync = 0
-            myData.unloadingGPSLocation = gpsLocation
-    
-            myDataPushSave.pushInsertMachineHour(myData, false)
-        }
-        myDataPushSave.checkUpdateServerSyncData(MyEnum.SERVER_SYNC_DATA_LOGOUT)
-        myHelper.clearLoginData()
+        myDataPushSave.logout(isAutoLogoutCall, gpsLocation, myData, sfinish_reading.text.toString())
+//        val operatorAPI = myHelper.getOperatorAPI()
+//        operatorAPI.unloadingGPSLocation = gpsLocation
+//        operatorAPI.orgId = myHelper.getLoginAPI().org_id
+//        operatorAPI.siteId = myHelper.getMachineSettings().siteId
+//        operatorAPI.operatorId = operatorAPI.id
+//        when {
+//            myHelper.isDailyModeStarted() -> operatorAPI.isDayWorks = 1
+//            else -> operatorAPI.isDayWorks = 0
+//        }
+//        operatorAPI.stopTime = System.currentTimeMillis()
+//        operatorAPI.totalTime = operatorAPI.stopTime - operatorAPI.startTime
+//        operatorAPI.loadingGPSLocationString = myHelper.getGPSLocationToString(operatorAPI.loadingGPSLocation)
+//        operatorAPI.unloadingGPSLocationString = myHelper.getGPSLocationToString(operatorAPI.unloadingGPSLocation)
+////        Calling db.insertOperatorHour because this time, data will not be pushed to server as whole data
+////        will be pushed to server and a Dialog Box will appear in this activity.
+////        Using pushInsertOperatorHour method there could be multiple OkHttp Requests to server.
+////        myDataPushSave.pushInsertOperatorHour(operatorAPI)
+//        db.insertOperatorHour(operatorAPI)
+//
+//        myHelper.log("isMachineStopped:${myHelper.getIsMachineStopped()}")
+////        If machine is already stopped in Machine Breakdown OR Machine Stop Adapter
+////        then Machine Hour is already inserted. But If machine is not stopped then stop machine and
+////        Insert Machine Hour
+//        if (!myHelper.getIsMachineStopped()) {
+//            myHelper.log("Machine is not stopped.")
+//            val totalHours = myHelper.getMeterValidValue(sfinish_reading.text.toString())
+//            if (!myHelper.getMeterTimeForFinish().equals(totalHours, true)) {
+//                val meter = myHelper.getMeter()
+//                meter.isMachineStopTimeCustom = true
+//                myData.isTotalHoursCustom = 1
+//                myData.startHours = meter.startHours
+//                myHelper.setMeter(meter)
+//                myHelper.log("Custom Time : True, Original reading:${myHelper.getMeterTimeForFinish()}, New Reading: $totalHours")
+//            } else {
+//                val meter = myHelper.getMeter()
+//                meter.isMachineStopTimeCustom = false
+//                myData.isTotalHoursCustom = 0
+//                myData.startHours = meter.startHours
+//                myHelper.setMeter(meter)
+//                myHelper.log("Custom Time : False, Original reading:${myHelper.getMeterTimeForFinish()}, New Reading: $totalHours")
+//            }
+//            val value = totalHours.toDouble()
+//            val minutes = value * 60
+//            val newMinutes = myHelper.getRoundedInt(minutes)
+//            myHelper.log("Minutes: $newMinutes")
+//            myHelper.setMachineTotalTime(newMinutes)
+//            myData.totalHours = totalHours
+//            myHelper.log("Before saveMachineHour:$myData")
+//            if (isAutoLogoutCall) {
+//                myData.machine_stop_reason_id = -3
+//            } else {
+//                myData.machine_stop_reason_id = -1
+//            }
+//            myData.isSync = 0
+//            myData.unloadingGPSLocation = gpsLocation
+//
+//            myDataPushSave.pushInsertMachineHour(myData, false)
+//        }
+//        myDataPushSave.checkUpdateServerSyncData(MyEnum.SERVER_SYNC_DATA_LOGOUT)
+//        myHelper.clearLoginData()
 //        finishAffinity()
     
     }

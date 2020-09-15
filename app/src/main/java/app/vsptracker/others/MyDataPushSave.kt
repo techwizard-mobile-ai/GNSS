@@ -10,9 +10,12 @@ import app.vsptracker.apis.delay.EWork
 import app.vsptracker.apis.serverSync.ServerSyncAPI
 import app.vsptracker.apis.serverSync.ServerSyncResponse
 import app.vsptracker.apis.trip.MyData
+import app.vsptracker.classes.GPSLocation
 import app.vsptracker.classes.Material
 import app.vsptracker.classes.ServerSyncModel
 import app.vsptracker.database.DatabaseAdapter
+import app.vsptracker.others.MyEnum.Companion.AUTO_LOGOUT
+import app.vsptracker.others.MyEnum.Companion.OPERATOR_LOGOUT
 import app.vsptracker.others.autologout.ServerSyncCoroutineWorker
 import com.amazonaws.mobile.auth.core.internal.util.ThreadUtils.runOnUiThread
 import com.google.gson.GsonBuilder
@@ -498,11 +501,11 @@ class MyDataPushSave(private val context: Context) {
 //                      this is complete data sent to server
 //                      val dataArray = dataObj.getJSONArray("data")
 //                      val dataArray = JSONArray(data1)
-                        val data = gson.fromJson(data1, Array<ServerSyncAPI>::class.java).toList()
-                        myHelper.log("data:${data}")
+                        val serverSyncAPIList = gson.fromJson(data1, Array<ServerSyncAPI>::class.java).toList()
+                        myHelper.log("serverSyncAPIList:${serverSyncAPIList}")
 //                      here I am getting complete list of data with type. Now I have to update each entry in
 //                      App Database and change their status from isSync 0 to 1 as these entries are successfully updated in Portal Database.
-                        if (updateServerSync(data)) {
+                        if (updateServerSync(serverSyncAPIList)) {
                             if (showDialog) {
                                 runOnUiThread {
                                     myHelper.toast(context.getString(R.string.all_data_uploaded))
@@ -602,6 +605,72 @@ class MyDataPushSave(private val context: Context) {
             myHelper.toast("updateServerSyncException:${e.localizedMessage}")
             return false
         }
+    
+    }
+    
+    fun logout(isAutoLogoutCall: Boolean = false, gpsLocation: GPSLocation, myData: MyData, sfinish_reading: String) {
         
+        val operatorAPI = myHelper.getOperatorAPI()
+        operatorAPI.unloadingGPSLocation = gpsLocation
+        operatorAPI.orgId = myHelper.getLoginAPI().org_id
+        operatorAPI.siteId = myHelper.getMachineSettings().siteId
+        operatorAPI.operatorId = operatorAPI.id
+        when {
+            myHelper.isDailyModeStarted() -> operatorAPI.isDayWorks = 1
+            else -> operatorAPI.isDayWorks = 0
+        }
+        operatorAPI.stopTime = System.currentTimeMillis()
+        operatorAPI.totalTime = operatorAPI.stopTime - operatorAPI.startTime
+        operatorAPI.loadingGPSLocationString = myHelper.getGPSLocationToString(operatorAPI.loadingGPSLocation)
+        operatorAPI.unloadingGPSLocationString = myHelper.getGPSLocationToString(operatorAPI.unloadingGPSLocation)
+//        Calling db.insertOperatorHour because this time, data will not be pushed to server as whole data
+//        will be pushed to server and a Dialog Box will appear in this activity.
+//        Using pushInsertOperatorHour method there could be multiple OkHttp Requests to server.
+//        myDataPushSave.pushInsertOperatorHour(operatorAPI)
+        db.insertOperatorHour(operatorAPI)
+        
+        myHelper.log("isMachineStopped:${myHelper.getIsMachineStopped()}")
+//        If machine is already stopped in Machine Breakdown OR Machine Stop Adapter
+//        then Machine Hour is already inserted. But If machine is not stopped then stop machine and
+//        Insert Machine Hour
+        if (!myHelper.getIsMachineStopped()) {
+            myHelper.log("Machine is not stopped.")
+            val totalHours = myHelper.getMeterValidValue(sfinish_reading)
+            if (!myHelper.getMeterTimeForFinish().equals(totalHours, true)) {
+                val meter = myHelper.getMeter()
+                meter.isMachineStopTimeCustom = true
+                myData.isTotalHoursCustom = 1
+                myData.startHours = meter.startHours
+                myHelper.setMeter(meter)
+                myHelper.log("Custom Time : True, Original reading:${myHelper.getMeterTimeForFinish()}, New Reading: $totalHours")
+            } else {
+                val meter = myHelper.getMeter()
+                meter.isMachineStopTimeCustom = false
+                myData.isTotalHoursCustom = 0
+                myData.startHours = meter.startHours
+                myHelper.setMeter(meter)
+                myHelper.log("Custom Time : False, Original reading:${myHelper.getMeterTimeForFinish()}, New Reading: $totalHours")
+            }
+            val value = totalHours.toDouble()
+            val minutes = value * 60
+            val newMinutes = myHelper.getRoundedInt(minutes)
+            myHelper.log("Minutes: $newMinutes")
+            myHelper.setMachineTotalTime(newMinutes)
+            myData.totalHours = totalHours
+            myHelper.log("Before saveMachineHour:$myData")
+            if (isAutoLogoutCall) {
+                myData.machine_stop_reason_id = AUTO_LOGOUT
+            } else {
+                myData.machine_stop_reason_id = OPERATOR_LOGOUT
+            }
+            myData.isSync = 0
+            myData.unloadingGPSLocation = gpsLocation
+            
+            pushInsertMachineHour(myData, false)
+        }
+        checkUpdateServerSyncData(MyEnum.SERVER_SYNC_DATA_LOGOUT)
+        myHelper.clearLoginData()
+//        finishAffinity()
+    
     }
 }

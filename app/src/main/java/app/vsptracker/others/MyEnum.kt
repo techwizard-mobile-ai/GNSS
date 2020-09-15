@@ -70,5 +70,9 @@ class MyEnum {
         const val SERVER_SYNC_DATA_LOGOUT = 2 // Do all tasks in background but don't exclude CheckFormsCompleted as it is logout call
         const val SERVER_SYNC_DATA_DIALOG = 3 // Do all tasks and Show Dialog as user has to wait for response
         const val SERVER_SYNC_UPDATE_MACHINE_STATUS = 4 // To update machine status call must make API request to server
+    
+        const val OPERATOR_LOGOUT = -1
+        const val MACHINE_CHANGED = -2
+        const val AUTO_LOGOUT = -3
     }
 }

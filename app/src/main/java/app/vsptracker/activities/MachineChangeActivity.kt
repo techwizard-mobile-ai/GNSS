@@ -13,6 +13,7 @@ import app.vsptracker.adapters.SelectMachineNumberAdapter
 import app.vsptracker.adapters.SelectStateAdapter
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.Material
+import app.vsptracker.others.MyEnum.Companion.MACHINE_CHANGED
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_machine_change.*
 import java.util.*
@@ -90,9 +91,9 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
             myHelper.hideKeyboard(machine_number1)
             false
         }
-
-        
-        if(myHelper.getMachineID() == 0)
+    
+    
+        if (myHelper.getMachineID() == 0)
             myHelper.setIsNavEnabled(false)
 //            val myData = MyData()
 //
@@ -120,7 +121,7 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         when (view!!.id) {
             R.id.machine_save -> {
-                
+        
                 machine_number.text.toString()
                 when {
                     selectedMachineSite.id == 0 -> myHelper.toast("Please Select Site")
@@ -130,7 +131,7 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
                         when {
                             //Selected Machine is Different from Previous Machine
                             selectedMachineNumber.id != myHelper.getMachineID() -> {
-                                
+                        
                                 val myData = MyData()
                                 myData.siteId = myHelper.getMachineSettings().siteId
                                 myData.machineId = myHelper.getMachineID()
@@ -139,31 +140,31 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
                                 myData.machineId = myHelper.getMachineID()
                                 val currentTime = System.currentTimeMillis()
                                 myData.stopTime = currentTime
-                                
+                        
                                 val meter = myHelper.getMeter()
                                 if (meter.isMachineStartTimeCustom)
                                     myData.isStartHoursCustom = 1
                                 myData.loadingGPSLocation = meter.hourStartGPSLocation
                                 myData.startHours = meter.startHours
                                 myData.startTime = meter.machineStartTime
-                                
+                        
                                 myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
                                 myData.unloadingGPSLocation = gpsLocation
                                 myData.unloadingGPSLocationString = myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
-                                myData.machine_stop_reason_id = -2
+                                myData.machine_stop_reason_id = MACHINE_CHANGED
                                 if (myHelper.isDailyModeStarted()) myData.isDayWorks = 1 else myData.isDayWorks = 0
-                                
+                        
                                 myData.totalTime = myData.stopTime - myData.startTime
-                                
+                        
                                 myData.machineTypeId = myHelper.getMachineTypeID()
                                 myData.totalHours = myHelper.getMeterTimeForFinishCustom(myData.startHours)
-                                
+                        
                                 myData.time = currentTime.toString()
                                 myData.date = myHelper.getDate(currentTime.toString())
-                                
+                        
                                 if (myData.machineId > 0)
                                     myDataPushSave.pushInsertMachineHour(myData)
-                                
+                        
                                 myHelper.setMachineTypeID(selectedMachineType.id)
                                 myHelper.setMachineNumber(selectedMachineNumber.number)
                                 myHelper.setMachineID(selectedMachineNumber.id)
@@ -173,7 +174,7 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
                                 myHelper.setIsNavEnabled(true)
                                 val intent = Intent(this, HourMeterStartActivity::class.java)
                                 startActivity(intent)
-                                
+                        
                             }
                         }
                     }

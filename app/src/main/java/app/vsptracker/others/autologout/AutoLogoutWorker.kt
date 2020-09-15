@@ -13,7 +13,7 @@ class AutoLogoutWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, par
         Log.e(tag, "App_Check:doWork")
         return try {
             myHelper.log("App_Check:${myHelper.getOperatorAPI().id }")
-            myHelper.clearLoginData()
+//            myHelper.clearLoginData()
             
 //              Launch the app to Auto Logout from app
 //            val intent = Intent(appContext, OperatorLoginActivity::class.java)

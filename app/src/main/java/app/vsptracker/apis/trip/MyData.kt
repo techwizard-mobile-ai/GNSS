@@ -147,6 +147,7 @@ class MyData : Serializable {
     
     //    Operator Logout = -1
     //    Machine Changed = -2
+    //    Machine AutoLogout = -3
     @SerializedName("machine_stop_reason_id")
     @Expose
     var machine_stop_reason_id: Int = 0
