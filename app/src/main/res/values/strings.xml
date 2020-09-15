@@ -344,4 +344,11 @@
     <string name="minimum_password_length">Password minimum length should be 8 characters.</string>
     <string name="pin_minimum_length">PIN minimum length should be 3 characters</string>
     <string name="invalid_pin">Invalid PIN.\nPlease enter correct case sensitive PIN.</string>
+    <string name="start_machine_first">Please start machine first.</string>
+    <string name="select_machine_first">Please select machine first.</string>
+    <string name="map_already_opened">Map is already opened.</string>
+    <string name="stop_waiting">Stop Waiting</string>
+    <string name="start_waiting">Start Waiting</string>
+    <string name="use_app_navigation_buttons">Please use App navigation buttons.</string>
+    <string name="waiting_started">Waiting started.</string>
 </resources>

@@ -312,13 +312,13 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                             val intent = Intent(this, Map1Activity::class.java)
                             startActivity(intent)
                         } else {
-                            myHelper.toast("Map is Already Opened.")
+                            myHelper.toast(getString(R.string.map_already_opened))
                         }
                     }
                     R.id.navb_delay -> {
                         when {
-                            myHelper.getIsMachineStopped() -> myHelper.toast("Please Start Machine First.")
-                            myHelper.getMachineID() < 1 -> myHelper.toast("Please Select Machine First.")
+                            myHelper.getIsMachineStopped() -> myHelper.toast(getString(R.string.start_machine_first))
+                            myHelper.getMachineID() < 1 -> myHelper.toast(getString(R.string.select_machine_first))
                             else -> toggleDelay()
                         }
                     }
@@ -375,12 +375,12 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         }
         
         if (myHelper.isDelayStarted()) {
-            menu.findItem(R.id.navb_delay).title = "Stop Waiting"
+            menu.findItem(R.id.navb_delay).title = getString(R.string.stop_waiting)
             menu.findItem(R.id.navb_delay).icon = ContextCompat.getDrawable(this, R.drawable.ic_started)
             menu.findItem(R.id.navb_delay).isChecked = true
             
         } else {
-            menu.findItem(R.id.navb_delay).title = "Start Waiting"
+            menu.findItem(R.id.navb_delay).title = getString(R.string.start_waiting)
             menu.findItem(R.id.navb_delay).icon = ContextCompat.getDrawable(this, R.drawable.ic_stopped)
             menu.findItem(R.id.navb_map).isChecked = true
         }
@@ -392,7 +392,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START)
         } else {
-            myHelper.toast("Please Use App Navigation Buttons.")
+            myHelper.toast(getString(R.string.use_app_navigation_buttons))
 //            super.onBackPressed()
         }
     }
@@ -491,10 +491,10 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     
     private fun startDelay() {
         if (!myHelper.isDelayStarted()) {
-            myHelper.toast("Waiting Started.")
+            myHelper.toast(getString(R.string.waiting_started))
             myHelper.startDelay(gpsLocation)
             menu.findItem(R.id.navb_delay).icon = ContextCompat.getDrawable(this, R.drawable.ic_started)
-            menu.findItem(R.id.navb_delay).title = "Stop Waiting"
+            menu.findItem(R.id.navb_delay).title = getString(R.string.stop_waiting)
             menu.findItem(R.id.navb_delay).isChecked = true
             val intent = Intent(this@BaseActivity, DelayActivity::class.java)
             startActivity(intent)
@@ -514,9 +514,9 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             eWork.totalTime = meter.delayTotalTime
             eWork.loadingGPSLocation = meter.delayStartGPSLocation
             eWork.unloadingGPSLocation = meter.delayStopGPSLocation
-            
+    
             menu.findItem(R.id.navb_delay).icon = ContextCompat.getDrawable(this, R.drawable.ic_stopped)
-            menu.findItem(R.id.navb_delay).title = "Start Waiting"
+            menu.findItem(R.id.navb_delay).title = getString(R.string.start_waiting)
             menu.findItem(R.id.navb_map).isChecked = true
             
             eWork.machineId = myHelper.getMachineID()
