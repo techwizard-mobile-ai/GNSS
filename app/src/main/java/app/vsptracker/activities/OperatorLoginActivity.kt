@@ -132,9 +132,6 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
             
             when {
                 myHelper.getOperatorAPI().id > 0 -> {
-//                when {
-//                    myHelper.isOnline() -> fetchOrgData()
-//                }
                     launchHomeForLoggedIn()
                 }
             }
@@ -157,7 +154,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
             R.id.signin_signin -> {
                 val pin = signin_pin.text.toString()
                 if (pin.length < 3) {
-                    myHelper.toast("PIN Minimum Length should be 3 Characters")
+                    myHelper.toast(getString(R.string.pin_minimum_length))
                 } else {
                     if (db.getOperator(pin).id > 0) {
                         val operator = db.getOperator(pin)
@@ -172,7 +169,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
                             fetchOrgData()
                         }
                     } else {
-                        myHelper.toast("Invalid PIN.\nPlease Enter Correct PIN.")
+                        myHelper.toast(getString(R.string.invalid_pin))
                     }
                 }
             }
@@ -237,7 +234,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
     }
     
     private fun fetchOrgData() {
-        myHelper.toast("Login Successful.\nFetching Company Data in background.")
+        myHelper.toast(getString(R.string.login_successful_fetching_data))
         myDataPushSave.fetchOrgData()
     }
     

@@ -63,7 +63,8 @@ class MyDataPushSave(private val context: Context) {
      * All Company Data will be fetched from Server using API Calls by this Class only.
      * Old data will be replaced with new one.
      */
-    fun fetchOrgData() {
+    fun fetchOrgData(isBackgroundCall: Boolean = true) {
+        this.isBackgroundCall = isBackgroundCall
         getServerSync()
     }
     
@@ -73,7 +74,7 @@ class MyDataPushSave(private val context: Context) {
      * can be added in this function.
      * It will reduce Internet Usage and User Wait time by 11 times.
      */
-    private fun getServerSync() {
+    internal fun getServerSync() {
         myHelper.log("deviceDetails:${myHelper.getDeviceDetailsString()}")
         val call = this.retrofitAPI.getServerSync(
             myHelper.getLoginAPI().org_id,
