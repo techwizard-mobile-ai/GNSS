@@ -671,7 +671,8 @@ class MyHelper(var TAG: String, val context: Context) {
     }
     
     fun hideKeyboardOnClick(view: View) {
-        view.setOnTouchListener { _, _ ->
+        view.setOnTouchListener { v, _ ->
+            v.performClick()
             hideKeyboard(view)
             false
         }
