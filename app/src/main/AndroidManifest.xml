@@ -33,13 +33,6 @@
             </intent-filter>
         </receiver>
 
-        <service
-            android:name="app.vsptracker.others.autologout.RebootService"
-            android:exported="false"
-            android:label="Alarm Service"
-            android:stopWithTask="false">
-        </service>
-
         <activity android:name=".activities.CheckFormTaskActivity" />
         <activity android:name=".activities.CheckFormsActivity" />
         <activity android:name=".activities.ServerSyncActivity" />

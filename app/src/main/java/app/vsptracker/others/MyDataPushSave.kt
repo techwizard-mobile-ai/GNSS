@@ -1,6 +1,8 @@
 package app.vsptracker.others
 
+import android.app.NotificationManager
 import android.content.Context
+import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
 import androidx.work.*
 import app.vsptracker.R
@@ -14,9 +16,7 @@ import app.vsptracker.classes.GPSLocation
 import app.vsptracker.classes.Material
 import app.vsptracker.classes.ServerSyncModel
 import app.vsptracker.database.DatabaseAdapter
-import app.vsptracker.others.MyEnum.Companion.AUTO_LOGOUT
-import app.vsptracker.others.MyEnum.Companion.OPERATOR_LOGOUT
-import app.vsptracker.others.autologout.ServerSyncCoroutineWorker
+import app.vsptracker.others.autologout.ForegroundService
 import com.amazonaws.mobile.auth.core.internal.util.ThreadUtils.runOnUiThread
 import com.google.gson.GsonBuilder
 import okhttp3.*
@@ -25,6 +25,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 import java.util.concurrent.TimeUnit
+
 
 /**
  * This class will be used for All APIs Calls and Database Actions. It will do following Actions.
@@ -608,7 +609,17 @@ class MyDataPushSave(private val context: Context) {
     
     }
     
-    fun logout(isAutoLogoutCall: Boolean = false, gpsLocation: GPSLocation, myData: MyData, sfinish_reading: String) {
+    fun logout(machine_stop_reason_id: Int, gpsLocation: GPSLocation = GPSLocation(), sfinish_reading: String = myHelper.getMeterTimeForFinish()) {
+        val myData = MyData()
+        
+        val meter = myHelper.getMeter()
+        if (meter.isMachineStartTimeCustom)
+            myData.isStartHoursCustom = 1
+        myData.startHours = myHelper.getMeterTimeForFinish()
+        
+        myData.startTime = meter.machineStartTime
+        
+        myData.loadingGPSLocation = meter.hourStartGPSLocation
         
         val operatorAPI = myHelper.getOperatorAPI()
         operatorAPI.unloadingGPSLocation = gpsLocation
@@ -637,7 +648,7 @@ class MyDataPushSave(private val context: Context) {
             myHelper.log("Machine is not stopped.")
             val totalHours = myHelper.getMeterValidValue(sfinish_reading)
             if (!myHelper.getMeterTimeForFinish().equals(totalHours, true)) {
-                val meter = myHelper.getMeter()
+//                val meter = myHelper.getMeter()
                 meter.isMachineStopTimeCustom = true
                 myData.isTotalHoursCustom = 1
                 myData.startHours = meter.startHours
@@ -658,17 +669,18 @@ class MyDataPushSave(private val context: Context) {
             myHelper.setMachineTotalTime(newMinutes)
             myData.totalHours = totalHours
             myHelper.log("Before saveMachineHour:$myData")
-            if (isAutoLogoutCall) {
-                myData.machine_stop_reason_id = AUTO_LOGOUT
-            } else {
-                myData.machine_stop_reason_id = OPERATOR_LOGOUT
-            }
+            myData.machine_stop_reason_id = machine_stop_reason_id
             myData.isSync = 0
             myData.unloadingGPSLocation = gpsLocation
-            
+    
             pushInsertMachineHour(myData, false)
         }
         checkUpdateServerSyncData(MyEnum.SERVER_SYNC_DATA_LOGOUT)
+        if (machine_stop_reason_id == MyEnum.AUTO_LOGOUT) {
+            ForegroundService.stopService(context)
+            val mNotificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager?
+            mNotificationManager!!.cancelAll()
+        }
         myHelper.clearLoginData()
 //        finishAffinity()
     

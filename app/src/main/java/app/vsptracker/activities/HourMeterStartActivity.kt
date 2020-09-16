@@ -141,20 +141,28 @@ class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
                         if (responseBody.data!![0].totalHours.isNotBlank()) {
                             startReading = responseBody.data!![0].totalHours
                             myHelper.log("startReading:$startReading")
-                            ms_reading.setText(startReading)
+                            val appMeterReading = ms_reading.text.toString().toDouble()
+                            val portalMeterReading = startReading.toDouble()
+                            // If App meter reading is greater than Portal reading then don't set Meter Reading value
+                            // of Portal, this may happen in the case if App meter reading has greater value but
+                            // it was not uploaded to Server due to Internet connection problem. Now when Operator
+                            // try to login from same device his app value is greater than Portal value as previous
+                            // app meter reading was not uploaded to server, so in that case don't set meter reading from portal
+                            if (portalMeterReading > appMeterReading)
+                                ms_reading.setText(startReading)
                         }
-                        
+                
                     }
                     catch (e: Exception) {
                         myHelper.log(e.message.toString())
                     }
-                    
+            
                 } else {
                     myHelper.hideProgressBar()
                     myHelper.toast(responseBody.message)
                 }
             }
-            
+    
             override fun onFailure(call: retrofit2.Call<MyDataListResponse>, t: Throwable) {
                 myHelper.hideDialog()
                 myHelper.hideProgressBar()

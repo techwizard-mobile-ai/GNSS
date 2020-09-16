@@ -234,7 +234,6 @@ class MyHelper(var TAG: String, val context: Context) {
         
                 val responseString = response.body!!.string()
                 try {
-                    log("inside refreshToken try")
                     val responseJObject = JSONObject(responseString)
                     log("RefreshTokenResponse:$responseString")
                     val success = responseJObject.getBoolean("success")
@@ -366,12 +365,10 @@ class MyHelper(var TAG: String, val context: Context) {
     
     fun stopDelay(gpsMaterial: GPSLocation) {
         val meter = getMeter()
-        log("MeterStopBefore:$meter")
         meter.isDelayStarted = false
         meter.delayStopTime = System.currentTimeMillis()
         meter.delayTotalTime = meter.delayStopTime - meter.delayStartTime
         meter.delayStopGPSLocation = gpsMaterial
-        log("MeterStopAfter:$meter")
         setMeter(meter)
     }
     
@@ -379,7 +376,6 @@ class MyHelper(var TAG: String, val context: Context) {
         val currentTime = System.currentTimeMillis()
         if (isDailyModeStarted()) {
             val meter = getMeter()
-            log("MeterStopBefore:$meter")
             meter.isDailyModeStarted = false
             val startTime = meter.dailyModeStartTime
             val totalTime = (currentTime - startTime) + meter.dailyModeTotalTime
@@ -394,12 +390,10 @@ class MyHelper(var TAG: String, val context: Context) {
         val currentTime = System.currentTimeMillis()
         if (!isDelayStarted()) {
             val meter = getMeter()
-            log("MeterStartBefore:$meter")
             meter.isDelayStarted = true
             meter.delayStartTime = currentTime
             meter.delayStartGPSLocation = gpsMaterial
 //            toast("Waiting Started.")
-            log("MeterStartAfter:$meter")
             setMeter(meter)
         } else {
             toast("Waiting is already Started.")
@@ -411,11 +405,9 @@ class MyHelper(var TAG: String, val context: Context) {
         val currentTime = System.currentTimeMillis()
         if (!isDailyModeStarted()) {
             val meter = getMeter()
-            log("MeterStartBefore:$meter")
             meter.isDailyModeStarted = true
             meter.dailyModeStartTime = currentTime
             toast("Day Works Started.")
-            log("MeterStartAfter:$meter")
             setMeter(meter)
         } else {
             val meter = getMeter()
@@ -542,7 +534,6 @@ class MyHelper(var TAG: String, val context: Context) {
     
     fun getLastJourney() = sessionManager.getLastJourney()
     fun setLastJourney(myData: MyData) {
-        log("setLastJourney:$myData")
         sessionManager.setLastJourney(myData)
     }
     
@@ -558,7 +549,6 @@ class MyHelper(var TAG: String, val context: Context) {
     
     fun getMeter() = sessionManager.getMeter()
     fun setMeter(meter: Meter) {
-        log("setMeter:$meter")
         sessionManager.setMeter(meter)
     }
     
@@ -591,9 +581,6 @@ class MyHelper(var TAG: String, val context: Context) {
     
     internal fun getMachineStartTime(): Long {
         val meter = sessionManager.getMeter()
-        
-        log("meter:$meter")
-        
         return if (meter.isMachineStopped) {
             0
         } else {

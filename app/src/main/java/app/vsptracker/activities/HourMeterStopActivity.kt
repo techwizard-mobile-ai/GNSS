@@ -11,7 +11,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.apis.serverSync.ServerSyncAPI
-import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.ServerSyncModel
 import app.vsptracker.others.MyEnum
 import com.google.android.material.navigation.NavigationView
@@ -45,22 +44,7 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
         } else {
             hm_layout.visibility = View.VISIBLE
         }
-        
-        myData = MyData()
-        
-        val meter = myHelper.getMeter()
-        if (meter.isMachineStartTimeCustom)
-            myData.isStartHoursCustom = 1
-        myData.startHours = myHelper.getMeterTimeForFinish()
-        
-        myData.startTime = meter.machineStartTime
-        
-        myData.loadingGPSLocation = meter.hourStartGPSLocation
-        
-        myHelper.log("getMeterTimeForFinish:${myHelper.getMeterTimeForFinish()}")
         sfinish_reading.setText(myHelper.getMeterTimeForFinish())
-        
-        myHelper.log("onCreate:$myData")
         
         val bundle: Bundle? = intent.extras
         if (bundle != null) {
@@ -164,6 +148,14 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
     }
     
     private fun logout(isAutoLogoutCall: Boolean = false) {
-        myDataPushSave.logout(isAutoLogoutCall, gpsLocation, myData, sfinish_reading.text.toString())
+        var machineStopReasonID = MyEnum.OPERATOR_LOGOUT
+        if (isAutoLogoutCall) {
+            machineStopReasonID = MyEnum.AUTO_LOGOUT
+        }
+        // AutoLogoutWorker is not running but handler is running to check Logout time
+        // So Cancel Handler when Operator manually logout.
+        stopHandler()
+        myDataPushSave.logout(machineStopReasonID, gpsLocation, sfinish_reading.text.toString())
+    
     }
 }

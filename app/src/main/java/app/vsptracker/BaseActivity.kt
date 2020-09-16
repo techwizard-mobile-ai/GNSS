@@ -179,9 +179,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             )
             if (difference > 0 && autoLogoutTime > 0) {
                 myHelper.log("Logout Time Completed.")
-//                val intent = Intent(this, HourMeterStopActivity::class.java)
-//                intent.putExtra("isAutoLogoutCall", true)
-//                startActivity(intent)
+                myDataPushSave.logout(MyEnum.AUTO_LOGOUT, gpsLocation)
             } else {
                 myHelper.log("AutoLogout not functional---------------")
             }
@@ -198,80 +196,14 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     
     fun startWorkManager() {
         myHelper.log("App_Check:startWorkManager")
-        ForegroundService.startService(this, getString(R.string.machine_hours_running), getString(R.string.please_logout_if_not_working), 10)
-//        Toast.makeText(this, "do work method", Toast.LENGTH_LONG).show()
-//        val myWorkRequest = OneTimeWorkRequestBuilder<AutoLogoutWorker>()
-//            .setInitialDelay(1, TimeUnit.MINUTES)
-//            .setBackoffCriteria(
-//                BackoffPolicy.LINEAR,
-//                OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
-//                TimeUnit.MILLISECONDS)
-//            .addTag(MyEnum.WORKER_AUTO_LOGOUT)
-//            .build()
-//        workManager.enqueue(myWorkRequest)
-
-//        val timeToTrigger = System.currentTimeMillis() + 10 * 1000
-//        val pendingShowList = PendingIntent.getActivity(this, 1, Intent(this, OperatorLoginActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT)
-//        val pendingIntent = PendingIntent.getBroadcast(this, 1, Intent(this, AlarmReceiver::class.java), PendingIntent.FLAG_UPDATE_CURRENT)
-//
-//        val manager = AlarmManager();
-//        manager.setAlarmClock(AlarmManager.AlarmClockInfo(timeToTrigger, pendingShowList), pendingIntent)
-
-//         var alarmMgr: AlarmManager? = null
-//         lateinit var alarmIntent: PendingIntent
-//
-//        alarmMgr = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-//        alarmIntent = Intent(this, OperatorLoginActivity::class.java).let { intent ->
-//            PendingIntent.getBroadcast(this, 0, intent, 0)
-//        }
-//
-//        alarmMgr?.set(
-//            AlarmManager.ELAPSED_REALTIME_WAKEUP,
-//            SystemClock.elapsedRealtime() + 60 * 1000,
-//            alarmIntent
-//        )
-
-//        val alarmManager =
-//            this.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
-//        val pendingIntent =
-//            PendingIntent.getActivity(this, 1, Intent(this, OperatorLoginActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT)
-////        if (pendingIntent != null && alarmManager != null) {
-////            alarmManager.cancel(pendingIntent)
-////        }
-//        alarmManager?.set(
-//            AlarmManager.ELAPSED_REALTIME_WAKEUP,
-//            SystemClock.elapsedRealtime() + 60 * 1000,
-//            pendingIntent
-//        )
-
-//        val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-//        val startTime: Calendar = Calendar.getInstance()
-//        startTime.add(Calendar.MINUTE, 1)
-////        startTime.add(Calendar.SECOND, 10)
-//        val intent = Intent(this@BaseActivity, OperatorLoginActivity::class.java)
-//        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-//        val pendingIntent = PendingIntent.getActivity(this@BaseActivity, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-//        alarmManager[AlarmManager.RTC, startTime.timeInMillis] = pendingIntent
-
-//        val alarmIntent = Intent(this, OperatorLoginActivity::class.java)
-//        val pendingIntent = PendingIntent.getActivity(
-//            this, 0,
-//            alarmIntent, 0
-//        )
-//        val manager = getSystemService(ALARM_SERVICE) as AlarmManager
-//        val interval = 1000 * 60 * 1
-//        manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval.toLong(), pendingIntent)
-//        val calendar = Calendar.getInstance()
-//        calendar.add(Calendar.SECOND, 10)
-//        MyAlarmManager.setAlarm(applicationContext, calendar.timeInMillis, "App_Check:Test Message!")
-
-//        val alarmIntent = Intent(this, AlarmService::class.java)
-//        startService(alarmIntent)
+        if (autoLogoutTime > 0) {
+            // We are starting Foreground service to show Notification as it will prevent app from kill If operator is not logged out.
+            ForegroundService.startService(this, getString(R.string.machine_hours_running), getString(R.string.please_logout_if_not_working), autoLogoutTime)
+        }
     }
     
     fun cancelWorkManager() {
         myHelper.log("App_Check:cancelWorkManager")
-//        ForegroundService.stopService(this)
         workManager.cancelAllWorkByTag(MyEnum.WORKER_AUTO_LOGOUT)
     }
     
@@ -289,7 +221,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         
     }
     
-    private fun stopHandler() {
+    internal fun stopHandler() {
         myHelper.log("stopHandler")
         handler.removeCallbacks(r)
         handler.removeCallbacksAndMessages(r)

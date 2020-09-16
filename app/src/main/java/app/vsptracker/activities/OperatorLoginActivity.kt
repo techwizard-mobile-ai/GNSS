@@ -1,6 +1,7 @@
 package app.vsptracker.activities
 
 import android.Manifest
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -27,6 +28,7 @@ import app.vsptracker.others.MyDataPushSave
 import app.vsptracker.others.MyEnum
 import app.vsptracker.others.MyHelper
 import app.vsptracker.others.Utils
+import app.vsptracker.others.autologout.ForegroundService
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_operator_login.*
@@ -227,10 +229,17 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
                 val dueCheckForms = db.getAdminCheckFormsDue()
                 myHelper.checkDueCheckForms(dueCheckForms)
                 myDataPushSave.checkUpdateServerSyncData(MyEnum.SERVER_SYNC_UPDATE_MACHINE_STATUS)
-                
+        
             }
-            
+    
         }
+    }
+    
+    override fun onResume() {
+        super.onResume()
+        ForegroundService.stopService(this)
+        val mNotificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager?
+        mNotificationManager!!.cancelAll()
     }
     
     private fun fetchOrgData() {

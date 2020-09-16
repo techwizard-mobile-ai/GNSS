@@ -1,10 +1,8 @@
-package app.vsptracker.others.autologout
+package app.vsptracker.others
 
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import app.vsptracker.others.MyDataPushSave
-import app.vsptracker.others.MyHelper
 
 class ServerSyncCoroutineWorker(context: Context, params: WorkerParameters) :
         CoroutineWorker(context, params) {

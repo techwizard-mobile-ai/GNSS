@@ -35,7 +35,6 @@ class CheckFormsActivity : BaseActivity(), View.OnClickListener,
         val bundle: Bundle? = intent.extras
         if (bundle != null) {
             myData = bundle.getSerializable("myData") as MyData
-            myHelper.log("myData:$myData")
         }
         
         val bottomNavigation: BottomNavigationView = findViewById(R.id.cf_navigationView)

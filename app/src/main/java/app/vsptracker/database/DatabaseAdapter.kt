@@ -617,7 +617,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
     
         val existedOrgsMap = getOrgsMapByID(datum.id)
         if(existedOrgsMap !== null){
-            if(existedOrgsMap.updated_at.equals(datum.updated_at))
+            if (existedOrgsMap.updated_at == datum.updated_at)
                 updateMap = false
         }
         return updateMap
@@ -642,7 +642,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             
             if (updateMap(datum)) {
                 val insertedID = db.replace(tableName, null, cv)
-                myHelper.printInsertion(tableName, insertedID, datum)
+//                myHelper.printInsertion(tableName, insertedID, datum)
             }
             
         }
@@ -676,7 +676,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_ATTEMPTED_QUESTIONS, datum.attempted_questions)
             
             val insertedID = db.replace(tableName, null, cv)
-            myHelper.printInsertion(tableName, insertedID, datum)
+//            myHelper.printInsertion(tableName, insertedID, datum)
         }
         
     }
@@ -784,7 +784,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
             val insertedID = db.replace(tableName, null, cv)
-            myHelper.printInsertion(tableName, insertedID, datum)
+//            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -801,7 +801,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
             val insertedID = db.replace(tableName, null, cv)
-            myHelper.printInsertion(tableName, insertedID, datum)
+//            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -841,7 +841,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
             val insertedID = db.replace(tableName, null, cv)
-            myHelper.printInsertion(tableName, insertedID, datum)
+//            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -983,7 +983,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
             val insertedID = db.replace(tableName, null, cv)
-            myHelper.printInsertion(tableName, insertedID, datum)
+//            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -1112,7 +1112,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
             val insertedID = db.replace(tableName, null, cv)
-            myHelper.printInsertion(tableName, insertedID, datum)
+//            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -1153,7 +1153,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
             val insertedID = db.replace(tableName, null, cv)
-            myHelper.printInsertion(tableName, insertedID, datum)
+//            myHelper.printInsertion(tableName, insertedID, datum)
         }
     }
     
@@ -1620,7 +1620,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
     fun getAdminCheckFormsDue(): ArrayList<MyData> {
         val dueCheckForms = ArrayList<MyData>()
         val adminCheckForms = getAdminCheckForms()
-        myHelper.log("adminCheckForms:$adminCheckForms")
+//        myHelper.log("adminCheckForms:$adminCheckForms")
         
         adminCheckForms.forEach { adminCheckForm ->
             myHelper.log("getMeterTimeForFinish1:${myHelper.getMeterTimeForFinish()}")

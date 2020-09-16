@@ -351,4 +351,5 @@
     <string name="start_waiting">Start Waiting</string>
     <string name="use_app_navigation_buttons">Please use App navigation buttons.</string>
     <string name="waiting_started">Waiting started.</string>
+    <string name="auto_loggingout_from_vspt">Auto logging out from VSPT.</string>
 </resources>

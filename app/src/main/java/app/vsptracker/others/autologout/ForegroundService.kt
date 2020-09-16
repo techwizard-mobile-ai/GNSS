@@ -6,11 +6,8 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.media.RingtoneManager
-import android.net.Uri
 import android.os.Build
 import android.os.IBinder
-import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.work.BackoffPolicy
@@ -24,7 +21,7 @@ import app.vsptracker.others.MyHelper
 import java.util.concurrent.TimeUnit
 
 class ForegroundService : Service() {
-    private val CHANNEL_ID = "ForegroundService Kotlin"
+    private val CHANNEL_ID = "VSPT_CHANNEL"
     private val tag = "ForegroundService"
     
     companion object {
@@ -35,7 +32,8 @@ class ForegroundService : Service() {
             startIntent.putExtra("title", title)
             startIntent.putExtra("text", text)
             ContextCompat.startForegroundService(context, startIntent)
-            
+            // This AutoLogoutWorker will not be called because we are using handler in BaseActivity
+            // for auto logout.
             val myWorkRequest = OneTimeWorkRequestBuilder<AutoLogoutWorker>()
                 .setInitialDelay(duration, TimeUnit.MINUTES)
                 .setBackoffCriteria(
@@ -72,9 +70,6 @@ class ForegroundService : Service() {
             this,
             0, notificationIntent, 0
         )
-        val notificationLayout = RemoteViews(packageName, R.layout.notification_small)
-        val notificationLayoutExpanded = RemoteViews(packageName, R.layout.notification_large)
-        val alarmSound: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(title)
@@ -83,8 +78,6 @@ class ForegroundService : Service() {
             .setColor(ContextCompat.getColor(this, R.color.colorPrimary))
             .setContentIntent(pendingIntent)
             .setStyle(NotificationCompat.DecoratedCustomViewStyle())
-//            .setCustomContentView(notificationLayout)
-//            .setCustomBigContentView(notificationLayoutExpanded)
             .setOnlyAlertOnce(true)
             .setAutoCancel(false)
             .setSound(null)
@@ -101,9 +94,8 @@ class ForegroundService : Service() {
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val serviceChannel = NotificationChannel(
-                CHANNEL_ID, "Foreground Service Channel",
+                CHANNEL_ID, "VSPT_CHANNEL",
                 NotificationManager.IMPORTANCE_LOW
-//                NotificationManager.IMPORTANCE_DEFAULT // to enable sound
             )
             val manager = getSystemService(NotificationManager::class.java)
             manager!!.createNotificationChannel(serviceChannel)
