@@ -11,8 +11,8 @@ android {
         applicationId "app.vsptracker"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 33
-        versionName "1.2.27"
+        versionCode 34
+        versionName "1.2.28"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         resValue "string", "google_maps_key", (project.findProperty("GOOGLE_MAPS_API_KEY") ?: "")
     }
