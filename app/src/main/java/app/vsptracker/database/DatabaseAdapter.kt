@@ -372,6 +372,7 @@ const val createMachinesTable = "CREATE TABLE IF NOT EXISTS $TABLE_MACHINES ( " 
         "$COL_MACHINE_BRAND_ID INTEGER, " +
         "$COL_MACHINE_PLANT_ID INTEGER, " +
         "$COL_NUMBER TEXT, " +
+        "$COL_PRIORITY INTEGER, " +
         "$COL_TOTAL_TIME TEXT," +
         "$COL_STATUS INTEGER," +
         "$COL_IS_DELETED INTEGER" +
@@ -540,7 +541,7 @@ const val DROP_TABLE_OPERATORS_HOURS = "DROP TABLE IF EXISTS $TABLE_OPERATORS_HO
 const val DROP_TABLE_QUESTIONS_TYPES = "DROP TABLE IF EXISTS $TABLE_QUESTIONS_TYPES"
 const val DROP_TABLE_ORGS_MAPS = "DROP TABLE IF EXISTS $TABLE_ORGS_MAPS"
 
-class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 16) {
+class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, 17) {
     
     val tag = "DatabaseAdapter"
     private var myHelper: MyHelper
@@ -1130,6 +1131,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
             cv.put(COL_MACHINE_PLANT_ID, datum.machinePlantId)
             cv.put(COL_NUMBER, datum.number)
             cv.put(COL_TOTAL_TIME, datum.totalHours)
+            cv.put(COL_PRIORITY, datum.priority)
             cv.put(COL_STATUS, datum.status)
             cv.put(COL_IS_DELETED, datum.isDeleted)
             
@@ -2593,9 +2595,9 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         val list: ArrayList<Material> = ArrayList()
         val db = this.readableDatabase
         val query: String = if (type < 1) {
-            "Select * from $TABLE_MACHINES  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 AND $COL_SITE_ID = ${myHelper.getMachineSettings().siteId} ORDER BY $COL_ID DESC"
+            "Select * from $TABLE_MACHINES  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 AND $COL_SITE_ID = ${myHelper.getMachineSettings().siteId}   ORDER BY $COL_PRIORITY < 0, $COL_PRIORITY ASC"
         } else {
-            "Select * from $TABLE_MACHINES  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 AND $COL_SITE_ID = ${myHelper.getMachineSettings().siteId} AND $COL_MACHINE_TYPE_ID = $type ORDER BY $COL_ID DESC"
+            "Select * from $TABLE_MACHINES  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 AND $COL_SITE_ID = ${myHelper.getMachineSettings().siteId} AND $COL_MACHINE_TYPE_ID = $type   ORDER BY $COL_PRIORITY < 0, $COL_PRIORITY ASC"
         }
         // myHelper.log("rawQuery:$query")
         val result = db.rawQuery(query, null)
