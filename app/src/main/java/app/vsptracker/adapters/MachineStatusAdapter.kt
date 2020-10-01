@@ -54,15 +54,21 @@ class MachineStatusAdapter(
                 data.isTotalHoursCustom = 0
                 myHelper.log("Custom Time : False, Original reading:${myHelper.getMeterTimeForStart()}, New Reading: ${myContext.sfinish_reading.text}")
             }
-            
+    
             myHelper.log("totalHours:${data.totalHours}")
             myHelper.log("data:$data")
             data.unloadingGPSLocation = (myContext as MachineStatusActivity).gpsLocation
+            // If waiting is started then stop waiting
+            if (myHelper.isDelayStarted())
+                myContext.stopDelay()
+            // If daily mode is started the stop daily mode
+            if (myHelper.isDailyModeStarted())
+                myContext.myDataPushSave.insertOperatorHour(myContext.gpsLocation)
             myContext.myDataPushSave.pushInsertMachineHour(data, true)
             data.loadingGPSLocation = (myContext as MachineStatusActivity).gpsLocation
             myContext.myDataPushSave.insertMachineStop(data, material)
-                myHelper.logout(myContext)
-                myContext.finishAffinity()
+            myHelper.logout(myContext)
+            myContext.finishAffinity()
         }
     }
 

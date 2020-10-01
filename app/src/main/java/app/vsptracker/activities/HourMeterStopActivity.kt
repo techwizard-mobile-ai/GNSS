@@ -155,7 +155,7 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
         // AutoLogoutWorker is not running but handler is running to check Logout time
         // So Cancel Handler when Operator manually logout.
         stopHandler()
-        myDataPushSave.logout(machineStopReasonID, gpsLocation, sfinish_reading.text.toString())
-    
+        // Using BaseActivity logout method as we have to stop waiting and change days work mode.
+        logout(machineStopReasonID, gpsLocation, sfinish_reading.text.toString())
     }
 }

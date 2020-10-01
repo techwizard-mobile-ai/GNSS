@@ -238,7 +238,7 @@ class MyDataPushSave(private val context: Context) {
         insertMachineHour(myData, pushServerSync)
         myHelper.stopDelay(myData.unloadingGPSLocation)
         myHelper.stopDailyMode()
-        
+    
         return true
     }
     
@@ -248,8 +248,28 @@ class MyDataPushSave(private val context: Context) {
             checkUpdateServerSyncData()
     }
     
-    fun insertOperatorHour(myData: MyData) {
-        val insertID = db.insertOperatorHour(myData)
+    fun insertOperatorHour(gpsLocation: GPSLocation) {
+        val operatorAPI = myHelper.getOperatorAPI()
+        operatorAPI.unloadingGPSLocation = gpsLocation
+        operatorAPI.orgId = myHelper.getLoginAPI().org_id
+        operatorAPI.siteId = myHelper.getMachineSettings().siteId
+        operatorAPI.operatorId = operatorAPI.id
+        when {
+            myHelper.isDailyModeStarted() -> operatorAPI.isDayWorks = 1
+            else -> operatorAPI.isDayWorks = 0
+        }
+        operatorAPI.stopTime = System.currentTimeMillis()
+        operatorAPI.totalTime = operatorAPI.stopTime - operatorAPI.startTime
+        operatorAPI.loadingGPSLocationString = myHelper.getGPSLocationToString(operatorAPI.loadingGPSLocation)
+        operatorAPI.unloadingGPSLocationString = myHelper.getGPSLocationToString(operatorAPI.unloadingGPSLocation)
+        val insertID = db.insertOperatorHour(operatorAPI)
+
+//        This method is called when Mode is changed. So Reset Start Time of Operator Hour
+        val operator = myHelper.getOperatorAPI()
+        operator.startTime = System.currentTimeMillis()
+        operator.loadingGPSLocation = gpsLocation
+        myHelper.setOperatorAPI(operator)
+        
         if (insertID > 0)
             checkUpdateServerSyncData()
     }

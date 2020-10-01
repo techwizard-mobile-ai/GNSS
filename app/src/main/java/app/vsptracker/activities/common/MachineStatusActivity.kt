@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.activities.HourMeterStartActivity
-import app.vsptracker.activities.OperatorLoginActivity
 import app.vsptracker.adapters.MachineStatusAdapter
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.others.MyEnum
@@ -105,28 +104,7 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
                 finish()
             }
             R.id.machine_status_logout -> {
-                if (myHelper.getIsMachineStopped()) {
-                    val operatorAPI = myHelper.getOperatorAPI()
-                    operatorAPI.unloadingGPSLocation = gpsLocation
-                    operatorAPI.stopTime = System.currentTimeMillis()
-                    operatorAPI.totalTime = operatorAPI.stopTime - operatorAPI.startTime
-                    operatorAPI.loadingGPSLocationString = myHelper.getGPSLocationToString(operatorAPI.loadingGPSLocation)
-                    operatorAPI.unloadingGPSLocationString = myHelper.getGPSLocationToString(operatorAPI.unloadingGPSLocation)
-                    myDataPushSave.insertOperatorHour(operatorAPI)
-                    
-                    myHelper.stopDelay(gpsLocation)
-                    myHelper.stopDailyMode()
-                    myHelper.setOperatorAPI(MyData())
-                    
-                    val data = MyData()
-                    myHelper.setLastJourney(data)
-                    
-                    val intent = Intent(this, OperatorLoginActivity::class.java)
-                    startActivity(intent)
-                    finishAffinity()
-                } else {
-                    myHelper.logout(this)
-                }
+                logout(MyEnum.OPERATOR_LOGOUT, gpsLocation, sfinish_reading.text.toString())
             }
     
             R.id.machine_status_start -> {

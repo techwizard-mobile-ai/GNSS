@@ -61,10 +61,10 @@ class DayWorksActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         when (view!!.id) {
             R.id.day_works_action -> {
-
+        
                 myHelper.setLastJourney(MyData())
 //                Before Day Works Mode is Changed, Insert Previous Hours into Database and Portal
-                insertOperatorHour()
+                myDataPushSave.insertOperatorHour(gpsLocation)
                 if (myHelper.isDailyModeStarted()) {
                     day_work_title.text = getString(R.string.start_day_works_mode)
                     day_works_button.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorPrimary))
@@ -73,16 +73,16 @@ class DayWorksActivity : BaseActivity(), View.OnClickListener {
                     day_works_chronometer.stop()
                     myHelper.stopDailyMode()
                     myHelper.startHomeActivityByType(MyData())
-
+            
                 } else {
 
 //                    day_works_chronometer.base = SystemClock.elapsedRealtime() - myHelper.getMeter().dailyModeTotalTime
                     day_works_chronometer.base = SystemClock.elapsedRealtime()
                     day_works_chronometer.start()
-
+            
                     day_work_title.text = getString(R.string.stop_day_works_mode)
                     day_works_button.backgroundTintList = ColorStateList.valueOf(
-                        ContextCompat.getColor(this, R.color.black )
+                        ContextCompat.getColor(this, R.color.black)
                     )
                     day_works_action_text.text = getString(R.string.stop)
                     isDailyModeStart = true
@@ -91,30 +91,5 @@ class DayWorksActivity : BaseActivity(), View.OnClickListener {
                 }
             }
         }
-    }
-
-    private fun insertOperatorHour(){
-        val operatorAPI = myHelper.getOperatorAPI()
-        operatorAPI.unloadingGPSLocation = gpsLocation
-        operatorAPI.orgId = myHelper.getLoginAPI().org_id
-        operatorAPI.siteId = myHelper.getMachineSettings().siteId
-        operatorAPI.operatorId = operatorAPI.id
-        when{
-            myHelper.isDailyModeStarted() -> operatorAPI.isDayWorks = 1
-            else -> operatorAPI.isDayWorks = 0
-        }
-//                operatorAPI.isDaysWork = myHelper.isDailyModeStarted()
-        operatorAPI.stopTime = System.currentTimeMillis()
-        operatorAPI.totalTime = operatorAPI.stopTime - operatorAPI.startTime
-        operatorAPI.loadingGPSLocationString = myHelper.getGPSLocationToString(operatorAPI.loadingGPSLocation)
-        operatorAPI.unloadingGPSLocationString = myHelper.getGPSLocationToString(operatorAPI.unloadingGPSLocation)
-        myDataPushSave.insertOperatorHour(operatorAPI)
-
-//        This method is called when Mode is changed. So Reset Start Time of Operator Hour
-        val operator = myHelper.getOperatorAPI()
-        operator.startTime = System.currentTimeMillis()
-        operator.loadingGPSLocation = gpsLocation
-        myHelper.setOperatorAPI(operator)
-
     }
 }

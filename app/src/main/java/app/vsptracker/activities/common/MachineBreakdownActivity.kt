@@ -61,7 +61,7 @@ class MachineBreakdownActivity : BaseActivity(), View.OnClickListener {
                     sfinish_reading.setText(myHelper.getRoundedDecimal(newValue).toString())
                 }
             }
-            
+    
             R.id.sfinish_plus -> {
                 val value = sfinish_reading.text.toString().toFloat()
                 val newValue = value + 0.1
@@ -85,7 +85,7 @@ class MachineBreakdownActivity : BaseActivity(), View.OnClickListener {
                 data.siteId = myHelper.getMachineSettings().siteId
                 data.unloadingGPSLocation = gpsLocation
 //                data.totalHours = myHelper.getMeterTimeForFinishCustom(myData.startHours)
-    
+        
                 if (!startReading.equals(sfinish_reading.text.toString(), true)) {
                     data.isTotalHoursCustom = 1
                     myHelper.log("Custom Time : True, Original reading:${myHelper.getMeterTimeForStart()}, New Reading: ${sfinish_reading.text}")
@@ -93,8 +93,14 @@ class MachineBreakdownActivity : BaseActivity(), View.OnClickListener {
                     data.isTotalHoursCustom = 0
                     myHelper.log("Custom Time : False, Original reading:${myHelper.getMeterTimeForStart()}, New Reading: ${sfinish_reading.text}")
                 }
-                
+        
                 data.totalHours = sfinish_reading.text.toString()
+                // If waiting is started then stop waiting
+                if (myHelper.isDelayStarted())
+                    stopDelay()
+                // If daily mode is started the stop daily mode
+                if (myHelper.isDailyModeStarted())
+                    myDataPushSave.insertOperatorHour(gpsLocation)
                 myDataPushSave.pushInsertMachineHour(data)
                 // Location which is Machine Hour Stop GPS is same location which is Machine Stop Start GPS
                 data.loadingGPSLocation = gpsLocation
@@ -104,7 +110,7 @@ class MachineBreakdownActivity : BaseActivity(), View.OnClickListener {
                 } else {
                     myHelper.toast("Machine Not Stopped. Please try again.")
                 }
-                
+        
             }
         }
     }

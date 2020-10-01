@@ -179,7 +179,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             )
             if (difference > 0 && autoLogoutTime > 0) {
                 myHelper.log("Logout Time Completed.")
-                myDataPushSave.logout(MyEnum.AUTO_LOGOUT, gpsLocation)
+                logout(MyEnum.AUTO_LOGOUT, gpsLocation)
             } else {
                 myHelper.log("AutoLogout not functional---------------")
             }
@@ -431,6 +431,14 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             val intent = Intent(this@BaseActivity, DelayActivity::class.java)
             startActivity(intent)
         }
+    }
+    
+    // Using this method as we have to make stop waiting and change works mode if it is days work.
+    fun logout(machine_stop_reason_id: Int, gpsLocation: GPSLocation = GPSLocation(), sfinish_reading: String = myHelper.getMeterTimeForFinish()) {
+        // If waiting is started then stop waiting
+        if (myHelper.isDelayStarted())
+            stopDelay()
+        myDataPushSave.logout(machine_stop_reason_id, gpsLocation, sfinish_reading)
     }
     
     fun stopDelay() {
