@@ -273,8 +273,13 @@ class MyDataPushSave(private val context: Context) {
     fun insertMachineStop(myData: MyData, material: Material, resetJourney: Boolean = false): Long {
         val currentTime = System.currentTimeMillis()
         myData.startTime = currentTime
+        myData.totalTime = 0
+        myData.stopTime = 0 // When inserting Machine hour data, this stop time and total time is also
+        // updated (values are from machine hours records ) which is incorrect
+        // so here we are updating this data to this value, stop_time and total_time will be updated when a machine is started again
+        // and there is call to updateMachineStops
         myData.time = currentTime.toString()
-        
+    
         myData.orgId = myHelper.getLoginAPI().org_id
         myData.siteId = myHelper.getMachineSettings().siteId
         myData.operatorId = myHelper.getOperatorAPI().id
@@ -425,7 +430,19 @@ class MyDataPushSave(private val context: Context) {
     fun addToList(type: Int, name: String, list: ArrayList<MyData>): ServerSyncAPI? {
         val total = list.size
         val synced = list.filter { it.isSync == 1 }.size
-        val remaining = list.filter { it.isSync == 0 }
+        // TODO uncomment this code when all machine stops entries are updated to Portal
+        // val remaining = list.filter { it.isSync == 0 }
+        // As some machines stops entries are not updated on Portal, it is better to update all records for a limited time.
+        // Purpose of this block of code is to sync machine stops data with portal, when all data will be synced to portal
+        // we can remove this code with val remaining = list.filter { it.isSync == 0 }
+        val remaining: List<MyData> = when (type) {
+            8 -> {
+                list
+            }
+            else -> {
+                list.filter { it.isSync == 0 }
+            }
+        }
         myHelper.log("$name:$total, isSynced:$synced, isRemaining:${remaining.size}")
         var serverSyncAPI: ServerSyncAPI? = null
         if (remaining.isNotEmpty()) {

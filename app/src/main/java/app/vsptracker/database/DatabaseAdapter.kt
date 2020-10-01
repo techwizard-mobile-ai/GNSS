@@ -617,7 +617,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
         var updateMap = true
     
         val existedOrgsMap = getOrgsMapByID(datum.id)
-        if(existedOrgsMap !== null){
+        if (existedOrgsMap !== null) {
             if (existedOrgsMap.updated_at == datum.updated_at)
                 updateMap = false
         }
@@ -1633,7 +1633,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 
                 myHelper.log("Case:${adminCheckForm.admin_checkforms_schedules_id}")
                 when (adminCheckForm.admin_checkforms_schedules_id) {
-                    
+    
                     1 -> {
                         // Due after every Days passed
                         if (myHelper.isDueCheckFormAfterDaysPassed(adminCheckForm, adminCheckFormsCompleted, getMachineHours("ASC"))) {
@@ -3401,7 +3401,16 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 )
                 datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
                 datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
-                list.add(datum)
+                myHelper.log("getMachinesStops:$datum")
+                // When Server sync data is required then send only data which has stop_time greater than 0
+                // Machine stop entry is recorded in database when a machine is stopped and updated when a machine
+                // is started again. So send data to server when we have complete data e.g start_time and stop_time
+                if (orderBy == "ASC") {
+                    if (datum.stopTime > 0)
+                        list.add(datum)
+                } else {
+                    list.add(datum)
+                }
             } while (result.moveToNext())
         }
         

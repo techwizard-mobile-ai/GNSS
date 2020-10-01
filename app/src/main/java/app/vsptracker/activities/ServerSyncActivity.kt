@@ -78,10 +78,11 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
             serverSyncList.add(it)
             it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
         }
-        myDataPushSave.addToList(8, myHelper.getTypeName(8), db.getMachinesStops("ASC"))?.let {
-            serverSyncList.add(it)
-            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
-        }
+        // TODO uncomment this code when all machine stops entries are updated to Portal
+//        myDataPushSave.addToList(8, myHelper.getTypeName(8), db.getMachinesStops("ASC"))?.let {
+//            serverSyncList.add(it)
+//            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+//        }
         myDataPushSave.addToList(9, myHelper.getTypeName(9), db.getMachinesHours("ASC"))?.let {
             serverSyncList.add(it)
             it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
