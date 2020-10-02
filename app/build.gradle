@@ -31,9 +31,11 @@ android {
     flavorDimensions "env"
     productFlavors {
         tvspt_com {
+            resValue "string", "override_name", "VSPT Testing"
             buildConfigField "String", "BASE_URL", '"https://tvspt.com/api/v1/"'
         }
         vsptracker_app {
+            resValue "string", "override_name", "VSP Tracker"
             buildConfigField "String", "BASE_URL", '"http://vsptracker.app/api/v1/"'
         }
     }

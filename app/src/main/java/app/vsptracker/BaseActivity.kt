@@ -128,15 +128,9 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         menu[0].isCheckable = false
         
         val headerView: View = navView.getHeaderView(0)
-        val navHeaderDeviceDetails: TextView = headerView.findViewById(R.id.nav_header_device_details)
         val navTitle: TextView = headerView.findViewById(R.id.nav_header_title)
-//        val navSubTitle : TextView = headerView.findViewById(R.id.nav_header_sub_title)
+        val navSubTitle: TextView = headerView.findViewById(R.id.nav_header_sub_title)
         val deviceDetails = DeviceDetails()
-        navHeaderDeviceDetails.text = "VSPT_VERSION: ${deviceDetails.VSPT_VERSION_NAME} (${deviceDetails.VSPT_VERSION_CODE})\n" +
-                "Mfr. : ${deviceDetails.MANUFACTURER}\n" +
-                "DEVICE : ${deviceDetails.DEVICE}\n" +
-                "MODEL : ${deviceDetails.MODEL}\n" +
-                "ANDROID_API : ${deviceDetails.ANDROID_SDK_API}\n"
         
         val appAPI = myHelper.getLatestVSPTVersion()
         
@@ -147,10 +141,8 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             "Latest Version:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${appAPI.version_name} (${appAPI.version_code})<br/>" +
                     "Installed Version:&nbsp;${deviceDetails.VSPT_VERSION_NAME} (${deviceDetails.VSPT_VERSION_CODE})"
         }
-        
-        
         navTitle.text = HtmlCompat.fromHtml(versionTitle, HtmlCompat.FROM_HTML_MODE_LEGACY)
-//        navSubTitle.text = "Test just"
+        navSubTitle.text = "${getString(R.string.override_name)}: ${getString(R.string.nav_header_subtitle)}"
 //        MachineAutoLogout is time set by administrator. If App is not in use for time greater than AutoLogoutTime
 //        which is different for Machine Type for Different sites then user should be Auto logout from App
 //        and all data should be sent to server.
