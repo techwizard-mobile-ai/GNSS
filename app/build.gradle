@@ -28,6 +28,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    flavorDimensions "env"
+    productFlavors {
+        tvspt_com {
+            buildConfigField "String", "BASE_URL", '"https://tvspt.com/api/v1/"'
+        }
+        vsptracker_app {
+            buildConfigField "String", "BASE_URL", '"http://vsptracker.app/api/v1/"'
+        }
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
