@@ -65,54 +65,26 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
     
     override fun onClick(view: View?) {
         when (view!!.id) {
-            
+    
             R.id.runload_home -> {
+                unload()
 //                everything should be reset when clicked on Finish
                 val data = MyData()
                 myHelper.setLastJourney(data)
                 myHelper.startHomeActivityByType(data)
             }
             R.id.runload_finish -> {
+                unload()
+//                everything should be reset when clicked on Finish
+                val data = MyData()
+                myHelper.setLastJourney(data)
                 myHelper.logout(this)
             }
             R.id.trunload_unload -> {
-                myData.unloadingGPSLocation = gpsLocation
-                myData.orgId = myHelper.getLoginAPI().org_id
-                myData.siteId = myHelper.getMachineSettings().siteId
-                myData.operatorId = myHelper.getOperatorAPI().id
-                myData.machineTypeId = myHelper.getMachineTypeID()
-                myData.machineId = myHelper.getMachineID()
-                
-                val currentTime = System.currentTimeMillis()
-                myData.stopTime = currentTime
-                myData.totalTime = myData.stopTime - myData.startTime
-                if (myHelper.isDailyModeStarted()) {
-                    myData.isDayWorks = 1
-                } else {
-                    myData.isDayWorks = 0
-                }
-                val datum = db.getTrip(myData.recordID)
-                myData.loadingGPSLocationString = myHelper.getGPSLocationToString(datum.loadingGPSLocation)
-                myData.unloadingGPSLocationString = myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
-                
-                
-                if (myData.tripType == 1) {
-                    saveTrip(myData)
-                    myData.loading_machine_id = myData.back_loading_machine_id
-                    myData.loading_material_id = myData.back_loading_material_id
-                    myData.loading_location_id = myData.back_loading_location_id
-                    myData.unloading_task_id = myData.back_unloading_task_id
-                    myData.unloading_material_id = myData.back_unloading_material_id
-                    myData.unloading_location_id = myData.back_unloading_location_id
-                } else {
-                    saveTrip(myData)
-                }
-                
-                
-                myData.unloadingWeight = trul_weight.text.toString().toDouble()
-                myDataPushSave.updateTrip(myData)
-                
-                stopDelay()
+                unload()
+                // Reset unload weight as in Repeat Journey OR Loop weight should be reset
+                myData.unloadingWeight = 0.0
+                afterUnloadAction(myData)
             }
             R.id.trul_task -> {
                 val intent = Intent(this, UnloadTaskActivity::class.java)
@@ -157,7 +129,40 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
         }
     }
     
-    private fun saveTrip(myData: MyData) {
+    private fun unload() {
+        myData.unloadingGPSLocation = gpsLocation
+        myData.orgId = myHelper.getLoginAPI().org_id
+        myData.siteId = myHelper.getMachineSettings().siteId
+        myData.operatorId = myHelper.getOperatorAPI().id
+        myData.machineTypeId = myHelper.getMachineTypeID()
+        myData.machineId = myHelper.getMachineID()
+        
+        val currentTime = System.currentTimeMillis()
+        myData.stopTime = currentTime
+        myData.totalTime = myData.stopTime - myData.startTime
+        if (myHelper.isDailyModeStarted()) {
+            myData.isDayWorks = 1
+        } else {
+            myData.isDayWorks = 0
+        }
+        val datum = db.getTrip(myData.recordID)
+        myData.loadingGPSLocationString = myHelper.getGPSLocationToString(datum.loadingGPSLocation)
+        myData.unloadingGPSLocationString = myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
+        
+        if (myData.tripType == 1) {
+            myData.loading_machine_id = myData.back_loading_machine_id
+            myData.loading_material_id = myData.back_loading_material_id
+            myData.loading_location_id = myData.back_loading_location_id
+            myData.unloading_task_id = myData.back_unloading_task_id
+            myData.unloading_material_id = myData.back_unloading_material_id
+            myData.unloading_location_id = myData.back_unloading_location_id
+        }
+        myData.unloadingWeight = trul_weight.text.toString().toDouble()
+        myDataPushSave.updateTrip(myData)
+        stopDelay()
+    }
+    
+    private fun afterUnloadAction(myData: MyData) {
         when (myData.repeatJourney) {
             0 -> {
                 when (myData.nextAction) {
@@ -168,7 +173,6 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
                         myData.nextAction = 3
                     }
                 }
-                
                 myHelper.setLastJourney(myData)
                 myHelper.startLoadAfterActivityByType(myData)
             }
