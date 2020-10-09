@@ -1195,14 +1195,9 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
     
     fun insertTrip(myData: MyData): Long {
         
-        
         myHelper.log("insertTrip:$myData")
-        
         val currentTime = System.currentTimeMillis()
-        
         myData.startTime = currentTime
-        myData.stopTime = currentTime
-        myData.totalTime = currentTime - myData.startTime
         
         val time = System.currentTimeMillis()
         myData.time = time.toString()
@@ -3217,7 +3212,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 datum.loadingGPSLocationString = result.getString(
                     result.getColumnIndex(COL_LOADING_GPS_LOCATION)
                 )
-                
+    
                 datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
                     result.getString(
                         result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
@@ -3228,7 +3223,16 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, DATABASE
                 )
                 datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
                 datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
-                list.add(datum)
+                myHelper.log("orderBy:$orderBy  tripData:$datum")
+                // For Server Sync; send data which has stop time greater than 0. As if stop_time=0 then
+                // Trip Unload data is not saved/updated yet. This could be the case when Load is done and machine is
+                // stopped. And when machine is started again data is synced with server but Unload is not done yet.
+                if (orderBy == "ASC") {
+                    if (datum.stopTime > 0)
+                        list.add(datum)
+                } else {
+                    list.add(datum)
+                }
             } while (result.moveToNext())
         }
         

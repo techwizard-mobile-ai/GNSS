@@ -322,6 +322,9 @@ class MyDataPushSave(private val context: Context) {
      * data is Pushed to server and Updated in Database.
      */
     fun insertTrip(myData: MyData): Long {
+        // This stopTime could be of Last Unloading data saved in Repeat Journey, So
+        // init it to 0, this value will be updated in RUnload Activity
+        myData.stopTime = 0
         val insertID = db.insertTrip(myData)
         myHelper.log("insertTripID:$insertID")
         return insertID
