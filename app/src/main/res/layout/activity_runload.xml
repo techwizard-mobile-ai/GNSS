@@ -42,6 +42,7 @@
         <TextView
             android:id="@+id/trul_weight"
             style="@style/load_tv"
+            android:background="@drawable/rounded_corner_yellow"
             android:text="@string/activity_runload_trul_weight_text" />
 
 

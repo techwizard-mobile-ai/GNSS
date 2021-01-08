@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
+import androidx.core.content.ContextCompat
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
@@ -50,7 +51,7 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
         
         runload_home.setOnClickListener(this)
         runload_finish.setOnClickListener(this)
-        
+    
         trunload_unload.setOnClickListener(this)
         trul_task.setOnClickListener(this)
         trul_material.setOnClickListener(this)
@@ -61,6 +62,15 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
     override fun onResume() {
         super.onResume()
         base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
+        updateWeightBackground()
+    }
+    
+    fun updateWeightBackground() {
+        if (trul_weight.text.toString().toDouble() > 0) {
+            trul_weight.background = ContextCompat.getDrawable(applicationContext, R.drawable.rounded_corner_unload)
+        } else {
+            trul_weight.background = ContextCompat.getDrawable(applicationContext, R.drawable.rounded_corner_yellow)
+        }
     }
     
     override fun onClick(view: View?) {

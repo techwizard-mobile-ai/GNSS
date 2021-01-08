@@ -216,6 +216,7 @@
 
     <style name="load_tv" parent="grid_tv">
         <item name="android:layout_width">@dimen/_140sdp</item>
+        <item name="android:background">@drawable/rounded_corner_unload</item>
     </style>
 
 

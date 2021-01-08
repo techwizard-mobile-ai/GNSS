@@ -28,5 +28,6 @@
     <color name="light_red">#D57E78</color>
     <color name="blue">#0265aa</color>
     <color name="grey">#9f9e9e</color>
+    <color name="yellow">#ffcc00</color>
 
 </resources>
