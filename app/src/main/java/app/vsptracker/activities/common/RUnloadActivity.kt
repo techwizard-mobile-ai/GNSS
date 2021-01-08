@@ -159,14 +159,6 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
         myData.loadingGPSLocationString = myHelper.getGPSLocationToString(datum.loadingGPSLocation)
         myData.unloadingGPSLocationString = myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
         
-        if (myData.tripType == 1) {
-            myData.loading_machine_id = myData.back_loading_machine_id
-            myData.loading_material_id = myData.back_loading_material_id
-            myData.loading_location_id = myData.back_loading_location_id
-            myData.unloading_task_id = myData.back_unloading_task_id
-            myData.unloading_material_id = myData.back_unloading_material_id
-            myData.unloading_location_id = myData.back_unloading_location_id
-        }
         myData.unloadingWeight = trul_weight.text.toString().toDouble()
         myDataPushSave.updateTrip(myData)
         stopDelay()
