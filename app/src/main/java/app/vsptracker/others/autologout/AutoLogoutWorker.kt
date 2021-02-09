@@ -13,10 +13,16 @@ class AutoLogoutWorker(context: Context, params: WorkerParameters) : Worker(cont
     val myHelper = MyHelper(tag, context)
     val myDataPushSave = MyDataPushSave(context)
     override fun doWork(): Result {
-        Log.e(tag, "App_Check:doWork")
+        myHelper.log("App_Check:doWork")
         return try {
-            myHelper.log("App_Check_getOperatorAPI:${myHelper.getOperatorAPI().id}")
-            myDataPushSave.logout(MyEnum.AUTO_LOGOUT)
+            //get Input Data back using "inputData" variable
+            val workerType = inputData.getInt("type", 0)
+            myHelper.log("workerType:$workerType")
+            when (workerType) {
+                MyEnum.WORKER_TYPE_AUTO_LOGOUT -> myDataPushSave.logout(MyEnum.LOGOUT_TYPE_AUTO)
+//                MyEnum.WORKER_TYPE_APP_LOCKS -> myHelper.lockOtherApps()
+            }
+
 
 //              Launch the app to Auto Logout from app
 //            val intent = Intent(appContext, OperatorLoginActivity::class.java)

@@ -104,7 +104,7 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
                 finish()
             }
             R.id.machine_status_logout -> {
-                logout(MyEnum.OPERATOR_LOGOUT, gpsLocation, sfinish_reading.text.toString())
+                logout(MyEnum.LOGOUT_TYPE_OPERATOR, gpsLocation, sfinish_reading.text.toString())
             }
     
             R.id.machine_status_start -> {

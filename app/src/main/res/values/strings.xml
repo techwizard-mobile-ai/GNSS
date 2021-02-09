@@ -352,4 +352,6 @@
     <string name="use_app_navigation_buttons">Please use App navigation buttons.</string>
     <string name="waiting_started">Waiting started.</string>
     <string name="auto_loggingout_from_vspt">Auto logging out from VSPT.</string>
+    <string name="do_you_want_same_machine">Do you want to use same machine?</string>
+    <string name="use_existing">Use Existing</string>
 </resources>

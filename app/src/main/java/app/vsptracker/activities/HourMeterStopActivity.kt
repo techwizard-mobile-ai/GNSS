@@ -148,9 +148,9 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
     }
     
     private fun logout(isAutoLogoutCall: Boolean = false) {
-        var machineStopReasonID = MyEnum.OPERATOR_LOGOUT
+        var machineStopReasonID = MyEnum.LOGOUT_TYPE_OPERATOR
         if (isAutoLogoutCall) {
-            machineStopReasonID = MyEnum.AUTO_LOGOUT
+            machineStopReasonID = MyEnum.LOGOUT_TYPE_AUTO
         }
         // AutoLogoutWorker is not running but handler is running to check Logout time
         // So Cancel Handler when Operator manually logout.

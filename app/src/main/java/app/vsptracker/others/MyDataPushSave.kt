@@ -402,7 +402,7 @@ class MyDataPushSave(private val context: Context) {
                 TimeUnit.MILLISECONDS
             )
             .setInputData(data.build())
-            .addTag(MyEnum.WORKDER_SERVER_SYNC)
+            .addTag(MyEnum.WORKER_TAG_SERVER_SYNC)
             .build()
         // Run the worker synchronously
         workManager.enqueue(myWorkRequest)
@@ -714,7 +714,7 @@ class MyDataPushSave(private val context: Context) {
                 pushInsertMachineHour(myData, false)
             }
             checkUpdateServerSyncData(MyEnum.SERVER_SYNC_DATA_LOGOUT)
-            if (machine_stop_reason_id == MyEnum.AUTO_LOGOUT) {
+            if (machine_stop_reason_id == MyEnum.LOGOUT_TYPE_AUTO) {
                 ForegroundService.stopService(context)
                 val mNotificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager?
                 mNotificationManager!!.cancelAll()

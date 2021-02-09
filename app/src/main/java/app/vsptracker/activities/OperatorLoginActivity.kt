@@ -1,6 +1,7 @@
 package app.vsptracker.activities
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
@@ -11,6 +12,8 @@ import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -32,6 +35,7 @@ import app.vsptracker.others.autologout.ForegroundService
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_operator_login.*
+import kotlinx.android.synthetic.main.dialog_save_checkform.view.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -199,10 +203,48 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
                 finishAffinity()
             }
             else -> {
-                val intent = Intent(this@OperatorLoginActivity, HourMeterStartActivity::class.java)
-                startActivity(intent)
-                finishAffinity()
+                machineConfirmDialog()
+//                val intent = Intent(this@OperatorLoginActivity, HourMeterStartActivity::class.java)
+//                startActivity(intent)
+//                finishAffinity()
             }
+        }
+    }
+    
+    @SuppressLint("InflateParams")
+    private fun machineConfirmDialog() {
+        
+        val mDialogView = LayoutInflater.from(this).inflate(R.layout.dialog_save_checkform, null)
+        
+        mDialogView.cftd_title.text = myHelper.getMachineDetails()
+        mDialogView.cftd_sub_title.text = getString(R.string.do_you_want_same_machine)
+        mDialogView.save_checkform_yes.text = getString(R.string.use_existing)
+        mDialogView.save_checkform_no.text = getString(R.string.change_machine)
+
+//        mDialogView.save_checkform_yes.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
+        
+        val mBuilder = AlertDialog.Builder(this)
+            .setView(mDialogView)
+        val mAlertDialog = mBuilder.show()
+        mAlertDialog.setCancelable(false)
+        
+        val window = mAlertDialog.window
+        val wlp = window!!.attributes
+        
+        wlp.gravity = Gravity.CENTER
+        window.attributes = wlp
+        
+        mDialogView.save_checkform_yes.setOnClickListener {
+            mAlertDialog.dismiss()
+            val intent = Intent(this@OperatorLoginActivity, HourMeterStartActivity::class.java)
+            startActivity(intent)
+            finishAffinity()
+        }
+        mDialogView.save_checkform_no.setOnClickListener {
+            mAlertDialog.dismiss()
+            val intent = Intent(this@OperatorLoginActivity, MachineTypeActivity::class.java)
+            startActivity(intent)
+            finishAffinity()
         }
     }
     

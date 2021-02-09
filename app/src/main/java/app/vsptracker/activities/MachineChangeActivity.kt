@@ -13,7 +13,7 @@ import app.vsptracker.adapters.SelectMachineNumberAdapter
 import app.vsptracker.adapters.SelectStateAdapter
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.Material
-import app.vsptracker.others.MyEnum.Companion.MACHINE_CHANGED
+import app.vsptracker.others.MyEnum.Companion.LOGOUT_TYPE_MACHINE_CHANGED
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_machine_change.*
 import java.util.*
@@ -135,7 +135,7 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
                                 myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
                                 myData.unloadingGPSLocation = gpsLocation
                                 myData.unloadingGPSLocationString = myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
-                                myData.machine_stop_reason_id = MACHINE_CHANGED
+                                myData.machine_stop_reason_id = LOGOUT_TYPE_MACHINE_CHANGED
                                 if (myHelper.isDailyModeStarted()) myData.isDayWorks = 1 else myData.isDayWorks = 0
                         
                                 myData.totalTime = myData.stopTime - myData.startTime

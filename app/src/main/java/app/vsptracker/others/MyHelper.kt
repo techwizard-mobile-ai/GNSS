@@ -4,11 +4,14 @@ package app.vsptracker.others
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.ActivityManager
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
@@ -25,6 +28,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import app.vsptracker.BuildConfig
@@ -1493,6 +1497,49 @@ class MyHelper(var TAG: String, val context: Context) {
             11 -> typeName = context.getString(R.string.checkforms_completed)
         }
         return typeName
+    }
+    
+    fun installedApps(): java.util.ArrayList<String> {
+        val packageManager = context.packageManager
+        val mainIntent = Intent(Intent.ACTION_MAIN, null)
+        mainIntent.addCategory(Intent.CATEGORY_LAUNCHER)
+        
+        var appList = java.util.ArrayList<String>()
+//        appList = packageManager.queryIntentActivities(mainIntent, 0) as ArrayList<ResolveInfo>
+//        Collections.sort(appList, ResolveInfo.DisplayNameComparator(packageManager))
+        val packs: List<PackageInfo> = packageManager.getInstalledPackages(0)
+        for (i in 0 until packs.size) {
+            val p: PackageInfo = packs[i]
+            val a: ApplicationInfo = p.applicationInfo
+            // skip system apps if they shall not be included
+//            if (a.flags and ApplicationInfo.FLAG_SYSTEM === 1) {
+//                continue
+//            }
+            appList.add(p.packageName)
+        }
+        return appList
+    }
+    
+    fun getCurrentRunningApp(): String {
+        val mActivityManager: ActivityManager = context.getSystemService(AppCompatActivity.ACTIVITY_SERVICE) as ActivityManager
+        val runningTask: List<ActivityManager.RunningTaskInfo> = mActivityManager.getRunningTasks(1)
+        val ar: ActivityManager.RunningTaskInfo = runningTask[0]
+//        return ar.topActivity!!.className
+        return ar.topActivity!!.packageName
+    }
+    
+    fun killApp() {
+        val startHomescreen = Intent(Intent.ACTION_MAIN)
+        startHomescreen.addCategory(Intent.CATEGORY_HOME)
+        startHomescreen.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+        context.startActivity(startHomescreen)
+    }
+    
+    fun lockOtherApps() {
+        
+        log("installedApps:${installedApps()}")
+        log("getCurrentRunningApp:${getCurrentRunningApp()}")
+        killApp()
     }
     
 }
