@@ -1,13 +1,19 @@
 package app.vsptracker
 
 import android.annotation.SuppressLint
+import android.app.ActivityManager
+import android.app.AppOpsManager
+import android.app.usage.UsageStats
+import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.view.Menu
@@ -44,6 +50,7 @@ import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.app_bar_base.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
 
 
 open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -171,7 +178,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             )
             if (difference > 0 && autoLogoutTime > 0) {
                 myHelper.log("Logout Time Completed.")
-                logout(MyEnum.AUTO_LOGOUT, gpsLocation)
+                logout(MyEnum.LOGOUT_TYPE_AUTO, gpsLocation)
             } else {
                 myHelper.log("AutoLogout not functional---------------")
             }
@@ -188,6 +195,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     
     fun startWorkManager() {
         myHelper.log("App_Check:startWorkManager")
+        myHelper.log("App_Check:autoLogoutTime:$autoLogoutTime")
         if (autoLogoutTime > 0) {
             // We are starting Foreground service to show Notification as it will prevent app from kill If operator is not logged out.
             ForegroundService.startService(this, getString(R.string.machine_hours_running), getString(R.string.please_logout_if_not_working), autoLogoutTime)
@@ -196,12 +204,88 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     
     fun cancelWorkManager() {
         myHelper.log("App_Check:cancelWorkManager")
-        workManager.cancelAllWorkByTag(MyEnum.WORKER_AUTO_LOGOUT)
+        workManager.cancelAllWorkByTag(MyEnum.WORKER_TAG_AUTO_LOGOUT)
     }
     
     override fun onPause() {
         super.onPause()
+        myHelper.log("getCurrentRunningApp:${myHelper.getCurrentRunningApp()}")
+        myHelper.log(applicationContext.packageName)
+        if (myHelper.getCurrentRunningApp() != applicationContext.packageName) {
+            myHelper.log("bringToFrontNow")
+            val intent = Intent(this, OperatorLoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
+            intent.action = Intent.ACTION_MAIN
+            intent.addCategory(Intent.CATEGORY_LAUNCHER)
+            startActivity(intent)
+        
+            val mylamda = Thread({
+                Thread.sleep(15 * 1000)
+                myHelper.log("thread start")
+//                myHelper.log(myHelper.getCurrentRunningApp())
+                currentRunningApps1()
+//                runOnUiThread {
+//                    startActivity(intent)
+//                }
+            })
+            mylamda.start()
+        }
         startWorkManager()
+    }
+    
+    @SuppressLint("WrongConstant")
+    fun currentRunningApps1() {
+        myHelper.log("needPermissionForBlocking:${needPermissionForBlocking(this)}")
+        myHelper.log("currentRunningApps1")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val usm: UsageStatsManager = this.getSystemService(USAGE_STATS_SERVICE) as UsageStatsManager
+            val time = System.currentTimeMillis()
+            val appList: List<UsageStats> = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time - 10000 * 10000, time)
+            if (appList != null && appList.size === 0) {
+                myHelper.log("######### NO APP FOUND ##########")
+            }
+            if (appList != null && appList.size > 0) {
+                val mySortedMap: SortedMap<Long, UsageStats> = TreeMap<Long, UsageStats>()
+                for (usageStats in appList) {
+//                    myHelper.log("usage stats executed : " + usageStats.packageName.toString() + "\t\t ID: ")
+                    mySortedMap[usageStats.lastTimeUsed] = usageStats
+                }
+                if (mySortedMap != null && !mySortedMap.isEmpty()) {
+                    val currentApp: String = mySortedMap[mySortedMap.lastKey()]!!.packageName
+                    myHelper.log("currentApp:$currentApp")
+                    if (currentApp != this.packageName) {
+                        myHelper.log("start vsptracker")
+//                        val mIntent = packageManager.getLaunchIntentForPackage(this.packageName)
+//                        if (mIntent != null) {
+//                            this.startActivity(mIntent)
+//                        }
+//                        val startMain = Intent(Intent.ACTION_MAIN)
+//                        startMain.addCategory(Intent.CATEGORY_HOME)
+//                        startMain.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+//                        startActivity(startMain)
+                        
+                        val am = applicationContext.getSystemService("activity") as ActivityManager
+                        val forceStopPackage = am.javaClass.getDeclaredMethod("forceStopPackage", String::class.java)
+                        forceStopPackage.isAccessible = true;
+                        forceStopPackage.invoke(am, currentApp);
+                        
+                    }
+                }
+            }
+        }
+    }
+    
+    fun needPermissionForBlocking(context: Context): Boolean {
+        return try {
+            val packageManager = context.packageManager
+            val applicationInfo: ApplicationInfo = packageManager.getApplicationInfo(context.packageName, 0)
+            val appOpsManager: AppOpsManager = context.getSystemService(APP_OPS_SERVICE) as AppOpsManager
+            val mode: Int = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, applicationInfo.uid, applicationInfo.packageName)
+            mode != AppOpsManager.MODE_ALLOWED
+        }
+        catch (e: PackageManager.NameNotFoundException) {
+            true
+        }
     }
     
     override fun onUserInteraction() {
