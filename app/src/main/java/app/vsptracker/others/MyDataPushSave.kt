@@ -518,6 +518,11 @@ class MyDataPushSave(private val context: Context) {
             .add("device_details", deviceDetails)
             .add("machine_id", machineID)
             .add("is_running", isMachineRunning)
+            // getting old machine details and send it to server. Machine status will be updated to stopped on server
+            // and this will be done once
+            .add("old_machine_id", myHelper.getOldMachineStatus().machineId.toString())
+            .add("old_machine_is_running", myHelper.getOldMachineStatus().isRunning.toString())
+            .add("old_machine_is_server_sync", myHelper.getOldMachineStatus().isSync.toString())
             .add("data", data)
             .build()
     

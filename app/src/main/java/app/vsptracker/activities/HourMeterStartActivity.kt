@@ -1,5 +1,6 @@
 package app.vsptracker.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
@@ -57,6 +58,7 @@ class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
         ms_minus.setOnClickListener(this)
         ms_plus.setOnClickListener(this)
         ms_continue.setOnClickListener(this)
+        ms_change_machine.setOnClickListener(this)
         // Disable map if Hour meter is not set
         myHelper.setIsNavEnabled(false)
 //        ms_reading.setText(myHelper.getRoundedDecimal(myHelper.getMachineTotalTime()/60.0).toString())
@@ -115,6 +117,11 @@ class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
                 // Either Due checkforms OR Home activity will be started
                 myHelper.checkDueCheckForms(dueCheckForms)
                 myDataPushSave.checkUpdateServerSyncData(MyEnum.SERVER_SYNC_UPDATE_MACHINE_STATUS)
+                finishAffinity()
+            }
+            R.id.ms_change_machine -> {
+                val intent = Intent(this@HourMeterStartActivity, MachineTypeActivity::class.java)
+                startActivity(intent)
                 finishAffinity()
             }
         }

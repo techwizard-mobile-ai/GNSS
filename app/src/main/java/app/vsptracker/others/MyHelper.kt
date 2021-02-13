@@ -95,6 +95,10 @@ class MyHelper(var TAG: String, val context: Context) {
     var util: Util = Util()
     var transferUtility: TransferUtility? = util.getTransferUtility(context)
     
+    fun getOldMachineStatus() = sessionManager.getOldMachineStatus()
+    fun setOldMachineStatus(myData: MyData) {
+        sessionManager.setOldMachineStatus(myData)
+    }
     
     /**
      * Returns the filename for the given Uri

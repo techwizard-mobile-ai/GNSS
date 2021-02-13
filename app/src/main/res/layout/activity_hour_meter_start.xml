@@ -42,7 +42,6 @@
             android:importantForAutofill="no" />
 
 
-
         <ImageView
             android:id="@+id/ms_plus"
             android:layout_width="@dimen/_30sdp"
@@ -50,9 +49,16 @@
             android:src="@drawable/ic_add"
             android:contentDescription="@string/add" />
     </LinearLayout>
+
     <Button
         android:id="@+id/ms_continue"
         style="@style/next_button"
         android:layout_marginTop="@dimen/_50sdp"
         android:text="@string/continuetext" />
+
+    <Button
+        android:id="@+id/ms_change_machine"
+        style="@style/next_button"
+        android:layout_marginTop="@dimen/_50sdp"
+        android:text="@string/change_machine" />
 </LinearLayout>

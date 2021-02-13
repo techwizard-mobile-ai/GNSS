@@ -27,6 +27,7 @@ private const val KEY_MACHINE_SETTINGS = "machine_settings"
 private const val KEY_DISABLE_NAV = "disable_navigation"
 private const val KEY_AUTO_LOGOUT_START_TIME = "auto_logout_startime"
 private const val KEY_FCM_TOKEN = "fcm_token"
+private const val KEY_OLD_MACHINE_STATUS = "old_machine_status"
 
 private const val KEY_APP_API = "app_api"
 
@@ -34,9 +35,32 @@ class SessionManager(_context: Context) {
     
     private var pref: SharedPreferences = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE)
     private var editor: Editor
-
+    
     init {
         editor = pref.run { edit() }
+    }
+    
+    /**
+     * These methods are being used for updating old machine status to stop
+     * when machine is replaced with new machine. Old machine status will be done
+     * only once and when old machine status server_sync is updated to 1
+     * it will not be updated again as Other operator might be working on it and
+     * machine status should be changed to running.
+     */
+    fun getOldMachineStatus(): MyData {
+        val gson = Gson()
+        val json = pref.getString(KEY_OLD_MACHINE_STATUS, "")
+        return when (val obj = gson.fromJson(json, MyData::class.java)) {
+            null -> MyData()
+            else -> obj
+        }
+    }
+    
+    fun setOldMachineStatus(myData: MyData) {
+        val gson = Gson()
+        val json = gson.toJson(myData)
+        editor.putString(KEY_OLD_MACHINE_STATUS, json)
+        editor.commit()
     }
     
     fun getFcmToken() = pref.getString(KEY_FCM_TOKEN, "").toString()

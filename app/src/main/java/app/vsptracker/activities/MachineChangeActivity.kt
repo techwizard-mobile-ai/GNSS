@@ -115,7 +115,12 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
                         when {
                             //Selected Machine is Different from Previous Machine
                             selectedMachineNumber.id != myHelper.getMachineID() -> {
-                        
+                                // save old machine status, this will be used for  updating old machine status to stopped on server
+                                val oldMachineStatus = MyData()
+                                oldMachineStatus.machineId = myHelper.getMachineID()
+                                oldMachineStatus.isRunning = 0
+                                oldMachineStatus.isSync = 0
+                                myHelper.setOldMachineStatus(oldMachineStatus)
                                 val myData = MyData()
                                 myData.siteId = myHelper.getMachineSettings().siteId
                                 myData.machineId = myHelper.getMachineID()
