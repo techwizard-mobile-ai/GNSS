@@ -354,4 +354,5 @@
     <string name="auto_loggingout_from_vspt">Auto logging out from VSPT.</string>
     <string name="do_you_want_same_machine">Do you want to use same machine?</string>
     <string name="use_existing">Use Existing</string>
+    <string name="privacy_policy">Privacy Policy</string>
 </resources>

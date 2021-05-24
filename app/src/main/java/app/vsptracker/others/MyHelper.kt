@@ -724,8 +724,8 @@ class MyHelper(var TAG: String, val context: Context) {
     fun toast(message: String) {
         try {
             val toast = Toast.makeText(context, message, Toast.LENGTH_LONG)
-            val v = toast.view.findViewById(android.R.id.message) as TextView
-            v.gravity = Gravity.CENTER
+//            val v = toast.view.findViewById(android.R.id.message) as TextView
+//            v.gravity = Gravity.CENTER
             toast.show()
         }
         catch (e: Exception) {
@@ -1103,38 +1103,43 @@ class MyHelper(var TAG: String, val context: Context) {
      * Show this dialog whenever user disable location from Settings even Location Permission is enabled.
      */
     fun showGPSDisabledAlertToUser() {
+        try {
+            val mDialogView = LayoutInflater.from(context).inflate(R.layout.dialog_permissions, null)
         
-        val mDialogView = LayoutInflater.from(context).inflate(R.layout.dialog_permissions, null)
+            mDialogView.permissions_title.text = context.resources.getString(R.string.gps_permission_title)
+            mDialogView.permissions_sub_title.text = context.resources.getString(R.string.gps_permission_explanation)
+            mDialogView.permissions_yes.text = context.resources.getString(R.string.gps_location_settings)
+            mDialogView.permissions_no.text = context.resources.getString(R.string.cancel)
         
-        mDialogView.permissions_title.text = context.resources.getString(R.string.gps_permission_title)
-        mDialogView.permissions_sub_title.text = context.resources.getString(R.string.gps_permission_explanation)
-        mDialogView.permissions_yes.text = context.resources.getString(R.string.gps_location_settings)
-        mDialogView.permissions_no.text = context.resources.getString(R.string.cancel)
-        
-        mDialogView.cftd_save_bottom.visibility = View.VISIBLE
-        mDialogView.permissions_no.visibility = View.VISIBLE
+            mDialogView.cftd_save_bottom.visibility = View.VISIBLE
+            mDialogView.permissions_no.visibility = View.VISIBLE
         
         
-        val mBuilder = AlertDialog.Builder(context)
-            .setView(mDialogView)
-        val mAlertDialog = mBuilder.show()
-        mAlertDialog.setCancelable(true)
+            val mBuilder = AlertDialog.Builder(context)
+                .setView(mDialogView)
+            val mAlertDialog = mBuilder.show()
+            mAlertDialog.setCancelable(true)
         
-        val window = mAlertDialog.window
-        val wlp = window!!.attributes
+            val window = mAlertDialog.window
+            val wlp = window!!.attributes
         
-        wlp.gravity = Gravity.CENTER
-        window.attributes = wlp
+            wlp.gravity = Gravity.CENTER
+            window.attributes = wlp
         
-        mDialogView.permissions_yes.setOnClickListener {
-            mAlertDialog.dismiss()
-            val callGPSSettingIntent = Intent(
-                android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
-            )
-            context.startActivity(callGPSSettingIntent)
+            mDialogView.permissions_yes.setOnClickListener {
+                mAlertDialog.dismiss()
+                val callGPSSettingIntent = Intent(
+                    android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
+                )
+                context.startActivity(callGPSSettingIntent)
+            }
+            mDialogView.permissions_no.setOnClickListener {
+                mAlertDialog.dismiss()
+            }
+        
         }
-        mDialogView.permissions_no.setOnClickListener {
-            mAlertDialog.dismiss()
+        catch (e: Exception) {
+            log("${e.localizedMessage}")
         }
     }
     

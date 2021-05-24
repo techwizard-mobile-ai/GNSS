@@ -11,6 +11,8 @@ import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -32,6 +34,7 @@ import app.vsptracker.others.autologout.ForegroundService
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_operator_login.*
+import kotlinx.android.synthetic.main.dialog_error.view.*
 import kotlinx.android.synthetic.main.dialog_save_checkform.view.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -248,23 +251,69 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
         myDataPushSave.fetchOrgData()
     }
     
+    fun showErrorDialog(title: String, explanation: String = "") {
+        
+        val mDialogView = LayoutInflater.from(this).inflate(R.layout.dialog_error, null)
+        mDialogView.error_title.text = title
+        if (explanation.isNotBlank()) {
+            mDialogView.error_explanation.text = explanation
+            mDialogView.error_explanation.visibility = View.VISIBLE
+        }
+        
+        val mBuilder = AlertDialog.Builder(this)
+            .setView(mDialogView)
+        val mAlertDialog = mBuilder.show()
+        mAlertDialog.setCancelable(false)
+        
+        val window = mAlertDialog.window
+        val wlp = window!!.attributes
+        
+        wlp.gravity = Gravity.CENTER
+        window.attributes = wlp
+        
+        mDialogView.error_ok.setOnClickListener {
+            mAlertDialog.dismiss()
+            locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
+            try {
+                locationManager?.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    1000,
+                    0f,
+                    locationListener
+                )
+                
+            }
+            catch (ex: SecurityException) {
+                // myHelper.log("No Location Available:${ex.message}")
+                requestPermission()
+            }
+        }
+    }
+    
     private fun startGPS() {
-        
-        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
-        try {
-            locationManager?.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER,
-                1000,
-                0f,
-                locationListener
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            showErrorDialog(
+                "Location permission needed",
+                "We require your location permission to access and track location-based information from your mobile device, while using the App and in the background, to provide certain location-based services also when the app is not is use."
             )
-            
+        } else {
+            locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
+            try {
+                locationManager?.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    1000,
+                    0f,
+                    locationListener
+                )
+                
+            }
+            catch (ex: SecurityException) {
+                // myHelper.log("No Location Available:${ex.message}")
+                requestPermission()
+            }
         }
-        catch (ex: SecurityException) {
-            // myHelper.log("No Location Available:${ex.message}")
-            requestPermission()
-        }
-        
     }
     
     private fun requestPermission() {
@@ -318,22 +367,27 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
     }
     
     private fun showGPSDisabledAlertToUser() {
-        val alertDialogBuilder = AlertDialog.Builder(this, R.style.ThemeOverlay_AppCompat_Dialog)
-        alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
-            .setCancelable(false)
-            .setPositiveButton(
-                "Goto Settings Page\nTo Enable GPS"
-            ) { _, _ ->
-                val callGPSSettingIntent = Intent(
-                    android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
-                )
-                startActivity(callGPSSettingIntent)
-            }
-        alertDialogBuilder.setNegativeButton(
-            "Cancel"
-        ) { dialog, _ -> dialog.cancel() }
-        val alert = alertDialogBuilder.create()
-        alert.show()
+        try {
+            val alertDialogBuilder = AlertDialog.Builder(this, R.style.ThemeOverlay_AppCompat_Dialog)
+            alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
+                .setCancelable(false)
+                .setPositiveButton(
+                    "Goto Settings Page\nTo Enable GPS"
+                ) { _, _ ->
+                    val callGPSSettingIntent = Intent(
+                        android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
+                    )
+                    startActivity(callGPSSettingIntent)
+                }
+            alertDialogBuilder.setNegativeButton(
+                "Cancel"
+            ) { dialog, _ -> dialog.cancel() }
+            val alert = alertDialogBuilder.create()
+            alert.show()
+        }
+        catch (e: Exception) {
+            myHelper.log("${e.localizedMessage}")
+        }
     }
     
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -380,26 +434,26 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
     }
     
     private val locationListener: LocationListener = object : LocationListener {
-        override fun onLocationChanged(location: Location?) {
+        override fun onLocationChanged(location: Location) {
             makeUseOfLocation(location)
         }
         
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
             // myHelper.log("Status Changed.")
         }
-        
+    
         override fun onProviderEnabled(provider: String) {
             // myHelper.log("Location Enabled.")
         }
-        
+    
         override fun onProviderDisabled(provider: String) {
             // myHelper.log("Location Disabled.")
             showGPSDisabledAlertToUser()
         }
     }
     
-    private fun makeUseOfLocation(location1: Location?) {
-        latitude = location1!!.latitude
+    private fun makeUseOfLocation(location1: Location) {
+        latitude = location1.latitude
         longitude = location1.longitude
         location = location1
         

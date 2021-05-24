@@ -62,7 +62,14 @@
 
     </group>
 
-
+    <item android:title="@string/privacy_policy">
+        <menu>
+            <item
+                android:id="@+id/nav_privacy"
+                android:icon="@drawable/ic_privacy"
+                android:title="@string/privacy_policy" />
+        </menu>
+    </item>
 
     <item android:title="@string/communicate">
         <menu>
@@ -72,5 +79,6 @@
                 android:title="@string/report_error" />
         </menu>
     </item>
+
 
 </menu>

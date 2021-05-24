@@ -235,7 +235,7 @@ class MapActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback{
                 getLocationPermission()
             }
         } catch (e: SecurityException) {
-            Log.e("Exception: %s", e.message)
+            myHelper.log("${e.message}")
         }
 
     }
@@ -271,7 +271,7 @@ class MapActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback{
                 locationResult.addOnCompleteListener {  }
             }
         } catch (e: SecurityException) {
-            Log.e("Exception: %s", e.message)
+            myHelper.log("${e.message}")
         }
 
     }

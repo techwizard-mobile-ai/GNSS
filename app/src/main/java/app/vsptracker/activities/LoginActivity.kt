@@ -3,6 +3,7 @@ package app.vsptracker.activities
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import app.vsptracker.BuildConfig
@@ -140,7 +141,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     }
     
     fun fetchOrgData() {
-        myHelper.toast(getString(R.string.login_successful_fetching_data))
+        Toast.makeText(this, R.string.login_successful_fetching_data, Toast.LENGTH_LONG).show()
         myDataPushSave.fetchOrgData(false)
     }
 }

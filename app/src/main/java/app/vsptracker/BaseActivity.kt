@@ -483,6 +483,11 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 startActivity(intent)
                 myHelper.setIsMapOpened(false)
             }
+            R.id.nav_privacy -> {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://vsptracker.com/privacy/"))
+                startActivity(intent)
+                myHelper.setIsMapOpened(false)
+            }
         }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         drawerLayout.closeDrawer(GravityCompat.START)
@@ -586,8 +591,10 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     }
     
     private fun startGPS() {
+        myHelper.log("startGPS__called")
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
         try {
+            myHelper.log("inside try method")
             locationManager?.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
                 1000,
@@ -636,25 +643,27 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     }
     
     private val locationListener: LocationListener = object : LocationListener {
-        override fun onLocationChanged(location: Location?) {
+        override fun onLocationChanged(location: Location) {
             makeUseOfLocation(location)
         }
         
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
             myHelper.log("Status Changed.")
         }
-        
+    
         override fun onProviderEnabled(provider: String) {
             myHelper.log("Location Enabled.")
         }
-        
+    
         override fun onProviderDisabled(provider: String) {
             myHelper.log("Location Disabled.")
             myHelper.showGPSDisabledAlertToUser()
         }
     }
     
-    private fun makeUseOfLocation(location1: Location?) {
+    private fun makeUseOfLocation(location1: Location) {
+        myHelper.log("makeUseOfLocation ${location1.latitude}")
+        myHelper.log("makeUseOfLocation ${location1.longitude}")
         latitude = location1!!.latitude
         longitude = location1.longitude
         location = location1
