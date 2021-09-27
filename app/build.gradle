@@ -11,8 +11,8 @@ android {
         applicationId "app.vsptracker"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 50
-        versionName "1.2.36"
+        versionCode 53
+        versionName "1.2.37"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         resValue "string", "google_maps_key", (project.findProperty("GOOGLE_MAPS_API_KEY") ?: "")
     }
@@ -36,7 +36,7 @@ android {
         }
         vsptracker_app {
             resValue "string", "override_name", "VSP Tracker"
-            buildConfigField "String", "BASE_URL", '"http://vsptracker.app/api/v1/"'
+            buildConfigField "String", "BASE_URL", '"https://vsptracker.app/api/v1/"'
         }
     }
     compileOptions {

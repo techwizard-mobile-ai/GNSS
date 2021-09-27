@@ -152,7 +152,7 @@ class MyHelper(var TAG: String, val context: Context) {
     }
     
     fun awsFileDownload(currentOrgsMap: MyData?) {
-        log("awsFileDownload")
+        log("awsFileDownload:${currentOrgsMap?.aws_path}")
         if (currentOrgsMap !== null)
             if (!currentOrgsMap.aws_path.isNullOrEmpty() && currentOrgsMap.isDownloaded == 0) {
                 if (isOnline()) {

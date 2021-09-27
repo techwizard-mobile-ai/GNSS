@@ -269,27 +269,7 @@ class MyData : Serializable {
     
     var isMapOpened: Boolean = false
     override fun toString(): String {
-        return "\n\nMyData(" +
-                "id=$id, " +
-                "siteId=$siteId, " +
-                "name=$name, " +
-                "loadTypeId=$loadTypeId, " +
-                "loading_machine_id=$loading_machine_id, " +
-                "back_loading_machine_id=$back_loading_machine_id, " +
-                "loading_material_id=$loading_material_id, " +
-                "back_loading_material_id=$back_loading_material_id, " +
-                "loading_location_id=$loading_location_id, " +
-                "back_loading_location_id=$back_loading_location_id, " +
-                "unloading_task_id=$unloading_task_id, " +
-                "back_unloading_task_id=$back_unloading_task_id, " +
-                "unloading_material_id=$unloading_material_id, " +
-                "back_unloading_material_id=$back_unloading_material_id, " +
-                "unloading_location_id=$unloading_location_id, " +
-                "back_unloading_location_id=$back_unloading_location_id, " +
-                "nextAction=$nextAction, " +
-                "repeatJourney=$repeatJourney, " +
-                "tripType=$tripType" +
-                ")"
+        return "MyData(id=$id, orgId=$orgId, operatorId=$operatorId, loadingGPSLocationString='$loadingGPSLocationString', unloadingGPSLocationString='$unloadingGPSLocationString')"
     }
     
     
