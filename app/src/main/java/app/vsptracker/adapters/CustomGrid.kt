@@ -8,7 +8,6 @@ import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import app.vsptracker.R
-import app.vsptracker.apis.operators.OperatorAPI
 import app.vsptracker.classes.Material
 import app.vsptracker.others.MyHelper
 
@@ -68,6 +67,10 @@ class CustomGrid(
                     }
                     5 -> {
                         myHelper.imageLoad(R.drawable.task_crushing_plant, imageView)
+                    }
+                    else -> {
+                        textView.visibility = View.VISIBLE
+                        textView.text = arrayList[position].name
                     }
                 }
             }
