@@ -228,7 +228,7 @@ class MyHelper(var TAG: String, val context: Context) {
             .add("ttl", MyEnum.TTL)
             .build()
         val request = Request.Builder()
-            .url(MyEnum.LOGIN_URL)
+            .url("${context.getString(R.string.api_url)}org/users/login1")
             .post(formBody)
             .build()
         

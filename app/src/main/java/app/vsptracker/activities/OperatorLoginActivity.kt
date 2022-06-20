@@ -74,7 +74,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
         gpsLocation = GPSLocation()
         
         this.retrofit = Retrofit.Builder()
-            .baseUrl(RetrofitAPI.BASE_URL)
+            .baseUrl(getString(R.string.api_url))
             .addConverterFactory(GsonConverterFactory.create())
             .client(myHelper.skipSSLOkHttpClient().build())
             .build()

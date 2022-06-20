@@ -141,7 +141,7 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
             .build()
         
         val request = Request.Builder()
-            .url(MyEnum.BASE_URL + "orgsserversync/store")
+            .url(getString(R.string.api_url) + "orgsserversync/store")
             .post(formBody)
             .build()
         

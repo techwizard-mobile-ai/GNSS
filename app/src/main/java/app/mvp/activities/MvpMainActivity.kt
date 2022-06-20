@@ -52,7 +52,8 @@ class MvpMainActivity : BaseActivity(), View.OnClickListener {
                 myHelper.launchNtripClient()
             }
             R.id.mvp_main_portal -> {
-                val url = "https://www.theconstructionexchangehub.co.nz/"
+//                val url = "https://www.theconstructionexchangehub.co.nz/"
+                val url = getString(R.string.portal_url)
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
             }
             R.id.mvp_main_logout -> {

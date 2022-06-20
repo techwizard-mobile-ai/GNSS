@@ -22,8 +22,8 @@ class MyEnum {
     
     
         //        const val BASE_URL: String = "https://vsptracker.app/api/v1/"
-        const val BASE_URL: String = app.vsptracker.BuildConfig.BASE_URL
-        const val LOGIN_URL: String = "${BASE_URL}org/users/login1"
+//        const val BASE_URL: String = app.vsptracker.BuildConfig.BASE_URL
+//        const val LOGIN_URL: String = "${BASE_URL}org/users/login1"
         const val TTL: String = "43800" // 43200 minutes = 30 days
         const val ROLE_OPERATOR: String = "1"
         const val ACCEPTED: String = "1"

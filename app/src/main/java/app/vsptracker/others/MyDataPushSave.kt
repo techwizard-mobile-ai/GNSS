@@ -53,7 +53,7 @@ class MyDataPushSave(private val context: Context) {
     private val myHelper = MyHelper(tag, context)
     private val db = DatabaseAdapter(context)
     private val retrofit = Retrofit.Builder()
-        .baseUrl(RetrofitAPI.BASE_URL)
+        .baseUrl(context.getString(R.string.api_url))
         .addConverterFactory(GsonConverterFactory.create())
         .client(myHelper.skipSSLOkHttpClient().build())
         .build()
@@ -527,7 +527,7 @@ class MyDataPushSave(private val context: Context) {
             .build()
     
         val request = Request.Builder()
-            .url("${MyEnum.BASE_URL}orgsserversync/store")
+            .url("${context.getString(R.string.api_url)}orgsserversync/store")
             .post(formBody)
             .build()
         

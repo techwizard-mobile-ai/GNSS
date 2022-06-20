@@ -32,32 +32,32 @@ android {
         tvspt_com_vspt_ {
             applicationId "app.vsptracker"
             resValue "string", "override_name", "VSPT Testing"
-            buildConfigField "String", "BASE_URL", '"https://tvspt.com/api/v1/"'
+//            buildConfigField "String", "BASE_URL", '"https://tvspt.com/api/v1/"' // replace with api_url string
         }
         tvspt_com_mvp_ {
             applicationId "app.taputapu"
             resValue "string", "override_name", "TapuTapu Testing"
-            buildConfigField "String", "BASE_URL", '"https://tvspt.com/api/v1/"'
+//            buildConfigField "String", "BASE_URL", '"https://tvspt.com/api/v1/"' // replace with api_url string
         }
         vsptracker_nz_vspt_ {
             applicationId "app.vsptracker"
             resValue "string", "override_name", "VSPT QA"
-            buildConfigField "String", "BASE_URL", '"https://vsptracker.nz/api/v1/"'
+//            buildConfigField "String", "BASE_URL", '"https://vsptracker.nz/api/v1/"' // replace with api_url string
         }
         vsptracker_nz_mvp_ {
             applicationId "app.taputapu"
             resValue "string", "override_name", "TapuTapu QA"
-            buildConfigField "String", "BASE_URL", '"https://vsptracker.nz/api/v1/"'
+//            buildConfigField "String", "BASE_URL", '"https://vsptracker.nz/api/v1/"' // replace with api_url string
         }
         vsptracker_app_vspt_ {
             applicationId "app.vsptracker"
             resValue "string", "override_name", "VSP Tracker"
-            buildConfigField "String", "BASE_URL", '"https://vsptracker.app/api/v1/"'
+//            buildConfigField "String", "BASE_URL", '"https://vsptracker.app/api/v1/"' // replace with api_url string
         }
         theconstructionexchangehub_co_nz_mvp_ {
             applicationId "app.taputapu"
             resValue "string", "override_name", "TapuTapu"
-            buildConfigField "String", "BASE_URL", '"https://theconstructionexchangehub.co.nz/api/v1/"'
+//            buildConfigField "String", "BASE_URL", '"https://theconstructionexchangehub.co.nz/api/v1/"' // replace with api_url string
         }
     }
     compileOptions {

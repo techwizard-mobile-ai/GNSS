@@ -11,7 +11,7 @@ import retrofit2.http.*
 
 interface RetrofitAPI {
     companion object {
-        const val BASE_URL = MyEnum.BASE_URL
+//        const val BASE_URL = MyEnum.BASE_URL
         const val LOGIN = "org/users/login1"
         const val ORGS_LOCATIONS = "orgslocations/list"
         const val ORGS_MACHINES = "orgsmachines/list"
