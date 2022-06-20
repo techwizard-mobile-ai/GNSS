@@ -8,6 +8,35 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:832501858439:android:ac82fa6feea515a2243822",
+        "android_client_info": {
+          "package_name": "app.taputapu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "832501858439-ae855piqt650bedqrpeoutt3gl22077t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByHFMbSrdidRlc0SOzYZweuKMX3Gxw2M8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "832501858439-ae855piqt650bedqrpeoutt3gl22077t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:832501858439:android:eec1de55bc494477243822",
         "android_client_info": {
           "package_name": "app.vsptracker"

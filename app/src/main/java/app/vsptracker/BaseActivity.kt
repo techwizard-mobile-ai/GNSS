@@ -34,12 +34,14 @@ import app.vsptracker.activities.common.MachineBreakdownActivity
 import app.vsptracker.activities.common.MachineStatusActivity
 import app.vsptracker.apis.RetrofitAPI
 import app.vsptracker.apis.delay.EWork
+import app.vsptracker.apis.login.LoginAPI
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.DeviceDetails
 import app.vsptracker.classes.GPSLocation
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyDataPushSave
 import app.vsptracker.others.MyEnum
+import app.vsptracker.others.MyEnum.Companion.TAPUTAPU
 import app.vsptracker.others.MyHelper
 import app.vsptracker.others.Utils
 import app.vsptracker.others.autologout.ForegroundService
@@ -87,7 +89,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         workManager = WorkManager.getInstance(application)
         
         myHelper = MyHelper(tag1, this)
-        if (myHelper.getIsMachineStopped() || myHelper.getMachineID() < 1) {
+        if ((myHelper.getIsMachineStopped() || myHelper.getMachineID() < 1) && !packageName.equals(MyEnum.TAPUTAPU)) {
             drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         }
         
@@ -116,7 +118,11 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         toggle.syncState()
         navView.setNavigationItemSelectedListener(this)
         
-        toolbar_title.text = "${myHelper.getMachineDetails()} : ${myHelper.getOperatorAPI().name}"
+        if (!packageName.equals(MyEnum.TAPUTAPU)) {
+            toolbar_title.text = "${myHelper.getMachineDetails()} : ${myHelper.getOperatorAPI().name}"
+        } else {
+            toolbar_title.text = "${myHelper.getLoginAPI().name} : ${myHelper.getLoginAPI().email}"
+        }
         base_machine_status.setOnClickListener {
             val intent = Intent(this@BaseActivity, MachineStatusActivity::class.java)
             startActivity(intent)
@@ -186,7 +192,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         if (autoLogoutTime > 0) {
             startHandler()
         }
-        if (myHelper.getOperatorAPI().id < 1) {
+        if (myHelper.getOperatorAPI().id < 1 && !packageName.equals(MyEnum.TAPUTAPU)) {
             val intent = Intent(this, OperatorLoginActivity::class.java)
             startActivity(intent)
         }
@@ -218,7 +224,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             intent.action = Intent.ACTION_MAIN
             intent.addCategory(Intent.CATEGORY_LAUNCHER)
             startActivity(intent)
-        
+            
             val mylamda = Thread({
                 Thread.sleep(15 * 1000)
                 myHelper.log("thread start")
@@ -414,29 +420,39 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 myHelper.setIsMapOpened(false)
             }
             R.id.nav_day_works -> {
-        
+                
                 val intent = Intent(this, DayWorksActivity::class.java)
                 startActivity(intent)
                 myHelper.setIsMapOpened(false)
             }
             R.id.nav_machine_breakdown -> {
-        
+                
                 val intent = Intent(this, MachineBreakdownActivity::class.java)
                 startActivity(intent)
                 myHelper.setIsMapOpened(false)
             }
             R.id.nav_logout -> {
-                myHelper.logout(this)
-                myHelper.setIsMapOpened(false)
+                if (packageName.equals(TAPUTAPU)) {
+                    myHelper.setLoginAPI(LoginAPI())
+                    myHelper.setIsMapOpened(false)
+                    myHelper.setOperatorAPI(MyData())
+                    myHelper.setLastJourney(MyData())
+                    val intent = Intent(this, LoginActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                } else {
+                    myHelper.logout(this)
+                    myHelper.setIsMapOpened(false)
+                }
             }
             R.id.nav_stop_machine -> {
-        
+                
                 val intent = Intent(this, MachineStatusActivity::class.java)
                 startActivity(intent)
                 myHelper.setIsMapOpened(false)
             }
             R.id.nav_night_mode -> {
-        
+                
                 myHelper.log("theme:" + applicationContext.theme)
                 myHelper.log("theme1:$theme")
                 if (myHelper.isNightMode()) {
@@ -452,7 +468,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 startActivity(intent)
                 myHelper.setIsMapOpened(false)
             }
-    
+            
             R.id.nav_load_history -> {
                 myHelper.startHistoryByType()
                 myHelper.setIsMapOpened(false)
@@ -461,13 +477,13 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 doEmail()
                 myHelper.setIsMapOpened(false)
             }
-    
+            
             R.id.nav_delay -> {
                 val intent = Intent(this, DelayActivity::class.java)
                 startActivity(intent)
                 myHelper.setIsMapOpened(false)
             }
-    
+            
             R.id.nav_hours_reporting -> {
                 val intent = Intent(this, HoursReportingActivity::class.java)
                 startActivity(intent)
@@ -484,9 +500,12 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 myHelper.setIsMapOpened(false)
             }
             R.id.nav_privacy -> {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://vsptracker.com/privacy/"))
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.privacy_url)))
                 startActivity(intent)
                 myHelper.setIsMapOpened(false)
+            }
+            R.id.nav_ntrip_client -> {
+                myHelper.launchNtripClient()
             }
         }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
@@ -535,7 +554,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             eWork.totalTime = meter.delayTotalTime
             eWork.loadingGPSLocation = meter.delayStartGPSLocation
             eWork.unloadingGPSLocation = meter.delayStopGPSLocation
-    
+            
             menu.findItem(R.id.navb_delay).icon = ContextCompat.getDrawable(this, R.drawable.ic_stopped)
             menu.findItem(R.id.navb_delay).title = getString(R.string.start_waiting)
             menu.findItem(R.id.navb_map).isChecked = true
@@ -556,7 +575,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             eWork.loadingGPSLocationString = myHelper.getGPSLocationToString(eWork.loadingGPSLocation)
             eWork.unloadingGPSLocationString = myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
             myDataPushSave.insertDelay(eWork)
-
+            
             myHelper.toast("Waiting Stopped.\nStart Time: ${myHelper.getTime(meter.delayStartTime)}Hrs.\nTotal Time: ${myHelper.getFormattedTime(meter.delayTotalTime)}")
             var dataNew = MyData()
             val bundle: Bundle? = this.intent.extras
@@ -565,7 +584,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             }
             intent.putExtra("myData", dataNew)
             finishFromChild(DelayActivity())
-
+            
         }
     }
     
@@ -628,7 +647,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 }
                 return
             }
-    
+            
             MyEnum.REQUEST_WRITE_EXTERNAL_STORAGE -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] != PackageManager.PERMISSION_GRANTED)) {
                     myHelper.log("Permission denied.")
@@ -650,11 +669,11 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
             myHelper.log("Status Changed.")
         }
-    
+        
         override fun onProviderEnabled(provider: String) {
             myHelper.log("Location Enabled.")
         }
-    
+        
         override fun onProviderDisabled(provider: String) {
             myHelper.log("Location Disabled.")
             myHelper.showGPSDisabledAlertToUser()
@@ -662,8 +681,8 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     }
     
     private fun makeUseOfLocation(location1: Location) {
-        myHelper.log("makeUseOfLocation ${location1.latitude}")
-        myHelper.log("makeUseOfLocation ${location1.longitude}")
+//        myHelper.log("makeUseOfLocation ${location1.latitude}")
+//        myHelper.log("makeUseOfLocation ${location1.longitude}")
         latitude = location1!!.latitude
         longitude = location1.longitude
         location = location1

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.truck.THomeActivity">
+
+    <TextView
+        android:id="@+id/mvp_main_title"
+        style="@style/activity_title"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/select_action" />
+
+    <LinearLayout
+        android:id="@+id/mvp_main_settings_layout"
+        style="@style/default_linearlayout"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_below="@id/mvp_main_title"
+        android:layout_above="@id/mvp_main_logout"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:layout_marginBottom="@dimen/_5sdp"
+        >
+
+        <ImageView
+            android:id="@+id/mvp_main_taputapu"
+            android:layout_width="@dimen/_220sdp"
+            android:layout_height="@dimen/_180sdp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_marginBottom="@dimen/_10sdp" />
+
+        <ImageView
+            android:id="@+id/mvp_main_portal"
+            android:layout_width="@dimen/_220sdp"
+            android:layout_height="@dimen/_180sdp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_marginBottom="@dimen/_10sdp" />
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/mvp_main_logout"
+        style="@style/next_button_single"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:layout_alignParentBottom="true" />
+</RelativeLayout>

@@ -13,6 +13,7 @@ import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
@@ -239,7 +240,7 @@ class MyHelper(var TAG: String, val context: Context) {
 //                log("networkResponse:${response.networkResponse}")
 //                log("isRedirect:${response.isRedirect}")
 //                log("headers:${response.headers}")
-        
+                
                 val responseString = response.body!!.string()
                 try {
                     val responseJObject = JSONObject(responseString)
@@ -249,7 +250,7 @@ class MyHelper(var TAG: String, val context: Context) {
                         val gson = GsonBuilder().create()
                         val loginAPI = gson.fromJson(responseJObject.getString("data"), LoginAPI::class.java)
                         loginAPI.pass = getLoginAPI().pass
-                
+                        
                         val app = gson.fromJson(responseJObject.getString("app"), AppAPI::class.java)
                         log("app:$app")
                         setLatestVSPTVersion(app)
@@ -269,15 +270,15 @@ class MyHelper(var TAG: String, val context: Context) {
                     }
                 }
                 catch (e: Exception) {
-            
+                    
                     toast("refreshTokenException:" + e.localizedMessage)
                     log("refreshTokenException:" + e.localizedMessage)
                     val intent = Intent(context, LoginActivity::class.java)
                     context.startActivity(intent)
                 }
-        
+                
             }
-    
+            
             override fun onFailure(call: Call, e: IOException) {
                 toast("Failed refresh token: ${e.printStackTrace()}")
                 log("Failed refresh token: ${e.printStackTrace()}")
@@ -798,7 +799,7 @@ class MyHelper(var TAG: String, val context: Context) {
             //    repeatJourney 0 = No Repeat Journey
             //    repeatJourney 1 = Repeat Journey without Back Load
             //    repeatJourney 2 = Repeat Journey with Back Load
-    
+            
             MyEnum.SCRAPER -> {
                 val intent: Intent = if (lastJourney.repeatJourney > 0 && (lastJourney.nextAction == 0 || lastJourney.nextAction == 2)) {
                     // Launch Load Screen
@@ -825,7 +826,7 @@ class MyHelper(var TAG: String, val context: Context) {
                     Intent(context, THomeActivity::class.java)
                 }
                 context.startActivity(intent)
-        
+                
             }
         }
     }
@@ -847,7 +848,7 @@ class MyHelper(var TAG: String, val context: Context) {
                 val intent = Intent(context, TUnloadAfterActivity::class.java)
                 intent.putExtra("myData", myData)
                 context.startActivity(intent)
-        
+                
             }
         }
     }
@@ -866,7 +867,7 @@ class MyHelper(var TAG: String, val context: Context) {
     fun showDialog(message: String = context.getString(R.string.loading_data_message)) {
         try {
             dialog = ProgressDialog.show(
-                context, "VSP Tracker", message, true, false
+                context, context.getString(R.string.app_name), message, true, false
             )
         }
         catch (exception: Exception) {
@@ -942,7 +943,7 @@ class MyHelper(var TAG: String, val context: Context) {
 //                                myHelper.hideDialog()
                         return false
                     }
-    
+                    
                     override fun onResourceReady(
                         resource: Drawable?,
                         model: Any?,
@@ -953,7 +954,7 @@ class MyHelper(var TAG: String, val context: Context) {
 //                                myHelper.hideDialog()
                         return false
                     }
-    
+                    
                 })
                 .into(imageView)
         } else {
@@ -1105,27 +1106,27 @@ class MyHelper(var TAG: String, val context: Context) {
     fun showGPSDisabledAlertToUser() {
         try {
             val mDialogView = LayoutInflater.from(context).inflate(R.layout.dialog_permissions, null)
-        
+            
             mDialogView.permissions_title.text = context.resources.getString(R.string.gps_permission_title)
             mDialogView.permissions_sub_title.text = context.resources.getString(R.string.gps_permission_explanation)
             mDialogView.permissions_yes.text = context.resources.getString(R.string.gps_location_settings)
             mDialogView.permissions_no.text = context.resources.getString(R.string.cancel)
-        
+            
             mDialogView.cftd_save_bottom.visibility = View.VISIBLE
             mDialogView.permissions_no.visibility = View.VISIBLE
-        
-        
+            
+            
             val mBuilder = AlertDialog.Builder(context)
                 .setView(mDialogView)
             val mAlertDialog = mBuilder.show()
             mAlertDialog.setCancelable(true)
-        
+            
             val window = mAlertDialog.window
             val wlp = window!!.attributes
-        
+            
             wlp.gravity = Gravity.CENTER
             window.attributes = wlp
-        
+            
             mDialogView.permissions_yes.setOnClickListener {
                 mAlertDialog.dismiss()
                 val callGPSSettingIntent = Intent(
@@ -1136,7 +1137,7 @@ class MyHelper(var TAG: String, val context: Context) {
             mDialogView.permissions_no.setOnClickListener {
                 mAlertDialog.dismiss()
             }
-        
+            
         }
         catch (e: Exception) {
             log("${e.localizedMessage}")
@@ -1479,7 +1480,7 @@ class MyHelper(var TAG: String, val context: Context) {
         setOperatorAPI(MyData())
         val data = MyData()
         setLastJourney(data)
-    
+        
         val intent = Intent(context, OperatorLoginActivity::class.java)
         intent.flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
         context.startActivity(intent)
@@ -1542,6 +1543,24 @@ class MyHelper(var TAG: String, val context: Context) {
         startHomescreen.addCategory(Intent.CATEGORY_HOME)
         startHomescreen.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
         context.startActivity(startHomescreen)
+    }
+    
+    fun launchNtripClient() {
+        try {
+//            val mainIntent = Intent(Intent.ACTION_MAIN, null)
+//            mainIntent.addCategory(Intent.CATEGORY_LAUNCHER)
+//            val pkgAppsList: List<ResolveInfo> = context.applicationContext.packageManager.queryIntentActivities(mainIntent, 0)
+//            log("pkgAppsList.toString()")
+//            pkgAppsList.forEach { log(it.toString()) }
+//            log("applicationContext.packageManager.getInstalledApplications(PackageManager.GET_META_DATA)")
+//            context.applicationContext.packageManager.getInstalledApplications(PackageManager.GET_META_DATA).forEach { log(it.toString()) }
+            val intent = context.applicationContext.packageManager.getLaunchIntentForPackage("com.lefebure.ntripclient")!!
+            context.applicationContext.startActivity(intent)
+        }
+        catch (e: Exception) {
+            log("taptapuException:${e.localizedMessage}")
+            showErrorDialog("No Ntrip Client installed", "Please install Lefebure Ntrip Client")
+        }
     }
     
     fun lockOtherApps() {

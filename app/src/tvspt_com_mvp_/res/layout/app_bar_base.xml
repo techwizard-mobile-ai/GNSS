@@ -93,7 +93,6 @@
         <FrameLayout
             android:id="@+id/base_content_frame"
             android:layout_width="match_parent"
-            android:layout_marginBottom="?android:attr/actionBarSize"
             android:layout_height="match_parent" />
 
     </LinearLayout>
@@ -104,6 +103,7 @@
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
         android:layout_marginStart="0dp"
+        android:visibility="gone"
         app:itemIconTint="@drawable/bottom_navigation_selector"
         app:itemTextColor="@drawable/bottom_navigation_selector"
         android:background="@color/light_white"

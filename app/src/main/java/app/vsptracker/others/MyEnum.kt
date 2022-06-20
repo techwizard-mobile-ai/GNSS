@@ -78,5 +78,8 @@ class MyEnum {
         const val LOGOUT_TYPE_AUTO = -3
         const val WORKER_TYPE_AUTO_LOGOUT = 1
         const val WORKER_TYPE_APP_LOCKS = 2
+        
+        const val TAPUTAPU = "app.taputapu"
+        const val VSPT = "app.vsptracker"
     }
 }

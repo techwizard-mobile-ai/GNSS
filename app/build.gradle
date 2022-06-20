@@ -8,7 +8,6 @@ android {
     compileSdkVersion 30
     buildToolsVersion "29.0.3"
     defaultConfig {
-        applicationId "app.vsptracker"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 55
@@ -30,13 +29,35 @@ android {
     }
     flavorDimensions "env"
     productFlavors {
-        tvspt_com {
+        tvspt_com_vspt_ {
+            applicationId "app.vsptracker"
             resValue "string", "override_name", "VSPT Testing"
             buildConfigField "String", "BASE_URL", '"https://tvspt.com/api/v1/"'
         }
-        vsptracker_app {
+        tvspt_com_mvp_ {
+            applicationId "app.taputapu"
+            resValue "string", "override_name", "TapuTapu Testing"
+            buildConfigField "String", "BASE_URL", '"https://tvspt.com/api/v1/"'
+        }
+        vsptracker_nz_vspt_ {
+            applicationId "app.vsptracker"
+            resValue "string", "override_name", "VSPT QA"
+            buildConfigField "String", "BASE_URL", '"https://vsptracker.nz/api/v1/"'
+        }
+        vsptracker_nz_mvp_ {
+            applicationId "app.taputapu"
+            resValue "string", "override_name", "TapuTapu QA"
+            buildConfigField "String", "BASE_URL", '"https://vsptracker.nz/api/v1/"'
+        }
+        vsptracker_app_vspt_ {
+            applicationId "app.vsptracker"
             resValue "string", "override_name", "VSP Tracker"
             buildConfigField "String", "BASE_URL", '"https://vsptracker.app/api/v1/"'
+        }
+        theconstructionexchangehub_co_nz_mvp_ {
+            applicationId "app.taputapu"
+            resValue "string", "override_name", "TapuTapu"
+            buildConfigField "String", "BASE_URL", '"https://theconstructionexchangehub.co.nz/api/v1/"'
         }
     }
     compileOptions {

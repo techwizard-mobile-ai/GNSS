@@ -19,6 +19,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import app.mvp.activities.MvpMainActivity
 import app.vsptracker.BuildConfig
 import app.vsptracker.R
 import app.vsptracker.activities.common.MachineStatusActivity
@@ -28,6 +29,7 @@ import app.vsptracker.classes.GPSLocation
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyDataPushSave
 import app.vsptracker.others.MyEnum
+import app.vsptracker.others.MyEnum.Companion.TAPUTAPU
 import app.vsptracker.others.MyHelper
 import app.vsptracker.others.Utils
 import app.vsptracker.others.autologout.ForegroundService
@@ -35,7 +37,6 @@ import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_operator_login.*
 import kotlinx.android.synthetic.main.dialog_error.view.*
-import kotlinx.android.synthetic.main.dialog_save_checkform.view.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -119,27 +120,31 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
 //        } else {
             // If Company credentials are saved then fetched Company Data otherwise redirect to Company Login Page.
             if (!myHelper.getLoginAPI().email.isNullOrBlank() && !myHelper.getLoginAPI().pass.isNullOrBlank()) {
+                myHelper.log("packageName.equals(TAPUTAPU):" + packageName.equals(TAPUTAPU))
+                if(packageName.equals(TAPUTAPU)){
+                    val intent = Intent(this, MvpMainActivity::class.java)
+                    startActivity(intent)
+                }else{
+                    fetchOrgData()
+                }
+            } else if ( myHelper.getOperatorAPI().id > 0){
+                /**
+                 * If Operator is Logged in and App is Launched this Code block will be executed.
+                 * If Internet is Available Fetch Company Data and Replace Old Data.
+                 * Call launchHomeForLoggedIn() method.
+                 */
                 fetchOrgData()
-            } else {
+                launchHomeForLoggedIn()
+            }
+            else {
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
             }
-            
-            // Refresh AccessToken if there is Internet connection
-            if (myHelper.isOnline()) {
+    
+        // Refresh AccessToken if there is Internet connection
+        if (myHelper.isOnline()) {
                 myHelper.log("refreshToken()")
                 myHelper.refreshToken()
-            }
-            /**
-             * If Operator is Logged in and App is Launched this Code block will be executed.
-             * If Internet is Available Fetch Company Data and Replace Old Data.
-             * Call launchHomeForLoggedIn() method.
-             */
-            
-            when {
-                myHelper.getOperatorAPI().id > 0 -> {
-                    launchHomeForLoggedIn()
-                }
             }
             
             signin_pin.setText(MyEnum.loginPin)
