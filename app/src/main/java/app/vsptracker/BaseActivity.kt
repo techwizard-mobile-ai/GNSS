@@ -41,7 +41,7 @@ import app.vsptracker.classes.GPSLocation
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyDataPushSave
 import app.vsptracker.others.MyEnum
-import app.vsptracker.others.MyEnum.Companion.TAPUTAPU
+import app.vsptracker.others.MyEnum.Companion.MVP
 import app.vsptracker.others.MyHelper
 import app.vsptracker.others.Utils
 import app.vsptracker.others.autologout.ForegroundService
@@ -89,7 +89,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         workManager = WorkManager.getInstance(application)
         
         myHelper = MyHelper(tag1, this)
-        if ((myHelper.getIsMachineStopped() || myHelper.getMachineID() < 1) && !packageName.equals(MyEnum.TAPUTAPU)) {
+        if ((myHelper.getIsMachineStopped() || myHelper.getMachineID() < 1) && !packageName.equals(MyEnum.MVP)) {
             drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         }
         
@@ -118,7 +118,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         toggle.syncState()
         navView.setNavigationItemSelectedListener(this)
         
-        if (!packageName.equals(MyEnum.TAPUTAPU)) {
+        if (!packageName.equals(MyEnum.MVP)) {
             toolbar_title.text = "${myHelper.getMachineDetails()} : ${myHelper.getOperatorAPI().name}"
         } else {
             toolbar_title.text = "${myHelper.getLoginAPI().name} : ${myHelper.getLoginAPI().email}"
@@ -192,7 +192,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         if (autoLogoutTime > 0) {
             startHandler()
         }
-        if (myHelper.getOperatorAPI().id < 1 && !packageName.equals(MyEnum.TAPUTAPU)) {
+        if (myHelper.getOperatorAPI().id < 1 && !packageName.equals(MyEnum.MVP)) {
             val intent = Intent(this, OperatorLoginActivity::class.java)
             startActivity(intent)
         }
@@ -432,7 +432,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
                 myHelper.setIsMapOpened(false)
             }
             R.id.nav_logout -> {
-                if (packageName.equals(TAPUTAPU)) {
+                if (packageName.equals(MVP)) {
                     myHelper.setLoginAPI(LoginAPI())
                     myHelper.setIsMapOpened(false)
                     myHelper.setOperatorAPI(MyData())

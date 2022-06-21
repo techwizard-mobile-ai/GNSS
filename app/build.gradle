@@ -35,7 +35,7 @@ android {
 //            buildConfigField "String", "BASE_URL", '"https://tvspt.com/api/v1/"' // replace with api_url string
         }
         tvspt_com_mvp_ {
-            applicationId "app.taputapu"
+            applicationId "app.mvp"
             resValue "string", "override_name", "TapuTapu Testing"
 //            buildConfigField "String", "BASE_URL", '"https://tvspt.com/api/v1/"' // replace with api_url string
         }
@@ -45,7 +45,7 @@ android {
 //            buildConfigField "String", "BASE_URL", '"https://vsptracker.nz/api/v1/"' // replace with api_url string
         }
         vsptracker_nz_mvp_ {
-            applicationId "app.taputapu"
+            applicationId "app.mvp"
             resValue "string", "override_name", "TapuTapu QA"
 //            buildConfigField "String", "BASE_URL", '"https://vsptracker.nz/api/v1/"' // replace with api_url string
         }
@@ -55,7 +55,7 @@ android {
 //            buildConfigField "String", "BASE_URL", '"https://vsptracker.app/api/v1/"' // replace with api_url string
         }
         theconstructionexchangehub_co_nz_mvp_ {
-            applicationId "app.taputapu"
+            applicationId "app.mvp"
             resValue "string", "override_name", "TapuTapu"
 //            buildConfigField "String", "BASE_URL", '"https://theconstructionexchangehub.co.nz/api/v1/"' // replace with api_url string
         }

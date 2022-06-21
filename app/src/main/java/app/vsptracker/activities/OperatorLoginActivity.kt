@@ -29,7 +29,7 @@ import app.vsptracker.classes.GPSLocation
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyDataPushSave
 import app.vsptracker.others.MyEnum
-import app.vsptracker.others.MyEnum.Companion.TAPUTAPU
+import app.vsptracker.others.MyEnum.Companion.MVP
 import app.vsptracker.others.MyHelper
 import app.vsptracker.others.Utils
 import app.vsptracker.others.autologout.ForegroundService
@@ -120,8 +120,8 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
 //        } else {
             // If Company credentials are saved then fetched Company Data otherwise redirect to Company Login Page.
             if (!myHelper.getLoginAPI().email.isNullOrBlank() && !myHelper.getLoginAPI().pass.isNullOrBlank()) {
-                myHelper.log("packageName.equals(TAPUTAPU):" + packageName.equals(TAPUTAPU))
-                if(packageName.equals(TAPUTAPU)){
+                myHelper.log("packageName.equals(TAPUTAPU):" + packageName.equals(MVP))
+                if(packageName.equals(MVP)){
                     val intent = Intent(this, MvpMainActivity::class.java)
                     startActivity(intent)
                 }else{
