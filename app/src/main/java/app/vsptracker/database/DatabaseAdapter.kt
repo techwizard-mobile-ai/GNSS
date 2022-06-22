@@ -15,7 +15,7 @@ import app.vsptracker.classes.CheckFormData
 import app.vsptracker.classes.Material
 import app.vsptracker.others.MyHelper
 
-const val DATABASE_NAME = "vsptracker"
+//const val DATABASE_NAME = "vsptracker"
 const val TABLE_E_LOAD_HISTORY = "e_load_history"
 const val TABLE_E_WORK = "ework"
 const val TABLE_E_WORK_ACTION_OFFLOADING = "ework_action_loading"
@@ -43,6 +43,7 @@ const val TABLE_ADMIN_CHECKFORMS_COMPLETED = "admin_checkforms_completed"
 const val TABLE_ADMIN_CHECKFORMS_DATA = "admin_checkforms_data"
 const val TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER = "admin_checkforms_completed_server"
 const val TABLE_ORGS_MAPS = "orgs_maps"
+const val TABLE_MVP_ORGS_PROJECTS = "mvp_orgs_projects"
 
 const val COL_TIME = "time"
 const val COL_DATE = "date"
@@ -125,7 +126,8 @@ const val COL_ATTEMPTED_QUESTIONS = "attempted_questions"
 const val COL_AWS_PATH = "aws_path"
 const val COL_UPDATED_AT = "updated_at"
 const val COL_IS_DOWNLOADED = "is_downloaded"
-
+const val COL_CREATED_AT = "created_at"
+const val COL_DETAILS = "details"
 // Completed CheckForm Entry Type
 // 0 : automatically completed when due
 // 1 : manually completed by operator before due time
@@ -514,6 +516,17 @@ const val createOrgsMapsTable = "CREATE TABLE IF NOT EXISTS $TABLE_ORGS_MAPS ( "
         "$COL_UPDATED_AT TEXT " +
         " )"
 
+const val createMvpOrgsProjectsTable = "CREATE TABLE IF NOT EXISTS $TABLE_MVP_ORGS_PROJECTS ( " +
+        "$COL_ID INTEGER PRIMARY KEY, " +
+        "$COL_ORG_ID INTEGER, " +
+        "$COL_NAME TEXT, " +
+        "$COL_DETAILS TEXT, " + // this is details column
+        "$COL_STATUS INTEGER, " +
+        "$COL_IS_DELETED INTEGER, " +
+        "$COL_CREATED_AT TEXT, " +
+        "$COL_UPDATED_AT TEXT " +
+        " )"
+
 const val DROP_TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER = "DROP TABLE IF EXISTS $TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER"
 const val DROP_TABLE_ADMIN_CHECKFORMS_DATA = "DROP TABLE IF EXISTS $TABLE_ADMIN_CHECKFORMS_DATA"
 const val DROP_TABLE_ADMIN_CHECKFORMS_COMPLETED = "DROP TABLE IF EXISTS $TABLE_ADMIN_CHECKFORMS_COMPLETED"
@@ -541,8 +554,9 @@ const val DROP_TABLE_MACHINES_AUTO_LOGOUTS = "DROP TABLE IF EXISTS $TABLE_MACHIN
 const val DROP_TABLE_OPERATORS_HOURS = "DROP TABLE IF EXISTS $TABLE_OPERATORS_HOURS"
 const val DROP_TABLE_QUESTIONS_TYPES = "DROP TABLE IF EXISTS $TABLE_QUESTIONS_TYPES"
 const val DROP_TABLE_ORGS_MAPS = "DROP TABLE IF EXISTS $TABLE_ORGS_MAPS"
+const val DROP_TABLE_MVP_ORGS_PROJECTS = "DROP TABLE IF EXISTS $TABLE_MVP_ORGS_PROJECTS"
 
-class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.getString(R.string.db_name), null, 17) {
+class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.getString(R.string.db_name), null, 18) {
     
     val tag = "DatabaseAdapter"
     private var myHelper: MyHelper
@@ -552,7 +566,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     }
     
     override fun onCreate(db: SQLiteDatabase?) {
-        myHelper.log("onCreate")
+        myHelper.log("DatabaseAdapter-onCreate")
         db?.execSQL(createOrgsMapsTable)
         db?.execSQL(createAdminCheckFormsCompletedServerTable)
         db?.execSQL(createAdminCheckFormsDataTable)
@@ -580,10 +594,12 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
         db?.execSQL(createEWorkActionOffloadingTable)
         db?.execSQL(createEWorkTable)
         db?.execSQL(createLoadHistoryTable)
+        db?.execSQL(createMvpOrgsProjectsTable)
     }
     
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         myHelper.log("onUpgrade")
+        db?.execSQL(DROP_TABLE_MVP_ORGS_PROJECTS)
         db?.execSQL(DROP_TABLE_ORGS_MAPS)
         db?.execSQL(DROP_TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER)
         db?.execSQL(DROP_TABLE_ADMIN_CHECKFORMS_DATA)
@@ -623,6 +639,54 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
                 updateMap = false
         }
         return updateMap
+    }
+    
+    fun insertMvpOrgsProjects(data: ArrayList<MyData>) {
+        myHelper.log("insertAdminCheckFormsCompletedServer:${data.size}")
+        val db = this.writableDatabase
+        val cv = ContentValues()
+        val tableName = TABLE_MVP_ORGS_PROJECTS
+        
+        for (datum in data) {
+            cv.put(COL_ID, datum.id)
+            cv.put(COL_ORG_ID, datum.orgId)
+            cv.put(COL_NAME, datum.name)
+            cv.put(COL_DETAILS, datum.details)
+            cv.put(COL_STATUS, datum.status)
+            cv.put(COL_IS_DELETED, datum.isDeleted)
+            cv.put(COL_CREATED_AT, datum.created_at)
+            cv.put(COL_UPDATED_AT, datum.updated_at)
+            
+            val insertedID = db.replace(tableName, null, cv)
+            myHelper.printInsertion(tableName, insertedID, datum)
+        }
+    }
+    
+    /**
+     * Here we are using number instead of name parameter as Adapter [CustomGridLMachine] is used and that is showing number instead of name.
+     */
+    fun getMvpOrgsProjects(): ArrayList<Material> {
+        
+        val list: ArrayList<Material> = ArrayList()
+        val db = this.readableDatabase
+        val query: String = "Select * from $TABLE_MVP_ORGS_PROJECTS  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 AND $COL_ORG_ID = ${myHelper.getLoginAPI().org_id}   ORDER BY $COL_NAME ASC"
+        
+        val result = db.rawQuery(query, null)
+        
+        if (result.moveToFirst()) {
+            do {
+                val datum = Material()
+                datum.id = result.getInt(result.getColumnIndex(COL_ID))
+                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+                datum.number = result.getString(result.getColumnIndex(COL_NAME))
+                list.add(datum)
+                
+            } while (result.moveToNext())
+        }
+        
+        result.close()
+        db.close()
+        return list
     }
     
     fun insertOrgsMaps(data: ArrayList<MyData>) {

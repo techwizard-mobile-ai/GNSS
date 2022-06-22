@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+android:paddingBottom="@dimen/_10sdp"
+tools:context="app.mvp.activities.MvpOrgsProjectsActivity">
+
+<TextView
+    android:layout_alignParentTop="true"
+    android:layout_centerHorizontal="true"
+    android:id="@+id/mvp_orgs_projects_title"
+    style="@style/activity_title"
+    android:text="@string/select_site" />
+
+<GridView
+    android:layout_above="@id/mvp_orgs_projects_back"
+    android:layout_below="@id/mvp_orgs_projects_title"
+    android:id="@+id/mvp_orgs_projects_gridview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/_5sdp"
+    android:columnWidth="@dimen/_120sdp"
+    android:gravity="center"
+    android:horizontalSpacing="0dp"
+    android:numColumns="auto_fit"
+    android:stretchMode="columnWidth"
+    android:verticalSpacing="0dp" />
+
+<Button
+    android:id="@+id/mvp_orgs_projects_back"
+    style="@style/back_button_single"
+    android:layout_alignParentBottom="true"
+    android:layout_centerHorizontal="true" />
+</RelativeLayout>

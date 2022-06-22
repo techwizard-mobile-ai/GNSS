@@ -14,6 +14,10 @@ class MyData : Serializable {
     @Expose
     var updated_at: String = ""
     
+    @SerializedName("created_at")
+    @Expose
+    var created_at: String = ""
+    
     @SerializedName("id")
     @Expose
     var id: Int = 0
@@ -266,10 +270,15 @@ class MyData : Serializable {
     @Expose
     var aws_path: String = ""
     
-    
     var isMapOpened: Boolean = false
+    
+    @SerializedName("details")
+    @Expose
+    var details = ""
+    var mvp_orgs_project_id: Int = 0
+    
     override fun toString(): String {
-        return "MyData(id=$id, orgId=$orgId, operatorId=$operatorId, loadingGPSLocationString='$loadingGPSLocationString', unloadingGPSLocationString='$unloadingGPSLocationString')"
+        return "MyData(id=$id, orgId=$orgId, operatorId=$operatorId, loadingGPSLocationString='$loadingGPSLocationString', mvp_orgs_project_id='$mvp_orgs_project_id')"
     }
     
     

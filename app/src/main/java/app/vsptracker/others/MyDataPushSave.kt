@@ -166,6 +166,10 @@ class MyDataPushSave(private val context: Context) {
                                     myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.myDataList.size}")
                                     db.insertOrgsMaps(serverSyncAPI.myDataList)
                                 }
+                                18 -> {
+                                    myHelper.log("${serverSyncAPI.type}--${serverSyncAPI.name}--${serverSyncAPI.myDataList.size}")
+                                    db.insertMvpOrgsProjects(serverSyncAPI.myDataList)
+                                }
                             }
                         }
                         myHelper.hideProgressBar()

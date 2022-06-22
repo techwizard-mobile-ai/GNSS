@@ -26,7 +26,6 @@ import java.net.SocketAddress
 
 
 class MvpMainActivity : BaseActivity(), View.OnClickListener {
-//class MvpMainActivity : BaseActivity() {
     private val tag = this::class.java.simpleName
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,11 +35,10 @@ class MvpMainActivity : BaseActivity(), View.OnClickListener {
         val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
         navigationView.menu.getItem(0).isChecked = true
         myHelper.setTag(tag)
-    
+        
         Glide.with(this@MvpMainActivity).load(ContextCompat.getDrawable(this@MvpMainActivity, R.drawable.widget_logo)).into(mvp_main_taputapu)
         Glide.with(this@MvpMainActivity).load(ContextCompat.getDrawable(this@MvpMainActivity, R.drawable.hub_logo_complete)).into(mvp_main_portal)
-//        base_navigationView.visibility = View.GONE
-    
+        
         mvp_main_taputapu.setOnClickListener(this@MvpMainActivity)
         mvp_main_portal.setOnClickListener(this@MvpMainActivity)
         mvp_main_logout.setOnClickListener(this@MvpMainActivity)
@@ -49,10 +47,11 @@ class MvpMainActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         when (view!!.id) {
             R.id.mvp_main_taputapu -> {
-                myHelper.launchNtripClient()
+                val intent = Intent(this, MvpOrgsProjectsActivity::class.java)
+                intent.putExtra("myData", MyData())
+                startActivity(intent)
             }
             R.id.mvp_main_portal -> {
-//                val url = "https://www.theconstructionexchangehub.co.nz/"
                 val url = getString(R.string.portal_url)
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
             }
@@ -65,9 +64,9 @@ class MvpMainActivity : BaseActivity(), View.OnClickListener {
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
             }
-
         }
     }
+    
     fun run() {
         try {
             myHelper.log("inside run")
