@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
+import androidx.activity.result.contract.ActivityResultContracts
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
@@ -20,6 +21,24 @@ private const val REQUEST_WEIGHT = 4
 class MvpStartDataCollectionActivity : BaseActivity(), View.OnClickListener {
     
     private val tag = this::class.java.simpleName
+    
+    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            // There are no request codes
+            val intent: Intent? = result.data
+            myHelper.log("resultLauncher")
+ 
+            val bundle: Bundle? = intent!!.extras
+            if (bundle != null) {
+                myData = bundle.getSerializable("myData") as MyData
+                myHelper.log("onActivityResult----:$myData")
+                mvp_load_project.text = myData.mvp_orgs_project_name
+                mvp_load_folder.text = myData.mvp_orgs_folder_name
+                myData.isForLoadResult = false
+                myHelper.setLastJourney(myData)
+            }
+        }
+    }
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,14 +79,16 @@ class MvpStartDataCollectionActivity : BaseActivity(), View.OnClickListener {
                 val intent = Intent(this, MvpOrgsProjectsActivity::class.java)
                 myData.isForLoadResult = true
                 intent.putExtra("myData", myData)
-                startActivityForResult(intent, REQUEST_MACHINE)
+//                startActivityForResult(intent, REQUEST_MACHINE)
+                resultLauncher.launch(intent)
             }
             
             R.id.mvp_load_folder -> {
                 val intent = Intent(this, MvpOrgsFoldersActivity::class.java)
                 myData.isForLoadResult = true
                 intent.putExtra("myData", myData)
-                startActivityForResult(intent, REQUEST_MACHINE)
+//                startActivityForResult(intent, REQUEST_MACHINE)
+                resultLauncher.launch(intent)
             }
             
             R.id.mvp_load_home -> {
@@ -80,23 +101,23 @@ class MvpStartDataCollectionActivity : BaseActivity(), View.OnClickListener {
         }
     }
     
-    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
-        super.onActivityResult(requestCode, resultCode, intent)
-        
-        if (resultCode == Activity.RESULT_OK) {
-            val bundle: Bundle? = intent!!.extras
-            if (bundle != null) {
-                myData = bundle.getSerializable("myData") as MyData
-                myHelper.log("myData:$myData")
-                mvp_load_project.text = myData.mvp_orgs_project_name
-                mvp_load_folder.text = myData.mvp_orgs_folder_name
-                myData.isForLoadResult = false
-                myHelper.setLastJourney(myData)
-            }
-            
-        } else {
-            myHelper.toast("Request can not be completed.")
-        }
-    }
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, intent)
+//
+//        if (resultCode == Activity.RESULT_OK) {
+//            val bundle: Bundle? = intent!!.extras
+//            if (bundle != null) {
+//                myData = bundle.getSerializable("myData") as MyData
+//                myHelper.log("onActivityResult:$myData")
+//                mvp_load_project.text = myData.mvp_orgs_project_name
+//                mvp_load_folder.text = myData.mvp_orgs_folder_name
+//                myData.isForLoadResult = false
+//                myHelper.setLastJourney(myData)
+//            }
+//
+//        } else {
+//            myHelper.toast("Request can not be completed.")
+//        }
+//    }
     
 }
