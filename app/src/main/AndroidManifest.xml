@@ -36,19 +36,24 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
+            android:name="app.mvp.activities.MvpOrgsFilesActivity"
+            android:configChanges="orientation"
+            android:exported="false"
+            android:screenOrientation="sensor" />
+        <activity
             android:name="app.mvp.activities.MvpOrgsProjectsActivity"
             android:configChanges="orientation"
             android:exported="false"
-            android:screenOrientation="sensor"  />
+            android:screenOrientation="sensor" />
+        <activity
+            android:name="app.mvp.activities.MvpHomeActivity"
+            android:configChanges="orientation"
+            android:exported="false"
+            android:screenOrientation="sensor" />
         <activity
             android:name=".BaseActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name="app.mvp.activities.MvpMainActivity"
-            android:configChanges="orientation"
-            android:exported="false"
-            android:screenOrientation="sensor" />
 
         <service android:name="app.vsptracker.others.autologout.ForegroundService" />
 

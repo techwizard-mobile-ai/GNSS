@@ -361,4 +361,5 @@
     <string name="provider_name">app.vsptracker.provider</string>
     <string name="provider_path">Android/data/app.vsptracker/files/Pictures</string>
     <string name="db_name">vsptracker</string>
+    <string name="select_task">Select Task</string>
 </resources>

@@ -19,7 +19,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import app.mvp.activities.MvpMainActivity
+import app.mvp.activities.MvpHomeActivity
 import app.vsptracker.BuildConfig
 import app.vsptracker.R
 import app.vsptracker.activities.common.MachineStatusActivity
@@ -122,7 +122,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
             if (!myHelper.getLoginAPI().email.isNullOrBlank() && !myHelper.getLoginAPI().pass.isNullOrBlank()) {
                 myHelper.log("packageName.equals(TAPUTAPU):" + packageName.equals(MVP))
                 if(packageName.equals(MVP)){
-                    val intent = Intent(this, MvpMainActivity::class.java)
+                    val intent = Intent(this, MvpHomeActivity::class.java)
                     startActivity(intent)
                 }else{
                     fetchOrgData()

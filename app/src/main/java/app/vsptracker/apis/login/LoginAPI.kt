@@ -9,10 +9,11 @@ class LoginAPI : Serializable{
     @SerializedName("name") val name : String =""
     @SerializedName("email") val email : String =""
     @SerializedName("org_id") val org_id : Int = 0
+    @SerializedName("role") val role : Int = 0
     @SerializedName("auth_token") val auth_token : String =""
     var pass :String = ""
     override fun toString(): String {
-        return "LoginAPI(id=$id, name='$name', email='$email', org_id=$org_id, auth_token='$auth_token', pass='$pass')"
+        return "LoginAPI(id=$id, name='$name', email='$email', org_id=$org_id, role=$role, auth_token='$auth_token', pass='$pass')"
     }
 
 

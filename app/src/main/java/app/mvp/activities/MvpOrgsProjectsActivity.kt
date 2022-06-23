@@ -1,6 +1,7 @@
 package app.mvp.activities
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -53,10 +54,11 @@ class MvpOrgsProjectsActivity : BaseActivity(), View.OnClickListener {
                 else -> {
                     myHelper.log("test")
                     myHelper.log(mvpOrgsProjects[position].toString())
-//                    val intent = Intent(this, MaterialActivity::class.java)
-//                    myData.mvp_orgs_project_id = machines[position].id
-//                    intent.putExtra("myData", myData)
-//                    startActivity(intent)
+                    val intent = Intent(this, MvpOrgsFilesActivity::class.java)
+                    myData.mvp_orgs_project_id = mvpOrgsProjects[position].id
+                    myData.name = mvpOrgsProjects[position].number
+                    intent.putExtra("myData", myData)
+                    startActivity(intent)
                 }
             }
         }

@@ -1,5 +1,6 @@
 package app.vsptracker.apis
 import app.vsptracker.apis.login.LoginResponse
+import app.vsptracker.apis.mvporgsfiles.MvpOrgsFilesResponse
 import app.vsptracker.apis.serverSync.ServerSyncDataAPI
 import app.vsptracker.apis.serverSync.ServerSyncResponse
 import app.vsptracker.apis.trip.MyData
@@ -40,6 +41,7 @@ interface RetrofitAPI {
         const val ORGS_MACHINE_MAX_HOUR ="orgsmachineshours/machine_max_hour"
         const val ORGS_SERVER_SYNC = "orgsserversync/store"
         const val ORGS_SERVER_SYNC_LIST = "orgsserversync/list"
+        const val MVP_ORGS_FILES_LIST = "mvporgsprojects/show"
     }
     
 
@@ -79,5 +81,14 @@ interface RetrofitAPI {
         @Query("operator_id") id: Int,
         @Query("device_details")deviceDetailsString: String
     ): Call<ServerSyncResponse>
+    
+    @GET(MVP_ORGS_FILES_LIST)
+    fun getMvpOrgsFiles(
+        @Query("id") id: Int?,
+        @Query("prefix") prefix: String = "",
+        @Query("role") role: Int?,
+        @Query("isAdminLoggedIn") isAdminLoggedIn: Boolean = false,
+        @Query("token") token: String?
+    ): Call<MvpOrgsFilesResponse>
     
 }

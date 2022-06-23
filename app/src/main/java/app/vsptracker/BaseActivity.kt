@@ -29,6 +29,7 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.get
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.work.WorkManager
+import app.mvp.activities.MvpHomeActivity
 import app.vsptracker.activities.*
 import app.vsptracker.activities.common.MachineBreakdownActivity
 import app.vsptracker.activities.common.MachineStatusActivity
@@ -415,9 +416,18 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         
         when (item.itemId) {
             R.id.nav_home -> {
-                val data = MyData()
-                myHelper.startHomeActivityByType(data)
-                myHelper.setIsMapOpened(false)
+                when {
+                    (packageName.equals(MVP)) -> {
+                        val intent = Intent(this, MvpHomeActivity::class.java)
+                        startActivity(intent)
+                        myHelper.setIsMapOpened(false)
+                    }
+                    else -> {
+                        val data = MyData()
+                        myHelper.startHomeActivityByType(data)
+                        myHelper.setIsMapOpened(false)
+                    }
+                }
             }
             R.id.nav_day_works -> {
                 

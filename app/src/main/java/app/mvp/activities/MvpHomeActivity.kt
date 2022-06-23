@@ -1,9 +1,6 @@
 package app.mvp.activities
 
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.content.pm.ResolveInfo
 import android.net.Uri
 import android.os.Bundle
 import android.os.RemoteException
@@ -18,30 +15,29 @@ import app.vsptracker.apis.login.LoginAPI
 import app.vsptracker.apis.trip.MyData
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_mvp_main.*
-import kotlinx.android.synthetic.main.app_bar_base.*
+import kotlinx.android.synthetic.main.activity_mvp_home.*
 import java.net.InetSocketAddress
 import java.net.Socket
 import java.net.SocketAddress
 
 
-class MvpMainActivity : BaseActivity(), View.OnClickListener {
+class MvpHomeActivity : BaseActivity(), View.OnClickListener {
     private val tag = this::class.java.simpleName
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
         val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
-        layoutInflater.inflate(R.layout.activity_mvp_main, contentFrameLayout)
+        layoutInflater.inflate(R.layout.activity_mvp_home, contentFrameLayout)
         val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
         navigationView.menu.getItem(0).isChecked = true
         myHelper.setTag(tag)
         
-        Glide.with(this@MvpMainActivity).load(ContextCompat.getDrawable(this@MvpMainActivity, R.drawable.widget_logo)).into(mvp_main_taputapu)
-        Glide.with(this@MvpMainActivity).load(ContextCompat.getDrawable(this@MvpMainActivity, R.drawable.hub_logo_complete)).into(mvp_main_portal)
+        Glide.with(this@MvpHomeActivity).load(ContextCompat.getDrawable(this@MvpHomeActivity, R.drawable.widget_logo)).into(mvp_main_taputapu)
+        Glide.with(this@MvpHomeActivity).load(ContextCompat.getDrawable(this@MvpHomeActivity, R.drawable.hub_logo_complete)).into(mvp_main_portal)
         
-        mvp_main_taputapu.setOnClickListener(this@MvpMainActivity)
-        mvp_main_portal.setOnClickListener(this@MvpMainActivity)
-        mvp_main_logout.setOnClickListener(this@MvpMainActivity)
+        mvp_main_taputapu.setOnClickListener(this@MvpHomeActivity)
+        mvp_main_portal.setOnClickListener(this@MvpHomeActivity)
+        mvp_main_logout.setOnClickListener(this@MvpHomeActivity)
     }
     
     override fun onClick(view: View?) {
