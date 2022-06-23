@@ -36,7 +36,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
-            android:name="app.mvp.activities.MvpOrgsFilesActivity"
+            android:name="app.mvp.activities.MvpStartDataCollectionActivity"
+            android:configChanges="orientation"
+            android:exported="false"
+            android:screenOrientation="sensor" />
+        <activity
+            android:name="app.mvp.activities.MvpOrgsFoldersActivity"
             android:configChanges="orientation"
             android:exported="false"
             android:screenOrientation="sensor" />

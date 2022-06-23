@@ -1,6 +1,7 @@
 package app.mvp.activities
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -14,11 +15,11 @@ import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.Material
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_mvp_orgs_files.*
+import kotlinx.android.synthetic.main.activity_mvp_orgs_folders.*
 import kotlinx.android.synthetic.main.app_bar_base.*
 import java.util.ArrayList
 
-class MvpOrgsFilesActivity : BaseActivity(), View.OnClickListener {
+class MvpOrgsFoldersActivity : BaseActivity(), View.OnClickListener {
     
     private val mvpOrgsFolders: ArrayList<Material> = ArrayList<Material>()
     private lateinit var gv: GridView
@@ -28,11 +29,12 @@ class MvpOrgsFilesActivity : BaseActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         
         val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
-        layoutInflater.inflate(R.layout.activity_mvp_orgs_files, contentFrameLayout)
+        layoutInflater.inflate(R.layout.activity_mvp_orgs_folders, contentFrameLayout)
         val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
         navigationView.menu.getItem(0).isChecked = true
         
         myHelper.setTag(tag)
+        myHelper.setProgressBar(mvp_orgs_files_pb)
         
         val bundle: Bundle? = intent.extras
         if (bundle != null) {
@@ -49,18 +51,19 @@ class MvpOrgsFilesActivity : BaseActivity(), View.OnClickListener {
             when {
                 myData.isForLoadResult -> {
                     val intent = intent
-                    myData.mvp_orgs_project_id = mvpOrgsFolders[position].id
+                    myData.mvp_orgs_folder_id = mvpOrgsFolders[position].id
+                    myData.mvp_orgs_folder_name = mvpOrgsFolders[position].number
                     intent.putExtra("myData", myData)
                     setResult(Activity.RESULT_OK, intent)
                     finish()
                 }
                 else -> {
-                    myHelper.log("test")
                     myHelper.log(mvpOrgsFolders[position].toString())
-//                    val intent = Intent(this, MaterialActivity::class.java)
-//                    myData.mvp_orgs_project_id = machines[position].id
-//                    intent.putExtra("myData", myData)
-//                    startActivity(intent)
+                    myData.mvp_orgs_folder_id = mvpOrgsFolders[position].id
+                    myData.mvp_orgs_folder_name = mvpOrgsFolders[position].number
+                    myHelper.setLastJourney(myData)
+                    val intent = Intent(this, MvpStartDataCollectionActivity::class.java)
+                    startActivity(intent)
                 }
             }
         }
@@ -84,7 +87,7 @@ class MvpOrgsFilesActivity : BaseActivity(), View.OnClickListener {
     
     
     internal fun getOrgsFiles(mvpOrgsProjectId: Int) {
-        myHelper.showDialog()
+        myHelper.showProgressBar()
         val call = this.retrofitAPI.getMvpOrgsFiles(
             mvpOrgsProjectId,
             "",
@@ -97,19 +100,18 @@ class MvpOrgsFilesActivity : BaseActivity(), View.OnClickListener {
                 call: retrofit2.Call<MvpOrgsFilesResponse>,
                 response: retrofit2.Response<MvpOrgsFilesResponse>
             ) {
-                myHelper.hideDialog()
-                myHelper.log("Response-getOrgsFiles:${response.body()}")
+                myHelper.hideProgressBar()
                 try {
                     val responseBody = response.body()
                     if (responseBody!!.success) {
-    
+                        
                         responseBody.separateFolders?.forEach {
                             val material = Material()
                             material.id = it.id!!
                             material.number = it.fileFolder?.name!!.dropLast(1)
                             mvpOrgsFolders.add(material)
                         }
-                        val adapter = CustomGridLMachine(this@MvpOrgsFilesActivity, mvpOrgsFolders)
+                        val adapter = CustomGridLMachine(this@MvpOrgsFoldersActivity, mvpOrgsFolders)
                         gv.adapter = adapter
                         
                     } else {
@@ -119,11 +121,10 @@ class MvpOrgsFilesActivity : BaseActivity(), View.OnClickListener {
                 catch (e: Exception) {
                     myHelper.log("getServerSync:${e.localizedMessage}")
                 }
-                
             }
             
             override fun onFailure(call: retrofit2.Call<MvpOrgsFilesResponse>, t: Throwable) {
-                myHelper.hideDialog()
+                myHelper.hideProgressBar()
                 myHelper.log("Failure" + t.message)
             }
         })

@@ -5,7 +5,7 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:orientation="vertical"
 android:paddingBottom="@dimen/_10sdp"
-tools:context="app.mvp.activities.MvpOrgsFilesActivity">
+tools:context="app.mvp.activities.MvpOrgsFoldersActivity">
 
 <TextView
     android:layout_alignParentTop="true"
@@ -14,6 +14,17 @@ tools:context="app.mvp.activities.MvpOrgsFilesActivity">
     style="@style/activity_title"
     android:text="@string/select_task" />
 
+    <ProgressBar
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/mvp_orgs_files_pb"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/colorPrimary"
+        android:indeterminateTintMode="src_atop"
+        android:visibility="gone" />
 <GridView
     android:layout_above="@id/mvp_orgs_files_back"
     android:layout_below="@id/mvp_orgs_files_title"

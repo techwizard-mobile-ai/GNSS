@@ -1,6 +1,5 @@
 package app.mvp.activities
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -43,24 +42,15 @@ class MvpOrgsProjectsActivity : BaseActivity(), View.OnClickListener {
         gv.adapter = adapter
         gv.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
             
-            when {
-                myData.isForLoadResult -> {
-                    val intent = intent
-                    myData.mvp_orgs_project_id = mvpOrgsProjects[position].id
-                    intent.putExtra("myData", myData)
-                    setResult(Activity.RESULT_OK, intent)
-                    finish()
-                }
-                else -> {
-                    myHelper.log("test")
-                    myHelper.log(mvpOrgsProjects[position].toString())
-                    val intent = Intent(this, MvpOrgsFilesActivity::class.java)
-                    myData.mvp_orgs_project_id = mvpOrgsProjects[position].id
-                    myData.name = mvpOrgsProjects[position].number
-                    intent.putExtra("myData", myData)
-                    startActivity(intent)
-                }
-            }
+            myHelper.log(mvpOrgsProjects[position].toString())
+            val intent = Intent(this, MvpOrgsFoldersActivity::class.java)
+            myData.mvp_orgs_project_id = mvpOrgsProjects[position].id
+            myData.mvp_orgs_project_name = mvpOrgsProjects[position].number
+            myData.isForLoadResult = false
+            myData.name = mvpOrgsProjects[position].number
+            intent.putExtra("myData", myData)
+            myHelper.setLastJourney(myData)
+            startActivity(intent)
         }
         
         mvp_orgs_projects_back.setOnClickListener(this)

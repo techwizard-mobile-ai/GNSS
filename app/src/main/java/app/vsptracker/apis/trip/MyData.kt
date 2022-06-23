@@ -276,9 +276,12 @@ class MyData : Serializable {
     @Expose
     var details = ""
     var mvp_orgs_project_id: Int = 0
+    var mvp_orgs_folder_id: Int = 0
+    var mvp_orgs_project_name: String = ""
+    var mvp_orgs_folder_name: String = ""
     
     override fun toString(): String {
-        return "MyData(id=$id, orgId=$orgId, operatorId=$operatorId, loadingGPSLocationString='$loadingGPSLocationString', mvp_orgs_project_id='$mvp_orgs_project_id')"
+        return "MyData(id=$id, orgId=$orgId, operatorId=$operatorId, mvp_orgs_project_id='$mvp_orgs_project_id', mvp_orgs_folder_id='$mvp_orgs_folder_id')"
     }
     
     
