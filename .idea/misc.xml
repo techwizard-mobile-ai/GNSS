@@ -26,6 +26,8 @@
         <entry key="app/src/main/res/layout-land/activity_mvp_main.xml" value="0.33" />
         <entry key="app/src/main/res/layout-land/activity_mvp_start_data_collection.xml" value="0.33958333333333335" />
         <entry key="app/src/main/res/layout-land/activity_mvp_survey_home.xml" value="0.33" />
+        <entry key="app/src/main/res/layout-land/activity_mvp_survey_scan.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/activity_check_form_task.xml" value="0.390625" />
         <entry key="app/src/main/res/layout/activity_lmachine.xml" value="0.390625" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.390625" />
         <entry key="app/src/main/res/layout/activity_map1.xml" value="0.390625" />
@@ -37,6 +39,7 @@
         <entry key="app/src/main/res/layout/activity_mvp_portal.xml" value="0.390625" />
         <entry key="app/src/main/res/layout/activity_mvp_start_data_collection.xml" value="0.390625" />
         <entry key="app/src/main/res/layout/activity_mvp_survey_home.xml" value="0.390625" />
+        <entry key="app/src/main/res/layout/activity_mvp_survey_scan.xml" value="0.390625" />
         <entry key="app/src/main/res/layout/activity_rload.xml" value="0.390625" />
         <entry key="app/src/main/res/layout/activity_thome.xml" value="0.390625" />
         <entry key="app/src/main/res/layout/app_bar_base.xml" value="0.390625" />

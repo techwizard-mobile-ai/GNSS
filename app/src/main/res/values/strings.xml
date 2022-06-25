@@ -368,4 +368,7 @@
     <string name="corrections_settings">Corrections settings</string>
     <string name="record_onto_check_point">Record Check Point</string>
     <string name="start_survey">Start Survey</string>
+    <string name="label_scan">Label Scan</string>
+    <string name="start_image_capture">Start Image Capture</string>
+    <string name="image_capture">Image Capture</string>
 </resources>

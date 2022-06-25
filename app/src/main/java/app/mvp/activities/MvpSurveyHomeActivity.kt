@@ -25,13 +25,8 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.navigation.NavigationView
 import com.google.maps.android.data.kml.KmlLayer
-import kotlinx.android.synthetic.main.activity_map1.*
-import kotlinx.android.synthetic.main.activity_mvp_start_data_collection.*
 import kotlinx.android.synthetic.main.activity_mvp_survey_home.*
-import kotlinx.android.synthetic.main.activity_mvp_survey_home.map
-import kotlinx.android.synthetic.main.app_bar_base.*
 import kotlinx.android.synthetic.main.app_bar_base.toolbar_title
-import kotlinx.android.synthetic.tvspt_com_mvp_.app_bar_base.*
 import java.io.File
 import java.io.FileInputStream
 
@@ -93,8 +88,8 @@ class MvpSurveyHomeActivity  : BaseActivity(), View.OnClickListener, OnMapReadyC
                 myHelper.toast("Under development")
             }
             R.id.mvp_survey_home_start_scan -> {
-//                val intent = Intent(this, MvpHomeActivity::class.java)
-//                startActivity(intent)
+                val intent = Intent(this, MvpSurveyScanActivity::class.java)
+                startActivity(intent)
             }
         }
     }
