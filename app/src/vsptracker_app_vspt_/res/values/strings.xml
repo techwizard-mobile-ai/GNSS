@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">VSP Tracker</string>
+    <string name="privacy_url">https://vsptracker.com/privacy/</string>
+    <string name="portal_url">https://vsptracker.app/</string>
+    <string name="api_url">https://vsptracker.app/api/v1/</string>
+    <string name="provider_name">app.vsptracker.provider</string>
+    <string name="provider_path">Android/data/app.vsptracker/files/Pictures</string>
+    <string name="db_name">vsptracker</string>
+</resources>
