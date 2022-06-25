@@ -57,11 +57,10 @@ class MvpStartDataCollectionActivity : BaseActivity(), View.OnClickListener {
         mvp_load_project.text = myData.mvp_orgs_project_name
         mvp_load_folder.text = myData.mvp_orgs_folder_name
         
-        mvp_load_home.setOnClickListener(this)
-    
         mvp_load_project.setOnClickListener(this)
         mvp_load_folder.setOnClickListener(this)
         mvp_load_home.setOnClickListener(this)
+        mvp_load_load.setOnClickListener(this)
         
     }
     
@@ -95,6 +94,11 @@ class MvpStartDataCollectionActivity : BaseActivity(), View.OnClickListener {
                 myData = MyData()
                 myHelper.setLastJourney(myData)
                 val intent = Intent(this, MvpHomeActivity::class.java)
+                startActivity(intent)
+            }
+            
+            R.id.mvp_load_load -> {
+                val intent = Intent(this, MvpSurveyHomeActivity::class.java)
                 startActivity(intent)
             }
 

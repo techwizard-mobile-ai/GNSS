@@ -37,7 +37,7 @@
         <item
             android:id="@+id/nav_ntrip_client"
             android:icon="@drawable/ic_ntrip_client"
-            android:title="Corrections settings " />
+            android:title="@string/corrections_settings" />
         <item
             android:id="@+id/nav_night_mode"
             android:icon="@drawable/ic_dark_mode"

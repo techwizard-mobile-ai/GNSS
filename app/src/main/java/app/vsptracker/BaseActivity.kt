@@ -198,6 +198,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
             startActivity(intent)
         }
         myHelper.requestPermissions()
+        
     }
     
     fun startWorkManager() {
@@ -623,7 +624,6 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         myHelper.log("startGPS__called")
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
         try {
-            myHelper.log("inside try method")
             locationManager?.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
                 1000,
@@ -692,7 +692,6 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     
     private fun makeUseOfLocation(location1: Location) {
 //        myHelper.log("makeUseOfLocation ${location1.latitude}")
-//        myHelper.log("makeUseOfLocation ${location1.longitude}")
         latitude = location1!!.latitude
         longitude = location1.longitude
         location = location1

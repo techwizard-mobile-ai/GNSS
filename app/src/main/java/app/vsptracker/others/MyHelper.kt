@@ -484,6 +484,18 @@ class MyHelper(var TAG: String, val context: Context) {
         return timestamp
     }
     
+    fun getDateTimeWithSeconds(s: Long): String {
+        return try {
+            val sdf = SimpleDateFormat("dd MMM yyyy HH:mm:ss")
+            val netDate = Date(s)
+            sdf.format(netDate)
+        }
+        catch (e: Exception) {
+            log("getDatetime:${e}")
+            s.toString()
+        }
+    }
+    
     fun getDateTime(s: Long): String {
         return try {
             val sdf = SimpleDateFormat("dd MMM yyyy HH:mm")

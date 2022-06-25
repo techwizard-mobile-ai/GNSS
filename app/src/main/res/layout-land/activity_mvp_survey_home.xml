@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="app.mvp.activities.MvpSurveyHomeActivity">
+
+    <LinearLayout
+        android:id="@+id/gpd_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/light_gray">
+
+        <TextView
+            android:id="@+id/mvp_survey_home_gps_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_5sdp"
+            android:text="@string/gps_location"
+            android:textColor="@color/black"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_buttons"
+        android:layout_below="@id/gpd_data" />
+
+    <LinearLayout
+        android:id="@+id/bottom_buttons"
+        android:background="@color/light_gray"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="@dimen/_5sdp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/mvp_survey_home_corrections"
+            style="@style/next_button"
+            android:layout_width="0dp"
+            android:layout_weight=".2"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:layout_marginRight="@dimen/_5sdp"
+            android:background="@color/colorPrimary"
+            android:textSize="12sp"
+            android:text="@string/corrections_settings" />
+
+        <Button
+            android:id="@+id/mvp_survey_home_check_point"
+            style="@style/next_button"
+            android:layout_width="0dp"
+            android:layout_weight=".2"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:layout_marginRight="@dimen/_5sdp"
+            android:background="@color/colorPrimary"
+            android:textSize="12sp"
+            android:text="@string/record_onto_check_point" />
+
+        <Button
+            android:id="@+id/mvp_survey_home_start_survey"
+            style="@style/next_button"
+            android:layout_width="0dp"
+            android:layout_weight=".2"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:layout_marginRight="@dimen/_5sdp"
+            android:background="@color/colorPrimary"
+            android:textSize="12sp"
+            android:text="@string/start_survey" />
+
+        <Button
+            android:id="@+id/mvp_survey_home_start_scan"
+            style="@style/next_button"
+            android:layout_width="0dp"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:layout_marginRight="@dimen/_5sdp"
+            android:layout_marginEnd="0dp"
+            android:layout_weight="0.2"
+            android:textSize="12sp"
+            android:text="@string/start_scan" />
+    </LinearLayout>
+
+</RelativeLayout>
