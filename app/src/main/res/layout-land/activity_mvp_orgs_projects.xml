@@ -5,30 +5,19 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:orientation="vertical"
 android:paddingBottom="@dimen/_10sdp"
-tools:context="app.mvp.activities.MvpOrgsFoldersActivity">
+tools:context="app.mvp.activities.MvpOrgsProjectsActivity">
 
 <TextView
     android:layout_alignParentTop="true"
     android:layout_centerHorizontal="true"
-    android:id="@+id/mvp_orgs_files_title"
+    android:id="@+id/mvp_orgs_projects_title"
     style="@style/activity_title"
-    android:text="@string/select_task" />
+    android:text="@string/select_site" />
 
-    <ProgressBar
-        android:layout_gravity="center_horizontal"
-        android:id="@+id/mvp_orgs_files_pb"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:indeterminate="true"
-        android:indeterminateTint="@color/colorPrimary"
-        android:indeterminateTintMode="src_atop"
-        android:visibility="gone" />
 <GridView
-    android:layout_above="@id/mvp_orgs_folder_bottom"
-    android:layout_below="@id/mvp_orgs_files_title"
-    android:id="@+id/mvp_orgs_files_gridview"
+    android:layout_above="@id/mvp_orgs_projects_bottom"
+    android:layout_below="@id/mvp_orgs_projects_title"
+    android:id="@+id/mvp_orgs_projects_gridview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="@dimen/_5sdp"
@@ -38,9 +27,8 @@ tools:context="app.mvp.activities.MvpOrgsFoldersActivity">
     android:numColumns="auto_fit"
     android:stretchMode="columnWidth"
     android:verticalSpacing="0dp" />
-
     <RelativeLayout
-        android:id="@+id/mvp_orgs_folder_bottom"
+        android:id="@+id/mvp_orgs_projects_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -50,13 +38,13 @@ tools:context="app.mvp.activities.MvpOrgsFoldersActivity">
         android:layout_centerHorizontal="true">
 
         <Button
-            android:id="@+id/mvp_orgs_folders_create"
+            android:id="@+id/mvp_orgs_projects_create"
             android:layout_alignParentStart="true"
             android:text="@string/create_new"
             style="@style/back_button_single" />
 
         <Button
-            android:id="@+id/mvp_orgs_files_back"
+            android:id="@+id/mvp_orgs_projects_back"
             android:layout_alignParentEnd="true"
             style="@style/back_button_single" />
     </RelativeLayout>
