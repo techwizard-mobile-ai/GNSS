@@ -372,4 +372,9 @@
     <string name="start_image_capture">Start Image Capture</string>
     <string name="image_capture">Image Capture</string>
     <string name="create_new">Create new</string>
+    <string name="antenna_height">Antenna Height</string>
+    <string name="survey_point">Survey Point</string>
+    <string name="enter_checkpoint_details">Please enter details</string>
+    <string name="how_to_record_checkpoint">How to Record Check Point</string>
+    <string name="how_to_use">How to use</string>
 </resources>

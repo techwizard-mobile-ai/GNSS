@@ -2,11 +2,10 @@ package app.mvp.activities
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
-import android.graphics.Color.green
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
@@ -25,15 +24,14 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.navigation.NavigationView
 import com.google.maps.android.data.kml.KmlLayer
-import kotlinx.android.synthetic.main.activity_mvp_survey_home.*
-import kotlinx.android.synthetic.main.app_bar_base.toolbar_title
+import kotlinx.android.synthetic.main.activity_mvp_survey_survey.*
+import kotlinx.android.synthetic.main.app_bar_base.*
 import java.io.File
 import java.io.FileInputStream
 
 private const val ZOOM_LEVEL: Float = 19.0f
-
-class MvpSurveyHomeActivity  : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
-                               GoogleMap.OnMarkerClickListener {
+class MvpSurveySurveyActivity  : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
+                                 GoogleMap.OnMarkerClickListener {
     
     private val tag = this::class.java.simpleName
     private lateinit var map: GoogleMap
@@ -43,19 +41,18 @@ class MvpSurveyHomeActivity  : BaseActivity(), View.OnClickListener, OnMapReadyC
     private var locationManager: LocationManager? = null
     
     private var mapGPSLocation: GPSLocation = GPSLocation()
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-    
         val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
-        layoutInflater.inflate(R.layout.activity_mvp_survey_home, contentFrameLayout)
+        layoutInflater.inflate(R.layout.activity_mvp_survey_survey, contentFrameLayout)
         val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
         navigationView.menu.getItem(0).isChecked = true
     
         myHelper.setTag(tag)
         myData = myHelper.getLastJourney()
         myHelper.log("myData:$myData")
-        toolbar_title.text = myData.mvp_orgs_project_name + " / " + myData.mvp_orgs_folder_name + " / Data Collection"
-    
+        toolbar_title.text = myData.mvp_orgs_project_name + " / " + myData.mvp_orgs_folder_name + " / Data Collection / Survey"
     
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -63,31 +60,21 @@ class MvpSurveyHomeActivity  : BaseActivity(), View.OnClickListener, OnMapReadyC
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         startGPS()
     
-        mvp_survey_home_corrections.setOnClickListener(this)
-        mvp_survey_home_check_point.setOnClickListener(this)
-        mvp_survey_home_start_survey.setOnClickListener(this)
-        mvp_survey_home_start_scan.setOnClickListener(this)
-    
+        mvp_survey_survey_gps_data_antenna_height.text = "Antenna Height: 2.000m"
+        mvp_survey_survey_gps_data_antenna_height.setOnClickListener(this)
+        mvp_survey_survey_back.setOnClickListener(this)
+//        mvp_survey_home_check_point.setOnClickListener(this)
+//        mvp_survey_home_start_survey.setOnClickListener(this)
+//        mvp_survey_home_start_scan.setOnClickListener(this)
     }
     
-    
     override fun onClick(view: View?) {
-        myData.trip0ID = System.currentTimeMillis().toString()
         when (view!!.id) {
-            R.id.mvp_survey_home_corrections -> {
-                myHelper.launchNtripClient()
+            R.id.mvp_survey_survey_gps_data_antenna_height -> {
+                myHelper.toast("Antenna Height")
             }
-            R.id.mvp_survey_home_check_point -> {
-                val intent = Intent(this, MvpSurveyCheckPointActivity::class.java)
-                startActivity(intent)
-            }
-            R.id.mvp_survey_home_start_survey -> {
-                val intent = Intent(this, MvpSurveySurveyActivity::class.java)
-                startActivity(intent)
-            }
-            R.id.mvp_survey_home_start_scan -> {
-                val intent = Intent(this, MvpSurveyScanActivity::class.java)
-                startActivity(intent)
+            R.id.mvp_survey_survey_back -> {
+                finish()
             }
         }
     }
@@ -115,23 +102,23 @@ class MvpSurveyHomeActivity  : BaseActivity(), View.OnClickListener, OnMapReadyC
     val locationListener: LocationListener = object : LocationListener {
         @SuppressLint("SetTextI18n")
         override fun onLocationChanged(location: Location) {
-    
+
 //            myHelper.log("location----$location")
 //            val accuracy = 0.11
-            mvp_survey_home_gps_data_acc.text = "Accuracy: ${location.accuracy}"
-//            mvp_survey_home_gps_data_acc.text = "Accuracy: ${accuracy}"
+            mvp_survey_survey_gps_data_acc.text = "Accuracy: ${location.accuracy}"
+//            mvp_survey_survey_gps_data_acc.text = "Accuracy: ${accuracy}"
             when{
-                location.accuracy >= 1 -> { mvp_survey_home_gps_data_acc.setBackgroundColor(ContextCompat.getColor(this@MvpSurveyHomeActivity, R.color.red)) }
-                location.accuracy <= 0.1 -> { mvp_survey_home_gps_data_acc.setBackgroundColor(ContextCompat.getColor(this@MvpSurveyHomeActivity, R.color.green)) }
-                else -> { mvp_survey_home_gps_data_acc.setBackgroundColor(ContextCompat.getColor(this@MvpSurveyHomeActivity, R.color.yellow)) }
+                location.accuracy >= 1 -> { mvp_survey_survey_gps_data_acc.setBackgroundColor(ContextCompat.getColor(this@MvpSurveySurveyActivity, R.color.red)) }
+                location.accuracy <= 0.1 -> { mvp_survey_survey_gps_data_acc.setBackgroundColor(ContextCompat.getColor(this@MvpSurveySurveyActivity, R.color.green)) }
+                else -> { mvp_survey_survey_gps_data_acc.setBackgroundColor(ContextCompat.getColor(this@MvpSurveySurveyActivity, R.color.yellow)) }
             }
-            mvp_survey_home_gps_data_lat.text = "Latitude: ${myHelper.roundToN(location.latitude, 8)}"
-//            mvp_survey_home_gps_data_long.text = "Longitude: ${myHelper.roundToN(location.longitude, 8)}"
-            mvp_survey_home_gps_data_long.text = "Longitude: ${location.longitude}"
-            mvp_survey_home_gps_data_alt.text = "Altitude: ${location.altitude}"
-            mvp_survey_home_gps_data_speed.text = "Speed: ${location.speed}"
-            mvp_survey_home_gps_data_bearing.text = "Bearing: ${location.bearing}"
-            mvp_survey_home_gps_data_time.text = "Time: ${myHelper.getDateTimeWithSeconds(location.time)}"
+            mvp_survey_survey_gps_data_lat.text = "Latitude: ${myHelper.roundToN(location.latitude, 8)}"
+//            mvp_survey_survey_gps_data_long.text = "Longitude: ${myHelper.roundToN(location.longitude, 8)}"
+            mvp_survey_survey_gps_data_long.text = "Longitude: ${location.longitude}"
+            mvp_survey_survey_gps_data_alt.text = "Altitude: ${location.altitude}"
+            mvp_survey_survey_gps_data_speed.text = "Speed: ${location.speed}"
+            mvp_survey_survey_gps_data_bearing.text = "Bearing: ${location.bearing}"
+            mvp_survey_survey_gps_data_time.text = "Time: ${myHelper.getDateTimeWithSeconds(location.time)}"
         }
         
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
