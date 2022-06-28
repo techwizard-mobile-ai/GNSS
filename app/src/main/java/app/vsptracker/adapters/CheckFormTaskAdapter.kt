@@ -72,6 +72,7 @@ class CheckFormTaskAdapter(
                     holder.itemView.cft_item_unacceptable.setTextColor(ContextCompat.getColor(context, R.color.light_red))
                     datum.unacceptableChecked = false
                 }
+                else -> {}
             }
             resetItemView(holder, datum)
         }
@@ -142,6 +143,7 @@ class CheckFormTaskAdapter(
                     holder.itemView.cft_item_acceptable.setTextColor(ContextCompat.getColor(context, R.color.light_colorPrimary))
                     datum.acceptableChecked = true
                 }
+                else -> {}
             }
             resetItemView(holder, datum)
             
