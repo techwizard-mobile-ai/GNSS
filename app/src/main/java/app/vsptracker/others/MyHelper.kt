@@ -74,6 +74,7 @@ import retrofit2.Retrofit
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.math.RoundingMode
 import java.security.SecureRandom
 import java.text.SimpleDateFormat
 import java.util.*
@@ -1580,6 +1581,16 @@ class MyHelper(var TAG: String, val context: Context) {
         log("installedApps:${installedApps()}")
         log("getCurrentRunningApp:${getCurrentRunningApp()}")
         killApp()
+    }
+    
+    /**
+     * This method will get number as input and it will round it to scale value. e.g. if number is 1.9237943 and scale values
+     * is 4 then return will be 1.9237.
+     */
+    fun roundToN(number: Double, scale: Int): Double {
+        var rounded = 0.0
+        rounded = number.toBigDecimal().setScale(scale, RoundingMode.UP).toDouble()
+        return rounded
     }
     
 }

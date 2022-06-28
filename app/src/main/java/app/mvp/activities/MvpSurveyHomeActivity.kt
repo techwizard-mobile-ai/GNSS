@@ -3,16 +3,16 @@ package app.mvp.activities
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color.green
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
+import androidx.core.content.ContextCompat
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
-import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.GPSLocation
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -115,11 +115,25 @@ class MvpSurveyHomeActivity  : BaseActivity(), View.OnClickListener, OnMapReadyC
     }
     
     val locationListener: LocationListener = object : LocationListener {
+        @SuppressLint("SetTextI18n")
         override fun onLocationChanged(location: Location) {
-//            makeUseOfLocation(location)
-            myHelper.log("location----$location")
-            
-            mvp_survey_home_gps_data.text =  "Latitude: ${location.latitude}  Longitude: ${location.longitude}  Accuracy: ${location.accuracy}  Altitude: ${location.altitude}  Speed: ${location.speed}  Bearing: ${location.bearing}  Time: ${myHelper.getDateTimeWithSeconds(location.time)}"
+    
+//            myHelper.log("location----$location")
+//            val accuracy = 0.11
+            mvp_survey_home_gps_data_acc.text = "Accuracy: ${location.accuracy}"
+//            mvp_survey_home_gps_data_acc.text = "Accuracy: ${accuracy}"
+            when{
+                location.accuracy >= 1 -> { mvp_survey_home_gps_data_acc.setBackgroundColor(ContextCompat.getColor(this@MvpSurveyHomeActivity, R.color.red)) }
+                location.accuracy <= 0.1 -> { mvp_survey_home_gps_data_acc.setBackgroundColor(ContextCompat.getColor(this@MvpSurveyHomeActivity, R.color.green)) }
+                else -> { mvp_survey_home_gps_data_acc.setBackgroundColor(ContextCompat.getColor(this@MvpSurveyHomeActivity, R.color.yellow)) }
+            }
+            mvp_survey_home_gps_data_lat.text = "Latitude: ${myHelper.roundToN(location.latitude, 8)}"
+//            mvp_survey_home_gps_data_long.text = "Longitude: ${myHelper.roundToN(location.longitude, 8)}"
+            mvp_survey_home_gps_data_long.text = "Longitude: ${location.longitude}"
+            mvp_survey_home_gps_data_alt.text = "Altitude: ${location.altitude}"
+            mvp_survey_home_gps_data_speed.text = "Speed: ${location.speed}"
+            mvp_survey_home_gps_data_bearing.text = "Bearing: ${location.bearing}"
+            mvp_survey_home_gps_data_time.text = "Time: ${myHelper.getDateTimeWithSeconds(location.time)}"
         }
         
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {

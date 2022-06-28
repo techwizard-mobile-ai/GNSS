@@ -28,6 +28,7 @@ import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_base.*
+import kotlinx.android.synthetic.main.activity_mvp_survey_home.*
 import kotlinx.android.synthetic.main.activity_mvp_survey_scan.*
 import kotlinx.android.synthetic.main.app_bar_base.*
 import java.text.SimpleDateFormat
@@ -222,13 +223,19 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener {
     
     val locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
-//            makeUseOfLocation(location)
-            myHelper.log("location----$location")
-            
-            mvp_survey_scan_gps_data.text =
-                "Latitude: ${location.latitude}  Longitude: ${location.longitude}  Accuracy: ${location.accuracy}  Altitude: ${location.altitude}  Speed: ${location.speed}  Bearing: ${location.bearing}  Time: ${
-                    myHelper.getDateTimeWithSeconds(location.time)
-                }"
+            mvp_survey_scan_gps_data_acc.text = "Accuracy: ${location.accuracy}"
+            when{
+                location.accuracy >= 1 -> { mvp_survey_scan_gps_data_acc.setBackgroundColor(ContextCompat.getColor(this@MvpSurveyScanActivity, R.color.red)) }
+                location.accuracy <= 0.1 -> { mvp_survey_scan_gps_data_acc.setBackgroundColor(ContextCompat.getColor(this@MvpSurveyScanActivity, R.color.green)) }
+                else -> { mvp_survey_scan_gps_data_acc.setBackgroundColor(ContextCompat.getColor(this@MvpSurveyScanActivity, R.color.yellow)) }
+            }
+            mvp_survey_scan_gps_data_lat.text = "Latitude: ${myHelper.roundToN(location.latitude, 8)}"
+//            mvp_survey_scan_gps_data_long.text = "Longitude: ${myHelper.roundToN(location.longitude, 8)}"
+            mvp_survey_scan_gps_data_long.text = "Longitude: ${location.longitude}"
+            mvp_survey_scan_gps_data_alt.text = "Altitude: ${location.altitude}"
+            mvp_survey_scan_gps_data_speed.text = "Speed: ${location.speed}"
+            mvp_survey_scan_gps_data_bearing.text = "Bearing: ${location.bearing}"
+            mvp_survey_scan_gps_data_time.text = "Time: ${myHelper.getDateTimeWithSeconds(location.time)}"
         }
         
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
