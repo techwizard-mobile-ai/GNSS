@@ -377,4 +377,5 @@
     <string name="enter_checkpoint_details">Please enter details</string>
     <string name="how_to_record_checkpoint">How to Record Check Point</string>
     <string name="how_to_use">How to use</string>
+    <string name="enter_label_scan_details">Enter label scan details</string>
 </resources>

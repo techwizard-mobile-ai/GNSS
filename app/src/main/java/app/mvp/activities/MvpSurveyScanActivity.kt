@@ -1,6 +1,7 @@
 package app.mvp.activities
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.content.pm.PackageManager
@@ -26,17 +27,32 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
+import app.vsptracker.classes.GPSLocation
+import app.vsptracker.others.MyEnum.Companion.MAP_ZOOM_LEVEL
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.navigation.NavigationView
+import com.google.maps.android.data.kml.KmlLayer
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_mvp_survey_home.*
 import kotlinx.android.synthetic.main.activity_mvp_survey_scan.*
 import kotlinx.android.synthetic.main.app_bar_base.*
+import java.io.File
+import java.io.FileInputStream
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener {
+class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
+                              GoogleMap.OnMarkerClickListener  {
     
     private val tag = this::class.java.simpleName
     private lateinit var lastLocation: Location
@@ -45,6 +61,10 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener {
     private var videoCapture: VideoCapture<Recorder>? = null
     private var recording: Recording? = null
     private lateinit var cameraExecutor: ExecutorService
+    
+    private lateinit var map: GoogleMap
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var mapGPSLocation: GPSLocation = GPSLocation()
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +87,13 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener {
                 this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
             )
         }
+    
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        startGPS()
         cameraExecutor = Executors.newSingleThreadExecutor()
+        mvp_survey_scan_back.setOnClickListener(this)
         mvp_survey_scan_capture.setOnClickListener(this)
         
     }
@@ -193,7 +219,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener {
     
     override fun onClick(view: View?) {
         when (view!!.id) {
-            R.id.mvp_orgs_projects_back -> {
+            R.id.mvp_survey_scan_back -> {
                 finish()
             }
             R.id.mvp_survey_scan_capture -> {
@@ -266,4 +292,76 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener {
                 }
             }.toTypedArray()
     }
+    override fun onMapReady(googleMap: GoogleMap) {
+        map = googleMap
+        map.uiSettings.isZoomControlsEnabled = true
+        map.setOnMarkerClickListener(this)
+        setUpMap()
+    }
+    
+    @SuppressLint("MissingPermission")
+    private fun setUpMap() {
+        
+        if (mapGPSLocation.latitude != 0.0 && mapGPSLocation.longitude != 0.0) {
+            
+            val lat = mapGPSLocation.latitude
+            val longitude = mapGPSLocation.longitude
+            myHelper.log("In SetupMap:$mapGPSLocation")
+            val location1 = LatLng(lat, longitude)
+            val marker = map.addMarker(
+                MarkerOptions()
+                    .position(location1)
+                    .title(mapGPSLocation.locationName)
+            )
+            
+            
+            marker.showInfoWindow()
+            map.isMyLocationEnabled = true
+            fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
+                // Got last known location. In some rare situations this can be null.
+                if (location != null) {
+                    lastLocation = location
+                    val currentLatLng = LatLng(location.latitude, location.longitude)
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, MAP_ZOOM_LEVEL))
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, MAP_ZOOM_LEVEL))
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(location1, MAP_ZOOM_LEVEL))
+                }
+            }
+            
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, MAP_ZOOM_LEVEL))
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(location1, MAP_ZOOM_LEVEL))
+            
+        } else {
+            map.isMyLocationEnabled = true
+            fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
+                // Got last known location. In some rare situations this can be null.
+                if (location != null) {
+                    lastLocation = location
+                    val currentLatLng = LatLng(location.latitude, location.longitude)
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, MAP_ZOOM_LEVEL))
+//                    val resourceID = R.raw.drury_xhunua
+                    try {
+//                        val fileName = "drury_xhunua"
+////                        val fileName = "dury_south"
+//                        val resourceID = this.resources.getIdentifier(fileName, "raw", this.packageName)
+//                        val layer = KmlLayer(map, resourceID, applicationContext)
+//                        layer.addLayerToMap()
+                        val currentOrgsMap = db.getCurrentOrgsMap()
+                        if (currentOrgsMap !== null && !currentOrgsMap.aws_path.isNullOrEmpty()) {
+                            val file = File(myHelper.getKMLFileName(currentOrgsMap.aws_path))
+                            myHelper.log("fileName:${currentOrgsMap.aws_path}")
+                            val inputStream: FileInputStream = file.inputStream()
+                            val layer = KmlLayer(map, inputStream, applicationContext)
+                            layer.addLayerToMap()
+                        }
+                    }
+                    catch (e: Exception) {
+                        myHelper.log("kmlLayerException:${e.localizedMessage}")
+                    }
+                }
+            }
+        }
+    }
+    
+    override fun onMarkerClick(p0: Marker?) = false
 }
