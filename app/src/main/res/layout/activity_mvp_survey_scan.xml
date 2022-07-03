@@ -83,20 +83,21 @@
                 android:textSize="10sp" />
         </LinearLayout>
     </RelativeLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_below="@id/gps_data"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        >
+        android:layout_below="@id/gps_data"
+        android:orientation="horizontal">
+
         <RelativeLayout
             android:id="@+id/bottom_buttons"
             android:layout_width="0dp"
-            android:layout_weight="0.25"
+            android:layout_height="match_parent"
             android:layout_below="@id/gps_data"
+            android:layout_weight="0.25"
             android:background="@color/gray"
-            android:padding="@dimen/_5sdp"
-            android:layout_height="match_parent">
+            android:padding="@dimen/_5sdp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -135,18 +136,20 @@
                 android:layout_marginBottom="@dimen/_10sdp"
                 android:background="@color/colorPrimary"
                 android:text="@string/image_capture" />
+
             <Button
                 style="@style/back_button_single"
-                android:background="@color/colorPrimary"
                 android:layout_above="@id/mvp_survey_scan_back"
+                android:background="@color/colorPrimary"
                 android:drawableLeft="@drawable/ic_help"
                 android:text="@string/how_to_use" />
+
             <Button
                 android:id="@+id/mvp_survey_scan_back"
-                android:paddingTop="@dimen/_10sdp"
                 style="@style/back_button_single"
                 android:layout_alignParentBottom="true"
-                android:background="@color/colorPrimary" />
+                android:background="@color/colorPrimary"
+                android:paddingTop="@dimen/_10sdp" />
         </RelativeLayout>
 
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
@@ -154,15 +157,15 @@
             android:id="@+id/map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="0dp"
-            android:layout_weight="0.2"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_weight="0.2" />
 
         <androidx.camera.view.PreviewView
             android:id="@+id/viewFinder"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="0dp"
-            android:layout_weight="0.7"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_weight="0.7" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -41,7 +41,6 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.navigation.NavigationView
 import com.google.maps.android.data.kml.KmlLayer
 import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_mvp_survey_home.*
 import kotlinx.android.synthetic.main.activity_mvp_survey_scan.*
 import kotlinx.android.synthetic.main.app_bar_base.*
 import java.io.File
@@ -52,7 +51,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
-                              GoogleMap.OnMarkerClickListener  {
+                              GoogleMap.OnMarkerClickListener {
     
     private val tag = this::class.java.simpleName
     private lateinit var lastLocation: Location
@@ -87,7 +86,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
                 this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
             )
         }
-    
+        
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
@@ -249,19 +248,16 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     
     val locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
-            mvp_survey_scan_gps_data_acc.text = "Accuracy: ${location.accuracy}"
-            when{
-                location.accuracy >= 1 -> { mvp_survey_scan_gps_data_acc.setBackgroundColor(ContextCompat.getColor(this@MvpSurveyScanActivity, R.color.red)) }
-                location.accuracy <= 0.1 -> { mvp_survey_scan_gps_data_acc.setBackgroundColor(ContextCompat.getColor(this@MvpSurveyScanActivity, R.color.green)) }
-                else -> { mvp_survey_scan_gps_data_acc.setBackgroundColor(ContextCompat.getColor(this@MvpSurveyScanActivity, R.color.yellow)) }
-            }
-            mvp_survey_scan_gps_data_lat.text = "Latitude: ${myHelper.roundToN(location.latitude, 8)}"
-//            mvp_survey_scan_gps_data_long.text = "Longitude: ${myHelper.roundToN(location.longitude, 8)}"
-            mvp_survey_scan_gps_data_long.text = "Longitude: ${location.longitude}"
-            mvp_survey_scan_gps_data_alt.text = "Altitude: ${location.altitude}"
-            mvp_survey_scan_gps_data_speed.text = "Speed: ${location.speed}"
-            mvp_survey_scan_gps_data_bearing.text = "Bearing: ${location.bearing}"
-            mvp_survey_scan_gps_data_time.text = "Time: ${myHelper.getDateTimeWithSeconds(location.time)}"
+            myHelper.setGPSLayout(
+                location,
+                mvp_survey_scan_gps_data_acc,
+                mvp_survey_scan_gps_data_lat,
+                mvp_survey_scan_gps_data_long,
+                mvp_survey_scan_gps_data_alt,
+                mvp_survey_scan_gps_data_speed,
+                mvp_survey_scan_gps_data_bearing,
+                mvp_survey_scan_gps_data_time
+            )
         }
         
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
@@ -292,6 +288,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
                 }
             }.toTypedArray()
     }
+    
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
         map.uiSettings.isZoomControlsEnabled = true

@@ -5,11 +5,9 @@ import android.content.Context
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
-import androidx.core.content.ContextCompat
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.classes.GPSLocation
@@ -30,8 +28,9 @@ import java.io.File
 import java.io.FileInputStream
 
 private const val ZOOM_LEVEL: Float = 19.0f
-class MvpSurveyCheckPointActivity  : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
-                                 GoogleMap.OnMarkerClickListener {
+
+class MvpSurveyCheckPointActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
+                                    GoogleMap.OnMarkerClickListener {
     
     private val tag = this::class.java.simpleName
     private lateinit var map: GoogleMap
@@ -60,8 +59,6 @@ class MvpSurveyCheckPointActivity  : BaseActivity(), View.OnClickListener, OnMap
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         startGPS()
         
-        mvp_survey_checkpoint_gps_data_antenna_height.text = "Antenna Height: 2.000m"
-        mvp_survey_checkpoint_gps_data_antenna_height.setOnClickListener(this)
         mvp_survey_checkpoint_back.setOnClickListener(this)
 //        mvp_survey_home_check_point.setOnClickListener(this)
 //        mvp_survey_home_start_survey.setOnClickListener(this)
@@ -70,9 +67,6 @@ class MvpSurveyCheckPointActivity  : BaseActivity(), View.OnClickListener, OnMap
     
     override fun onClick(view: View?) {
         when (view!!.id) {
-            R.id.mvp_survey_checkpoint_gps_data_antenna_height -> {
-                myHelper.toast("Antenna Height")
-            }
             R.id.mvp_survey_checkpoint_back -> {
                 finish()
             }
@@ -104,21 +98,16 @@ class MvpSurveyCheckPointActivity  : BaseActivity(), View.OnClickListener, OnMap
         override fun onLocationChanged(location: Location) {
 
 //            myHelper.log("location----$location")
-//            val accuracy = 0.11
-            mvp_survey_checkpoint_gps_data_acc.text = "Accuracy: ${location.accuracy}"
-//            mvp_survey_checkpoint_gps_data_acc.text = "Accuracy: ${accuracy}"
-            when{
-                location.accuracy >= 1 -> { mvp_survey_checkpoint_gps_data_acc.setBackgroundColor(ContextCompat.getColor(this@MvpSurveyCheckPointActivity, R.color.red)) }
-                location.accuracy <= 0.1 -> { mvp_survey_checkpoint_gps_data_acc.setBackgroundColor(ContextCompat.getColor(this@MvpSurveyCheckPointActivity, R.color.green)) }
-                else -> { mvp_survey_checkpoint_gps_data_acc.setBackgroundColor(ContextCompat.getColor(this@MvpSurveyCheckPointActivity, R.color.yellow)) }
-            }
-            mvp_survey_checkpoint_gps_data_lat.text = "Latitude: ${myHelper.roundToN(location.latitude, 8)}"
-//            mvp_survey_checkpoint_gps_data_long.text = "Longitude: ${myHelper.roundToN(location.longitude, 8)}"
-            mvp_survey_checkpoint_gps_data_long.text = "Longitude: ${location.longitude}"
-            mvp_survey_checkpoint_gps_data_alt.text = "Altitude: ${location.altitude}"
-            mvp_survey_checkpoint_gps_data_speed.text = "Speed: ${location.speed}"
-            mvp_survey_checkpoint_gps_data_bearing.text = "Bearing: ${location.bearing}"
-            mvp_survey_checkpoint_gps_data_time.text = "Time: ${myHelper.getDateTimeWithSeconds(location.time)}"
+            myHelper.setGPSLayout(
+                location,
+                mvp_survey_checkpoint_gps_data_acc,
+                mvp_survey_checkpoint_gps_data_lat,
+                mvp_survey_checkpoint_gps_data_long,
+                mvp_survey_checkpoint_gps_data_alt,
+                mvp_survey_checkpoint_gps_data_speed,
+                mvp_survey_checkpoint_gps_data_bearing,
+                mvp_survey_checkpoint_gps_data_time
+            )
         }
         
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {

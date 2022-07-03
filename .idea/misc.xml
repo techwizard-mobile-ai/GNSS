@@ -44,7 +44,7 @@
         <entry key="app/src/main/res/layout-land/activity_mvp_survey_check_point.xml" value="0.45" />
         <entry key="app/src/main/res/layout-land/activity_mvp_survey_home.xml" value="0.33" />
         <entry key="app/src/main/res/layout-land/activity_mvp_survey_scan.xml" value="0.45" />
-        <entry key="app/src/main/res/layout-land/activity_mvp_survey_survey.xml" value="0.375" />
+        <entry key="app/src/main/res/layout-land/activity_mvp_survey_survey.xml" value="0.55" />
         <entry key="app/src/main/res/layout/activity_check_form_task.xml" value="0.390625" />
         <entry key="app/src/main/res/layout/activity_lmachine.xml" value="0.390625" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.390625" />

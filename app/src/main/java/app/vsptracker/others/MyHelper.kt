@@ -13,9 +13,9 @@ import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
-import android.content.pm.ResolveInfo
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.location.Location
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.provider.MediaStore
@@ -80,7 +80,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.net.ssl.*
-import kotlin.collections.ArrayList
 import kotlin.math.roundToLong
 
 @SuppressLint("SimpleDateFormat")
@@ -1591,6 +1590,40 @@ class MyHelper(var TAG: String, val context: Context) {
         var rounded = 0.0
         rounded = number.toBigDecimal().setScale(scale, RoundingMode.UP).toDouble()
         return rounded
+    }
+    
+    /**
+     * This method will be used to set GPS data to view being used in MVP activities.
+     */
+    fun setGPSLayout(
+        location: Location,
+        acc: TextView,
+        lat: TextView,
+        long: TextView,
+        alt: TextView,
+        speed: TextView,
+        bearing: TextView,
+        time: TextView
+    ) {
+        acc.text = "Accuracy: ${location.accuracy}"
+        when {
+            location.accuracy >= 1 -> {
+                acc.setBackgroundColor(ContextCompat.getColor(context, R.color.blue))
+            }
+            location.accuracy <= 0.05 -> {
+                acc.setBackgroundColor(ContextCompat.getColor(context, R.color.green))
+            }
+            else -> {
+                acc.setBackgroundColor(ContextCompat.getColor(context, R.color.yellow))
+            }
+        }
+        lat.text = "Latitude: ${roundToN(location.latitude, 8)}"
+        long.text = "Longitude: ${roundToN(location.longitude, 8)}"
+//        long.text = "Longitude: ${location.longitude}"
+        alt.text = "Altitude: ${location.altitude}"
+        speed.text = "Speed: ${location.speed}"
+        bearing.text = "Bearing: ${location.bearing}"
+        time.text = "Time: ${getDateTimeWithSeconds(location.time)}"
     }
     
 }
