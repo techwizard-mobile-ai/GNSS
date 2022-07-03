@@ -1608,7 +1608,7 @@ class MyHelper(var TAG: String, val context: Context) {
         acc.text = "Accuracy: ${location.accuracy}"
         when {
             location.accuracy >= 1 -> {
-                acc.setBackgroundColor(ContextCompat.getColor(context, R.color.blue))
+                acc.setBackgroundColor(ContextCompat.getColor(context, R.color.red))
             }
             location.accuracy <= 0.05 -> {
                 acc.setBackgroundColor(ContextCompat.getColor(context, R.color.green))
