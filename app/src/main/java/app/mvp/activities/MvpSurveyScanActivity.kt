@@ -10,6 +10,7 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
@@ -53,6 +54,7 @@ import java.util.concurrent.Executors
 class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
                               GoogleMap.OnMarkerClickListener {
     
+    private lateinit var location1: Location
     private val tag = this::class.java.simpleName
     private lateinit var lastLocation: Location
     private var locationManager: LocationManager? = null
@@ -65,6 +67,11 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var mapGPSLocation: GPSLocation = GPSLocation()
     
+    
+    private val mInterval = 2000 // 2 seconds by default, can be changed later
+    private var mHandler: Handler? = null
+    private var isCapturingImage = false
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
@@ -76,7 +83,6 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
         myData = myHelper.getLastJourney()
         myHelper.log("myData:$myData")
         toolbar_title.text = myData.mvp_orgs_project_name + " / " + myData.mvp_orgs_folder_name + " / Data Collection / Scan"
-        startGPS()
         
         
         if (allPermissionsGranted()) {
@@ -90,13 +96,27 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        startGPS()
         cameraExecutor = Executors.newSingleThreadExecutor()
         mvp_survey_scan_back.setOnClickListener(this)
         mvp_survey_scan_capture.setOnClickListener(this)
-        
+        mvp_survey_scan_pause.setOnClickListener(this)
+        startGPS()
+        mHandler = Handler()
+        mvp_survey_scan_capture.text = "Start Image Capture"
+    
     }
     
+    var mStatusChecker: Runnable = object : Runnable {
+        override fun run() {
+            try {
+                takePhoto() //this function can change value of mInterval.
+            } finally {
+                // 100% guarantee that this always happens, even if
+                // your update method throws an exception
+                mHandler!!.postDelayed(this, mInterval.toLong())
+            }
+        }
+    }
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
         
@@ -189,8 +209,19 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
                 override fun
                         onImageSaved(output: ImageCapture.OutputFileResults) {
                     val msg = "Image saved successfully: ${output.savedUri}"
+
+//                    var lalLong =
+//                    val marker = map.addMarker(
+//                        MarkerOptions()
+//                            .position(location1)
+//                            .title(mapGPSLocation.locationName)
+//                    )
+                    
+                    val location = LatLng(location1.latitude, location1.longitude)
+                    map.addMarker(MarkerOptions().position(location))
+
 //                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
-                    myHelper.toast(msg)
+//                    myHelper.toast(msg)
                     myHelper.log(msg)
 //                    Log.d(TAG, msg)
                 }
@@ -222,9 +253,58 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
                 finish()
             }
             R.id.mvp_survey_scan_capture -> {
-                takePhoto()
+    
+//                Handler(Looper.getMainLooper()).postDelayed({
+//                    //Do something after 100ms
+//                    takePhoto()
+//                }, 200)
+    
+//                Timer().schedule(object : TimerTask() {
+//                    override fun run() {
+//                        takePhoto()
+//                    }
+//                }, 2000)
+    
+                myHelper.log("isCapturingImage:$isCapturingImage")
+                if(isCapturingImage){
+                    myHelper.log("stopRepeatingTask")
+                    stopRepeatingTask()
+                    mvp_survey_scan_pause.visibility = View.GONE
+                    isCapturingImage = false
+                    mvp_survey_scan_capture.text = "Start Image Capture"
+                    mvp_survey_scan_label.text.clear()
+                }else{
+                    myHelper.log("startRepeatingTask")
+                    isCapturingImage = true
+                    mvp_survey_scan_pause.visibility = View.VISIBLE
+                    startRepeatingTask()
+                    mvp_survey_scan_capture.text = "Stop Image Capture"
+                }
+//                Handler(Looper.getMainLooper()).postDelayed({
+//                    takePhoto()
+//                }, 2000)
+            }
+            R.id.mvp_survey_scan_pause -> {
+                if(isCapturingImage){
+                    myHelper.log("pauseRepeatingTask")
+                    stopRepeatingTask()
+                    isCapturingImage = false
+                    mvp_survey_scan_pause.text = "Resume"
+                }else{
+                    myHelper.log("resumeRepeatingTask")
+                    isCapturingImage = true
+                    startRepeatingTask()
+                    mvp_survey_scan_pause.text = "Pause"
+                }
             }
         }
+    }
+    
+    fun startRepeatingTask() {
+        mStatusChecker.run()
+    }
+    fun stopRepeatingTask() {
+        mHandler!!.removeCallbacks(mStatusChecker)
     }
     
     private fun startGPS() {
@@ -248,6 +328,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     
     val locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
+            location1 = location
             myHelper.setGPSLayout(
                 location,
                 mvp_survey_scan_gps_data_acc,
@@ -258,6 +339,17 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
                 mvp_survey_scan_gps_data_bearing,
                 mvp_survey_scan_gps_data_time
             )
+            
+            var zoomlevel: Float = map.cameraPosition.zoom
+//            myHelper.log("zoomlevel: $zoomlevel")
+            if (zoomlevel < 12.0f) {
+                zoomlevel = MAP_ZOOM_LEVEL
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location1.latitude, location1.longitude), zoomlevel))
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location1.latitude, location1.longitude), zoomlevel))
+            } else {
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location1.latitude, location1.longitude), zoomlevel))
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location1.latitude, location1.longitude), zoomlevel))
+            }
         }
         
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
@@ -321,7 +413,6 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
                     val currentLatLng = LatLng(location.latitude, location.longitude)
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, MAP_ZOOM_LEVEL))
                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, MAP_ZOOM_LEVEL))
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(location1, MAP_ZOOM_LEVEL))
                 }
             }
             

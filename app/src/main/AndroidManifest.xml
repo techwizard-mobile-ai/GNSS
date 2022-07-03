@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="app.vsptracker" >
+    package="app.vsptracker">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -38,7 +38,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:screenOrientation="sensor"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar" >
+        android:theme="@style/AppTheme.NoActionBar">
+        <activity
+            android:name="app.mvp.activities.MvpOrgsCreateFolderActivity"
+            android:configChanges="orientation"
+            android:exported="false"
+            android:screenOrientation="sensor" />
         <activity
             android:name="app.mvp.activities.MvpSurveyCheckPointActivity"
             android:configChanges="orientation"
@@ -86,7 +91,7 @@
 
         <service android:name="app.vsptracker.others.autologout.ForegroundService" />
 
-        <receiver android:name="app.vsptracker.others.autologout.RebootReceiver" >
+        <receiver android:name="app.vsptracker.others.autologout.RebootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -99,7 +104,7 @@
         <activity android:name=".activities.common.MachineBreakdownActivity" />
         <activity
             android:name=".activities.OperatorLoginActivity"
-            android:theme="@style/splashScreenTheme" >
+            android:theme="@style/splashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
@@ -167,7 +172,7 @@
 
         <service
             android:name=".others.MyFirebaseMessagingService"
-            tools:ignore="ExportedService" >
+            tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -177,13 +182,13 @@
             android:name="androidx.core.content.FileProvider"
             android:authorities="@string/provider_name"
             android:exported="false"
-            android:grantUriPermissions="true" >
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <receiver android:name=".others.VSPTWidget" >
+        <receiver android:name=".others.VSPTWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

@@ -84,7 +84,8 @@ class MyDataPushSave(private val context: Context) {
             myHelper.getLoginAPI().org_id,
             myHelper.getLoginAPI().auth_token,
             myHelper.getOperatorAPI().id,
-            myHelper.getDeviceDetailsString()
+            myHelper.getDeviceDetailsString(),
+            myHelper.getDefaultMobileAPIType()
         )
         call.enqueue(object : retrofit2.Callback<ServerSyncResponse> {
             override fun onResponse(

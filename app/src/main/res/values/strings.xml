@@ -378,4 +378,6 @@
     <string name="how_to_record_checkpoint">How to Record Check Point</string>
     <string name="how_to_use">How to use</string>
     <string name="enter_label_scan_details">Enter label scan details</string>
+    <string name="create_task">Create Task</string>
+    <string name="pause">Pause</string>
 </resources>

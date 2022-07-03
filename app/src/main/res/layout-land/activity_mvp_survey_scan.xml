@@ -113,6 +113,7 @@
                     android:textColor="@color/black" />
 
                 <EditText
+                    android:id="@+id/mvp_survey_scan_label"
                     style="@style/et_background"
                     android:layout_gravity="top"
                     android:layout_marginStart="0dp"
@@ -129,13 +130,29 @@
                     android:textColor="@color/black" />
             </LinearLayout>
 
-            <Button
-                android:id="@+id/mvp_survey_scan_capture"
-                style="@style/back_button_single"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:layout_centerInParent="true"
                 android:layout_marginBottom="@dimen/_10sdp"
-                android:background="@color/colorPrimary"
-                android:text="@string/image_capture" />
+                >
+
+                <Button
+                    android:id="@+id/mvp_survey_scan_capture"
+                    style="@style/back_button_single"
+                    android:layout_width="match_parent"
+                    android:background="@color/colorPrimary"
+                    android:text="@string/image_capture" />
+
+                <Button
+                    android:id="@+id/mvp_survey_scan_pause"
+                    style="@style/back_button_single"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:background="@color/colorPrimary"
+                    android:text="@string/pause" />
+            </LinearLayout>
 
             <Button
                 style="@style/back_button_single"

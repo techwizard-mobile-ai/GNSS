@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home"
+            android:title="@string/home" />
+        <!--        <item-->
+        <!--                android:id="@+id/nav_settings"-->
+        <!--                android:visible="false"-->
+        <!--                android:icon="@drawable/ic_settings"-->
+        <!--                android:title="@string/settings"/>-->
+
+        <item
+            android:id="@+id/nav_delay"
+            android:icon="@drawable/ic_wait1"
+            android:visible="false"
+            android:title="@string/delay" />
+        <item
+            android:id="@+id/nav_stop_machine"
+            android:icon="@drawable/ic_stop_machine"
+            android:visible="false"
+            android:title="@string/stop_machine" />
+        <item
+            android:id="@+id/nav_machine_breakdown"
+            android:icon="@drawable/ic_action_report"
+            android:visible="false"
+            android:title="@string/machine_breakdown" />
+        <item
+            android:id="@+id/nav_day_works"
+            android:icon="@drawable/ic_action_departure_board"
+            android:visible="false"
+            android:title="@string/day_works" />
+        <item
+            android:id="@+id/nav_ntrip_client"
+            android:icon="@drawable/ic_ntrip_client"
+            android:title="@string/corrections_settings" />
+        <item
+            android:id="@+id/nav_night_mode"
+            android:icon="@drawable/ic_dark_mode"
+            android:title="@string/night_mode" />
+        <item
+            android:id="@+id/nav_load_history"
+            android:icon="@drawable/ic_history"
+            android:visible="false"
+            android:title="@string/work_history" />
+        <item
+            android:id="@+id/nav_change_machine"
+            android:icon="@drawable/ic_change_machine"
+            android:visible="false"
+            android:title="@string/change_machine" />
+        <item
+            android:id="@+id/nav_hours_reporting"
+            android:icon="@drawable/ic_hours_reporting"
+            android:visible="false"
+            android:title="@string/hours_reporting" />
+        <item
+            android:id="@+id/nav_checkforms"
+            android:icon="@drawable/ic_checkform"
+            android:visible="false"
+            android:title="@string/checkform" />
+        <item
+            android:id="@+id/nav_server_sync"
+            android:icon="@drawable/ic_server_sync"
+            android:title="@string/server_sync" />
+
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_logout"
+            android:title="@string/logout" />
+
+    </group>
+
+    <item android:title="@string/privacy_policy">
+        <menu>
+            <item
+                android:id="@+id/nav_privacy"
+                android:icon="@drawable/ic_privacy"
+                android:title="@string/privacy_policy" />
+        </menu>
+    </item>
+
+    <item android:title="@string/communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_email"
+                android:icon="@drawable/ic_email"
+                android:title="@string/report_error" />
+        </menu>
+    </item>
+
+
+</menu>

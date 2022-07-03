@@ -58,6 +58,7 @@ import app.vsptracker.apis.trip.MyData
 import app.vsptracker.aws.MyService
 import app.vsptracker.aws.Util
 import app.vsptracker.classes.*
+import app.vsptracker.others.MyEnum.*
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility
 import com.bumptech.glide.Glide
@@ -1624,6 +1625,20 @@ class MyHelper(var TAG: String, val context: Context) {
         speed.text = "Speed: ${location.speed}"
         bearing.text = "Bearing: ${location.bearing}"
         time.text = "Time: ${getDateTimeWithSeconds(location.time)}"
+    }
+    
+    fun getDefaultMobileAPIType(): Int {
+        var type = MyEnum.MOBILE_API_TYPE_GET_ALL
+        
+        when {
+            context.packageName.equals(MyEnum.VSPT) ->{
+                type = MyEnum.MOBILE_API_TYPE_GET_VSPT_ALL
+            }
+            context.packageName.equals(MyEnum.MVP) ->{
+                type = MyEnum.MOBILE_API_TYPE_GET_MVP_ALL
+            }
+        }
+        return type
     }
     
 }

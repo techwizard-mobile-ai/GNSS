@@ -83,5 +83,11 @@ class MyEnum {
         const val VSPT = "app.vsptracker"
         
         const val MAP_ZOOM_LEVEL: Float = 19.0f
+        
+        const val MOBILE_API_TYPE_GET_ALL: Int = 0
+        const val MOBILE_API_TYPE_GET_VSPT_ALL: Int = 1
+        const val MOBILE_API_TYPE_GET_MVP_ALL: Int = 2
+        const val MOBILE_API_TYPE_GET_VSPT_DATA: Int = 3
+        const val MOBILE_API_TYPE_GET_MVP_DATA: Int = 4
     }
 }

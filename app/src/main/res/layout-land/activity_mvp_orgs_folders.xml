@@ -51,9 +51,9 @@ tools:context="app.mvp.activities.MvpOrgsFoldersActivity">
 
         <Button
             android:id="@+id/mvp_orgs_folders_create"
+            style="@style/back_button_single"
             android:layout_alignParentStart="true"
-            android:text="@string/create_new"
-            style="@style/back_button_single" />
+            android:text="@string/create_new" />
 
         <Button
             android:id="@+id/mvp_orgs_files_back"

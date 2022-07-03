@@ -69,6 +69,7 @@ class MvpOrgsFoldersActivity : BaseActivity(), View.OnClickListener {
         }
         
         mvp_orgs_files_back.setOnClickListener(this)
+        mvp_orgs_folders_create.setOnClickListener(this)
     }
     
     override fun onResume() {
@@ -81,6 +82,11 @@ class MvpOrgsFoldersActivity : BaseActivity(), View.OnClickListener {
         when (view!!.id) {
             R.id.mvp_orgs_files_back -> {
                 finish()
+            }
+            R.id.mvp_orgs_folders_create -> {
+                val intent = Intent(this, MvpOrgsCreateFolderActivity::class.java)
+                intent.putExtra("myData", myData)
+                startActivity(intent)
             }
         }
     }
@@ -104,13 +110,15 @@ class MvpOrgsFoldersActivity : BaseActivity(), View.OnClickListener {
                 try {
                     val responseBody = response.body()
                     if (responseBody!!.success) {
-                        
+//                        myHelper.log("responseBodyTapu: $responseBody")
                         responseBody.separateFolders?.forEach {
                             val material = Material()
                             material.id = it.id!!
                             material.number = it.fileFolder?.name!!.dropLast(1)
+                            myHelper.log("material: $material")
                             mvpOrgsFolders.add(material)
                         }
+                        myHelper.log("mvpOrgsFolders: $mvpOrgsFolders")
                         val adapter = CustomGridLMachine(this@MvpOrgsFoldersActivity, mvpOrgsFolders)
                         gv.adapter = adapter
                         
