@@ -14,6 +14,7 @@ import android.os.Handler
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.camera.core.CameraSelector
@@ -51,6 +52,7 @@ import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
+
 class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
                               GoogleMap.OnMarkerClickListener {
     
@@ -68,7 +70,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     private var mapGPSLocation: GPSLocation = GPSLocation()
     
     
-    private val mInterval = 2000 // 2 seconds by default, can be changed later
+    private var mInterval : Long = 2000 // 2 seconds by default, can be changed later
     private var mHandler: Handler? = null
     private var isCapturingImage = false
     
@@ -100,6 +102,8 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
         mvp_survey_scan_back.setOnClickListener(this)
         mvp_survey_scan_capture.setOnClickListener(this)
         mvp_survey_scan_pause.setOnClickListener(this)
+        timer_minus.setOnClickListener(this)
+        timer_plus.setOnClickListener(this)
         startGPS()
         mHandler = Handler()
         mvp_survey_scan_capture.text = "Start Image Capture"
@@ -113,7 +117,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
             } finally {
                 // 100% guarantee that this always happens, even if
                 // your update method throws an exception
-                mHandler!!.postDelayed(this, mInterval.toLong())
+                mHandler!!.postDelayed(this, mInterval)
             }
         }
     }
@@ -252,19 +256,48 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
             R.id.mvp_survey_scan_back -> {
                 finish()
             }
+            
+            R.id.timer_minus -> {
+    
+                val str: String = timer.text.toString()
+                var timer_value = 0.5
+                try {
+                    timer_value = str.toDouble()
+                }
+                catch (e: java.lang.Exception) {
+                    myHelper.log("Exception Timer: " + e.message)
+                }
+                if(timer_value > 0.9){
+                    mInterval -= 500
+                    timer.setText((timer_value - 0.5).toString())
+                    myHelper.log("mInterval:$mInterval")
+                }else{
+                    timer.setText(timer_value.toString())
+                    myHelper.log("mInterval:$mInterval")
+                }
+            }
+            
+            R.id.timer_plus -> {
+    
+                val str: String = timer.text.toString()
+                var timer_value = 0.5
+                try {
+                    timer_value = str.toDouble()
+                }
+                catch (e: java.lang.Exception) {
+                    myHelper.log("Exception Timer: " + e.message)
+                }
+                if(timer_value < 5){
+                    timer.setText((timer_value + 0.5).toString())
+                    mInterval += 500
+                    myHelper.log("mInterval:$mInterval")
+                }else{
+                    timer.setText(timer_value.toString())
+                    myHelper.log("mInterval:$mInterval")
+                }
+            }
+            
             R.id.mvp_survey_scan_capture -> {
-    
-//                Handler(Looper.getMainLooper()).postDelayed({
-//                    //Do something after 100ms
-//                    takePhoto()
-//                }, 200)
-    
-//                Timer().schedule(object : TimerTask() {
-//                    override fun run() {
-//                        takePhoto()
-//                    }
-//                }, 2000)
-    
                 myHelper.log("isCapturingImage:$isCapturingImage")
                 if(isCapturingImage){
                     myHelper.log("stopRepeatingTask")
@@ -280,9 +313,6 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
                     startRepeatingTask()
                     mvp_survey_scan_capture.text = "Stop Image Capture"
                 }
-//                Handler(Looper.getMainLooper()).postDelayed({
-//                    takePhoto()
-//                }, 2000)
             }
             R.id.mvp_survey_scan_pause -> {
                 if(isCapturingImage){
