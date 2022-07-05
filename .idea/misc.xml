@@ -51,7 +51,7 @@
         <entry key="app/src/main/res/layout-land/activity_mvp_start_data_collection.xml" value="0.33958333333333335" />
         <entry key="app/src/main/res/layout-land/activity_mvp_survey_check_point.xml" value="0.45" />
         <entry key="app/src/main/res/layout-land/activity_mvp_survey_home.xml" value="0.45" />
-        <entry key="app/src/main/res/layout-land/activity_mvp_survey_scan.xml" value="0.45" />
+        <entry key="app/src/main/res/layout-land/activity_mvp_survey_scan.xml" value="0.375" />
         <entry key="app/src/main/res/layout-land/activity_mvp_survey_survey.xml" value="0.55" />
         <entry key="app/src/main/res/layout/activity_check_form_task.xml" value="0.390625" />
         <entry key="app/src/main/res/layout/activity_lmachine.xml" value="0.390625" />
@@ -78,6 +78,13 @@
         <entry key="app/src/main/res/layout/nav_header_main.xml" value="0.390625" />
         <entry key="app/src/main/res/layout/vsptwidget.xml" value="0.390625" />
         <entry key="app/src/main/res/menu/activity_main_drawer.xml" value="0.390625" />
+        <entry key="app/src/main/res/menu/base_navigation.xml" value="0.45416666666666666" />
+        <entry key="app/src/main/res/menu/e_history_navigation.xml" value="0.45416666666666666" />
+        <entry key="app/src/main/res/menu/s_history_navigation.xml" value="0.45416666666666666" />
+        <entry key="app/src/main/res/menu/server_sync_navigation.xml" value="0.45416666666666666" />
+        <entry key="app/src/main/res/menu/t_history_navigation.xml" value="0.45416666666666666" />
+        <entry key="app/src/theconstructionexchangehub_co_nz_mvp_/res/menu/activity_main_drawer.xml" value="0.45416666666666666" />
+        <entry key="app/src/theconstructionexchangehub_co_nz_mvp_/res/menu/base_navigation.xml" value="0.45416666666666666" />
         <entry key="app/src/tvspt_com_mvp_/res/drawable/side_nav_bar.xml" value="0.26" />
         <entry key="app/src/tvspt_com_mvp_/res/layout/app_bar_base.xml" value="0.390625" />
         <entry key="app/src/tvspt_com_mvp_/res/layout/nav_header_main.xml" value="0.390625" />

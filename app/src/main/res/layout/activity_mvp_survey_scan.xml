@@ -110,6 +110,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/label_scan"
+                    android:visibility="gone"
                     android:textColor="@color/black" />
 
                 <LinearLayout
@@ -134,7 +135,7 @@
                     <TextView
                         android:id="@+id/timer"
                         style="@style/tv_background"
-                        android:padding="@dimen/_7sdp"
+                        android:padding="@dimen/_3sdp"
                         android:paddingStart="@dimen/_15sdp"
                         android:paddingEnd="@dimen/_5sdp"
                         android:layout_width="wrap_content"
@@ -167,9 +168,9 @@
                     android:gravity="top"
                     android:hint="@string/enter_label_scan_details"
                     android:inputType="text|textMultiLine"
-                    android:lines="4"
-                    android:maxLines="4"
-                    android:minLines="4"
+                    android:lines="2"
+                    android:maxLines="2"
+                    android:minLines="2"
                     android:scrollbars="vertical"
                     android:text=""
                     android:textColor="@color/black" />
