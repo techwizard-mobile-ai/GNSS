@@ -32,6 +32,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import app.mvp.activities.MvpWorkHistoryActivity
 import app.vsptracker.BuildConfig
 import app.vsptracker.R
 import app.vsptracker.activities.HourMeterStopActivity
@@ -58,7 +59,8 @@ import app.vsptracker.apis.trip.MyData
 import app.vsptracker.aws.MyService
 import app.vsptracker.aws.Util
 import app.vsptracker.classes.*
-import app.vsptracker.others.MyEnum.*
+import app.vsptracker.others.MyEnum.Companion.MVP
+import app.vsptracker.others.MyEnum.Companion.VSPT
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility
 import com.bumptech.glide.Glide
@@ -770,19 +772,28 @@ class MyHelper(var TAG: String, val context: Context) {
     }
     
     fun startHistoryByType() {
-        when (getMachineTypeID()) {
-            MyEnum.EXCAVATOR -> {
-                val intent = Intent(context, EHistoryActivity::class.java)
+        when (context.packageName) {
+            MVP -> {
+                val intent = Intent(context, MvpWorkHistoryActivity::class.java)
                 context.startActivity(intent)
             }
-            MyEnum.SCRAPER -> {
-                val intent = Intent(context, SHistoryActivity::class.java)
-                context.startActivity(intent)
+            VSPT -> {
+                when (getMachineTypeID()) {
+                    MyEnum.EXCAVATOR -> {
+                        val intent = Intent(context, EHistoryActivity::class.java)
+                        context.startActivity(intent)
+                    }
+                    MyEnum.SCRAPER -> {
+                        val intent = Intent(context, SHistoryActivity::class.java)
+                        context.startActivity(intent)
+                    }
+                    MyEnum.TRUCK -> {
+                        val intent = Intent(context, THistoryActivity::class.java)
+                        context.startActivity(intent)
+                    }
+                }
             }
-            MyEnum.TRUCK -> {
-                val intent = Intent(context, THistoryActivity::class.java)
-                context.startActivity(intent)
-            }
+            
         }
     }
     
@@ -1631,10 +1642,10 @@ class MyHelper(var TAG: String, val context: Context) {
         var type = MyEnum.MOBILE_API_TYPE_GET_ALL
         
         when {
-            context.packageName.equals(MyEnum.VSPT) ->{
+            context.packageName.equals(MyEnum.VSPT) -> {
                 type = MyEnum.MOBILE_API_TYPE_GET_VSPT_ALL
             }
-            context.packageName.equals(MyEnum.MVP) ->{
+            context.packageName.equals(MyEnum.MVP) -> {
                 type = MyEnum.MOBILE_API_TYPE_GET_MVP_ALL
             }
         }

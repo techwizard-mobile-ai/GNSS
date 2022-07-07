@@ -380,4 +380,6 @@
     <string name="enter_label_scan_details">Enter label scan details</string>
     <string name="create_task">Create Task</string>
     <string name="pause">Pause</string>
+    <string name="scan">Scan</string>
+    <string name="survey">Survey</string>
 </resources>
