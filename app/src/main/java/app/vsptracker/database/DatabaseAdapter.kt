@@ -2,6 +2,7 @@
 
 package app.vsptracker.database
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor.FIELD_TYPE_STRING
@@ -555,7 +556,7 @@ const val DROP_TABLE_OPERATORS_HOURS = "DROP TABLE IF EXISTS $TABLE_OPERATORS_HO
 const val DROP_TABLE_QUESTIONS_TYPES = "DROP TABLE IF EXISTS $TABLE_QUESTIONS_TYPES"
 const val DROP_TABLE_ORGS_MAPS = "DROP TABLE IF EXISTS $TABLE_ORGS_MAPS"
 const val DROP_TABLE_MVP_ORGS_PROJECTS = "DROP TABLE IF EXISTS $TABLE_MVP_ORGS_PROJECTS"
-
+@SuppressLint("Range")
 class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.getString(R.string.db_name), null, 18) {
     
     val tag = "DatabaseAdapter"
