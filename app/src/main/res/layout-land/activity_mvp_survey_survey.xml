@@ -148,16 +148,27 @@ tools:context="app.mvp.activities.MvpSurveySurveyActivity">
             style="@style/back_button_single"
             android:layout_marginBottom="@dimen/_10sdp"
             android:background="@color/colorPrimary"
-            android:layout_above="@id/mvp_survey_survey_back"
+            android:layout_above="@id/mvp_survey_checkpoint_bottom"
             android:text="@string/survey_point" />
 
-        <Button
-            android:id="@+id/mvp_survey_survey_back"
-            style="@style/back_button_single"
-            android:layout_alignParentBottom="true"/>
+        <LinearLayout
+            android:id="@+id/mvp_survey_checkpoint_bottom"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/mvp_survey_survey_settings"
+                style="@style/back_button_single"
+                android:text="@string/settings" />
+
+            <Button
+                android:id="@+id/mvp_survey_survey_back"
+                style="@style/back_button_single" />
+        </LinearLayout>
     </RelativeLayout>
-
-
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/map"
@@ -166,9 +177,4 @@ tools:context="app.mvp.activities.MvpSurveySurveyActivity">
         android:layout_weight="0.7"
         android:layout_height="match_parent"/>
 </LinearLayout>
-
-
-
-
-
 </RelativeLayout>

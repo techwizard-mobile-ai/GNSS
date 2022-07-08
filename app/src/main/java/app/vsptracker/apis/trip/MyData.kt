@@ -271,6 +271,8 @@ class MyData : Serializable {
     var aws_path: String = ""
     
     var isMapOpened: Boolean = false
+    var type: Int = 0
+    var timer_interval: Long = 1000
     
     @SerializedName("details")
     @Expose
@@ -281,7 +283,7 @@ class MyData : Serializable {
     var mvp_orgs_folder_name: String = ""
     
     override fun toString(): String {
-        return "MyData(id=$id, orgId=$orgId, operatorId=$operatorId, mvp_orgs_project_id='$mvp_orgs_project_id', mvp_orgs_folder_id='$mvp_orgs_folder_id')"
+        return "MyData(timer_interval=$timer_interval,id=$id, orgId=$orgId, operatorId=$operatorId, mvp_orgs_project_id='$mvp_orgs_project_id', mvp_orgs_folder_id='$mvp_orgs_folder_id')"
     }
     
     

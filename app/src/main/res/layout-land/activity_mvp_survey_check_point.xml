@@ -129,16 +129,17 @@
 
       <Button
           style="@style/back_button_single"
-          android:background="@color/colorPrimary"
-          android:layout_marginBottom="@dimen/_10sdp"
           android:layout_centerInParent="true"
-          android:text="@string/record_onto_check_point" />
-      <Button
-          style="@style/back_button_single"
+          android:layout_marginBottom="@dimen/_10sdp"
           android:background="@color/colorPrimary"
+          android:text="@string/record_onto_check_point" />
+
+      <Button
+          android:id="@+id/mvp_survey_checkpoint_settings"
+          style="@style/back_button_single"
           android:layout_above="@id/mvp_survey_checkpoint_back"
-          android:drawableLeft="@drawable/ic_help"
-          android:text="@string/how_to_use" />
+          android:background="@color/colorPrimary"
+          android:text="@string/settings" />
       <Button
           android:id="@+id/mvp_survey_checkpoint_back"
           android:paddingTop="@dimen/_10sdp"

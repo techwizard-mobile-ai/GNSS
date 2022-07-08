@@ -89,5 +89,9 @@ class MyEnum {
         const val MOBILE_API_TYPE_GET_MVP_ALL: Int = 2
         const val MOBILE_API_TYPE_GET_VSPT_DATA: Int = 3
         const val MOBILE_API_TYPE_GET_MVP_DATA: Int = 4
+        
+        const val SETTINGS_TYPE_MVP_SCAN = 1
+        const val SETTINGS_TYPE_MVP_SURVEY = 2
+        const val SETTINGS_TYPE_MVP_RECORD_CHECKPOINT = 3
     }
 }

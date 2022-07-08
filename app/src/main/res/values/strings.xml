@@ -382,4 +382,5 @@
     <string name="pause">Pause</string>
     <string name="scan">Scan</string>
     <string name="survey">Survey</string>
+    <string name="scan_interval">Scan Interval</string>
 </resources>

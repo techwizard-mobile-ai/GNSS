@@ -2,6 +2,7 @@ package app.mvp.activities
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -11,6 +12,7 @@ import android.widget.FrameLayout
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.classes.GPSLocation
+import app.vsptracker.others.MyEnum
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -60,15 +62,20 @@ class MvpSurveyCheckPointActivity : BaseActivity(), View.OnClickListener, OnMapR
         startGPS()
         
         mvp_survey_checkpoint_back.setOnClickListener(this)
-//        mvp_survey_home_check_point.setOnClickListener(this)
-//        mvp_survey_home_start_survey.setOnClickListener(this)
-//        mvp_survey_home_start_scan.setOnClickListener(this)
+        mvp_survey_checkpoint_settings.setOnClickListener(this)
     }
     
     override fun onClick(view: View?) {
         when (view!!.id) {
             R.id.mvp_survey_checkpoint_back -> {
                 finish()
+            }
+            R.id.mvp_survey_checkpoint_settings -> {
+                val intent = Intent(this, SettingsActivity::class.java)
+                myData.name = "Record Check Point Settings"
+                myData.type = MyEnum.SETTINGS_TYPE_MVP_RECORD_CHECKPOINT
+                intent.putExtra("myData", myData)
+                startActivity(intent)
             }
         }
     }

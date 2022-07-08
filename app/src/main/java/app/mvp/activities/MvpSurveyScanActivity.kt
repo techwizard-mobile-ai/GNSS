@@ -2,8 +2,10 @@ package app.mvp.activities
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
@@ -17,6 +19,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -29,7 +32,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
+import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.GPSLocation
+import app.vsptracker.others.MyEnum
 import app.vsptracker.others.MyEnum.Companion.MAP_ZOOM_LEVEL
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -43,6 +48,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.navigation.NavigationView
 import com.google.maps.android.data.kml.KmlLayer
 import kotlinx.android.synthetic.main.activity_base.*
+import kotlinx.android.synthetic.main.activity_mvp_start_data_collection.*
 import kotlinx.android.synthetic.main.activity_mvp_survey_scan.*
 import kotlinx.android.synthetic.main.app_bar_base.*
 import java.io.File
@@ -70,9 +76,34 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     private var mapGPSLocation: GPSLocation = GPSLocation()
     
     
-    private var mInterval : Long = 2000 // 2 seconds by default, can be changed later
+    private var mInterval: Long = 1000 // 1 seconds by default, can be changed later
     private var mHandler: Handler? = null
     private var isCapturingImage = false
+    
+    var mStatusChecker: Runnable = object : Runnable {
+        override fun run() {
+            try {
+                takePhoto()
+            } finally {
+                mHandler!!.postDelayed(this, mInterval)
+            }
+        }
+    }
+    
+    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            // There are no request codes
+            val intent: Intent? = result.data
+            myHelper.log("resultLauncher")
+            
+            val bundle: Bundle? = intent!!.extras
+            if (bundle != null) {
+                myData = bundle.getSerializable("myData") as MyData
+                myHelper.log("onActivityResult----:$myData")
+                mInterval = myData.timer_interval
+            }
+        }
+    }
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,28 +130,65 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
         mapFragment.getMapAsync(this)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         cameraExecutor = Executors.newSingleThreadExecutor()
-        mvp_survey_scan_back.setOnClickListener(this)
-        mvp_survey_scan_capture.setOnClickListener(this)
-        mvp_survey_scan_pause.setOnClickListener(this)
-        timer_minus.setOnClickListener(this)
-        timer_plus.setOnClickListener(this)
         startGPS()
         mHandler = Handler()
         mvp_survey_scan_capture.text = "Start Image Capture"
-    
+        
+        mvp_survey_scan_back.setOnClickListener(this)
+        mvp_survey_scan_capture.setOnClickListener(this)
+        mvp_survey_scan_pause.setOnClickListener(this)
+        mvp_survey_scan_settings.setOnClickListener(this)
     }
     
-    var mStatusChecker: Runnable = object : Runnable {
-        override fun run() {
-            try {
-                takePhoto() //this function can change value of mInterval.
-            } finally {
-                // 100% guarantee that this always happens, even if
-                // your update method throws an exception
-                mHandler!!.postDelayed(this, mInterval)
+    override fun onClick(view: View?) {
+        when (view!!.id) {
+            R.id.mvp_survey_scan_back -> {
+                finish()
+            }
+            R.id.mvp_survey_scan_capture -> {
+                myHelper.log("isCapturingImage:$isCapturingImage")
+                if (isCapturingImage) {
+                    myHelper.log("stopRepeatingTask")
+                    stopRepeatingTask()
+                    mvp_survey_scan_pause.visibility = View.GONE
+                    mvp_survey_scan_settings.visibility = View.VISIBLE
+                    isCapturingImage = false
+                    mvp_survey_scan_capture.text = "Start Image Capture"
+                    mvp_survey_scan_label.text.clear()
+                } else {
+                    myHelper.log("startRepeatingTask")
+                    isCapturingImage = true
+                    mvp_survey_scan_pause.visibility = View.VISIBLE
+                    mvp_survey_scan_settings.visibility = View.GONE
+                    startRepeatingTask()
+                    mvp_survey_scan_capture.text = "Stop Image Capture"
+                }
+            }
+            R.id.mvp_survey_scan_pause -> {
+                if (isCapturingImage) {
+                    myHelper.log("pauseRepeatingTask")
+                    stopRepeatingTask()
+                    isCapturingImage = false
+                    mvp_survey_scan_pause.text = "Resume"
+                } else {
+                    myHelper.log("resumeRepeatingTask")
+                    isCapturingImage = true
+                    startRepeatingTask()
+                    mvp_survey_scan_pause.text = "Pause"
+                }
+            }
+            R.id.mvp_survey_scan_settings -> {
+                val intent = Intent(this, SettingsActivity::class.java)
+                myData.name = "Scan Settings"
+                myData.type = MyEnum.SETTINGS_TYPE_MVP_SCAN
+                myData.timer_interval = mInterval
+                intent.putExtra("myData", myData)
+//                startActivity(intent)
+                resultLauncher.launch(intent)
             }
         }
     }
+    
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
         
@@ -243,6 +311,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     
     override fun onDestroy() {
         super.onDestroy()
+        stopRepeatingTask()
         cameraExecutor.shutdown()
     }
     
@@ -251,88 +320,11 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
         base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
     }
     
-    override fun onClick(view: View?) {
-        when (view!!.id) {
-            R.id.mvp_survey_scan_back -> {
-                finish()
-            }
-            
-            R.id.timer_minus -> {
-    
-                val str: String = timer.text.toString()
-                var timer_value = 0.5
-                try {
-                    timer_value = str.toDouble()
-                }
-                catch (e: java.lang.Exception) {
-                    myHelper.log("Exception Timer: " + e.message)
-                }
-                if(timer_value > 0.9){
-                    mInterval -= 500
-                    timer.setText((timer_value - 0.5).toString())
-                    myHelper.log("mInterval:$mInterval")
-                }else{
-                    timer.setText(timer_value.toString())
-                    myHelper.log("mInterval:$mInterval")
-                }
-            }
-            
-            R.id.timer_plus -> {
-    
-                val str: String = timer.text.toString()
-                var timer_value = 0.5
-                try {
-                    timer_value = str.toDouble()
-                }
-                catch (e: java.lang.Exception) {
-                    myHelper.log("Exception Timer: " + e.message)
-                }
-                if(timer_value < 5){
-                    timer.setText((timer_value + 0.5).toString())
-                    mInterval += 500
-                    myHelper.log("mInterval:$mInterval")
-                }else{
-                    timer.setText(timer_value.toString())
-                    myHelper.log("mInterval:$mInterval")
-                }
-            }
-            
-            R.id.mvp_survey_scan_capture -> {
-                myHelper.log("isCapturingImage:$isCapturingImage")
-                if(isCapturingImage){
-                    myHelper.log("stopRepeatingTask")
-                    stopRepeatingTask()
-                    mvp_survey_scan_pause.visibility = View.GONE
-                    isCapturingImage = false
-                    mvp_survey_scan_capture.text = "Start Image Capture"
-                    mvp_survey_scan_label.text.clear()
-                }else{
-                    myHelper.log("startRepeatingTask")
-                    isCapturingImage = true
-                    mvp_survey_scan_pause.visibility = View.VISIBLE
-                    startRepeatingTask()
-                    mvp_survey_scan_capture.text = "Stop Image Capture"
-                }
-            }
-            R.id.mvp_survey_scan_pause -> {
-                if(isCapturingImage){
-                    myHelper.log("pauseRepeatingTask")
-                    stopRepeatingTask()
-                    isCapturingImage = false
-                    mvp_survey_scan_pause.text = "Resume"
-                }else{
-                    myHelper.log("resumeRepeatingTask")
-                    isCapturingImage = true
-                    startRepeatingTask()
-                    mvp_survey_scan_pause.text = "Pause"
-                }
-            }
-        }
-    }
     
     fun startRepeatingTask() {
         mStatusChecker.run()
     }
+    
     fun stopRepeatingTask() {
         mHandler!!.removeCallbacks(mStatusChecker)
     }
@@ -379,6 +371,23 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
             } else {
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location1.latitude, location1.longitude), zoomlevel))
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location1.latitude, location1.longitude), zoomlevel))
+            }
+            
+            if (isCapturingImage) {
+                when {
+                    location.accuracy >= 1 -> {
+                        mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.red))
+                    }
+                    location.accuracy <= 0.05 -> {
+                        mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.green))
+                    }
+                    else -> {
+                        mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.yellow))
+                    }
+                }
+            } else {
+                mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.colorPrimary))
+                
             }
         }
         

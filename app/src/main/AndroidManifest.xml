@@ -41,6 +41,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
+            android:name="app.mvp.activities.SettingsActivity"
+            android:configChanges="orientation"
+            android:exported="false"
+            android:screenOrientation="sensor" />
+        <activity
             android:name="app.mvp.activities.MvpWorkHistoryActivity"
             android:configChanges="orientation"
             android:exported="false"
