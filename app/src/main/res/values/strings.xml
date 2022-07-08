@@ -383,4 +383,6 @@
     <string name="scan">Scan</string>
     <string name="survey">Survey</string>
     <string name="scan_interval">Scan Interval</string>
+    <string name="back">Back</string>
+    <string name="label_scan1">Label scan</string>
 </resources>

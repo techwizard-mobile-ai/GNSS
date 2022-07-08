@@ -32,7 +32,7 @@ class MvpHomeActivity : BaseActivity(), View.OnClickListener {
         navigationView.menu.getItem(0).isChecked = true
         myHelper.setTag(tag)
         
-        Glide.with(this@MvpHomeActivity).load(ContextCompat.getDrawable(this@MvpHomeActivity, R.drawable.widget_logo)).into(mvp_main_taputapu)
+        Glide.with(this@MvpHomeActivity).load(ContextCompat.getDrawable(this@MvpHomeActivity, R.drawable.widget_logo1)).into(mvp_main_taputapu)
         Glide.with(this@MvpHomeActivity).load(ContextCompat.getDrawable(this@MvpHomeActivity, R.drawable.hub_logo_complete)).into(mvp_main_portal)
         
         mvp_main_taputapu.setOnClickListener(this@MvpHomeActivity)

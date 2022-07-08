@@ -120,7 +120,7 @@
                     android:layout_marginTop="@dimen/_1sdp"
                     android:layout_marginEnd="0dp"
                     android:gravity="top"
-                    android:hint="@string/enter_label_scan_details"
+                    android:hint="@string/label_scan1"
                     android:inputType="text|textMultiLine"
                     android:lines="2"
                     android:maxLines="2"

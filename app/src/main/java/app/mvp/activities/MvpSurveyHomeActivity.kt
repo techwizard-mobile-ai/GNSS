@@ -60,8 +60,8 @@ class MvpSurveyHomeActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
         
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         startGPS()
-        
-        mvp_survey_home_corrections.setOnClickListener(this)
+    
+        mvp_survey_home_back.setOnClickListener(this)
         mvp_survey_home_check_point.setOnClickListener(this)
         mvp_survey_home_start_survey.setOnClickListener(this)
         mvp_survey_home_start_scan.setOnClickListener(this)
@@ -72,8 +72,9 @@ class MvpSurveyHomeActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     override fun onClick(view: View?) {
         myData.trip0ID = System.currentTimeMillis().toString()
         when (view!!.id) {
-            R.id.mvp_survey_home_corrections -> {
-                myHelper.launchNtripClient()
+            R.id.mvp_survey_home_back -> {
+//                myHelper.launchNtripClient()
+                finish()
             }
             R.id.mvp_survey_home_check_point -> {
                 val intent = Intent(this, MvpSurveyCheckPointActivity::class.java)

@@ -97,15 +97,15 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/mvp_survey_home_corrections"
+            android:id="@+id/mvp_survey_home_back"
             style="@style/next_button"
             android:layout_width="0dp"
             android:layout_weight=".2"
             android:layout_marginStart="@dimen/_5sdp"
             android:layout_marginRight="@dimen/_5sdp"
             android:background="@color/colorPrimary"
-            android:textSize="12sp"
-            android:text="@string/corrections_settings" />
+            android:text="@string/back"
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/mvp_survey_home_check_point"
