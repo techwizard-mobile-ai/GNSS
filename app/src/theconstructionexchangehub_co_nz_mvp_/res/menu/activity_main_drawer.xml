@@ -45,7 +45,7 @@
         <item
             android:id="@+id/nav_load_history"
             android:icon="@drawable/ic_history"
-            android:visible="true"
+            android:visible="false"
             android:title="@string/work_history" />
         <item
             android:id="@+id/nav_change_machine"

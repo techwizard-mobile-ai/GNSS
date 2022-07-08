@@ -30,6 +30,7 @@
             android:id="@+id/mvp_main_taputapu"
             android:layout_width="0dp"
             android:layout_weight="0.5"
+            android:padding="@dimen/_14sdp"
             android:layout_height="@dimen/_180sdp"
             android:scaleType="fitCenter" />
 
