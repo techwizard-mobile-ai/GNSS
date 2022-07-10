@@ -4,7 +4,7 @@
     android:initialLayout="@layout/vsptwidget"
     android:minWidth="@dimen/_40sdp"
     android:minHeight="@dimen/_40sdp"
-    android:previewImage="@drawable/hub_logo_complete"
+    android:previewImage="@drawable/widget_logo"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="1800000"
     android:widgetCategory="home_screen"></appwidget-provider>
