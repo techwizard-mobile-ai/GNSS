@@ -7,6 +7,8 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -16,7 +18,6 @@ import android.os.Handler
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -42,13 +43,10 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.android.material.navigation.NavigationView
 import com.google.maps.android.data.kml.KmlLayer
 import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_mvp_start_data_collection.*
 import kotlinx.android.synthetic.main.activity_mvp_survey_scan.*
 import kotlinx.android.synthetic.main.app_bar_base.*
 import java.io.File
@@ -290,7 +288,11 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
 //                    )
                     
                     val location = LatLng(location1.latitude, location1.longitude)
-                    map.addMarker(MarkerOptions().position(location))
+                    map.addMarker(
+                        MarkerOptions()
+                            .position(location)
+                            .icon(bitmapFromVector(applicationContext, R.drawable.ic_camera_scan))
+                    )
 
 //                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
 //                    myHelper.toast(msg)
@@ -299,6 +301,18 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
                 }
             }
         )
+    }
+    
+    private fun bitmapFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
+        val vectorDrawable = ContextCompat.getDrawable(context, vectorResId)
+        vectorDrawable!!.setBounds(0, 0, vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight)
+        
+        val bitmap = Bitmap.createBitmap(vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        
+        val canvas = Canvas(bitmap)
+        vectorDrawable.draw(canvas)
+        
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
     
     private fun captureVideo() {}
