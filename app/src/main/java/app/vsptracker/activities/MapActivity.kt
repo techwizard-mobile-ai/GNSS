@@ -23,21 +23,21 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.navigation.NavigationView
 
 
-class MapActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback{
-
-
-    private val DEFAULT_ZOOM: Float = 10.0f
-    private var mLastKnownLocation: Location? = Location("GPS")
-
-    private val mDefaultLocation: LatLng? = LatLng(132.3, 63.1)
-    private var mLocationPermissionGranted: Boolean = false
-
-    private val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: Int = 64
-    private var mFusedLocationProviderClient: FusedLocationProviderClient? = null
-    private var mPlaceDetectionClient: PlaceDetectionClient? = null
-    private var mGeoDataClient: GeoDataClient? = null
-
-    private val TAG = this::class.java.simpleName
+class MapActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback {
+  
+  
+  private val DEFAULT_ZOOM: Float = 10.0f
+  private var mLastKnownLocation: Location? = Location("GPS")
+  
+  private val mDefaultLocation: LatLng? = LatLng(132.3, 63.1)
+  private var mLocationPermissionGranted: Boolean = false
+  
+  private val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: Int = 64
+  private var mFusedLocationProviderClient: FusedLocationProviderClient? = null
+  private var mPlaceDetectionClient: PlaceDetectionClient? = null
+  private var mGeoDataClient: GeoDataClient? = null
+  
+  private val TAG = this::class.java.simpleName
 /*
 
     private val COLOR_BLACK_ARGB = -0x1000000
@@ -63,32 +63,32 @@ class MapActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback{
     // Create a stroke pattern of a dot followed by a gap, a dash, and another gap.
     private val PATTERN_POLYGON_BETA = Arrays.asList(DOT, GAP, DASH, GAP)
 */
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val contentFrameLayout = findViewById(R.id.base_content_frame) as FrameLayout
-        layoutInflater.inflate(R.layout.activity_map, contentFrameLayout)
-        val navigationView = findViewById(R.id.base_nav_view) as NavigationView
-        navigationView.menu.getItem(0).isChecked = true
-
-        myHelper.setTag(TAG)
+  
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    
+    val contentFrameLayout = findViewById(R.id.base_content_frame) as FrameLayout
+    layoutInflater.inflate(R.layout.activity_map, contentFrameLayout)
+    val navigationView = findViewById(R.id.base_nav_view) as NavigationView
+    navigationView.menu.getItem(0).isChecked = true
+    
+    myHelper.setTag(TAG)
 //        startGPS()
-
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-        mapFragment!!.getMapAsync(this)
-
-
-        // Construct a GeoDataClient.
-        mGeoDataClient = Places.getGeoDataClient(this, null)
-
-        // Construct a PlaceDetectionClient.
-        mPlaceDetectionClient = Places.getPlaceDetectionClient(this, null)
-
-        // Construct a FusedLocationProviderClient.
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-
-    }
+    
+    val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+    mapFragment!!.getMapAsync(this)
+    
+    
+    // Construct a GeoDataClient.
+    mGeoDataClient = Places.getGeoDataClient(this, null)
+    
+    // Construct a PlaceDetectionClient.
+    mPlaceDetectionClient = Places.getPlaceDetectionClient(this, null)
+    
+    // Construct a FusedLocationProviderClient.
+    mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+    
+  }
 /*
 
     private fun stylePolygon(polygon: Polygon) {
@@ -139,54 +139,54 @@ class MapActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback{
         }
     }
 */
-
-
-    private fun getLocationPermission() {
-        /*
-     * Request location permission, so that we can get the location of the
-     * device. The result of the permission request is handled by a callback,
-     * onRequestPermissionsResult.
-     */
-        if (ContextCompat.checkSelfPermission(
-                this.applicationContext,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            mLocationPermissionGranted = true
-        } else {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
-                PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION
-            )
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
+  
+  
+  private fun getLocationPermission() {
+    /*
+ * Request location permission, so that we can get the location of the
+ * device. The result of the permission request is handled by a callback,
+ * onRequestPermissionsResult.
+ */
+    if (ContextCompat.checkSelfPermission(
+        this.applicationContext,
+        android.Manifest.permission.ACCESS_FINE_LOCATION
+      ) == PackageManager.PERMISSION_GRANTED
     ) {
-        mLocationPermissionGranted = false
-        when (requestCode) {
-            PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION -> {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mLocationPermissionGranted = true
-                }
-            }
-        }
-//        updateLocationUI()
+      mLocationPermissionGranted = true
+    } else {
+      ActivityCompat.requestPermissions(
+        this,
+        arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+        PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION
+      )
     }
-
-    override fun onMapReady(googleMap: GoogleMap?) {
-
-        // Do other setup activities here too, as described elsewhere in this tutorial.
-
-        // Turn on the My Location layer and the related control on the map.
-        updateLocationUI(googleMap);
-
-        // Get the current location of the device and set the position of the map.
+  }
+  
+  override fun onRequestPermissionsResult(
+    requestCode: Int,
+    permissions: Array<String>,
+    grantResults: IntArray
+  ) {
+    mLocationPermissionGranted = false
+    when (requestCode) {
+      PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION -> {
+        // If request is cancelled, the result arrays are empty.
+        if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+          mLocationPermissionGranted = true
+        }
+      }
+    }
+//        updateLocationUI()
+  }
+  
+  override fun onMapReady(googleMap: GoogleMap?) {
+    
+    // Do other setup activities here too, as described elsewhere in this tutorial.
+    
+    // Turn on the My Location layer and the related control on the map.
+    updateLocationUI(googleMap);
+    
+    // Get the current location of the device and set the position of the map.
 //        getDeviceLocation(googleMap);
 
 //        val lat = gpsLocation.latitude
@@ -218,67 +218,70 @@ class MapActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback{
         stylePolygon(polygon)
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(-23.684, 133.903), 4f))
         googleMap.setOnPolygonClickListener(this)*/
+  }
+  
+  private fun updateLocationUI(mMap: GoogleMap?) {
+    if (mMap == null) {
+      return
     }
-
-    private fun updateLocationUI(mMap: GoogleMap?) {
-        if (mMap == null) {
-            return
-        }
-        try {
-            if (mLocationPermissionGranted) {
-                mMap.setMyLocationEnabled(true)
-                mMap.getUiSettings().setMyLocationButtonEnabled(true)
-            } else {
-                mMap.setMyLocationEnabled(false)
-                mMap.getUiSettings().setMyLocationButtonEnabled(false)
-                mLastKnownLocation = null
-                getLocationPermission()
-            }
-        } catch (e: SecurityException) {
-            myHelper.log("${e.message}")
-        }
-
+    try {
+      if (mLocationPermissionGranted) {
+        mMap.setMyLocationEnabled(true)
+        mMap.getUiSettings().setMyLocationButtonEnabled(true)
+      } else {
+        mMap.setMyLocationEnabled(false)
+        mMap.getUiSettings().setMyLocationButtonEnabled(false)
+        mLastKnownLocation = null
+        getLocationPermission()
+      }
     }
-    private fun getDeviceLocation(mMap: GoogleMap?) {
-
-        try {
-            if (mLocationPermissionGranted) {
-                val locationResult = mFusedLocationProviderClient!!.getLastLocation()
-                locationResult.addOnCompleteListener {
-                    if (it.isSuccessful()) {
-                        // Set the map's camera position to the current location of the device.
-                        mLastKnownLocation = it.getResult()
-                        mMap!!.moveCamera(
-                            CameraUpdateFactory.newLatLngZoom(
-                                LatLng(
-                                    mLastKnownLocation!!.getLatitude(),
-                                    mLastKnownLocation!!.getLongitude()
-                                ), DEFAULT_ZOOM
-                            )
-                        )
-                    } else {
-                        Log.d(TAG, "Current location is null. Using defaults.")
-                        Log.e(TAG, "Exception: %s", it.getException())
-                        mMap!!.moveCamera(
-                            CameraUpdateFactory.newLatLngZoom(
-                                mDefaultLocation,
-                                DEFAULT_ZOOM
-                            )
-                        )
-                        mMap.getUiSettings().setMyLocationButtonEnabled(false)
-                    }
-                }
-                locationResult.addOnCompleteListener {  }
-            }
-        } catch (e: SecurityException) {
-            myHelper.log("${e.message}")
-        }
-
+    catch (e: SecurityException) {
+      myHelper.log("${e.message}")
     }
-
-    override fun onClick(view: View?) {
-        when(view!!.id){
+    
+  }
+  
+  private fun getDeviceLocation(mMap: GoogleMap?) {
+    
+    try {
+      if (mLocationPermissionGranted) {
+        val locationResult = mFusedLocationProviderClient!!.getLastLocation()
+        locationResult.addOnCompleteListener {
+          if (it.isSuccessful()) {
+            // Set the map's camera position to the current location of the device.
+            mLastKnownLocation = it.getResult()
+            mMap!!.moveCamera(
+              CameraUpdateFactory.newLatLngZoom(
+                LatLng(
+                  mLastKnownLocation!!.getLatitude(),
+                  mLastKnownLocation!!.getLongitude()
+                ), DEFAULT_ZOOM
+              )
+            )
+          } else {
+            Log.d(TAG, "Current location is null. Using defaults.")
+            Log.e(TAG, "Exception: %s", it.getException())
+            mMap!!.moveCamera(
+              CameraUpdateFactory.newLatLngZoom(
+                mDefaultLocation,
+                DEFAULT_ZOOM
+              )
+            )
+            mMap.getUiSettings().setMyLocationButtonEnabled(false)
+          }
         }
+        locationResult.addOnCompleteListener { }
+      }
     }
-
+    catch (e: SecurityException) {
+      myHelper.log("${e.message}")
+    }
+    
+  }
+  
+  override fun onClick(view: View?) {
+    when (view!!.id) {
+    }
+  }
+  
 }

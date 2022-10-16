@@ -20,121 +20,121 @@ import kotlinx.android.synthetic.main.app_bar_base.*
 import java.util.ArrayList
 
 class MvpOrgsFoldersActivity : BaseActivity(), View.OnClickListener {
+  
+  private val mvpOrgsFolders: ArrayList<Material> = ArrayList<Material>()
+  private lateinit var gv: GridView
+  private val tag = this::class.java.simpleName
+  
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
     
-    private val mvpOrgsFolders: ArrayList<Material> = ArrayList<Material>()
-    private lateinit var gv: GridView
-    private val tag = this::class.java.simpleName
+    val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
+    layoutInflater.inflate(R.layout.activity_mvp_orgs_folders, contentFrameLayout)
+    val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
+    navigationView.menu.getItem(0).isChecked = true
     
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        
-        val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
-        layoutInflater.inflate(R.layout.activity_mvp_orgs_folders, contentFrameLayout)
-        val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-        navigationView.menu.getItem(0).isChecked = true
-        
-        myHelper.setTag(tag)
-        myHelper.setProgressBar(mvp_orgs_files_pb)
-        
-        val bundle: Bundle? = intent.extras
-        if (bundle != null) {
-            myData = bundle.getSerializable("myData") as MyData
-            myHelper.log("myData:$myData")
-            getOrgsFiles(myData.mvp_orgs_project_id)
-            toolbar_title.text = myData.name
-        }
-        
-        gv = findViewById<GridView>(R.id.mvp_orgs_files_gridview)
-        
-        gv.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-            
-            when {
-                myData.isForLoadResult -> {
-                    val intent = intent
-                    myData.mvp_orgs_folder_id = mvpOrgsFolders[position].id
-                    myData.mvp_orgs_folder_name = mvpOrgsFolders[position].number
-                    intent.putExtra("myData", myData)
-                    setResult(Activity.RESULT_OK, intent)
-                    finish()
-                }
-                else -> {
-                    myHelper.log(mvpOrgsFolders[position].toString())
-                    myData.mvp_orgs_folder_id = mvpOrgsFolders[position].id
-                    myData.mvp_orgs_folder_name = mvpOrgsFolders[position].number
-                    myHelper.setLastJourney(myData)
-                    val intent = Intent(this, MvpStartDataCollectionActivity::class.java)
-                    startActivity(intent)
-                }
-            }
-        }
-        
-        mvp_orgs_files_back.setOnClickListener(this)
-        mvp_orgs_folders_create.setOnClickListener(this)
+    myHelper.setTag(tag)
+    myHelper.setProgressBar(mvp_orgs_files_pb)
+    
+    val bundle: Bundle? = intent.extras
+    if (bundle != null) {
+      myData = bundle.getSerializable("myData") as MyData
+      myHelper.log("myData:$myData")
+      getOrgsFiles(myData.mvp_orgs_project_id)
+      toolbar_title.text = myData.name
     }
     
-    override fun onResume() {
-        super.onResume()
-        base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
-    }
+    gv = findViewById<GridView>(R.id.mvp_orgs_files_gridview)
     
-    
-    override fun onClick(view: View?) {
-        when (view!!.id) {
-            R.id.mvp_orgs_files_back -> {
-                finish()
-            }
-            R.id.mvp_orgs_folders_create -> {
-                val intent = Intent(this, MvpOrgsCreateFolderActivity::class.java)
-                intent.putExtra("myData", myData)
-                startActivity(intent)
-            }
+    gv.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+      
+      when {
+        myData.isForLoadResult -> {
+          val intent = intent
+          myData.mvp_orgs_folder_id = mvpOrgsFolders[position].id
+          myData.mvp_orgs_folder_name = mvpOrgsFolders[position].number
+          intent.putExtra("myData", myData)
+          setResult(Activity.RESULT_OK, intent)
+          finish()
         }
+        else -> {
+          myHelper.log(mvpOrgsFolders[position].toString())
+          myData.mvp_orgs_folder_id = mvpOrgsFolders[position].id
+          myData.mvp_orgs_folder_name = mvpOrgsFolders[position].number
+          myHelper.setLastJourney(myData)
+          val intent = Intent(this, MvpStartDataCollectionActivity::class.java)
+          startActivity(intent)
+        }
+      }
     }
     
-    
-    internal fun getOrgsFiles(mvpOrgsProjectId: Int) {
-        myHelper.showProgressBar()
-        val call = this.retrofitAPI.getMvpOrgsFiles(
-            mvpOrgsProjectId,
-            "",
-            myHelper.getLoginAPI().role,
-            false,
-            myHelper.getLoginAPI().auth_token,
-        )
-        call.enqueue(object : retrofit2.Callback<MvpOrgsFilesResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<MvpOrgsFilesResponse>,
-                response: retrofit2.Response<MvpOrgsFilesResponse>
-            ) {
-                myHelper.hideProgressBar()
-                try {
-                    val responseBody = response.body()
-                    if (responseBody!!.success) {
+    mvp_orgs_files_back.setOnClickListener(this)
+    mvp_orgs_folders_create.setOnClickListener(this)
+  }
+  
+  override fun onResume() {
+    super.onResume()
+    base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
+  }
+  
+  
+  override fun onClick(view: View?) {
+    when (view!!.id) {
+      R.id.mvp_orgs_files_back -> {
+        finish()
+      }
+      R.id.mvp_orgs_folders_create -> {
+        val intent = Intent(this, MvpOrgsCreateFolderActivity::class.java)
+        intent.putExtra("myData", myData)
+        startActivity(intent)
+      }
+    }
+  }
+  
+  
+  internal fun getOrgsFiles(mvpOrgsProjectId: Int) {
+    myHelper.showProgressBar()
+    val call = this.retrofitAPI.getMvpOrgsFiles(
+      mvpOrgsProjectId,
+      "",
+      myHelper.getLoginAPI().role,
+      false,
+      myHelper.getLoginAPI().auth_token,
+    )
+    call.enqueue(object : retrofit2.Callback<MvpOrgsFilesResponse> {
+      override fun onResponse(
+        call: retrofit2.Call<MvpOrgsFilesResponse>,
+        response: retrofit2.Response<MvpOrgsFilesResponse>
+      ) {
+        myHelper.hideProgressBar()
+        try {
+          val responseBody = response.body()
+          if (responseBody!!.success) {
 //                        myHelper.log("responseBodyTapu: $responseBody")
-                        responseBody.separateFolders?.forEach {
-                            val material = Material()
-                            material.id = it.id!!
-                            material.number = it.fileFolder?.name!!.dropLast(1)
-                            myHelper.log("material: $material")
-                            mvpOrgsFolders.add(material)
-                        }
-                        myHelper.log("mvpOrgsFolders: $mvpOrgsFolders")
-                        val adapter = CustomGridLMachine(this@MvpOrgsFoldersActivity, mvpOrgsFolders)
-                        gv.adapter = adapter
-                        
-                    } else {
-                        myHelper.toast(responseBody.message)
-                    }
-                }
-                catch (e: Exception) {
-                    myHelper.log("getServerSync:${e.localizedMessage}")
-                }
+            responseBody.separateFolders?.forEach {
+              val material = Material()
+              material.id = it.id!!
+              material.number = it.fileFolder?.name!!.dropLast(1)
+              myHelper.log("material: $material")
+              mvpOrgsFolders.add(material)
             }
+            myHelper.log("mvpOrgsFolders: $mvpOrgsFolders")
+            val adapter = CustomGridLMachine(this@MvpOrgsFoldersActivity, mvpOrgsFolders)
+            gv.adapter = adapter
             
-            override fun onFailure(call: retrofit2.Call<MvpOrgsFilesResponse>, t: Throwable) {
-                myHelper.hideProgressBar()
-                myHelper.log("Failure" + t.message)
-            }
-        })
-    }
+          } else {
+            myHelper.toast(responseBody.message)
+          }
+        }
+        catch (e: Exception) {
+          myHelper.log("getServerSync:${e.localizedMessage}")
+        }
+      }
+      
+      override fun onFailure(call: retrofit2.Call<MvpOrgsFilesResponse>, t: Throwable) {
+        myHelper.hideProgressBar()
+        myHelper.log("Failure" + t.message)
+      }
+    })
+  }
 }

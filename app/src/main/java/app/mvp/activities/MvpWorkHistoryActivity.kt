@@ -17,82 +17,82 @@ private const val LOADING_HISTORY: String = "LOADING_HISTORY"
 private const val DELAY_HISTORY: String = "DELAY_HISTORY"
 
 class MvpWorkHistoryActivity : BaseActivity(), View.OnClickListener,
-                         LoadingHistoryFragment.OnFragmentInteractionListener,
-                         DelayHistoryFragment.OnFragmentInteractionListener {
+                               LoadingHistoryFragment.OnFragmentInteractionListener,
+                               DelayHistoryFragment.OnFragmentInteractionListener {
+  
+  override fun onFragmentInteraction(uri: Uri) {}
+  private val tag = this::class.java.simpleName
+  
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
     
-    override fun onFragmentInteraction(uri: Uri) {}
-    private val tag = this::class.java.simpleName
+    val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
+    layoutInflater.inflate(R.layout.activity_mvp_work_history, contentFrameLayout)
+    val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
+    navigationView.menu.getItem(7).isChecked = true
     
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        
-        val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
-        layoutInflater.inflate(R.layout.activity_mvp_work_history, contentFrameLayout)
-        val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-        navigationView.menu.getItem(7).isChecked = true
-        
-        myHelper.setTag(tag)
-        
-        val bundle: Bundle? = intent.extras
-        if (bundle != null) {
-            myData = bundle.getSerializable("myData") as MyData
-        }
-        
-        
-        val bottomNavigation: BottomNavigationView = findViewById(R.id.navigationView)
-        bottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-        
-        val menuFragment = bundle?.getString("menuFragment")
-        if (menuFragment != null) {
-            if (menuFragment == "delayHistoryFragment") {
-                val delayFragment = DelayHistoryFragment.newInstance(DELAY_HISTORY)
-                openFragment(delayFragment, DELAY_HISTORY)
-            } else {
-                val homeFragment = LoadingHistoryFragment.newInstance()
-                openFragment(homeFragment, LOADING_HISTORY)
-            }
-        } else {
-            val homeFragment = LoadingHistoryFragment.newInstance()
-            openFragment(homeFragment, LOADING_HISTORY)
-        }
-        
-        val eLoadingHistoryFragment = LoadingHistoryFragment.newInstance()
-        openFragment(eLoadingHistoryFragment, LOADING_HISTORY)
-        
-        myHelper.log("onCreate:${this::class.java.simpleName}")
+    myHelper.setTag(tag)
+    
+    val bundle: Bundle? = intent.extras
+    if (bundle != null) {
+      myData = bundle.getSerializable("myData") as MyData
     }
     
-    private fun openFragment(fragment: Fragment, FRAGMENT_TAG: String?) {
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.fragment_container, fragment, FRAGMENT_TAG)
-        transaction.addToBackStack(FRAGMENT_TAG)
-        transaction.commit()
+    
+    val bottomNavigation: BottomNavigationView = findViewById(R.id.navigationView)
+    bottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+    
+    val menuFragment = bundle?.getString("menuFragment")
+    if (menuFragment != null) {
+      if (menuFragment == "delayHistoryFragment") {
+        val delayFragment = DelayHistoryFragment.newInstance(DELAY_HISTORY)
+        openFragment(delayFragment, DELAY_HISTORY)
+      } else {
+        val homeFragment = LoadingHistoryFragment.newInstance()
+        openFragment(homeFragment, LOADING_HISTORY)
+      }
+    } else {
+      val homeFragment = LoadingHistoryFragment.newInstance()
+      openFragment(homeFragment, LOADING_HISTORY)
     }
     
-    private val mOnNavigationItemSelectedListener =
-        BottomNavigationView.OnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.navf_loading -> {
-                    val loadingHistoryFragment =
-                        LoadingHistoryFragment.newInstance()
-                    openFragment(loadingHistoryFragment, LOADING_HISTORY)
-                    return@OnNavigationItemSelectedListener true
-                }
-                
-                R.id.navf_delay -> {
-                    val delayHistoryFragment = DelayHistoryFragment.newInstance(DELAY_HISTORY)
-                    openFragment(delayHistoryFragment, DELAY_HISTORY)
-                    return@OnNavigationItemSelectedListener true
-                }
-                R.id.navf_finish -> {
-                    finish()
-                }
-            }
-            false
+    val eLoadingHistoryFragment = LoadingHistoryFragment.newInstance()
+    openFragment(eLoadingHistoryFragment, LOADING_HISTORY)
+    
+    myHelper.log("onCreate:${this::class.java.simpleName}")
+  }
+  
+  private fun openFragment(fragment: Fragment, FRAGMENT_TAG: String?) {
+    val transaction = supportFragmentManager.beginTransaction()
+    transaction.replace(R.id.fragment_container, fragment, FRAGMENT_TAG)
+    transaction.addToBackStack(FRAGMENT_TAG)
+    transaction.commit()
+  }
+  
+  private val mOnNavigationItemSelectedListener =
+    BottomNavigationView.OnNavigationItemSelectedListener { item ->
+      when (item.itemId) {
+        R.id.navf_loading -> {
+          val loadingHistoryFragment =
+            LoadingHistoryFragment.newInstance()
+          openFragment(loadingHistoryFragment, LOADING_HISTORY)
+          return@OnNavigationItemSelectedListener true
         }
-    
-    override fun onClick(view: View?) {
-    
+        
+        R.id.navf_delay -> {
+          val delayHistoryFragment = DelayHistoryFragment.newInstance(DELAY_HISTORY)
+          openFragment(delayHistoryFragment, DELAY_HISTORY)
+          return@OnNavigationItemSelectedListener true
+        }
+        R.id.navf_finish -> {
+          finish()
+        }
+      }
+      false
     }
+  
+  override fun onClick(view: View?) {
     
+  }
+  
 }

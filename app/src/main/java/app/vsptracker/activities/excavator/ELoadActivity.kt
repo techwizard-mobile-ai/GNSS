@@ -19,97 +19,99 @@ import app.vsptracker.others.MyHelper
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_eload.*
+
 private const val REQUEST_MATERIAL = 2
 private const val REQUEST_LOCATION = 3
+
 class ELoadActivity : BaseActivity(), View.OnClickListener {
-
-    private val tag = this::class.java.simpleName
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
-        layoutInflater.inflate(R.layout.activity_eload, contentFrameLayout)
-        val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-        navigationView.menu.getItem(0).isChecked = true
-
-        myHelper = MyHelper(tag, this)
-
-
-        myData = myHelper.getLastJourney()
-        myHelper.log("$myData")
-        eload_material.text = db.getMaterialByID(myData.loading_material_id).name
-        eload_location.text = db.getLocationByID(myData.loading_location_id).name
-
-
-        load_truck_load.setOnClickListener(this)
-        eload_back.setOnClickListener(this)
-        eload_finish.setOnClickListener(this)
-        eload_material.setOnClickListener(this)
-        eload_location.setOnClickListener(this)
-
-
-        val loadHistory = db.getELoadHistory()
-        if (loadHistory.size > 0) {
-            elh_rv.visibility = View.VISIBLE
-            val aa = ELoadingAdapter(this@ELoadActivity, loadHistory)
-            val layoutManager1 = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-            elh_rv.layoutManager = layoutManager1
-            elh_rv!!.adapter = aa
+  
+  private val tag = this::class.java.simpleName
+  
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    
+    val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
+    layoutInflater.inflate(R.layout.activity_eload, contentFrameLayout)
+    val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
+    navigationView.menu.getItem(0).isChecked = true
+    
+    myHelper = MyHelper(tag, this)
+    
+    
+    myData = myHelper.getLastJourney()
+    myHelper.log("$myData")
+    eload_material.text = db.getMaterialByID(myData.loading_material_id).name
+    eload_location.text = db.getLocationByID(myData.loading_location_id).name
+    
+    
+    load_truck_load.setOnClickListener(this)
+    eload_back.setOnClickListener(this)
+    eload_finish.setOnClickListener(this)
+    eload_material.setOnClickListener(this)
+    eload_location.setOnClickListener(this)
+    
+    
+    val loadHistory = db.getELoadHistory()
+    if (loadHistory.size > 0) {
+      elh_rv.visibility = View.VISIBLE
+      val aa = ELoadingAdapter(this@ELoadActivity, loadHistory)
+      val layoutManager1 = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+      elh_rv.layoutManager = layoutManager1
+      elh_rv!!.adapter = aa
+    } else {
+      elh_rv.visibility = View.INVISIBLE
+    }
+    
+  }
+  
+  
+  override fun onResume() {
+    super.onResume()
+    base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
+  }
+  
+  override fun onClick(view: View?) {
+    when (view!!.id) {
+      R.id.load_truck_load -> {
+        stopDelay()
+        
+        myData.loadingGPSLocation = gpsLocation
+        myData.loadTypeId = 1
+        myData.orgId = myHelper.getLoginAPI().org_id
+        myData.operatorId = myHelper.getOperatorAPI().id
+        
+        
+        myData.loadingGPSLocation = gpsLocation
+        myData.orgId = myHelper.getLoginAPI().org_id
+        myData.siteId = myHelper.getMachineSettings().siteId
+        myData.operatorId = myHelper.getOperatorAPI().id
+        myData.machineTypeId = myHelper.getMachineTypeID()
+        myData.machineId = myHelper.getMachineID()
+        
+        val currentTime = System.currentTimeMillis()
+        myData.startTime = currentTime
+        myData.stopTime = currentTime
+        myData.totalTime = myData.stopTime - myData.startTime
+        if (myHelper.isDailyModeStarted()) {
+          myData.isDayWorks = 1
         } else {
-            elh_rv.visibility = View.INVISIBLE
+          myData.isDayWorks = 0
         }
-
-    }
-
-
-    override fun onResume() {
-        super.onResume()
-        base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
-    }
-
-    override fun onClick(view: View?) {
-        when (view!!.id) {
-            R.id.load_truck_load -> {
-                stopDelay()
-
-                myData.loadingGPSLocation = gpsLocation
-                myData.loadTypeId = 1
-                myData.orgId = myHelper.getLoginAPI().org_id
-                myData.operatorId = myHelper.getOperatorAPI().id
-
-
-                myData.loadingGPSLocation = gpsLocation
-                myData.orgId = myHelper.getLoginAPI().org_id
-                myData.siteId = myHelper.getMachineSettings().siteId
-                myData.operatorId = myHelper.getOperatorAPI().id
-                myData.machineTypeId = myHelper.getMachineTypeID()
-                myData.machineId = myHelper.getMachineID()
-
-                val currentTime = System.currentTimeMillis()
-                myData.startTime = currentTime
-                myData.stopTime = currentTime
-                myData.totalTime = myData.stopTime - myData.startTime
-                if (myHelper.isDailyModeStarted()) {
-                    myData.isDayWorks = 1
-                } else {
-                    myData.isDayWorks = 0
-                }
-                myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
-                myData.time = currentTime.toString()
-                myData.date = myHelper.getDate(currentTime)
-                myData.isSync = 0
-
-                myData.machineTypeId = myHelper.getMachineTypeID()
-
-                pushInsertELoad(myData)
-                stopDelay()
+        myData.loadingGPSLocationString = myHelper.getGPSLocationToString(myData.loadingGPSLocation)
+        myData.time = currentTime.toString()
+        myData.date = myHelper.getDate(currentTime)
+        myData.isSync = 0
+        
+        myData.machineTypeId = myHelper.getMachineTypeID()
+        
+        pushInsertELoad(myData)
+        stopDelay()
 //                if(myHelper.isOnline()){
 //                    pushELoad(myData)
 //                }
 //                val insertID = db.insertELoad(myData)
 //                if (insertID > 0) {
-                    myHelper.toast("Loading Successful.")
+        myHelper.toast("Loading Successful.")
 
 //                    val loadHistory = db.getELoadHistory()
 //                    if (loadHistory.size > 0) {
@@ -125,50 +127,51 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
 //                } else {
 //                    myHelper.toast("Error while Saving Record.")
 //                }
-
-            }
-            R.id.eload_back -> {
-                myHelper.startHomeActivityByType(MyData())
-            }
-            R.id.eload_finish -> {
-                val intent = Intent(this, HourMeterStopActivity::class.java)
-                startActivity(intent)
-            }
-            R.id.eload_material -> {
-                val intent = Intent(this, MaterialActivity::class.java)
+      
+      }
+      R.id.eload_back -> {
+        myHelper.startHomeActivityByType(MyData())
+      }
+      R.id.eload_finish -> {
+        val intent = Intent(this, HourMeterStopActivity::class.java)
+        startActivity(intent)
+      }
+      R.id.eload_material -> {
+        val intent = Intent(this, MaterialActivity::class.java)
 //                val data1 = myHelper.getLastJourney()
-                myData.isForLoadResult = true
-                intent.putExtra("myData", myData)
-                startActivityForResult(intent, REQUEST_MATERIAL)
-            }
-            R.id.eload_location -> {
-                val intent = Intent(this, LocationActivity::class.java)
+        myData.isForLoadResult = true
+        intent.putExtra("myData", myData)
+        startActivityForResult(intent, REQUEST_MATERIAL)
+      }
+      R.id.eload_location -> {
+        val intent = Intent(this, LocationActivity::class.java)
 //                val data1 = myHelper.getLastJourney()
-                myData.isForLoadResult = true
-                intent.putExtra("myData", myData)
-                startActivityForResult(intent, REQUEST_LOCATION)
-            }
-        }
+        myData.isForLoadResult = true
+        intent.putExtra("myData", myData)
+        startActivityForResult(intent, REQUEST_LOCATION)
+      }
     }
-    private fun pushInsertELoad(myData: MyData): Int {
+  }
+  
+  private fun pushInsertELoad(myData: MyData): Int {
 
 //        when {
 //            myHelper.isOnline() -> pushELoad1(myData)
 //            else -> {
 //                myHelper.toast("No Internet Connection.\nData Saved in App but Not Uploaded to Server.")
-                insertELoad(myData)
+    insertELoad(myData)
 //            }
 //        }
-        return 1
-    }
-    
-    /**
-     * Previously was using this API call to Upload Data for Excavator Production Digging
-     * as after call there was adapter update with load which could not be done without this
-     * Activity. Now Adapter is updated and Data is inserted in App Database but it is not
-     * pushed to Server, rather on Data insertion standard method checkServerSyncData is called
-     * for uploading data to Server and updating in App after call.
-     */
+    return 1
+  }
+  
+  /**
+   * Previously was using this API call to Upload Data for Excavator Production Digging
+   * as after call there was adapter update with load which could not be done without this
+   * Activity. Now Adapter is updated and Data is inserted in App Database but it is not
+   * pushed to Server, rather on Data insertion standard method checkServerSyncData is called
+   * for uploading data to Server and updating in App after call.
+   */
 /*    private fun pushELoad1(myData: MyData) {
 
 //        myData.loadingGPSLocation = gpsLocation
@@ -226,47 +229,47 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
             }
         })
     }*/
-
-    private fun insertELoad(myData: MyData): Long {
-        myHelper.log("insertELoad:$myData")
-        val insertID = myDataPushSave.insertELoad(myData)
-        myHelper.log("insertELoadID:$insertID")
-
-        if(insertID > 0){
-            val loadHistory = db.getELoadHistory()
-            if (loadHistory.size > 0) {
-                elh_rv.visibility = View.VISIBLE
-                val aa = ELoadingAdapter(this@ELoadActivity, loadHistory)
-                val layoutManager1 = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-                elh_rv.layoutManager = layoutManager1
-                elh_rv!!.adapter = aa
-            } else {
-                elh_rv.visibility = View.INVISIBLE
-            }
-        }
-        return insertID
+  
+  private fun insertELoad(myData: MyData): Long {
+    myHelper.log("insertELoad:$myData")
+    val insertID = myDataPushSave.insertELoad(myData)
+    myHelper.log("insertELoadID:$insertID")
+    
+    if (insertID > 0) {
+      val loadHistory = db.getELoadHistory()
+      if (loadHistory.size > 0) {
+        elh_rv.visibility = View.VISIBLE
+        val aa = ELoadingAdapter(this@ELoadActivity, loadHistory)
+        val layoutManager1 = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        elh_rv.layoutManager = layoutManager1
+        elh_rv!!.adapter = aa
+      } else {
+        elh_rv.visibility = View.INVISIBLE
+      }
     }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
-        super.onActivityResult(requestCode, resultCode, intent)
-
-        if (resultCode == Activity.RESULT_OK) {
-            val bundle: Bundle? = intent!!.extras
-            if (bundle != null) {
-                myData = bundle.getSerializable("myData") as MyData
-                myHelper.log("myData:$myData")
-                
-                eload_material.text = db.getMaterialByID(myData.loading_material_id).name
-                eload_location.text = db.getLocationByID(myData.loading_location_id).name
-
-                myData.isForUnloadResult = false
-                myData.isForLoadResult = false
-                myHelper.setLastJourney(myData)
-
-            }
-
-        } else {
-            myHelper.toast("Request can not be completed.")
-        }
+    return insertID
+  }
+  
+  override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
+    super.onActivityResult(requestCode, resultCode, intent)
+    
+    if (resultCode == Activity.RESULT_OK) {
+      val bundle: Bundle? = intent!!.extras
+      if (bundle != null) {
+        myData = bundle.getSerializable("myData") as MyData
+        myHelper.log("myData:$myData")
+        
+        eload_material.text = db.getMaterialByID(myData.loading_material_id).name
+        eload_location.text = db.getLocationByID(myData.loading_location_id).name
+        
+        myData.isForUnloadResult = false
+        myData.isForLoadResult = false
+        myHelper.setLastJourney(myData)
+        
+      }
+      
+    } else {
+      myHelper.toast("Request can not be completed.")
     }
+  }
 }

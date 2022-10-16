@@ -129,6 +129,7 @@ const val COL_UPDATED_AT = "updated_at"
 const val COL_IS_DOWNLOADED = "is_downloaded"
 const val COL_CREATED_AT = "created_at"
 const val COL_DETAILS = "details"
+
 // Completed CheckForm Entry Type
 // 0 : automatically completed when due
 // 1 : manually completed by operator before due time
@@ -556,442 +557,444 @@ const val DROP_TABLE_OPERATORS_HOURS = "DROP TABLE IF EXISTS $TABLE_OPERATORS_HO
 const val DROP_TABLE_QUESTIONS_TYPES = "DROP TABLE IF EXISTS $TABLE_QUESTIONS_TYPES"
 const val DROP_TABLE_ORGS_MAPS = "DROP TABLE IF EXISTS $TABLE_ORGS_MAPS"
 const val DROP_TABLE_MVP_ORGS_PROJECTS = "DROP TABLE IF EXISTS $TABLE_MVP_ORGS_PROJECTS"
+
 @SuppressLint("Range")
 class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.getString(R.string.db_name), null, 18) {
+  
+  val tag = "DatabaseAdapter"
+  private var myHelper: MyHelper
+  
+  init {
+    this.myHelper = MyHelper(tag, context)
+  }
+  
+  override fun onCreate(db: SQLiteDatabase?) {
+    myHelper.log("DatabaseAdapter-onCreate")
+    db?.execSQL(createOrgsMapsTable)
+    db?.execSQL(createAdminCheckFormsCompletedServerTable)
+    db?.execSQL(createAdminCheckFormsDataTable)
+    db?.execSQL(createAdminCheckFormsCompletedTable)
+    db?.execSQL(createAdminCheckFormsTable)
+    db?.execSQL(createAdminCheckFormsSchedulesTable)
+    db?.execSQL(createQuestionsTable)
+    db?.execSQL(createQuestionsTypesTable)
+    db?.execSQL(createOperatorsHoursTable)
+    db?.execSQL(createMachinesAutoLogoutsTable)
+    db?.execSQL(createMachinesHoursTable)
+    db?.execSQL(createMachinesTasksTable)
+    db?.execSQL(createMachinesPlantsTable)
+    db?.execSQL(createMachinesBrandsTable)
+    db?.execSQL(createMachinesTypesTable)
+    db?.execSQL(createSitesTable)
+    db?.execSQL(createOperatorsTable)
+    db?.execSQL(createStopReasonsTable)
+    db?.execSQL(createMaterialsTable)
+    db?.execSQL(createMachinesTable)
+    db?.execSQL(createLocationsTable)
+    db?.execSQL(createMachinesStopsTable)
+    db?.execSQL(createTripTable)
+    db?.execSQL(createWaitsTable)
+    db?.execSQL(createEWorkActionOffloadingTable)
+    db?.execSQL(createEWorkTable)
+    db?.execSQL(createLoadHistoryTable)
+    db?.execSQL(createMvpOrgsProjectsTable)
+  }
+  
+  override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
+    myHelper.log("onUpgrade")
+    db?.execSQL(DROP_TABLE_MVP_ORGS_PROJECTS)
+    db?.execSQL(DROP_TABLE_ORGS_MAPS)
+    db?.execSQL(DROP_TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER)
+    db?.execSQL(DROP_TABLE_ADMIN_CHECKFORMS_DATA)
+    db?.execSQL(DROP_TABLE_ADMIN_CHECKFORMS_COMPLETED)
+    db?.execSQL(DROP_TABLE_ADMIN_CHECKFORMS)
+    db?.execSQL(DROP_TABLE_ADMIN_CHECKFORMS_SCHEDULES)
+    db?.execSQL(DROP_TABLE_QUESTIONS)
+    db?.execSQL(DROP_TABLE_QUESTIONS_TYPES)
+    db?.execSQL(DROP_TABLE_OPERATORS_HOURS)
+    db?.execSQL(DROP_TABLE_MACHINES_AUTO_LOGOUTS)
+    db?.execSQL(DROP_TABLE_MACHINES_HOURS)
+    db?.execSQL(DROP_TABLE_MACHINES_TASKS)
+    db?.execSQL(DROP_TABLE_MACHINES_PLANTS)
+    db?.execSQL(DROP_TABLE_MACHINES_BRANDS)
+    db?.execSQL(DROP_TABLE_MACHINES_TYPES)
+    db?.execSQL(DROP_TABLE_SITES)
+    db?.execSQL(DROP_TABLE_OPERATORS)
+    db?.execSQL(DROP_TABLE_STOP_REASONS)
+    db?.execSQL(DROP_TABLE_MATERIALS)
+    db?.execSQL(DROP_TABLE_MACHINES)
+    db?.execSQL(DROP_TABLE_LOCATIONS)
+    db?.execSQL(DROP_TABLE_MACHINES_STOPS)
+    db?.execSQL(DROP_TABLE_TRIP)
+    db?.execSQL(DROP_TABLE_WAIT)
+    db?.execSQL(DROP_TABLE_E_WORK_ACTION_OFFLOADING)
+    db?.execSQL(DROP_TABLE_E_WORK)
+    db?.execSQL(DROP_TABLE_E_LOAD_HISTORY)
+    onCreate(db)
+  }
+  
+  fun updateMap(datum: MyData): Boolean {
+    var updateMap = true
     
-    val tag = "DatabaseAdapter"
-    private var myHelper: MyHelper
+    val existedOrgsMap = getOrgsMapByID(datum.id)
+    if (existedOrgsMap !== null) {
+      if (existedOrgsMap.updated_at == datum.updated_at)
+        updateMap = false
+    }
+    return updateMap
+  }
+  
+  fun insertMvpOrgsProjects(data: ArrayList<MyData>) {
+    myHelper.log("insertAdminCheckFormsCompletedServer:${data.size}")
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    val tableName = TABLE_MVP_ORGS_PROJECTS
     
-    init {
-        this.myHelper = MyHelper(tag, context)
+    for (datum in data) {
+      cv.put(COL_ID, datum.id)
+      cv.put(COL_ORG_ID, datum.orgId)
+      cv.put(COL_NAME, datum.name)
+      cv.put(COL_DETAILS, datum.details)
+      cv.put(COL_STATUS, datum.status)
+      cv.put(COL_IS_DELETED, datum.isDeleted)
+      cv.put(COL_CREATED_AT, datum.created_at)
+      cv.put(COL_UPDATED_AT, datum.updated_at)
+      
+      val insertedID = db.replace(tableName, null, cv)
+      myHelper.printInsertion(tableName, insertedID, datum)
+    }
+  }
+  
+  /**
+   * Here we are using number instead of name parameter as Adapter [CustomGridLMachine] is used and that is showing number instead of name.
+   */
+  fun getMvpOrgsProjects(): ArrayList<Material> {
+    
+    val list: ArrayList<Material> = ArrayList()
+    val db = this.readableDatabase
+    val query: String =
+      "Select * from $TABLE_MVP_ORGS_PROJECTS  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 AND $COL_ORG_ID = ${myHelper.getLoginAPI().org_id}   ORDER BY $COL_NAME ASC"
+    
+    val result = db.rawQuery(query, null)
+    
+    if (result.moveToFirst()) {
+      do {
+        val datum = Material()
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.number = result.getString(result.getColumnIndex(COL_NAME))
+        list.add(datum)
+        
+      } while (result.moveToNext())
     }
     
-    override fun onCreate(db: SQLiteDatabase?) {
-        myHelper.log("DatabaseAdapter-onCreate")
-        db?.execSQL(createOrgsMapsTable)
-        db?.execSQL(createAdminCheckFormsCompletedServerTable)
-        db?.execSQL(createAdminCheckFormsDataTable)
-        db?.execSQL(createAdminCheckFormsCompletedTable)
-        db?.execSQL(createAdminCheckFormsTable)
-        db?.execSQL(createAdminCheckFormsSchedulesTable)
-        db?.execSQL(createQuestionsTable)
-        db?.execSQL(createQuestionsTypesTable)
-        db?.execSQL(createOperatorsHoursTable)
-        db?.execSQL(createMachinesAutoLogoutsTable)
-        db?.execSQL(createMachinesHoursTable)
-        db?.execSQL(createMachinesTasksTable)
-        db?.execSQL(createMachinesPlantsTable)
-        db?.execSQL(createMachinesBrandsTable)
-        db?.execSQL(createMachinesTypesTable)
-        db?.execSQL(createSitesTable)
-        db?.execSQL(createOperatorsTable)
-        db?.execSQL(createStopReasonsTable)
-        db?.execSQL(createMaterialsTable)
-        db?.execSQL(createMachinesTable)
-        db?.execSQL(createLocationsTable)
-        db?.execSQL(createMachinesStopsTable)
-        db?.execSQL(createTripTable)
-        db?.execSQL(createWaitsTable)
-        db?.execSQL(createEWorkActionOffloadingTable)
-        db?.execSQL(createEWorkTable)
-        db?.execSQL(createLoadHistoryTable)
-        db?.execSQL(createMvpOrgsProjectsTable)
-    }
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun insertOrgsMaps(data: ArrayList<MyData>) {
     
-    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        myHelper.log("onUpgrade")
-        db?.execSQL(DROP_TABLE_MVP_ORGS_PROJECTS)
-        db?.execSQL(DROP_TABLE_ORGS_MAPS)
-        db?.execSQL(DROP_TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER)
-        db?.execSQL(DROP_TABLE_ADMIN_CHECKFORMS_DATA)
-        db?.execSQL(DROP_TABLE_ADMIN_CHECKFORMS_COMPLETED)
-        db?.execSQL(DROP_TABLE_ADMIN_CHECKFORMS)
-        db?.execSQL(DROP_TABLE_ADMIN_CHECKFORMS_SCHEDULES)
-        db?.execSQL(DROP_TABLE_QUESTIONS)
-        db?.execSQL(DROP_TABLE_QUESTIONS_TYPES)
-        db?.execSQL(DROP_TABLE_OPERATORS_HOURS)
-        db?.execSQL(DROP_TABLE_MACHINES_AUTO_LOGOUTS)
-        db?.execSQL(DROP_TABLE_MACHINES_HOURS)
-        db?.execSQL(DROP_TABLE_MACHINES_TASKS)
-        db?.execSQL(DROP_TABLE_MACHINES_PLANTS)
-        db?.execSQL(DROP_TABLE_MACHINES_BRANDS)
-        db?.execSQL(DROP_TABLE_MACHINES_TYPES)
-        db?.execSQL(DROP_TABLE_SITES)
-        db?.execSQL(DROP_TABLE_OPERATORS)
-        db?.execSQL(DROP_TABLE_STOP_REASONS)
-        db?.execSQL(DROP_TABLE_MATERIALS)
-        db?.execSQL(DROP_TABLE_MACHINES)
-        db?.execSQL(DROP_TABLE_LOCATIONS)
-        db?.execSQL(DROP_TABLE_MACHINES_STOPS)
-        db?.execSQL(DROP_TABLE_TRIP)
-        db?.execSQL(DROP_TABLE_WAIT)
-        db?.execSQL(DROP_TABLE_E_WORK_ACTION_OFFLOADING)
-        db?.execSQL(DROP_TABLE_E_WORK)
-        db?.execSQL(DROP_TABLE_E_LOAD_HISTORY)
-        onCreate(db)
-    }
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    val tableName = TABLE_ORGS_MAPS
     
-    fun updateMap(datum: MyData): Boolean {
-        var updateMap = true
-    
-        val existedOrgsMap = getOrgsMapByID(datum.id)
-        if (existedOrgsMap !== null) {
-            if (existedOrgsMap.updated_at == datum.updated_at)
-                updateMap = false
-        }
-        return updateMap
-    }
-    
-    fun insertMvpOrgsProjects(data: ArrayList<MyData>) {
-        myHelper.log("insertAdminCheckFormsCompletedServer:${data.size}")
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        val tableName = TABLE_MVP_ORGS_PROJECTS
-        
-        for (datum in data) {
-            cv.put(COL_ID, datum.id)
-            cv.put(COL_ORG_ID, datum.orgId)
-            cv.put(COL_NAME, datum.name)
-            cv.put(COL_DETAILS, datum.details)
-            cv.put(COL_STATUS, datum.status)
-            cv.put(COL_IS_DELETED, datum.isDeleted)
-            cv.put(COL_CREATED_AT, datum.created_at)
-            cv.put(COL_UPDATED_AT, datum.updated_at)
-            
-            val insertedID = db.replace(tableName, null, cv)
-            myHelper.printInsertion(tableName, insertedID, datum)
-        }
-    }
-    
-    /**
-     * Here we are using number instead of name parameter as Adapter [CustomGridLMachine] is used and that is showing number instead of name.
-     */
-    fun getMvpOrgsProjects(): ArrayList<Material> {
-        
-        val list: ArrayList<Material> = ArrayList()
-        val db = this.readableDatabase
-        val query: String = "Select * from $TABLE_MVP_ORGS_PROJECTS  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 AND $COL_ORG_ID = ${myHelper.getLoginAPI().org_id}   ORDER BY $COL_NAME ASC"
-        
-        val result = db.rawQuery(query, null)
-        
-        if (result.moveToFirst()) {
-            do {
-                val datum = Material()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.number = result.getString(result.getColumnIndex(COL_NAME))
-                list.add(datum)
-                
-            } while (result.moveToNext())
-        }
-        
-        result.close()
-        db.close()
-        return list
-    }
-    
-    fun insertOrgsMaps(data: ArrayList<MyData>) {
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        val tableName = TABLE_ORGS_MAPS
-        
-        for (datum in data) {
-            cv.put(COL_ID, datum.id)
-            cv.put(COL_ORG_ID, datum.orgId)
-            cv.put(COL_SITE_ID, datum.siteId)
-            cv.put(COL_AWS_PATH, datum.aws_path)
-            cv.put(COL_STATUS, datum.status)
-            cv.put(COL_IS_DELETED, datum.isDeleted)
-            cv.put(COL_TIME, myHelper.getTimestampFromDate(datum.updated_at))
-            cv.put(COL_IS_DOWNLOADED, datum.isDownloaded)
-            cv.put(COL_UPDATED_AT, datum.updated_at)
-            
-            if (updateMap(datum)) {
-                val insertedID = db.replace(tableName, null, cv)
+    for (datum in data) {
+      cv.put(COL_ID, datum.id)
+      cv.put(COL_ORG_ID, datum.orgId)
+      cv.put(COL_SITE_ID, datum.siteId)
+      cv.put(COL_AWS_PATH, datum.aws_path)
+      cv.put(COL_STATUS, datum.status)
+      cv.put(COL_IS_DELETED, datum.isDeleted)
+      cv.put(COL_TIME, myHelper.getTimestampFromDate(datum.updated_at))
+      cv.put(COL_IS_DOWNLOADED, datum.isDownloaded)
+      cv.put(COL_UPDATED_AT, datum.updated_at)
+      
+      if (updateMap(datum)) {
+        val insertedID = db.replace(tableName, null, cv)
 //                myHelper.printInsertion(tableName, insertedID, datum)
-            }
-            
-        }
+      }
+      
     }
+  }
+  
+  fun insertAdminCheckFormsCompletedServer(data: ArrayList<MyData>) {
+    myHelper.log("insertAdminCheckFormsCompletedServer:${data.size}")
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    val tableName = TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER
     
-    fun insertAdminCheckFormsCompletedServer(data: ArrayList<MyData>) {
-        myHelper.log("insertAdminCheckFormsCompletedServer:${data.size}")
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        val tableName = TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER
-        
-        for (datum in data) {
-            cv.put(COL_ID, datum.id)
-            cv.put(COL_ORG_ID, datum.orgId)
-            cv.put(COL_SITE_ID, datum.siteId)
-            cv.put(COL_OPERATOR_ID, datum.operatorId)
-            cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
-            cv.put(COL_MACHINE_ID, datum.machineId)
-            cv.put(COL_ADMIN_CHECKFORMS_ID, datum.admin_checkforms_id)
-            cv.put(COL_ADMIN_CHECKFORMS_SCHEDULES_ID, datum.admin_checkforms_schedules_id)
-            cv.put(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE, datum.admin_checkforms_schedules_value)
-            cv.put(COL_ENTRY_TYPE, datum.entry_type)
-            cv.put(COL_LOADING_GPS_LOCATION, datum.loadingGPSLocationString)
-            cv.put(COL_UNLOADING_GPS_LOCATION, datum.unloadingGPSLocationString)
-            cv.put(COL_START_TIME, datum.startTime)
-            cv.put(COL_END_TIME, datum.stopTime)
-            cv.put(COL_TOTAL_TIME, datum.totalTime)
-            cv.put(COL_TIME, datum.stopTime)
-            cv.put(COL_DATE, datum.date)
-            cv.put(COL_IS_DAY_WORKS, datum.isDayWorks)
-            cv.put(COL_ATTEMPTED_QUESTIONS, datum.attempted_questions)
-            
-            val insertedID = db.replace(tableName, null, cv)
+    for (datum in data) {
+      cv.put(COL_ID, datum.id)
+      cv.put(COL_ORG_ID, datum.orgId)
+      cv.put(COL_SITE_ID, datum.siteId)
+      cv.put(COL_OPERATOR_ID, datum.operatorId)
+      cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
+      cv.put(COL_MACHINE_ID, datum.machineId)
+      cv.put(COL_ADMIN_CHECKFORMS_ID, datum.admin_checkforms_id)
+      cv.put(COL_ADMIN_CHECKFORMS_SCHEDULES_ID, datum.admin_checkforms_schedules_id)
+      cv.put(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE, datum.admin_checkforms_schedules_value)
+      cv.put(COL_ENTRY_TYPE, datum.entry_type)
+      cv.put(COL_LOADING_GPS_LOCATION, datum.loadingGPSLocationString)
+      cv.put(COL_UNLOADING_GPS_LOCATION, datum.unloadingGPSLocationString)
+      cv.put(COL_START_TIME, datum.startTime)
+      cv.put(COL_END_TIME, datum.stopTime)
+      cv.put(COL_TOTAL_TIME, datum.totalTime)
+      cv.put(COL_TIME, datum.stopTime)
+      cv.put(COL_DATE, datum.date)
+      cv.put(COL_IS_DAY_WORKS, datum.isDayWorks)
+      cv.put(COL_ATTEMPTED_QUESTIONS, datum.attempted_questions)
+      
+      val insertedID = db.replace(tableName, null, cv)
 //            myHelper.printInsertion(tableName, insertedID, datum)
-        }
-        
     }
     
-    fun insertAdminCheckFormsData(data: ArrayList<CheckFormData>, checkFormCompletedLocalID: Long) {
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        val tableName = TABLE_ADMIN_CHECKFORMS_DATA
-        
-        for (datum in data) {
-            cv.put(COL_ADMIN_CHECKFORMS_COMPLETED_ID, datum.admin_checkforms_completed_id)
-            cv.put(COL_ADMIN_CHECKFORMS_COMPLETED_LOCAL_ID, checkFormCompletedLocalID)
-            cv.put(COL_ADMIN_QUESTIONS_ID, datum.admin_questions_id)
-            cv.put(COL_ANSWER, datum.answer)
-            cv.put(COL_ANSWER_DATA, myHelper.getAnswerDataToString(datum.answerDataObj))
-            cv.put(COL_TIME, datum.time)
-            cv.put(COL_IS_SYNC, datum.isSync)
-            
-            
-            val insertedID = db.insert(tableName, null, cv)
-            myHelper.printInsertion(tableName, insertedID, datum)
-        }
-    }
+  }
+  
+  fun insertAdminCheckFormsData(data: ArrayList<CheckFormData>, checkFormCompletedLocalID: Long) {
     
-    fun insertAdminCheckFormsCompleted(datum: MyData): Long {
-        myHelper.log("insertAdminCheckFormsCompleted:$datum")
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        val tableName = TABLE_ADMIN_CHECKFORMS_COMPLETED
-        
-        cv.put(COL_ORG_ID, datum.orgId)
-        cv.put(COL_SITE_ID, datum.siteId)
-        cv.put(COL_OPERATOR_ID, datum.operatorId)
-        cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
-        cv.put(COL_MACHINE_ID, datum.machineId)
-        cv.put(COL_ADMIN_CHECKFORMS_ID, datum.admin_checkforms_id)
-        cv.put(COL_ADMIN_CHECKFORMS_SCHEDULES_ID, datum.admin_checkforms_schedules_id)
-        cv.put(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE, datum.admin_checkforms_schedules_value)
-        cv.put(COL_ENTRY_TYPE, datum.entry_type)
-        cv.put(COL_LOADING_GPS_LOCATION, datum.loadingGPSLocationString)
-        cv.put(COL_UNLOADING_GPS_LOCATION, datum.unloadingGPSLocationString)
-        cv.put(COL_START_TIME, datum.startTime)
-        cv.put(COL_END_TIME, datum.stopTime)
-        cv.put(COL_TOTAL_TIME, datum.totalTime)
-        cv.put(COL_TIME, datum.stopTime)
-        cv.put(COL_DATE, datum.date)
-        cv.put(COL_IS_DAY_WORKS, datum.isDayWorks)
-        cv.put(COL_IS_SYNC, datum.isSync)
-        
-        val insertedID = db.insert(tableName, null, cv)
-        myHelper.printInsertion(tableName, insertedID, datum)
-        return insertedID
-        
-    }
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    val tableName = TABLE_ADMIN_CHECKFORMS_DATA
     
-    fun insertAdminCheckFormsCompleted(data: ArrayList<MyData>) {
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        val tableName = TABLE_ADMIN_CHECKFORMS_COMPLETED
-        
-        for (datum in data) {
-            cv.put(COL_ORG_ID, datum.orgId)
-            cv.put(COL_SITE_ID, datum.siteId)
-            cv.put(COL_OPERATOR_ID, datum.operatorId)
-            cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
-            cv.put(COL_MACHINE_ID, datum.machineId)
-            cv.put(COL_ADMIN_CHECKFORMS_ID, datum.admin_checkforms_id)
-            cv.put(COL_ADMIN_CHECKFORMS_SCHEDULES_ID, datum.admin_checkforms_schedules_id)
-            cv.put(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE, datum.admin_checkforms_schedules_value)
-            cv.put(COL_ENTRY_TYPE, datum.entry_type)
-            cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.loadingGPSLocation))
-            cv.put(COL_UNLOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.unloadingGPSLocation))
-            cv.put(COL_START_TIME, datum.startTime)
-            cv.put(COL_END_TIME, datum.stopTime)
-            cv.put(COL_TOTAL_TIME, datum.totalTime)
-            cv.put(COL_TIME, datum.time.toLong())
-            cv.put(COL_DATE, datum.date)
-            cv.put(COL_IS_DAY_WORKS, datum.isDayWorks)
-            cv.put(COL_IS_SYNC, datum.isSync)
-            
-            val insertedID = db.insert(tableName, null, cv)
-            myHelper.printInsertion(tableName, insertedID, datum)
-        }
+    for (datum in data) {
+      cv.put(COL_ADMIN_CHECKFORMS_COMPLETED_ID, datum.admin_checkforms_completed_id)
+      cv.put(COL_ADMIN_CHECKFORMS_COMPLETED_LOCAL_ID, checkFormCompletedLocalID)
+      cv.put(COL_ADMIN_QUESTIONS_ID, datum.admin_questions_id)
+      cv.put(COL_ANSWER, datum.answer)
+      cv.put(COL_ANSWER_DATA, myHelper.getAnswerDataToString(datum.answerDataObj))
+      cv.put(COL_TIME, datum.time)
+      cv.put(COL_IS_SYNC, datum.isSync)
+      
+      
+      val insertedID = db.insert(tableName, null, cv)
+      myHelper.printInsertion(tableName, insertedID, datum)
     }
+  }
+  
+  fun insertAdminCheckFormsCompleted(datum: MyData): Long {
+    myHelper.log("insertAdminCheckFormsCompleted:$datum")
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    val tableName = TABLE_ADMIN_CHECKFORMS_COMPLETED
     
-    fun insertAdminCheckForms(data: ArrayList<MyData>) {
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        val tableName = TABLE_ADMIN_CHECKFORMS
-        
-        for (datum in data) {
-            cv.put(COL_ID, datum.id)
-            cv.put(COL_ORG_ID, datum.orgId)
-            cv.put(COL_SITE_ID, datum.siteId)
-            cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
-            cv.put(COL_MACHINE_ID, datum.machineId)
-            cv.put(COL_ADMIN_CHECKFORMS_SCHEDULES_ID, datum.admin_checkforms_schedules_id)
-            cv.put(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE, datum.admin_checkforms_schedules_value)
-            cv.put(COL_NAME, datum.name)
-            cv.put(COL_QUESTIONS_DATA, datum.questions_data)
-            cv.put(COL_STATUS, datum.status)
-            cv.put(COL_IS_DELETED, datum.isDeleted)
-            
-            val insertedID = db.replace(tableName, null, cv)
+    cv.put(COL_ORG_ID, datum.orgId)
+    cv.put(COL_SITE_ID, datum.siteId)
+    cv.put(COL_OPERATOR_ID, datum.operatorId)
+    cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
+    cv.put(COL_MACHINE_ID, datum.machineId)
+    cv.put(COL_ADMIN_CHECKFORMS_ID, datum.admin_checkforms_id)
+    cv.put(COL_ADMIN_CHECKFORMS_SCHEDULES_ID, datum.admin_checkforms_schedules_id)
+    cv.put(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE, datum.admin_checkforms_schedules_value)
+    cv.put(COL_ENTRY_TYPE, datum.entry_type)
+    cv.put(COL_LOADING_GPS_LOCATION, datum.loadingGPSLocationString)
+    cv.put(COL_UNLOADING_GPS_LOCATION, datum.unloadingGPSLocationString)
+    cv.put(COL_START_TIME, datum.startTime)
+    cv.put(COL_END_TIME, datum.stopTime)
+    cv.put(COL_TOTAL_TIME, datum.totalTime)
+    cv.put(COL_TIME, datum.stopTime)
+    cv.put(COL_DATE, datum.date)
+    cv.put(COL_IS_DAY_WORKS, datum.isDayWorks)
+    cv.put(COL_IS_SYNC, datum.isSync)
+    
+    val insertedID = db.insert(tableName, null, cv)
+    myHelper.printInsertion(tableName, insertedID, datum)
+    return insertedID
+    
+  }
+  
+  fun insertAdminCheckFormsCompleted(data: ArrayList<MyData>) {
+    
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    val tableName = TABLE_ADMIN_CHECKFORMS_COMPLETED
+    
+    for (datum in data) {
+      cv.put(COL_ORG_ID, datum.orgId)
+      cv.put(COL_SITE_ID, datum.siteId)
+      cv.put(COL_OPERATOR_ID, datum.operatorId)
+      cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
+      cv.put(COL_MACHINE_ID, datum.machineId)
+      cv.put(COL_ADMIN_CHECKFORMS_ID, datum.admin_checkforms_id)
+      cv.put(COL_ADMIN_CHECKFORMS_SCHEDULES_ID, datum.admin_checkforms_schedules_id)
+      cv.put(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE, datum.admin_checkforms_schedules_value)
+      cv.put(COL_ENTRY_TYPE, datum.entry_type)
+      cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.loadingGPSLocation))
+      cv.put(COL_UNLOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.unloadingGPSLocation))
+      cv.put(COL_START_TIME, datum.startTime)
+      cv.put(COL_END_TIME, datum.stopTime)
+      cv.put(COL_TOTAL_TIME, datum.totalTime)
+      cv.put(COL_TIME, datum.time.toLong())
+      cv.put(COL_DATE, datum.date)
+      cv.put(COL_IS_DAY_WORKS, datum.isDayWorks)
+      cv.put(COL_IS_SYNC, datum.isSync)
+      
+      val insertedID = db.insert(tableName, null, cv)
+      myHelper.printInsertion(tableName, insertedID, datum)
+    }
+  }
+  
+  fun insertAdminCheckForms(data: ArrayList<MyData>) {
+    
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    val tableName = TABLE_ADMIN_CHECKFORMS
+    
+    for (datum in data) {
+      cv.put(COL_ID, datum.id)
+      cv.put(COL_ORG_ID, datum.orgId)
+      cv.put(COL_SITE_ID, datum.siteId)
+      cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
+      cv.put(COL_MACHINE_ID, datum.machineId)
+      cv.put(COL_ADMIN_CHECKFORMS_SCHEDULES_ID, datum.admin_checkforms_schedules_id)
+      cv.put(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE, datum.admin_checkforms_schedules_value)
+      cv.put(COL_NAME, datum.name)
+      cv.put(COL_QUESTIONS_DATA, datum.questions_data)
+      cv.put(COL_STATUS, datum.status)
+      cv.put(COL_IS_DELETED, datum.isDeleted)
+      
+      val insertedID = db.replace(tableName, null, cv)
 //            myHelper.printInsertion(tableName, insertedID, datum)
-        }
     }
+  }
+  
+  fun insertAdminCheckFormsSchedules(data: ArrayList<MyData>) {
     
-    fun insertAdminCheckFormsSchedules(data: ArrayList<MyData>) {
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        val tableName = TABLE_ADMIN_CHECKFORMS_SCHEDULES
-        
-        for (datum in data) {
-            cv.put(COL_ID, datum.id)
-            cv.put(COL_NAME, datum.name)
-            cv.put(COL_STATUS, datum.status)
-            cv.put(COL_IS_DELETED, datum.isDeleted)
-            
-            val insertedID = db.replace(tableName, null, cv)
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    val tableName = TABLE_ADMIN_CHECKFORMS_SCHEDULES
+    
+    for (datum in data) {
+      cv.put(COL_ID, datum.id)
+      cv.put(COL_NAME, datum.name)
+      cv.put(COL_STATUS, datum.status)
+      cv.put(COL_IS_DELETED, datum.isDeleted)
+      
+      val insertedID = db.replace(tableName, null, cv)
 //            myHelper.printInsertion(tableName, insertedID, datum)
-        }
     }
+  }
+  
+  fun insertQuestions(data: ArrayList<MyData>) {
     
-    fun insertQuestions(data: ArrayList<MyData>) {
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        val tableName = TABLE_QUESTIONS
-        
-        for (datum in data) {
-            cv.put(COL_ID, datum.id)
-            cv.put(COL_ORG_ID, datum.orgId)
-            cv.put(COL_ADMIN_QUESTIONS_TYPES_ID, datum.admin_questions_types_id)
-            cv.put(COL_IMAGES_LIMIT, datum.images_limit)
-            cv.put(COL_IMAGES_QUALITY, datum.images_quality)
-            cv.put(COL_NAME, datum.name)
-            cv.put(COL_STATUS, datum.status)
-            cv.put(COL_IS_DELETED, datum.isDeleted)
-            
-            val insertedID = db.replace(tableName, null, cv)
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    val tableName = TABLE_QUESTIONS
+    
+    for (datum in data) {
+      cv.put(COL_ID, datum.id)
+      cv.put(COL_ORG_ID, datum.orgId)
+      cv.put(COL_ADMIN_QUESTIONS_TYPES_ID, datum.admin_questions_types_id)
+      cv.put(COL_IMAGES_LIMIT, datum.images_limit)
+      cv.put(COL_IMAGES_QUALITY, datum.images_quality)
+      cv.put(COL_NAME, datum.name)
+      cv.put(COL_STATUS, datum.status)
+      cv.put(COL_IS_DELETED, datum.isDeleted)
+      
+      val insertedID = db.replace(tableName, null, cv)
 //            myHelper.printInsertion(tableName, insertedID, datum)
-        }
     }
+  }
+  
+  fun insertQuestionsTypes(data: ArrayList<MyData>) {
     
-    fun insertQuestionsTypes(data: ArrayList<MyData>) {
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        val tableName = TABLE_QUESTIONS_TYPES
-        
-        for (datum in data) {
-            cv.put(COL_ID, datum.id)
-            cv.put(COL_NAME, datum.name)
-            cv.put(COL_ANSWERS_OPTIONS, datum.answers_options)
-            cv.put(COL_TOTAL_CORRECT_ANSWERS, datum.total_correct_answers)
-            cv.put(COL_STATUS, datum.status)
-            cv.put(COL_IS_DELETED, datum.isDeleted)
-            
-            val insertedID = db.replace(tableName, null, cv)
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    val tableName = TABLE_QUESTIONS_TYPES
+    
+    for (datum in data) {
+      cv.put(COL_ID, datum.id)
+      cv.put(COL_NAME, datum.name)
+      cv.put(COL_ANSWERS_OPTIONS, datum.answers_options)
+      cv.put(COL_TOTAL_CORRECT_ANSWERS, datum.total_correct_answers)
+      cv.put(COL_STATUS, datum.status)
+      cv.put(COL_IS_DELETED, datum.isDeleted)
+      
+      val insertedID = db.replace(tableName, null, cv)
 //            myHelper.printInsertion(tableName, insertedID, datum)
-        }
     }
+  }
+  
+  fun insertOperatorHour(myData: MyData): Long {
+    val currentTime = System.currentTimeMillis()
+    myData.time = currentTime.toString()
+    myData.date = myHelper.getDate(currentTime.toString())
     
-    fun insertOperatorHour(myData: MyData): Long {
-        val currentTime = System.currentTimeMillis()
-        myData.time = currentTime.toString()
-        myData.date = myHelper.getDate(currentTime.toString())
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        cv.put(COL_ORG_ID, myData.orgId)
-        cv.put(COL_SITE_ID, myData.siteId)
-        cv.put(COL_OPERATOR_ID, myData.operatorId)
-        cv.put(COL_START_TIME, myData.startTime)
-        cv.put(COL_END_TIME, myData.stopTime)
-        cv.put(COL_TOTAL_TIME, myData.totalTime)
-        cv.put(COL_TIME, myData.time.toLong())
-        cv.put(COL_DATE, myData.date)
-        cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(myData.loadingGPSLocation))
-        cv.put(COL_UNLOADING_GPS_LOCATION, myHelper.getGPSLocationToString(myData.unloadingGPSLocation))
-        cv.put(COL_IS_SYNC, myData.isSync)
-        cv.put(COL_IS_DAY_WORKS, myData.isDayWorks)
-        return db.insert(TABLE_OPERATORS_HOURS, null, cv)
-    }
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    cv.put(COL_ORG_ID, myData.orgId)
+    cv.put(COL_SITE_ID, myData.siteId)
+    cv.put(COL_OPERATOR_ID, myData.operatorId)
+    cv.put(COL_START_TIME, myData.startTime)
+    cv.put(COL_END_TIME, myData.stopTime)
+    cv.put(COL_TOTAL_TIME, myData.totalTime)
+    cv.put(COL_TIME, myData.time.toLong())
+    cv.put(COL_DATE, myData.date)
+    cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(myData.loadingGPSLocation))
+    cv.put(COL_UNLOADING_GPS_LOCATION, myHelper.getGPSLocationToString(myData.unloadingGPSLocation))
+    cv.put(COL_IS_SYNC, myData.isSync)
+    cv.put(COL_IS_DAY_WORKS, myData.isDayWorks)
+    return db.insert(TABLE_OPERATORS_HOURS, null, cv)
+  }
+  
+  /**
+   * Save Machines Logout Times in Database.
+   * This Logout Time is different for each Site and each Machine Type.
+   * After inactivity of Operator, Logout function will be called and required actions will be taken.
+   */
+  fun insertMachinesAutoLogouts(data: ArrayList<OperatorAPI>) {
     
-    /**
-     * Save Machines Logout Times in Database.
-     * This Logout Time is different for each Site and each Machine Type.
-     * After inactivity of Operator, Logout function will be called and required actions will be taken.
-     */
-    fun insertMachinesAutoLogouts(data: ArrayList<OperatorAPI>) {
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        val tableName = TABLE_MACHINES_AUTO_LOGOUTS
-        
-        for (datum in data) {
-            cv.put(COL_ID, datum.id)
-            cv.put(COL_ORG_ID, datum.orgId)
-            cv.put(COL_SITE_ID, datum.siteId)
-            cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
-            cv.put(COL_AUTO_LOGOUT_TIME, datum.autoLogoutTime)
-            cv.put(COL_STATUS, datum.status)
-            cv.put(COL_IS_DELETED, datum.isDeleted)
-            
-            @Suppress("UNUSED_VARIABLE") val insertedID = db.replace(tableName, null, cv)
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    val tableName = TABLE_MACHINES_AUTO_LOGOUTS
+    
+    for (datum in data) {
+      cv.put(COL_ID, datum.id)
+      cv.put(COL_ORG_ID, datum.orgId)
+      cv.put(COL_SITE_ID, datum.siteId)
+      cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
+      cv.put(COL_AUTO_LOGOUT_TIME, datum.autoLogoutTime)
+      cv.put(COL_STATUS, datum.status)
+      cv.put(COL_IS_DELETED, datum.isDeleted)
+      
+      @Suppress("UNUSED_VARIABLE") val insertedID = db.replace(tableName, null, cv)
 //            myHelper.printInsertion(tableName, insertedID, datum)
-        }
     }
-    
-    fun insertMachineHours(datum: MyData): Long {
-        val db = this.writableDatabase
-        val cv = ContentValues()
+  }
+  
+  fun insertMachineHours(datum: MyData): Long {
+    val db = this.writableDatabase
+    val cv = ContentValues()
 //        val currentTime = System.currentTimeMillis()
 //        datum.stopTime = currentTime
 //
 //        val time = System.currentTimeMillis()
 //        datum.time = time.toString()
 //        datum.date = myHelper.getDate(time.toString())
-        
-        cv.put(COL_ORG_ID, datum.orgId)
-        cv.put(COL_SITE_ID, datum.siteId)
-        cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
-        cv.put(COL_MACHINE_ID, datum.machineId)
-        cv.put(COL_MACHINE_STOP_REASON_ID, datum.machine_stop_reason_id)
-        cv.put(COL_START_TIME, datum.startTime)
-        cv.put(COL_END_TIME, datum.stopTime)
-        cv.put(COL_TOTAL_TIME, datum.totalTime)
-        cv.put(COL_START_HOURS, datum.startHours)
-        cv.put(COL_IS_START_HOURS_CUSTOM, datum.isStartHoursCustom)
-        cv.put(COL_TOTAL_HOURS, datum.totalHours)
-        cv.put(COL_IS_TOTAL_HOURS_CUSTOM, datum.isTotalHoursCustom)
-        
-        if (!datum.time.isNullOrEmpty())
-            cv.put(COL_TIME, datum.time.toLong())
-        cv.put(COL_DATE, datum.date)
-        cv.put(COL_IS_DAY_WORKS, datum.isDayWorks)
-        cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.loadingGPSLocation))
-        cv.put(COL_UNLOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.unloadingGPSLocation))
-        cv.put(COL_OPERATOR_ID, datum.operatorId)
-        cv.put(COL_IS_SYNC, datum.isSync)
-        return db.insert(TABLE_MACHINES_HOURS, null, cv)
-    }
+    
+    cv.put(COL_ORG_ID, datum.orgId)
+    cv.put(COL_SITE_ID, datum.siteId)
+    cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
+    cv.put(COL_MACHINE_ID, datum.machineId)
+    cv.put(COL_MACHINE_STOP_REASON_ID, datum.machine_stop_reason_id)
+    cv.put(COL_START_TIME, datum.startTime)
+    cv.put(COL_END_TIME, datum.stopTime)
+    cv.put(COL_TOTAL_TIME, datum.totalTime)
+    cv.put(COL_START_HOURS, datum.startHours)
+    cv.put(COL_IS_START_HOURS_CUSTOM, datum.isStartHoursCustom)
+    cv.put(COL_TOTAL_HOURS, datum.totalHours)
+    cv.put(COL_IS_TOTAL_HOURS_CUSTOM, datum.isTotalHoursCustom)
+    
+    if (!datum.time.isNullOrEmpty())
+      cv.put(COL_TIME, datum.time.toLong())
+    cv.put(COL_DATE, datum.date)
+    cv.put(COL_IS_DAY_WORKS, datum.isDayWorks)
+    cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.loadingGPSLocation))
+    cv.put(COL_UNLOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.unloadingGPSLocation))
+    cv.put(COL_OPERATOR_ID, datum.operatorId)
+    cv.put(COL_IS_SYNC, datum.isSync)
+    return db.insert(TABLE_MACHINES_HOURS, null, cv)
+  }
 
 /*    fun insertMachinesHours(data: ArrayList<MyData>) {
         
@@ -1032,297 +1035,297 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
             // myHelper.log("MachinesHour:insertID:$insertID")
         }
     }*/
+  
+  fun insertMachinesTasks(data: ArrayList<OperatorAPI>) {
     
-    fun insertMachinesTasks(data: ArrayList<OperatorAPI>) {
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        val tableName = TABLE_MACHINES_TASKS
-        for (datum in data) {
-            cv.put(COL_ID, datum.id)
-            cv.put(COL_ORG_ID, datum.orgId)
-            cv.put(COL_SITE_ID, datum.siteId)
-            cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
-            cv.put(COL_MACHINE_TASK_ID, datum.machineTaskId)
-            cv.put(COL_NAME, datum.name)
-            cv.put(COL_PRIORITY, datum.priority)
-            cv.put(COL_STATUS, datum.status)
-            cv.put(COL_IS_DELETED, datum.isDeleted)
-            
-            val insertedID = db.replace(tableName, null, cv)
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    val tableName = TABLE_MACHINES_TASKS
+    for (datum in data) {
+      cv.put(COL_ID, datum.id)
+      cv.put(COL_ORG_ID, datum.orgId)
+      cv.put(COL_SITE_ID, datum.siteId)
+      cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
+      cv.put(COL_MACHINE_TASK_ID, datum.machineTaskId)
+      cv.put(COL_NAME, datum.name)
+      cv.put(COL_PRIORITY, datum.priority)
+      cv.put(COL_STATUS, datum.status)
+      cv.put(COL_IS_DELETED, datum.isDeleted)
+      
+      val insertedID = db.replace(tableName, null, cv)
 //            myHelper.printInsertion(tableName, insertedID, datum)
-        }
     }
+  }
+  
+  fun insertMachinesPlants(data: ArrayList<OperatorAPI>) {
     
-    fun insertMachinesPlants(data: ArrayList<OperatorAPI>) {
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        val tableName = TABLE_MACHINES_PLANTS
-        
-        for (datum in data) {
-            cv.put(COL_ID, datum.id)
-            cv.put(COL_ORG_ID, datum.orgId)
-            cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
-            cv.put(COL_MACHINE_BRAND_ID, datum.machineBrandId)
-            cv.put(COL_NAME, datum.name)
-            cv.put(COL_STATUS, datum.status)
-            cv.put(COL_IS_DELETED, datum.isDeleted)
-            
-            val insertedID = db.replace(tableName, null, cv)
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    val tableName = TABLE_MACHINES_PLANTS
+    
+    for (datum in data) {
+      cv.put(COL_ID, datum.id)
+      cv.put(COL_ORG_ID, datum.orgId)
+      cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
+      cv.put(COL_MACHINE_BRAND_ID, datum.machineBrandId)
+      cv.put(COL_NAME, datum.name)
+      cv.put(COL_STATUS, datum.status)
+      cv.put(COL_IS_DELETED, datum.isDeleted)
+      
+      val insertedID = db.replace(tableName, null, cv)
 //            myHelper.printInsertion(tableName, insertedID, datum)
-        }
     }
+  }
+  
+  fun insertMachinesBrands(data: ArrayList<OperatorAPI>) {
     
-    fun insertMachinesBrands(data: ArrayList<OperatorAPI>) {
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        val tableName = TABLE_MACHINES_BRANDS
-        
-        for (datum in data) {
-            cv.put(COL_ID, datum.id)
-            cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
-            cv.put(COL_NAME, datum.name)
-            cv.put(COL_STATUS, datum.status)
-            cv.put(COL_IS_DELETED, datum.isDeleted)
-            
-            val insertedID = db.replace(tableName, null, cv)
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    val tableName = TABLE_MACHINES_BRANDS
+    
+    for (datum in data) {
+      cv.put(COL_ID, datum.id)
+      cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
+      cv.put(COL_NAME, datum.name)
+      cv.put(COL_STATUS, datum.status)
+      cv.put(COL_IS_DELETED, datum.isDeleted)
+      
+      val insertedID = db.replace(tableName, null, cv)
 //            myHelper.printInsertion(tableName, insertedID, datum)
-        }
     }
+  }
+  
+  fun insertMachinesTypes(data: ArrayList<OperatorAPI>) {
     
-    fun insertMachinesTypes(data: ArrayList<OperatorAPI>) {
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        val tableName = TABLE_MACHINES_TYPES
-        
-        for (datum in data) {
-            cv.put(COL_ID, datum.id)
-            cv.put(COL_NAME, datum.name)
-            cv.put(COL_STATUS, datum.status)
-            cv.put(COL_IS_DELETED, datum.isDeleted)
-            
-            val insertedID = db.replace(tableName, null, cv)
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    val tableName = TABLE_MACHINES_TYPES
+    
+    for (datum in data) {
+      cv.put(COL_ID, datum.id)
+      cv.put(COL_NAME, datum.name)
+      cv.put(COL_STATUS, datum.status)
+      cv.put(COL_IS_DELETED, datum.isDeleted)
+      
+      val insertedID = db.replace(tableName, null, cv)
 //            myHelper.printInsertion(tableName, insertedID, datum)
-        }
     }
+  }
+  
+  fun insertSites(data: ArrayList<OperatorAPI>) {
     
-    fun insertSites(data: ArrayList<OperatorAPI>) {
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        val tableName = TABLE_SITES
-        
-        for (datum in data) {
-            cv.put(COL_ID, datum.siteId)
-            cv.put(COL_NAME, datum.siteName)
-            cv.put(COL_STATUS, datum.status)
-            cv.put(COL_IS_DELETED, datum.isDeleted)
-            
-            val insertedID = db.replace(tableName, null, cv)
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    val tableName = TABLE_SITES
+    
+    for (datum in data) {
+      cv.put(COL_ID, datum.siteId)
+      cv.put(COL_NAME, datum.siteName)
+      cv.put(COL_STATUS, datum.status)
+      cv.put(COL_IS_DELETED, datum.isDeleted)
+      
+      val insertedID = db.replace(tableName, null, cv)
 //            myHelper.printInsertion(tableName, insertedID, datum)
-        }
     }
+  }
+  
+  fun insertOperators(data: ArrayList<OperatorAPI>) {
     
-    fun insertOperators(data: ArrayList<OperatorAPI>) {
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        val tableName = TABLE_OPERATORS
-        
-        for (datum in data) {
-            cv.put(COL_ID, datum.id)
-            cv.put(COL_ORG_ID, datum.orgId)
-            cv.put(COL_NAME, datum.name)
-            cv.put(COL_PIN, datum.pin)
-            cv.put(COL_STATUS, datum.status)
-            cv.put(COL_IS_DELETED, datum.isDeleted)
-            
-            val insertedID = db.replace(tableName, null, cv)
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    val tableName = TABLE_OPERATORS
+    
+    for (datum in data) {
+      cv.put(COL_ID, datum.id)
+      cv.put(COL_ORG_ID, datum.orgId)
+      cv.put(COL_NAME, datum.name)
+      cv.put(COL_PIN, datum.pin)
+      cv.put(COL_STATUS, datum.status)
+      cv.put(COL_IS_DELETED, datum.isDeleted)
+      
+      val insertedID = db.replace(tableName, null, cv)
 //            myHelper.printInsertion(tableName, insertedID, datum)
-        }
     }
+  }
+  
+  fun insertStopReasons(data: ArrayList<OperatorAPI>) {
     
-    fun insertStopReasons(data: ArrayList<OperatorAPI>) {
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        val tableName = TABLE_STOP_REASONS
-        
-        for (datum in data) {
-            cv.put(COL_ID, datum.id)
-            cv.put(COL_ORG_ID, datum.orgId)
-            cv.put(COL_NAME, datum.name)
-            cv.put(COL_STATUS, datum.status)
-            cv.put(COL_IS_DELETED, datum.isDeleted)
-            
-            val insertedID = db.replace(TABLE_STOP_REASONS, null, cv)
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    val tableName = TABLE_STOP_REASONS
+    
+    for (datum in data) {
+      cv.put(COL_ID, datum.id)
+      cv.put(COL_ORG_ID, datum.orgId)
+      cv.put(COL_NAME, datum.name)
+      cv.put(COL_STATUS, datum.status)
+      cv.put(COL_IS_DELETED, datum.isDeleted)
+      
+      val insertedID = db.replace(TABLE_STOP_REASONS, null, cv)
 //            myHelper.printInsertion(tableName, insertedID, datum)
-        }
     }
+  }
+  
+  fun insertMaterials(data: ArrayList<OperatorAPI>) {
     
-    fun insertMaterials(data: ArrayList<OperatorAPI>) {
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        val tableName = TABLE_MATERIALS
-        for (datum in data) {
-            cv.put(COL_ID, datum.id)
-            cv.put(COL_ORG_ID, datum.orgId)
-            cv.put(COL_SITE_ID, datum.siteId)
-            cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
-            cv.put(COL_NAME, datum.name)
-            cv.put(COL_PRIORITY, datum.priority)
-            cv.put(COL_STATUS, datum.status)
-            cv.put(COL_IS_DELETED, datum.isDeleted)
-            
-            val insertedID = db.replace(tableName, null, cv)
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    val tableName = TABLE_MATERIALS
+    for (datum in data) {
+      cv.put(COL_ID, datum.id)
+      cv.put(COL_ORG_ID, datum.orgId)
+      cv.put(COL_SITE_ID, datum.siteId)
+      cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
+      cv.put(COL_NAME, datum.name)
+      cv.put(COL_PRIORITY, datum.priority)
+      cv.put(COL_STATUS, datum.status)
+      cv.put(COL_IS_DELETED, datum.isDeleted)
+      
+      val insertedID = db.replace(tableName, null, cv)
 //            myHelper.printInsertion(tableName, insertedID, datum)
-        }
     }
+  }
+  
+  fun insertMachines(data: ArrayList<OperatorAPI>) {
     
-    fun insertMachines(data: ArrayList<OperatorAPI>) {
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        val tableName = TABLE_MACHINES
-        for (datum in data) {
-            cv.put(COL_ID, datum.id)
-            cv.put(COL_ORG_ID, datum.orgId)
-            cv.put(COL_SITE_ID, datum.siteId)
-            cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
-            cv.put(COL_MACHINE_BRAND_ID, datum.machineBrandId)
-            cv.put(COL_MACHINE_PLANT_ID, datum.machinePlantId)
-            cv.put(COL_NUMBER, datum.number)
-            cv.put(COL_TOTAL_TIME, datum.totalHours)
-            cv.put(COL_PRIORITY, datum.priority)
-            cv.put(COL_STATUS, datum.status)
-            cv.put(COL_IS_DELETED, datum.isDeleted)
-            
-            val insertedID = db.replace(tableName, null, cv)
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    val tableName = TABLE_MACHINES
+    for (datum in data) {
+      cv.put(COL_ID, datum.id)
+      cv.put(COL_ORG_ID, datum.orgId)
+      cv.put(COL_SITE_ID, datum.siteId)
+      cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
+      cv.put(COL_MACHINE_BRAND_ID, datum.machineBrandId)
+      cv.put(COL_MACHINE_PLANT_ID, datum.machinePlantId)
+      cv.put(COL_NUMBER, datum.number)
+      cv.put(COL_TOTAL_TIME, datum.totalHours)
+      cv.put(COL_PRIORITY, datum.priority)
+      cv.put(COL_STATUS, datum.status)
+      cv.put(COL_IS_DELETED, datum.isDeleted)
+      
+      val insertedID = db.replace(tableName, null, cv)
 //            myHelper.printInsertion(tableName, insertedID, datum)
-        }
     }
+  }
+  
+  fun insertLocations(data: ArrayList<OperatorAPI>) {
     
-    fun insertLocations(data: ArrayList<OperatorAPI>) {
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        val tableName = TABLE_LOCATIONS
-        for (datum in data) {
-            cv.put(COL_ID, datum.id)
-            cv.put(COL_ORG_ID, datum.orgId)
-            cv.put(COL_SITE_ID, datum.siteId)
-            cv.put(COL_NAME, datum.name)
-            cv.put(COL_PRIORITY, datum.priority)
-            cv.put(COL_STATUS, datum.status)
-            cv.put(COL_IS_DELETED, datum.isDeleted)
-            
-            val insertedID = db.replace(tableName, null, cv)
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    val tableName = TABLE_LOCATIONS
+    for (datum in data) {
+      cv.put(COL_ID, datum.id)
+      cv.put(COL_ORG_ID, datum.orgId)
+      cv.put(COL_SITE_ID, datum.siteId)
+      cv.put(COL_NAME, datum.name)
+      cv.put(COL_PRIORITY, datum.priority)
+      cv.put(COL_STATUS, datum.status)
+      cv.put(COL_IS_DELETED, datum.isDeleted)
+      
+      val insertedID = db.replace(tableName, null, cv)
 //            myHelper.printInsertion(tableName, insertedID, datum)
-        }
     }
+  }
+  
+  fun insertMachineStop(myData: MyData): Long {
     
-    fun insertMachineStop(myData: MyData): Long {
-        
-        myHelper.log("insertMachineStop:$myData")
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        cv.put(COL_ORG_ID, myData.orgId)
-        cv.put(COL_SITE_ID, myData.siteId)
-        cv.put(COL_MACHINE_TYPE_ID, myData.machineTypeId)
-        cv.put(COL_MACHINE_ID, myData.machineId)
-        cv.put(COL_MACHINE_STOP_REASON_ID, myData.machine_stop_reason_id)
-        
-        cv.put(COL_START_TIME, myData.startTime)
-        cv.put(COL_END_TIME, myData.stopTime)
-        cv.put(COL_TOTAL_TIME, myData.totalTime)
-        
-        cv.put(COL_TIME, myData.time.toLong())
-        cv.put(COL_DATE, myData.date)
-        cv.put(COL_IS_DAY_WORKS, myData.isDayWorks)
-        
-        
-        cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(myData.loadingGPSLocation))
-        cv.put(
-            COL_UNLOADING_GPS_LOCATION,
-            myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
-        )
-        cv.put(COL_OPERATOR_ID, myData.operatorId)
-        cv.put(COL_IS_SYNC, myData.isSync)
-        
-        
-        // myHelper.log("insertID:$insertID")
-        return db.insert(TABLE_MACHINES_STOPS, null, cv)
-    }
+    myHelper.log("insertMachineStop:$myData")
     
-    fun insertTrip(myData: MyData): Long {
-        
-        myHelper.log("insertTrip:$myData")
-        val currentTime = System.currentTimeMillis()
-        myData.startTime = currentTime
-        
-        val time = System.currentTimeMillis()
-        myData.time = time.toString()
-        myData.date = myHelper.getDate(time.toString())
-        myData.machineTypeId = myHelper.getMachineTypeID()
-        myData.machineId = myHelper.getMachineID()
-        
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        cv.put(COL_ORG_ID, myData.orgId)
-        cv.put(COL_SITE_ID, myData.siteId)
-        cv.put(COL_TRIP_TYPE, myData.tripType)
-        cv.put(COL_TRIP0_ID, myData.trip0ID)
-        cv.put(COL_MACHINE_TYPE_ID, myData.machineTypeId)
-        cv.put(COL_MACHINE_ID, myData.machineId)
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    cv.put(COL_ORG_ID, myData.orgId)
+    cv.put(COL_SITE_ID, myData.siteId)
+    cv.put(COL_MACHINE_TYPE_ID, myData.machineTypeId)
+    cv.put(COL_MACHINE_ID, myData.machineId)
+    cv.put(COL_MACHINE_STOP_REASON_ID, myData.machine_stop_reason_id)
+    
+    cv.put(COL_START_TIME, myData.startTime)
+    cv.put(COL_END_TIME, myData.stopTime)
+    cv.put(COL_TOTAL_TIME, myData.totalTime)
+    
+    cv.put(COL_TIME, myData.time.toLong())
+    cv.put(COL_DATE, myData.date)
+    cv.put(COL_IS_DAY_WORKS, myData.isDayWorks)
+    
+    
+    cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(myData.loadingGPSLocation))
+    cv.put(
+      COL_UNLOADING_GPS_LOCATION,
+      myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
+    )
+    cv.put(COL_OPERATOR_ID, myData.operatorId)
+    cv.put(COL_IS_SYNC, myData.isSync)
+    
+    
+    // myHelper.log("insertID:$insertID")
+    return db.insert(TABLE_MACHINES_STOPS, null, cv)
+  }
+  
+  fun insertTrip(myData: MyData): Long {
+    
+    myHelper.log("insertTrip:$myData")
+    val currentTime = System.currentTimeMillis()
+    myData.startTime = currentTime
+    
+    val time = System.currentTimeMillis()
+    myData.time = time.toString()
+    myData.date = myHelper.getDate(time.toString())
+    myData.machineTypeId = myHelper.getMachineTypeID()
+    myData.machineId = myHelper.getMachineID()
+    
+    
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    cv.put(COL_ORG_ID, myData.orgId)
+    cv.put(COL_SITE_ID, myData.siteId)
+    cv.put(COL_TRIP_TYPE, myData.tripType)
+    cv.put(COL_TRIP0_ID, myData.trip0ID)
+    cv.put(COL_MACHINE_TYPE_ID, myData.machineTypeId)
+    cv.put(COL_MACHINE_ID, myData.machineId)
 
 //        Back Load saving as Loading item with Trip 0 ID
-        if (myData.nextAction == 2) {
-            cv.put(COL_LOADING_MACHINE_ID, myData.back_loading_machine_id)
-            
-            cv.put(COL_LOADING_MATERIAL_ID, myData.back_loading_material_id)
-            
-            cv.put(COL_LOADING_LOCATION_ID, myData.back_loading_location_id)
-            
-        } else {
-            cv.put(COL_LOADING_MACHINE_ID, myData.loading_machine_id)
-            
-            cv.put(COL_LOADING_MATERIAL_ID, myData.loading_material_id)
-            
-            cv.put(COL_LOADING_LOCATION_ID, myData.loading_location_id)
-        }
-        
-        cv.put(COL_UNLOADING_WEIGHT, myData.unloadingWeight)
-        
-        cv.put(COL_START_TIME, myData.startTime)
-        cv.put(COL_END_TIME, myData.stopTime)
-        cv.put(COL_TOTAL_TIME, myData.totalTime)
-        
-        cv.put(COL_TIME, myData.time.toLong())
-        cv.put(COL_DATE, myData.date)
-        cv.put(COL_IS_DAY_WORKS, myData.isDayWorks)
-        
-        
-        cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(myData.loadingGPSLocation))
-        cv.put(
-            COL_UNLOADING_GPS_LOCATION,
-            myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
-        )
-        cv.put(COL_OPERATOR_ID, myData.operatorId)
-        cv.put(COL_IS_SYNC, myData.isSync)
-        
-        // myHelper.log("BeforeInsertTrip--:$myData")
-        
-        // myHelper.log("insertID:$insertID")
-        return db.insert(TABLE_TRIP, null, cv)
+    if (myData.nextAction == 2) {
+      cv.put(COL_LOADING_MACHINE_ID, myData.back_loading_machine_id)
+      
+      cv.put(COL_LOADING_MATERIAL_ID, myData.back_loading_material_id)
+      
+      cv.put(COL_LOADING_LOCATION_ID, myData.back_loading_location_id)
+      
+    } else {
+      cv.put(COL_LOADING_MACHINE_ID, myData.loading_machine_id)
+      
+      cv.put(COL_LOADING_MATERIAL_ID, myData.loading_material_id)
+      
+      cv.put(COL_LOADING_LOCATION_ID, myData.loading_location_id)
     }
     
-    fun insertDelay(eWork: EWork): Long {
+    cv.put(COL_UNLOADING_WEIGHT, myData.unloadingWeight)
+    
+    cv.put(COL_START_TIME, myData.startTime)
+    cv.put(COL_END_TIME, myData.stopTime)
+    cv.put(COL_TOTAL_TIME, myData.totalTime)
+    
+    cv.put(COL_TIME, myData.time.toLong())
+    cv.put(COL_DATE, myData.date)
+    cv.put(COL_IS_DAY_WORKS, myData.isDayWorks)
+    
+    
+    cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(myData.loadingGPSLocation))
+    cv.put(
+      COL_UNLOADING_GPS_LOCATION,
+      myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
+    )
+    cv.put(COL_OPERATOR_ID, myData.operatorId)
+    cv.put(COL_IS_SYNC, myData.isSync)
+    
+    // myHelper.log("BeforeInsertTrip--:$myData")
+    
+    // myHelper.log("insertID:$insertID")
+    return db.insert(TABLE_TRIP, null, cv)
+  }
+  
+  fun insertDelay(eWork: EWork): Long {
 
 //        val time = System.currentTimeMillis()
 ////        eWork.time = time.toString()
@@ -1330,2175 +1333,2175 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
 //        eWork.stopTime = time
 //        eWork.totalTime = eWork.stopTime - eWork.startTime
 //        eWork.date = myHelper.getDate(time)
-        
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        cv.put(COL_ORG_ID, eWork.orgId)
-        cv.put(COL_SITE_ID, eWork.siteId)
-        cv.put(COL_MACHINE_TYPE_ID, eWork.machineTypeId)
-        cv.put(COL_MACHINE_ID, eWork.machineId)
-        cv.put(COL_START_TIME, eWork.startTime)
-        cv.put(COL_END_TIME, eWork.stopTime)
-        cv.put(COL_TOTAL_TIME, eWork.totalTime)
-        cv.put(COL_TIME, eWork.time.toLong())
-        cv.put(COL_DATE, eWork.date)
-        cv.put(COL_IS_DAY_WORKS, eWork.isDayWorks)
-        
-        cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(eWork.loadingGPSLocation))
-        cv.put(
-            COL_UNLOADING_GPS_LOCATION,
-            myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
-        )
-        cv.put(COL_OPERATOR_ID, eWork.operatorId)
-        cv.put(COL_IS_SYNC, eWork.isSync)
-        
-        myHelper.log("delayInsert:$eWork")
-        // myHelper.log("insertID:$insertID")
-        return db.insert(TABLE_WAITS, null, cv)
-    }
     
-    fun insertEWorkOffLoad(eWork: EWork): Long {
-        val time = System.currentTimeMillis()
-        eWork.time = time.toString()
-        eWork.date = myHelper.getDate(time)
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        cv.put(COL_ORG_ID, eWork.orgId)
-        cv.put(COL_SITE_ID, eWork.siteId)
-        cv.put(COL_MACHINE_TYPE_ID, eWork.machineTypeId)
-        cv.put(COL_MACHINE_ID, eWork.machineId)
-        cv.put(COL_EWORK_ID, eWork.eWorkId)
-        cv.put(COL_TIME, eWork.time.toLong())
-        cv.put(COL_DATE, eWork.date)
-        cv.put(COL_IS_DAY_WORKS, eWork.isDayWorks)
-        
-        cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(eWork.loadingGPSLocation))
-        cv.put(
-            COL_UNLOADING_GPS_LOCATION,
-            myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
-        )
-        cv.put(COL_OPERATOR_ID, eWork.operatorId)
-        cv.put(COL_IS_SYNC, eWork.isSync)
-        
-        // myHelper.log("insertID:$insertID")
-        return db.insert(TABLE_E_WORK_ACTION_OFFLOADING, null, cv)
-    }
     
-    /**
-     * eWorkType 1 = General Digging
-     * eWorkType 2 = Trenching
-     * eWorkType 3 = Scraper Trimming
-     * eWorkActionType 1 = Side Casting
-     * eWorkActionType 2 = Off Loading
-     */
-    fun insertEWork(eWork: EWork): Long {
-        
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        cv.put(COL_ORG_ID, eWork.orgId)
-        cv.put(COL_SITE_ID, eWork.siteId)
-        cv.put(COL_MACHINE_TYPE_ID, eWork.machineTypeId)
-        cv.put(COL_MACHINE_ID, eWork.machineId)
-        cv.put(COL_EWORK_TYPE, eWork.workType)
-        cv.put(COL_EWORK_ACTION_TYPE, eWork.workActionType)
-        cv.put(COL_START_TIME, eWork.startTime)
-        
-        cv.put(COL_END_TIME, eWork.stopTime)
-        
-        cv.put(COL_TOTAL_TIME, eWork.totalTime)
-        cv.put(COL_TIME, eWork.time.toLong())
-        cv.put(COL_DATE, eWork.date)
-        cv.put(COL_IS_DAY_WORKS, eWork.isDayWorks)
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    cv.put(COL_ORG_ID, eWork.orgId)
+    cv.put(COL_SITE_ID, eWork.siteId)
+    cv.put(COL_MACHINE_TYPE_ID, eWork.machineTypeId)
+    cv.put(COL_MACHINE_ID, eWork.machineId)
+    cv.put(COL_START_TIME, eWork.startTime)
+    cv.put(COL_END_TIME, eWork.stopTime)
+    cv.put(COL_TOTAL_TIME, eWork.totalTime)
+    cv.put(COL_TIME, eWork.time.toLong())
+    cv.put(COL_DATE, eWork.date)
+    cv.put(COL_IS_DAY_WORKS, eWork.isDayWorks)
+    
+    cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(eWork.loadingGPSLocation))
+    cv.put(
+      COL_UNLOADING_GPS_LOCATION,
+      myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
+    )
+    cv.put(COL_OPERATOR_ID, eWork.operatorId)
+    cv.put(COL_IS_SYNC, eWork.isSync)
+    
+    myHelper.log("delayInsert:$eWork")
+    // myHelper.log("insertID:$insertID")
+    return db.insert(TABLE_WAITS, null, cv)
+  }
+  
+  fun insertEWorkOffLoad(eWork: EWork): Long {
+    val time = System.currentTimeMillis()
+    eWork.time = time.toString()
+    eWork.date = myHelper.getDate(time)
+    
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    cv.put(COL_ORG_ID, eWork.orgId)
+    cv.put(COL_SITE_ID, eWork.siteId)
+    cv.put(COL_MACHINE_TYPE_ID, eWork.machineTypeId)
+    cv.put(COL_MACHINE_ID, eWork.machineId)
+    cv.put(COL_EWORK_ID, eWork.eWorkId)
+    cv.put(COL_TIME, eWork.time.toLong())
+    cv.put(COL_DATE, eWork.date)
+    cv.put(COL_IS_DAY_WORKS, eWork.isDayWorks)
+    
+    cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(eWork.loadingGPSLocation))
+    cv.put(
+      COL_UNLOADING_GPS_LOCATION,
+      myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
+    )
+    cv.put(COL_OPERATOR_ID, eWork.operatorId)
+    cv.put(COL_IS_SYNC, eWork.isSync)
+    
+    // myHelper.log("insertID:$insertID")
+    return db.insert(TABLE_E_WORK_ACTION_OFFLOADING, null, cv)
+  }
+  
+  /**
+   * eWorkType 1 = General Digging
+   * eWorkType 2 = Trenching
+   * eWorkType 3 = Scraper Trimming
+   * eWorkActionType 1 = Side Casting
+   * eWorkActionType 2 = Off Loading
+   */
+  fun insertEWork(eWork: EWork): Long {
+    
+    
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    cv.put(COL_ORG_ID, eWork.orgId)
+    cv.put(COL_SITE_ID, eWork.siteId)
+    cv.put(COL_MACHINE_TYPE_ID, eWork.machineTypeId)
+    cv.put(COL_MACHINE_ID, eWork.machineId)
+    cv.put(COL_EWORK_TYPE, eWork.workType)
+    cv.put(COL_EWORK_ACTION_TYPE, eWork.workActionType)
+    cv.put(COL_START_TIME, eWork.startTime)
+    
+    cv.put(COL_END_TIME, eWork.stopTime)
+    
+    cv.put(COL_TOTAL_TIME, eWork.totalTime)
+    cv.put(COL_TIME, eWork.time.toLong())
+    cv.put(COL_DATE, eWork.date)
+    cv.put(COL_IS_DAY_WORKS, eWork.isDayWorks)
 
 
 //        cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(eWork.loadingGPSLocation))
-        cv.put(COL_LOADING_GPS_LOCATION, eWork.loadingGPSLocationString)
-        
-        cv.put(COL_UNLOADING_GPS_LOCATION, myHelper.getGPSLocationToString(eWork.unloadingGPSLocation))
-        
-        cv.put(COL_OPERATOR_ID, eWork.operatorId)
-        cv.put(COL_IS_SYNC, eWork.isSync)
-        // myHelper.log("insertID:$insertID")
-        return db.insert(TABLE_E_WORK, null, cv)
-        
-    }
+    cv.put(COL_LOADING_GPS_LOCATION, eWork.loadingGPSLocationString)
     
-    fun insertELoad(myData: MyData): Long {
+    cv.put(COL_UNLOADING_GPS_LOCATION, myHelper.getGPSLocationToString(eWork.unloadingGPSLocation))
+    
+    cv.put(COL_OPERATOR_ID, eWork.operatorId)
+    cv.put(COL_IS_SYNC, eWork.isSync)
+    // myHelper.log("insertID:$insertID")
+    return db.insert(TABLE_E_WORK, null, cv)
+    
+  }
+  
+  fun insertELoad(myData: MyData): Long {
 
 //        val time = System.currentTimeMillis()
 //        myData.time = time.toString()
 //        myData.date = myHelper.getDate(time.toString())
 //        myData.loadedMachineType = myHelper.getMachineTypeID()
-        
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        cv.put(COL_ORG_ID, myData.orgId)
-        cv.put(COL_SITE_ID, myData.siteId)
-        cv.put(COL_MACHINE_ID, myData.machineId)
-        cv.put(COL_LOAD_TYPE_ID, myData.loadTypeId)
-        cv.put(COL_MACHINE_TYPE_ID, myData.machineTypeId)
-        cv.put(COL_LOADING_MATERIAL_ID, myData.loading_material_id)
-        cv.put(COL_LOADING_LOCATION_ID, myData.loading_location_id)
-        cv.put(COL_UNLOADING_WEIGHT, myData.unloadingWeight)
-        
-        
-        cv.put(COL_START_TIME, myData.startTime)
-        cv.put(COL_END_TIME, myData.stopTime)
-        cv.put(COL_TOTAL_TIME, myData.totalTime)
-        cv.put(COL_TIME, myData.time.toLong())
-        cv.put(COL_DATE, myData.date)
-        cv.put(COL_IS_DAY_WORKS, myData.isDayWorks)
-        
-        
-        cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(myData.loadingGPSLocation))
-        cv.put(
-            COL_UNLOADING_GPS_LOCATION,
-            myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
-        )
-        cv.put(COL_OPERATOR_ID, myData.operatorId)
-        cv.put(COL_IS_SYNC, myData.isSync)
-        // myHelper.log("insertID:$insertID")
-        return db.insert(TABLE_E_LOAD_HISTORY, null, cv)
-    }
     
-    /**
-     * This method will return Orgs Map details for selected site
-     */
-    fun getCurrentOrgsMap(): MyData? {
-        
-        val db = this.readableDatabase
-        
-        val query =
-            "Select * FROM $TABLE_ORGS_MAPS  WHERE $COL_ORG_ID = ${myHelper.getLoginAPI().org_id} AND $COL_SITE_ID = ${myHelper.getMachineSettings().siteId} AND  $COL_IS_DELETED = 0 AND $COL_STATUS = 1  ORDER BY $COL_ID DESC "
-        val result = db.rawQuery(query, null)
-        var datum: MyData? = null
-        if (result.moveToFirst()) {
-            
-            datum = MyData()
-            datum.id = result.getInt(result.getColumnIndex(COL_ID))
-            datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-            datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-            datum.aws_path = result.getString(result.getColumnIndex(COL_AWS_PATH))
-            datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
-            datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
-            datum.isDownloaded = result.getInt(result.getColumnIndex(COL_IS_DOWNLOADED))
-            datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
-            datum.updated_at = result.getString(result.getColumnIndex(COL_UPDATED_AT))
-        }
-        result.close()
-        db.close()
-        return datum
-    }
     
-    fun getOrgsMaps(): ArrayList<MyData> {
-        val list: ArrayList<MyData> = ArrayList()
-        val db = this.readableDatabase
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    cv.put(COL_ORG_ID, myData.orgId)
+    cv.put(COL_SITE_ID, myData.siteId)
+    cv.put(COL_MACHINE_ID, myData.machineId)
+    cv.put(COL_LOAD_TYPE_ID, myData.loadTypeId)
+    cv.put(COL_MACHINE_TYPE_ID, myData.machineTypeId)
+    cv.put(COL_LOADING_MATERIAL_ID, myData.loading_material_id)
+    cv.put(COL_LOADING_LOCATION_ID, myData.loading_location_id)
+    cv.put(COL_UNLOADING_WEIGHT, myData.unloadingWeight)
+    
+    
+    cv.put(COL_START_TIME, myData.startTime)
+    cv.put(COL_END_TIME, myData.stopTime)
+    cv.put(COL_TOTAL_TIME, myData.totalTime)
+    cv.put(COL_TIME, myData.time.toLong())
+    cv.put(COL_DATE, myData.date)
+    cv.put(COL_IS_DAY_WORKS, myData.isDayWorks)
+    
+    
+    cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(myData.loadingGPSLocation))
+    cv.put(
+      COL_UNLOADING_GPS_LOCATION,
+      myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
+    )
+    cv.put(COL_OPERATOR_ID, myData.operatorId)
+    cv.put(COL_IS_SYNC, myData.isSync)
+    // myHelper.log("insertID:$insertID")
+    return db.insert(TABLE_E_LOAD_HISTORY, null, cv)
+  }
+  
+  /**
+   * This method will return Orgs Map details for selected site
+   */
+  fun getCurrentOrgsMap(): MyData? {
+    
+    val db = this.readableDatabase
+    
+    val query =
+      "Select * FROM $TABLE_ORGS_MAPS  WHERE $COL_ORG_ID = ${myHelper.getLoginAPI().org_id} AND $COL_SITE_ID = ${myHelper.getMachineSettings().siteId} AND  $COL_IS_DELETED = 0 AND $COL_STATUS = 1  ORDER BY $COL_ID DESC "
+    val result = db.rawQuery(query, null)
+    var datum: MyData? = null
+    if (result.moveToFirst()) {
+      
+      datum = MyData()
+      datum.id = result.getInt(result.getColumnIndex(COL_ID))
+      datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+      datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+      datum.aws_path = result.getString(result.getColumnIndex(COL_AWS_PATH))
+      datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+      datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+      datum.isDownloaded = result.getInt(result.getColumnIndex(COL_IS_DOWNLOADED))
+      datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
+      datum.updated_at = result.getString(result.getColumnIndex(COL_UPDATED_AT))
+    }
+    result.close()
+    db.close()
+    return datum
+  }
+  
+  fun getOrgsMaps(): ArrayList<MyData> {
+    val list: ArrayList<MyData> = ArrayList()
+    val db = this.readableDatabase
 
 //        val query = "Select * FROM $TABLE_ORGS_MAPS  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1  ORDER BY $COL_ID DESC "
-        val query = "Select * FROM $TABLE_ORGS_MAPS ORDER BY $COL_ID DESC "
-        val result = db.rawQuery(query, null)
-        
-        if (result.moveToFirst()) {
-            do {
-                val datum = MyData()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-                datum.aws_path = result.getString(result.getColumnIndex(COL_AWS_PATH))
-                datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
-                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
-                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
-                datum.isDownloaded = result.getInt(result.getColumnIndex(COL_IS_DOWNLOADED))
-                datum.updated_at = result.getString(result.getColumnIndex(COL_UPDATED_AT))
-                list.add(datum)
-            } while (result.moveToNext())
-        }
-        result.close()
-        db.close()
-        return list
-    }
+    val query = "Select * FROM $TABLE_ORGS_MAPS ORDER BY $COL_ID DESC "
+    val result = db.rawQuery(query, null)
     
-    fun getOrgsMapByID(id: Int): MyData? {
-        
-        val db = this.readableDatabase
-        
-        val query = "Select * FROM $TABLE_ORGS_MAPS  WHERE $COL_ID = $id  ORDER BY $COL_ID DESC LIMIT 1"
-        val result = db.rawQuery(query, null)
-        
-        var datum: MyData? = null
-        
-        if (result.moveToFirst()) {
-            datum = MyData()
-            datum.id = result.getInt(result.getColumnIndex(COL_ID))
-            datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-            datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-            datum.aws_path = result.getString(result.getColumnIndex(COL_AWS_PATH))
-            datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
-            datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
-            datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
-            datum.isDownloaded = result.getInt(result.getColumnIndex(COL_IS_DOWNLOADED))
-            datum.updated_at = result.getString(result.getColumnIndex(COL_UPDATED_AT))
-        }
-        result.close()
+    if (result.moveToFirst()) {
+      do {
+        val datum = MyData()
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+        datum.aws_path = result.getString(result.getColumnIndex(COL_AWS_PATH))
+        datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+        datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+        datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
+        datum.isDownloaded = result.getInt(result.getColumnIndex(COL_IS_DOWNLOADED))
+        datum.updated_at = result.getString(result.getColumnIndex(COL_UPDATED_AT))
+        list.add(datum)
+      } while (result.moveToNext())
+    }
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun getOrgsMapByID(id: Int): MyData? {
+    
+    val db = this.readableDatabase
+    
+    val query = "Select * FROM $TABLE_ORGS_MAPS  WHERE $COL_ID = $id  ORDER BY $COL_ID DESC LIMIT 1"
+    val result = db.rawQuery(query, null)
+    
+    var datum: MyData? = null
+    
+    if (result.moveToFirst()) {
+      datum = MyData()
+      datum.id = result.getInt(result.getColumnIndex(COL_ID))
+      datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+      datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+      datum.aws_path = result.getString(result.getColumnIndex(COL_AWS_PATH))
+      datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+      datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+      datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
+      datum.isDownloaded = result.getInt(result.getColumnIndex(COL_IS_DOWNLOADED))
+      datum.updated_at = result.getString(result.getColumnIndex(COL_UPDATED_AT))
+    }
+    result.close()
 //        db.close()
-        return datum
-    }
+    return datum
+  }
+  
+  fun getAdminCheckFormsCompletedServer(orderBy: String = "DESC"): ArrayList<MyData> {
+    val list: ArrayList<MyData> = ArrayList()
+    val db = this.readableDatabase
     
-    fun getAdminCheckFormsCompletedServer(orderBy: String = "DESC"): ArrayList<MyData> {
-        val list: ArrayList<MyData> = ArrayList()
-        val db = this.readableDatabase
-        
-        val query =
-            "Select * FROM $TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER WHERE $COL_MACHINE_ID = ${myHelper.getMachineID()} ORDER BY $COL_ID $orderBy "
-        val result = db.rawQuery(query, null)
-        
-        if (result.moveToFirst()) {
-            do {
-                val datum = MyData()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-                datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
-                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-                datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
-                datum.admin_checkforms_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_ID))
-                datum.admin_checkforms_schedules_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_ID))
-                datum.admin_checkforms_schedules_value = result.getString(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE))
-                datum.entry_type = result.getInt(result.getColumnIndex(COL_ENTRY_TYPE))
-                
-                datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
-                datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
-                datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
-                
-                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
-                datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
-                datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
-                datum.attempted_questions = result.getInt(result.getColumnIndex(COL_ATTEMPTED_QUESTIONS))
-                
-                datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
-                    result.getString(
-                        result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                    )
-                )
-                datum.loadingGPSLocationString = result.getString(
-                    result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                )
-                
-                datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
-                    result.getString(
-                        result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                    )
-                )
-                
-                datum.unloadingGPSLocationString = result.getString(
-                    result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                )
-                
-                list.add(datum)
-            } while (result.moveToNext())
-        }
-        result.close()
-        db.close()
-        return list
-    }
+    val query =
+      "Select * FROM $TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER WHERE $COL_MACHINE_ID = ${myHelper.getMachineID()} ORDER BY $COL_ID $orderBy "
+    val result = db.rawQuery(query, null)
     
-    fun getAdminCheckFormsDataByLocalID(completedCheckFormLocalID: Int): ArrayList<CheckFormData> {
-        val list: ArrayList<CheckFormData> = ArrayList()
-        val db = this.readableDatabase
+    if (result.moveToFirst()) {
+      do {
+        val datum = MyData()
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+        datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
+        datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+        datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
+        datum.admin_checkforms_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_ID))
+        datum.admin_checkforms_schedules_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_ID))
+        datum.admin_checkforms_schedules_value = result.getString(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE))
+        datum.entry_type = result.getInt(result.getColumnIndex(COL_ENTRY_TYPE))
         
-        val query =
-            "Select * FROM $TABLE_ADMIN_CHECKFORMS_DATA  WHERE $COL_ADMIN_CHECKFORMS_COMPLETED_LOCAL_ID = $completedCheckFormLocalID   "
-        val result = db.rawQuery(query, null)
+        datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
+        datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
+        datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
         
-        if (result.moveToFirst()) {
-            do {
-                val datum = CheckFormData()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.admin_checkforms_completed_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_COMPLETED_ID))
-                datum.admin_checkform_completed_local_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_COMPLETED_LOCAL_ID))
-                datum.admin_questions_id = result.getInt(result.getColumnIndex(COL_ADMIN_QUESTIONS_ID))
-                datum.answer = result.getString(result.getColumnIndex(COL_ANSWER))
-                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
-                
-                datum.answerDataObj = myHelper.getStringToAnswerData(
-                    result.getString(
-                        result.getColumnIndex(COL_ANSWER_DATA)
-                    )
-                )
-                datum.answerDataString = result.getString(
-                    result.getColumnIndex(COL_ANSWER_DATA)
-                )
-                
-                datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
-                
-                list.add(datum)
-            } while (result.moveToNext())
-        }
-        result.close()
-        db.close()
-        return list
+        datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
+        datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+        datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
+        datum.attempted_questions = result.getInt(result.getColumnIndex(COL_ATTEMPTED_QUESTIONS))
+        
+        datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
+          result.getString(
+            result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+          )
+        )
+        datum.loadingGPSLocationString = result.getString(
+          result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+        )
+        
+        datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
+          result.getString(
+            result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+          )
+        )
+        
+        datum.unloadingGPSLocationString = result.getString(
+          result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+        )
+        
+        list.add(datum)
+      } while (result.moveToNext())
     }
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun getAdminCheckFormsDataByLocalID(completedCheckFormLocalID: Int): ArrayList<CheckFormData> {
+    val list: ArrayList<CheckFormData> = ArrayList()
+    val db = this.readableDatabase
     
-    fun getAdminCheckFormsData(): ArrayList<CheckFormData> {
-        val list: ArrayList<CheckFormData> = ArrayList()
-        val db = this.readableDatabase
+    val query =
+      "Select * FROM $TABLE_ADMIN_CHECKFORMS_DATA  WHERE $COL_ADMIN_CHECKFORMS_COMPLETED_LOCAL_ID = $completedCheckFormLocalID   "
+    val result = db.rawQuery(query, null)
+    
+    if (result.moveToFirst()) {
+      do {
+        val datum = CheckFormData()
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.admin_checkforms_completed_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_COMPLETED_ID))
+        datum.admin_checkform_completed_local_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_COMPLETED_LOCAL_ID))
+        datum.admin_questions_id = result.getInt(result.getColumnIndex(COL_ADMIN_QUESTIONS_ID))
+        datum.answer = result.getString(result.getColumnIndex(COL_ANSWER))
+        datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
         
-        val query =
-            "Select * FROM $TABLE_ADMIN_CHECKFORMS_DATA ORDER BY $COL_ID DESC "
-        val result = db.rawQuery(query, null)
+        datum.answerDataObj = myHelper.getStringToAnswerData(
+          result.getString(
+            result.getColumnIndex(COL_ANSWER_DATA)
+          )
+        )
+        datum.answerDataString = result.getString(
+          result.getColumnIndex(COL_ANSWER_DATA)
+        )
         
-        if (result.moveToFirst()) {
-            do {
-                val datum = CheckFormData()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.admin_checkforms_completed_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_COMPLETED_ID))
-                datum.admin_checkform_completed_local_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_COMPLETED_LOCAL_ID))
-                datum.admin_questions_id = result.getInt(result.getColumnIndex(COL_ADMIN_QUESTIONS_ID))
-                datum.answer = result.getString(result.getColumnIndex(COL_ANSWER))
-                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
-                
-                datum.answerDataObj = myHelper.getStringToAnswerData(
-                    result.getString(
-                        result.getColumnIndex(COL_ANSWER_DATA)
-                    )
-                )
-                datum.answerDataString = result.getString(
-                    result.getColumnIndex(COL_ANSWER_DATA)
-                )
-                
-                datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
-                
-                list.add(datum)
-            } while (result.moveToNext())
-        }
-        result.close()
-        db.close()
-        return list
+        datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
+        
+        list.add(datum)
+      } while (result.moveToNext())
     }
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun getAdminCheckFormsData(): ArrayList<CheckFormData> {
+    val list: ArrayList<CheckFormData> = ArrayList()
+    val db = this.readableDatabase
     
-    fun getAdminCheckFormsDue(): ArrayList<MyData> {
-        val dueCheckForms = ArrayList<MyData>()
-        val adminCheckForms = getAdminCheckForms()
+    val query =
+      "Select * FROM $TABLE_ADMIN_CHECKFORMS_DATA ORDER BY $COL_ID DESC "
+    val result = db.rawQuery(query, null)
+    
+    if (result.moveToFirst()) {
+      do {
+        val datum = CheckFormData()
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.admin_checkforms_completed_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_COMPLETED_ID))
+        datum.admin_checkform_completed_local_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_COMPLETED_LOCAL_ID))
+        datum.admin_questions_id = result.getInt(result.getColumnIndex(COL_ADMIN_QUESTIONS_ID))
+        datum.answer = result.getString(result.getColumnIndex(COL_ANSWER))
+        datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
+        
+        datum.answerDataObj = myHelper.getStringToAnswerData(
+          result.getString(
+            result.getColumnIndex(COL_ANSWER_DATA)
+          )
+        )
+        datum.answerDataString = result.getString(
+          result.getColumnIndex(COL_ANSWER_DATA)
+        )
+        
+        datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
+        
+        list.add(datum)
+      } while (result.moveToNext())
+    }
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun getAdminCheckFormsDue(): ArrayList<MyData> {
+    val dueCheckForms = ArrayList<MyData>()
+    val adminCheckForms = getAdminCheckForms()
 //        myHelper.log("adminCheckForms:$adminCheckForms")
-        
-        adminCheckForms.forEach { adminCheckForm ->
-            myHelper.log("getMeterTimeForFinish1:${myHelper.getMeterTimeForFinish()}")
+    
+    adminCheckForms.forEach { adminCheckForm ->
+      myHelper.log("getMeterTimeForFinish1:${myHelper.getMeterTimeForFinish()}")
 //            myHelper.log("adminCheckForm:$adminCheckForm")
-            // Check If CheckForm is valid for Current, Site, Machine Type and Machine
-            if (myHelper.isValidCheckForm(adminCheckForm)) {
-                val adminCheckFormsCompleted = getAdminCheckFormsCompletedServer(adminCheckForm.id)
-                
-                myHelper.log("Case:${adminCheckForm.admin_checkforms_schedules_id}")
-                when (adminCheckForm.admin_checkforms_schedules_id) {
-    
-                    1 -> {
-                        // Due after every Days passed
-                        if (myHelper.isDueCheckFormAfterDaysPassed(adminCheckForm, adminCheckFormsCompleted, getMachineHours("ASC"))) {
-                            dueCheckForms.add(adminCheckForm)
-                        }
-                    }
-                    2 -> {
-                        // Due after every Machine Hours duration
-                        if (myHelper.isDueCheckFormAfterMachineHoursCompleted(adminCheckForm, adminCheckFormsCompleted)) {
-                            dueCheckForms.add(adminCheckForm)
-                        }
-                    }
-                    3 -> {
-                        // Due at each machine start
-                        dueCheckForms.add(adminCheckForm)
-                    }
-                    4 -> {
-                        // Due at machine start - one time
-                        if (adminCheckFormsCompleted == null) {
-                            myHelper.log("already not completed")
-                            dueCheckForms.add(adminCheckForm)
-                        } else {
-                            // As it is one time so no need to show in due CheckForms
-                            myHelper.log("already completed")
-                        }
-                    }
-                    5 -> {
-                        // Due after Machine Hours - one time
-                        if (adminCheckFormsCompleted == null) {
-                            myHelper.log("already not completed")
-                            if (myHelper.isDueCheckFormAfterMachineHoursCompleted(adminCheckForm, adminCheckFormsCompleted)) {
-                                dueCheckForms.add(adminCheckForm)
-                            }
-                        } else {
-                            // As it is one time so no need to show in due CheckForms
-                            myHelper.log("already completed")
-                        }
-                    }
-                    6 -> {
-                        // Due after Days - one time
-                        if (adminCheckFormsCompleted == null) {
-                            myHelper.log("already not completed")
-                            if (myHelper.isDueCheckFormAfterDaysPassed(adminCheckForm, adminCheckFormsCompleted, getMachineHours("ASC"))) {
-                                dueCheckForms.add(adminCheckForm)
-                            }
-                        } else {
-                            // As it is one time so no need to show in due CheckForms
-                            myHelper.log("already completed")
-                        }
-                    }
-                }
+      // Check If CheckForm is valid for Current, Site, Machine Type and Machine
+      if (myHelper.isValidCheckForm(adminCheckForm)) {
+        val adminCheckFormsCompleted = getAdminCheckFormsCompletedServer(adminCheckForm.id)
+        
+        myHelper.log("Case:${adminCheckForm.admin_checkforms_schedules_id}")
+        when (adminCheckForm.admin_checkforms_schedules_id) {
+          
+          1 -> {
+            // Due after every Days passed
+            if (myHelper.isDueCheckFormAfterDaysPassed(adminCheckForm, adminCheckFormsCompleted, getMachineHours("ASC"))) {
+              dueCheckForms.add(adminCheckForm)
             }
-            
+          }
+          2 -> {
+            // Due after every Machine Hours duration
+            if (myHelper.isDueCheckFormAfterMachineHoursCompleted(adminCheckForm, adminCheckFormsCompleted)) {
+              dueCheckForms.add(adminCheckForm)
+            }
+          }
+          3 -> {
+            // Due at each machine start
+            dueCheckForms.add(adminCheckForm)
+          }
+          4 -> {
+            // Due at machine start - one time
+            if (adminCheckFormsCompleted == null) {
+              myHelper.log("already not completed")
+              dueCheckForms.add(adminCheckForm)
+            } else {
+              // As it is one time so no need to show in due CheckForms
+              myHelper.log("already completed")
+            }
+          }
+          5 -> {
+            // Due after Machine Hours - one time
+            if (adminCheckFormsCompleted == null) {
+              myHelper.log("already not completed")
+              if (myHelper.isDueCheckFormAfterMachineHoursCompleted(adminCheckForm, adminCheckFormsCompleted)) {
+                dueCheckForms.add(adminCheckForm)
+              }
+            } else {
+              // As it is one time so no need to show in due CheckForms
+              myHelper.log("already completed")
+            }
+          }
+          6 -> {
+            // Due after Days - one time
+            if (adminCheckFormsCompleted == null) {
+              myHelper.log("already not completed")
+              if (myHelper.isDueCheckFormAfterDaysPassed(adminCheckForm, adminCheckFormsCompleted, getMachineHours("ASC"))) {
+                dueCheckForms.add(adminCheckForm)
+              }
+            } else {
+              // As it is one time so no need to show in due CheckForms
+              myHelper.log("already completed")
+            }
+          }
         }
-        return dueCheckForms
+      }
+      
     }
+    return dueCheckForms
+  }
+  
+  /**
+   * Get Latest Completed CheckForm for selected Machine from AdminCheckForms.
+   */
+  fun getAdminCheckFormsCompletedServer(checkForm_id: Int): MyData? {
+    val db = this.readableDatabase
     
-    /**
-     * Get Latest Completed CheckForm for selected Machine from AdminCheckForms.
-     */
-    fun getAdminCheckFormsCompletedServer(checkForm_id: Int): MyData? {
-        val db = this.readableDatabase
-        
-        val query = "SELECT * FROM $TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER " +
-                "WHERE $COL_ADMIN_CHECKFORMS_ID = $checkForm_id AND $COL_MACHINE_ID = ${myHelper.getMachineID()} ORDER BY $COL_ID DESC LIMIT 1"
-        val result = db.rawQuery(query, null)
-        
-        var datum: MyData? = null
-        if (result.moveToFirst()) {
-            datum = MyData()
-            datum.id = result.getInt(result.getColumnIndex(COL_ID))
-            datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-            datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-            datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
-            datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-            datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
-            datum.admin_checkforms_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_ID))
-            datum.admin_checkforms_schedules_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_ID))
-            datum.admin_checkforms_schedules_value = result.getString(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE))
-            datum.entry_type = result.getInt(result.getColumnIndex(COL_ENTRY_TYPE))
-            
-            datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
-            datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
-            datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
-            
-            datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
-            datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
-            datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
-            
-            datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
-                result.getString(
-                    result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                )
-            )
-            datum.loadingGPSLocationString = result.getString(
-                result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-            )
-            
-            datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
-                result.getString(
-                    result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                )
-            )
-            datum.unloadingGPSLocationString = result.getString(
-                result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-            )
-            datum.attempted_questions = result.getInt(result.getColumnIndex(COL_ATTEMPTED_QUESTIONS))
-        }
-        result.close()
-        db.close()
-        return datum
+    val query = "SELECT * FROM $TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER " +
+            "WHERE $COL_ADMIN_CHECKFORMS_ID = $checkForm_id AND $COL_MACHINE_ID = ${myHelper.getMachineID()} ORDER BY $COL_ID DESC LIMIT 1"
+    val result = db.rawQuery(query, null)
+    
+    var datum: MyData? = null
+    if (result.moveToFirst()) {
+      datum = MyData()
+      datum.id = result.getInt(result.getColumnIndex(COL_ID))
+      datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+      datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+      datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
+      datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+      datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
+      datum.admin_checkforms_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_ID))
+      datum.admin_checkforms_schedules_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_ID))
+      datum.admin_checkforms_schedules_value = result.getString(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE))
+      datum.entry_type = result.getInt(result.getColumnIndex(COL_ENTRY_TYPE))
+      
+      datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
+      datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
+      datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
+      
+      datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
+      datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+      datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
+      
+      datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
+        result.getString(
+          result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+        )
+      )
+      datum.loadingGPSLocationString = result.getString(
+        result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+      )
+      
+      datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
+        result.getString(
+          result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+        )
+      )
+      datum.unloadingGPSLocationString = result.getString(
+        result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+      )
+      datum.attempted_questions = result.getInt(result.getColumnIndex(COL_ATTEMPTED_QUESTIONS))
     }
+    result.close()
+    db.close()
+    return datum
+  }
+  
+  fun getAdminCheckFormsCompleted(orderBy: String = "DESC"): ArrayList<MyData> {
+    val list: ArrayList<MyData> = ArrayList()
+    val db = this.readableDatabase
     
-    fun getAdminCheckFormsCompleted(orderBy: String = "DESC"): ArrayList<MyData> {
-        val list: ArrayList<MyData> = ArrayList()
-        val db = this.readableDatabase
-        
-        val query =
-            "Select * FROM $TABLE_ADMIN_CHECKFORMS_COMPLETED ORDER BY $COL_ID $orderBy "
-        val result = db.rawQuery(query, null)
-        
-        if (result.moveToFirst()) {
-            do {
-                val datum = MyData()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-                datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
-                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-                datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
-                datum.admin_checkforms_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_ID))
-                datum.admin_checkforms_schedules_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_ID))
-                datum.admin_checkforms_schedules_value = result.getString(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE))
-                datum.entry_type = result.getInt(result.getColumnIndex(COL_ENTRY_TYPE))
-                
-                datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
-                datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
-                datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
-                
-                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
-                datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
-                datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
-                
-                datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
-                    result.getString(
-                        result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                    )
-                )
-                datum.loadingGPSLocationString = result.getString(
-                    result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                )
-                
-                datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
-                    result.getString(
-                        result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                    )
-                )
-                
-                datum.unloadingGPSLocationString = result.getString(
-                    result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                )
-                
-                datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
-                datum.checkFormData = getAdminCheckFormsDataByLocalID(datum.id)
-                
-                list.add(datum)
-            } while (result.moveToNext())
-        }
-        result.close()
-        db.close()
-        return list
-    }
+    val query =
+      "Select * FROM $TABLE_ADMIN_CHECKFORMS_COMPLETED ORDER BY $COL_ID $orderBy "
+    val result = db.rawQuery(query, null)
     
-    fun getAdminCheckFormByID(id: Int): MyData {
-        val db = this.readableDatabase
-        
-        val query =
-            "Select * FROM $TABLE_ADMIN_CHECKFORMS WHERE $COL_ID = $id  "
-        val result = db.rawQuery(query, null)
+    if (result.moveToFirst()) {
+      do {
         val datum = MyData()
-        if (result.moveToFirst()) {
-            datum.id = result.getInt(result.getColumnIndex(COL_ID))
-            datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-            datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-            datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-            datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
-            datum.admin_checkforms_schedules_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_ID))
-            datum.admin_checkforms_schedules_value = result.getString(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE))
-            datum.name = result.getString(result.getColumnIndex(COL_NAME))
-            datum.questions_data = result.getString(result.getColumnIndex(COL_QUESTIONS_DATA))
-            datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
-            datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
-            
-        }
-        result.close()
-        db.close()
-        return datum
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+        datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
+        datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+        datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
+        datum.admin_checkforms_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_ID))
+        datum.admin_checkforms_schedules_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_ID))
+        datum.admin_checkforms_schedules_value = result.getString(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE))
+        datum.entry_type = result.getInt(result.getColumnIndex(COL_ENTRY_TYPE))
+        
+        datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
+        datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
+        datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
+        
+        datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
+        datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+        datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
+        
+        datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
+          result.getString(
+            result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+          )
+        )
+        datum.loadingGPSLocationString = result.getString(
+          result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+        )
+        
+        datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
+          result.getString(
+            result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+          )
+        )
+        
+        datum.unloadingGPSLocationString = result.getString(
+          result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+        )
+        
+        datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
+        datum.checkFormData = getAdminCheckFormsDataByLocalID(datum.id)
+        
+        list.add(datum)
+      } while (result.moveToNext())
     }
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun getAdminCheckFormByID(id: Int): MyData {
+    val db = this.readableDatabase
     
-    fun getAdminCheckForms(): ArrayList<MyData> {
-        val list: ArrayList<MyData> = ArrayList()
-        val db = this.readableDatabase
-        
-        val query =
-            "Select * FROM $TABLE_ADMIN_CHECKFORMS  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1  ORDER BY $COL_ID DESC "
-        val result = db.rawQuery(query, null)
-        
-        if (result.moveToFirst()) {
-            do {
-                val datum = MyData()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-                datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
-                datum.admin_checkforms_schedules_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_ID))
-                datum.admin_checkforms_schedules_value = result.getString(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE))
-                datum.name = result.getString(result.getColumnIndex(COL_NAME))
-                
-                // If not Questions are added to CheckForm then populate questions_data with empty String
-                if (result.getType(result.getColumnIndex(COL_QUESTIONS_DATA)) == FIELD_TYPE_STRING) {
-                    datum.questions_data = result.getString(result.getColumnIndex(COL_QUESTIONS_DATA))
-                } else {
-                    datum.questions_data = ""
-                }
-                datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
-                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
-                // Check if CheckForm is valid for this Site, Machine Type and Machine
-                if (myHelper.isValidCheckForm(datum))
-                    list.add(datum)
-            } while (result.moveToNext())
-        }
-        result.close()
-        db.close()
-        return list
+    val query =
+      "Select * FROM $TABLE_ADMIN_CHECKFORMS WHERE $COL_ID = $id  "
+    val result = db.rawQuery(query, null)
+    val datum = MyData()
+    if (result.moveToFirst()) {
+      datum.id = result.getInt(result.getColumnIndex(COL_ID))
+      datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+      datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+      datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+      datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
+      datum.admin_checkforms_schedules_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_ID))
+      datum.admin_checkforms_schedules_value = result.getString(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE))
+      datum.name = result.getString(result.getColumnIndex(COL_NAME))
+      datum.questions_data = result.getString(result.getColumnIndex(COL_QUESTIONS_DATA))
+      datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+      datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+      
     }
+    result.close()
+    db.close()
+    return datum
+  }
+  
+  fun getAdminCheckForms(): ArrayList<MyData> {
+    val list: ArrayList<MyData> = ArrayList()
+    val db = this.readableDatabase
     
-    fun getAdminCheckFormScheduleByID(id: Int): MyData {
-        val db = this.readableDatabase
-        
-        val query =
-            "Select * from $TABLE_ADMIN_CHECKFORMS_SCHEDULES WHERE $COL_ID = $id "
-        val result = db.rawQuery(query, null)
+    val query =
+      "Select * FROM $TABLE_ADMIN_CHECKFORMS  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1  ORDER BY $COL_ID DESC "
+    val result = db.rawQuery(query, null)
+    
+    if (result.moveToFirst()) {
+      do {
         val datum = MyData()
-        if (result.moveToFirst()) {
-            datum.id = result.getInt(result.getColumnIndex(COL_ID))
-            datum.name = result.getString(result.getColumnIndex(COL_NAME))
-            datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
-            datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+        datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+        datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
+        datum.admin_checkforms_schedules_id = result.getInt(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_ID))
+        datum.admin_checkforms_schedules_value = result.getString(result.getColumnIndex(COL_ADMIN_CHECKFORMS_SCHEDULES_VALUE))
+        datum.name = result.getString(result.getColumnIndex(COL_NAME))
+        
+        // If not Questions are added to CheckForm then populate questions_data with empty String
+        if (result.getType(result.getColumnIndex(COL_QUESTIONS_DATA)) == FIELD_TYPE_STRING) {
+          datum.questions_data = result.getString(result.getColumnIndex(COL_QUESTIONS_DATA))
+        } else {
+          datum.questions_data = ""
         }
-        result.close()
-        db.close()
-        return datum
+        datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+        datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+        // Check if CheckForm is valid for this Site, Machine Type and Machine
+        if (myHelper.isValidCheckForm(datum))
+          list.add(datum)
+      } while (result.moveToNext())
     }
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun getAdminCheckFormScheduleByID(id: Int): MyData {
+    val db = this.readableDatabase
     
-    fun getQuestionByID(id: Int): MyData {
-        val db = this.readableDatabase
-        
-        val query =
-            "Select * from $TABLE_QUESTIONS WHERE $COL_ID = $id "
-        val result = db.rawQuery(query, null)
-        val datum = MyData()
-        if (result.moveToFirst()) {
-            datum.id = result.getInt(result.getColumnIndex(COL_ID))
-            datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-            datum.admin_questions_types_id = result.getInt(result.getColumnIndex(COL_ADMIN_QUESTIONS_TYPES_ID))
-            datum.images_limit = result.getInt(result.getColumnIndex(COL_IMAGES_LIMIT))
-            datum.images_quality = result.getInt(result.getColumnIndex(COL_IMAGES_QUALITY))
-            datum.name = result.getString(result.getColumnIndex(COL_NAME))
-            datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
-            datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
-        }
-        result.close()
-        db.close()
-        return datum
+    val query =
+      "Select * from $TABLE_ADMIN_CHECKFORMS_SCHEDULES WHERE $COL_ID = $id "
+    val result = db.rawQuery(query, null)
+    val datum = MyData()
+    if (result.moveToFirst()) {
+      datum.id = result.getInt(result.getColumnIndex(COL_ID))
+      datum.name = result.getString(result.getColumnIndex(COL_NAME))
+      datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+      datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
     }
+    result.close()
+    db.close()
+    return datum
+  }
+  
+  fun getQuestionByID(id: Int): MyData {
+    val db = this.readableDatabase
     
-    fun getQuestionsByIDs(ids: String, questionsIDsList: List<Int>): ArrayList<MyData> {
-        val list: ArrayList<MyData> = ArrayList()
-        val db = this.readableDatabase
-        
-        // ordering the questions as per admin selected order
-        var orderBy = "CASE $TABLE_QUESTIONS.id "
-        var i = 1
-        for (id in questionsIDsList) {
-            orderBy = "$orderBy WHEN $id THEN $i"
-            i++
-        }
-        orderBy = "$orderBy END"
-        
-        
-        val query =
-            "Select * from $TABLE_QUESTIONS WHERE $COL_ID  IN ( $ids ) ORDER BY $orderBy"
+    val query =
+      "Select * from $TABLE_QUESTIONS WHERE $COL_ID = $id "
+    val result = db.rawQuery(query, null)
+    val datum = MyData()
+    if (result.moveToFirst()) {
+      datum.id = result.getInt(result.getColumnIndex(COL_ID))
+      datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+      datum.admin_questions_types_id = result.getInt(result.getColumnIndex(COL_ADMIN_QUESTIONS_TYPES_ID))
+      datum.images_limit = result.getInt(result.getColumnIndex(COL_IMAGES_LIMIT))
+      datum.images_quality = result.getInt(result.getColumnIndex(COL_IMAGES_QUALITY))
+      datum.name = result.getString(result.getColumnIndex(COL_NAME))
+      datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+      datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+    }
+    result.close()
+    db.close()
+    return datum
+  }
+  
+  fun getQuestionsByIDs(ids: String, questionsIDsList: List<Int>): ArrayList<MyData> {
+    val list: ArrayList<MyData> = ArrayList()
+    val db = this.readableDatabase
+    
+    // ordering the questions as per admin selected order
+    var orderBy = "CASE $TABLE_QUESTIONS.id "
+    var i = 1
+    for (id in questionsIDsList) {
+      orderBy = "$orderBy WHEN $id THEN $i"
+      i++
+    }
+    orderBy = "$orderBy END"
+    
+    
+    val query =
+      "Select * from $TABLE_QUESTIONS WHERE $COL_ID  IN ( $ids ) ORDER BY $orderBy"
 
 //        myHelper.log("query:$query")
-        val result = db.rawQuery(query, null)
-        
-        if (result.moveToFirst()) {
-            do {
-                val datum = MyData()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.admin_questions_types_id = result.getInt(result.getColumnIndex(COL_ADMIN_QUESTIONS_TYPES_ID))
-                datum.images_limit = result.getInt(result.getColumnIndex(COL_IMAGES_LIMIT))
-                datum.images_quality = result.getInt(result.getColumnIndex(COL_IMAGES_QUALITY))
-                datum.name = result.getString(result.getColumnIndex(COL_NAME))
-                datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
-                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
-                list.add(datum)
-            } while (result.moveToNext())
-        }
-        result.close()
-        db.close()
-        return list
-    }
+    val result = db.rawQuery(query, null)
     
-    fun getQuestionsTypesByID(id: Int): MyData {
-        
-        val db = this.readableDatabase
-        
-        val query =
-            "Select * from $TABLE_QUESTIONS_TYPES WHERE $COL_ID = $id ORDER BY $COL_ID DESC"
-        val result = db.rawQuery(query, null)
-        
+    if (result.moveToFirst()) {
+      do {
         val datum = MyData()
-        if (result.moveToFirst()) {
-            datum.id = result.getInt(result.getColumnIndex(COL_ID))
-            datum.name = result.getString(result.getColumnIndex(COL_NAME))
-            datum.answers_options = result.getInt(result.getColumnIndex(COL_ANSWERS_OPTIONS))
-            datum.total_correct_answers = result.getInt(result.getColumnIndex(COL_TOTAL_CORRECT_ANSWERS))
-            datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
-            datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
-            
-        }
-        
-        result.close()
-        db.close()
-        return datum
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.admin_questions_types_id = result.getInt(result.getColumnIndex(COL_ADMIN_QUESTIONS_TYPES_ID))
+        datum.images_limit = result.getInt(result.getColumnIndex(COL_IMAGES_LIMIT))
+        datum.images_quality = result.getInt(result.getColumnIndex(COL_IMAGES_QUALITY))
+        datum.name = result.getString(result.getColumnIndex(COL_NAME))
+        datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+        datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+        list.add(datum)
+      } while (result.moveToNext())
+    }
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun getQuestionsTypesByID(id: Int): MyData {
+    
+    val db = this.readableDatabase
+    
+    val query =
+      "Select * from $TABLE_QUESTIONS_TYPES WHERE $COL_ID = $id ORDER BY $COL_ID DESC"
+    val result = db.rawQuery(query, null)
+    
+    val datum = MyData()
+    if (result.moveToFirst()) {
+      datum.id = result.getInt(result.getColumnIndex(COL_ID))
+      datum.name = result.getString(result.getColumnIndex(COL_NAME))
+      datum.answers_options = result.getInt(result.getColumnIndex(COL_ANSWERS_OPTIONS))
+      datum.total_correct_answers = result.getInt(result.getColumnIndex(COL_TOTAL_CORRECT_ANSWERS))
+      datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+      datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+      
     }
     
-    fun getOperatorsHours(orderBy: String = "DESC"): ArrayList<MyData> {
-        val list: ArrayList<MyData> = ArrayList()
-        val db = this.readableDatabase
-        val query = "Select * from $TABLE_OPERATORS_HOURS  ORDER BY $COL_ID $orderBy"
-        val result = db.rawQuery(query, null)
-        
-        if (result.moveToFirst()) {
-            do {
-                val datum = MyData()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-                datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
-                datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
-                datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
-                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
-                datum.date = result.getString(result.getColumnIndex(COL_TIME))
-                datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
-                datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
-                    result.getString(
-                        result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                    )
-                )
-                datum.loadingGPSLocationString = result.getString(result.getColumnIndex(COL_LOADING_GPS_LOCATION))
-                datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
-                    result.getString(
-                        result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                    )
-                )
-                datum.unloadingGPSLocationString = result.getString(result.getColumnIndex(COL_UNLOADING_GPS_LOCATION))
-                datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
-                datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
-                list.add(datum)
-            } while (result.moveToNext())
-        }
-        
-        result.close()
-        db.close()
-        return list
-    }
+    result.close()
+    db.close()
+    return datum
+  }
+  
+  fun getOperatorsHours(orderBy: String = "DESC"): ArrayList<MyData> {
+    val list: ArrayList<MyData> = ArrayList()
+    val db = this.readableDatabase
+    val query = "Select * from $TABLE_OPERATORS_HOURS  ORDER BY $COL_ID $orderBy"
+    val result = db.rawQuery(query, null)
     
-    fun getMachinesAutoLogout(): ArrayList<OperatorAPI> {
-        
-        val list: ArrayList<OperatorAPI> = ArrayList()
-        val db = this.readableDatabase
-        
-        val query =
-            "Select * from $TABLE_MACHINES_AUTO_LOGOUTS WHERE " +
-                    "$COL_IS_DELETED = 0 AND $COL_STATUS = 1  AND $COL_MACHINE_TYPE_ID = ${myHelper.getMachineTypeID()} AND " +
-                    "$COL_SITE_ID = ${myHelper.getMachineSettings().siteId} ORDER BY $COL_ID DESC"
-        val result = db.rawQuery(query, null)
-        
-        if (result.moveToFirst()) {
-            do {
-                val datum = OperatorAPI()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-                datum.autoLogoutTime = result.getString(result.getColumnIndex(COL_AUTO_LOGOUT_TIME))
-                datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
-                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
-                list.add(datum)
-            } while (result.moveToNext())
-        }
-        
-        result.close()
-        db.close()
-        return list
-    }
-    
-    fun getMachinesAutoLogouts(): ArrayList<OperatorAPI> {
-        
-        val list: ArrayList<OperatorAPI> = ArrayList()
-        val db = this.readableDatabase
-        
-        val query =
-            "Select * from $TABLE_MACHINES_AUTO_LOGOUTS WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1  ORDER BY $COL_ID DESC"
-        val result = db.rawQuery(query, null)
-        
-        if (result.moveToFirst()) {
-            do {
-                val datum = OperatorAPI()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-                datum.autoLogoutTime = result.getString(result.getColumnIndex(COL_AUTO_LOGOUT_TIME))
-                datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
-                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
-                list.add(datum)
-            } while (result.moveToNext())
-        }
-        
-        result.close()
-        db.close()
-        return list
-    }
-    
-    fun getMachineHours(orderBy: String = "DESC"): MyData {
-        
-        
-        val db = this.readableDatabase
-        val query = "Select * from $TABLE_MACHINES_HOURS WHERE $COL_MACHINE_ID = ${myHelper.getMachineID()} ORDER BY $COL_ID $orderBy LIMIT 1"
-        val result = db.rawQuery(query, null)
+    if (result.moveToFirst()) {
+      do {
         val datum = MyData()
-        if (result.moveToFirst()) {
-            
-            datum.id = result.getInt(result.getColumnIndex(COL_ID))
-            datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-            datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-            
-            datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-            datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
-            datum.machine_stop_reason_id = result.getInt(result.getColumnIndex(COL_MACHINE_STOP_REASON_ID))
-            
-            datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
-            datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
-            datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+        datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
+        datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
+        datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
+        datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
+        datum.date = result.getString(result.getColumnIndex(COL_TIME))
+        datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
+        datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
+          result.getString(
+            result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+          )
+        )
+        datum.loadingGPSLocationString = result.getString(result.getColumnIndex(COL_LOADING_GPS_LOCATION))
+        datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
+          result.getString(
+            result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+          )
+        )
+        datum.unloadingGPSLocationString = result.getString(result.getColumnIndex(COL_UNLOADING_GPS_LOCATION))
+        datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
+        datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
+        list.add(datum)
+      } while (result.moveToNext())
+    }
+    
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun getMachinesAutoLogout(): ArrayList<OperatorAPI> {
+    
+    val list: ArrayList<OperatorAPI> = ArrayList()
+    val db = this.readableDatabase
+    
+    val query =
+      "Select * from $TABLE_MACHINES_AUTO_LOGOUTS WHERE " +
+              "$COL_IS_DELETED = 0 AND $COL_STATUS = 1  AND $COL_MACHINE_TYPE_ID = ${myHelper.getMachineTypeID()} AND " +
+              "$COL_SITE_ID = ${myHelper.getMachineSettings().siteId} ORDER BY $COL_ID DESC"
+    val result = db.rawQuery(query, null)
+    
+    if (result.moveToFirst()) {
+      do {
+        val datum = OperatorAPI()
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+        datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+        datum.autoLogoutTime = result.getString(result.getColumnIndex(COL_AUTO_LOGOUT_TIME))
+        datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+        datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+        list.add(datum)
+      } while (result.moveToNext())
+    }
+    
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun getMachinesAutoLogouts(): ArrayList<OperatorAPI> {
+    
+    val list: ArrayList<OperatorAPI> = ArrayList()
+    val db = this.readableDatabase
+    
+    val query =
+      "Select * from $TABLE_MACHINES_AUTO_LOGOUTS WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1  ORDER BY $COL_ID DESC"
+    val result = db.rawQuery(query, null)
+    
+    if (result.moveToFirst()) {
+      do {
+        val datum = OperatorAPI()
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+        datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+        datum.autoLogoutTime = result.getString(result.getColumnIndex(COL_AUTO_LOGOUT_TIME))
+        datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+        datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+        list.add(datum)
+      } while (result.moveToNext())
+    }
+    
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun getMachineHours(orderBy: String = "DESC"): MyData {
+    
+    
+    val db = this.readableDatabase
+    val query = "Select * from $TABLE_MACHINES_HOURS WHERE $COL_MACHINE_ID = ${myHelper.getMachineID()} ORDER BY $COL_ID $orderBy LIMIT 1"
+    val result = db.rawQuery(query, null)
+    val datum = MyData()
+    if (result.moveToFirst()) {
+      
+      datum.id = result.getInt(result.getColumnIndex(COL_ID))
+      datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+      datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+      
+      datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+      datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
+      datum.machine_stop_reason_id = result.getInt(result.getColumnIndex(COL_MACHINE_STOP_REASON_ID))
+      
+      datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
+      datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
+      datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
 //                // myHelper.log("DB_startTime:${result.getLong(result.getColumnIndex(COL_START_TIME))}")
 //                // myHelper.log("DB_StartHour:${result.getString(result.getColumnIndex(COL_START_HOURS))}")
-            if (result.getString(result.getColumnIndex(COL_START_HOURS)) != null)
-                datum.startHours = result.getString(result.getColumnIndex(COL_START_HOURS))
-            
-            if (result.getString(result.getColumnIndex(COL_TOTAL_HOURS)) != null)
-                datum.totalHours = result.getString(result.getColumnIndex(COL_TOTAL_HOURS))
-            
-            datum.isStartHoursCustom = result.getInt(result.getColumnIndex(COL_IS_START_HOURS_CUSTOM))
-            datum.isTotalHoursCustom = result.getInt(result.getColumnIndex(COL_IS_TOTAL_HOURS_CUSTOM))
-            
-            datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
-            datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
-            datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
-            
-            datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
-                result.getString(
-                    result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                )
-            )
-            datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
-                result.getString(
-                    result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                )
-            )
-            
-            datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
-            datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
-            datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
-        }
-        
-        result.close()
-        db.close()
-        return datum
+      if (result.getString(result.getColumnIndex(COL_START_HOURS)) != null)
+        datum.startHours = result.getString(result.getColumnIndex(COL_START_HOURS))
+      
+      if (result.getString(result.getColumnIndex(COL_TOTAL_HOURS)) != null)
+        datum.totalHours = result.getString(result.getColumnIndex(COL_TOTAL_HOURS))
+      
+      datum.isStartHoursCustom = result.getInt(result.getColumnIndex(COL_IS_START_HOURS_CUSTOM))
+      datum.isTotalHoursCustom = result.getInt(result.getColumnIndex(COL_IS_TOTAL_HOURS_CUSTOM))
+      
+      datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
+      datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+      datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
+      
+      datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
+        result.getString(
+          result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+        )
+      )
+      datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
+        result.getString(
+          result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+        )
+      )
+      
+      datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
+      datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
+      datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
     }
     
-    fun getMachinesHours(orderBy: String = "DESC"): ArrayList<MyData> {
+    result.close()
+    db.close()
+    return datum
+  }
+  
+  fun getMachinesHours(orderBy: String = "DESC"): ArrayList<MyData> {
+    
+    val list: ArrayList<MyData> = ArrayList()
+    
+    val db = this.readableDatabase
+    
+    val query =
+      "Select * from $TABLE_MACHINES_HOURS  ORDER BY $COL_ID $orderBy"
+    val result = db.rawQuery(query, null)
+    
+    if (result.moveToFirst()) {
+      do {
+        val datum = MyData()
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
         
-        val list: ArrayList<MyData> = ArrayList()
+        datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+        datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
+        datum.machine_stop_reason_id = result.getInt(result.getColumnIndex(COL_MACHINE_STOP_REASON_ID))
+        datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
+        datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
+        datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
         
-        val db = this.readableDatabase
+        if (result.getString(result.getColumnIndex(COL_START_HOURS)) != null)
+          datum.startHours = result.getString(result.getColumnIndex(COL_START_HOURS))
         
-        val query =
-            "Select * from $TABLE_MACHINES_HOURS  ORDER BY $COL_ID $orderBy"
-        val result = db.rawQuery(query, null)
+        if (result.getString(result.getColumnIndex(COL_TOTAL_HOURS)) != null)
+          datum.totalHours = result.getString(result.getColumnIndex(COL_TOTAL_HOURS))
         
-        if (result.moveToFirst()) {
-            do {
-                val datum = MyData()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-                
-                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-                datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
-                datum.machine_stop_reason_id = result.getInt(result.getColumnIndex(COL_MACHINE_STOP_REASON_ID))
-                datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
-                datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
-                datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
-                
-                if (result.getString(result.getColumnIndex(COL_START_HOURS)) != null)
-                    datum.startHours = result.getString(result.getColumnIndex(COL_START_HOURS))
-                
-                if (result.getString(result.getColumnIndex(COL_TOTAL_HOURS)) != null)
-                    datum.totalHours = result.getString(result.getColumnIndex(COL_TOTAL_HOURS))
-                
-                datum.isStartHoursCustom = result.getInt(result.getColumnIndex(COL_IS_START_HOURS_CUSTOM))
-                datum.isTotalHoursCustom = result.getInt(result.getColumnIndex(COL_IS_TOTAL_HOURS_CUSTOM))
-                
-                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
-                datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
-                datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
-                
-                datum.loadingGPSLocationString = result.getString(
-                    result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                )
+        datum.isStartHoursCustom = result.getInt(result.getColumnIndex(COL_IS_START_HOURS_CUSTOM))
+        datum.isTotalHoursCustom = result.getInt(result.getColumnIndex(COL_IS_TOTAL_HOURS_CUSTOM))
+        
+        datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
+        datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+        datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
+        
+        datum.loadingGPSLocationString = result.getString(
+          result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+        )
 //                myHelper.log("loadingGPS:$loadingGPS")
 //                if(loadingGPS == null)
 //                    loadingGPS = GPSLocation()
-                datum.loadingGPSLocation = myHelper.getStringToGPSLocation(datum.loadingGPSLocationString)
-                
-                datum.unloadingGPSLocationString = result.getString(
-                    result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                )
-                datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(datum.unloadingGPSLocationString)
-                
-                datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
-                datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
-                datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
-                list.add(datum)
-            } while (result.moveToNext())
-        }
+        datum.loadingGPSLocation = myHelper.getStringToGPSLocation(datum.loadingGPSLocationString)
         
-        result.close()
-        db.close()
-        return list
+        datum.unloadingGPSLocationString = result.getString(
+          result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+        )
+        datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(datum.unloadingGPSLocationString)
+        
+        datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
+        datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
+        datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
+        list.add(datum)
+      } while (result.moveToNext())
     }
     
-    fun getTasks(): ArrayList<Material> {
-        
-        val list: ArrayList<Material> = ArrayList()
-        val db = this.readableDatabase
-        
-        val query =
-            "Select * from $TABLE_MACHINES_TASKS WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 AND $COL_MACHINE_TYPE_ID = ${myHelper.getMachineTypeID()} AND $COL_SITE_ID = ${myHelper.getMachineSettings().siteId}  ORDER BY $COL_PRIORITY < 0, $COL_PRIORITY ASC"
-        val result = db.rawQuery(query, null)
-        
-        if (result.moveToFirst()) {
-            do {
-                val datum = Material()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-                datum.machineTaskId = result.getInt(result.getColumnIndex(COL_MACHINE_TASK_ID))
-                datum.name = result.getString(result.getColumnIndex(COL_NAME))
-                datum.priority = result.getInt(result.getColumnIndex(COL_PRIORITY))
-                datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
-                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
-                list.add(datum)
-            } while (result.moveToNext())
-        }
-        
-        result.close()
-        db.close()
-        return list
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun getTasks(): ArrayList<Material> {
+    
+    val list: ArrayList<Material> = ArrayList()
+    val db = this.readableDatabase
+    
+    val query =
+      "Select * from $TABLE_MACHINES_TASKS WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 AND $COL_MACHINE_TYPE_ID = ${myHelper.getMachineTypeID()} AND $COL_SITE_ID = ${myHelper.getMachineSettings().siteId}  ORDER BY $COL_PRIORITY < 0, $COL_PRIORITY ASC"
+    val result = db.rawQuery(query, null)
+    
+    if (result.moveToFirst()) {
+      do {
+        val datum = Material()
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+        datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+        datum.machineTaskId = result.getInt(result.getColumnIndex(COL_MACHINE_TASK_ID))
+        datum.name = result.getString(result.getColumnIndex(COL_NAME))
+        datum.priority = result.getInt(result.getColumnIndex(COL_PRIORITY))
+        datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+        datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+        list.add(datum)
+      } while (result.moveToNext())
     }
     
-    fun getTaskByID(id: Int): OperatorAPI {
-        
-        val db = this.readableDatabase
-        
-        val query =
-            "Select * from $TABLE_MACHINES_TASKS WHERE $COL_ID = $id ORDER BY $COL_ID DESC"
-        val result = db.rawQuery(query, null)
-        
-        val datum = OperatorAPI()
-        if (result.moveToFirst()) {
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun getTaskByID(id: Int): OperatorAPI {
+    
+    val db = this.readableDatabase
+    
+    val query =
+      "Select * from $TABLE_MACHINES_TASKS WHERE $COL_ID = $id ORDER BY $COL_ID DESC"
+    val result = db.rawQuery(query, null)
+    
+    val datum = OperatorAPI()
+    if (result.moveToFirst()) {
 //            do {
-            datum.id = result.getInt(result.getColumnIndex(COL_ID))
-            datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-            datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-            datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-            datum.machineTaskId = result.getInt(result.getColumnIndex(COL_MACHINE_TASK_ID))
-            datum.name = result.getString(result.getColumnIndex(COL_NAME))
-            datum.priority = result.getInt(result.getColumnIndex(COL_PRIORITY))
-            datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
-            datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+      datum.id = result.getInt(result.getColumnIndex(COL_ID))
+      datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+      datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+      datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+      datum.machineTaskId = result.getInt(result.getColumnIndex(COL_MACHINE_TASK_ID))
+      datum.name = result.getString(result.getColumnIndex(COL_NAME))
+      datum.priority = result.getInt(result.getColumnIndex(COL_PRIORITY))
+      datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+      datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
 
 //            } while (result.moveToNext())
-        }
-        
-        result.close()
-        db.close()
-        return datum
     }
     
-    @SuppressWarnings("unused")
-    fun getMachinesPlants(): ArrayList<OperatorAPI> {
-        
-        val list: ArrayList<OperatorAPI> = ArrayList()
-        val db = this.readableDatabase
-        
-        val query =
-            "Select * from $TABLE_MACHINES_PLANTS WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 ORDER BY $COL_ID DESC"
-        val result = db.rawQuery(query, null)
-        
-        if (result.moveToFirst()) {
-            do {
-                val datum = OperatorAPI()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-                datum.machineBrandId = result.getInt(result.getColumnIndex(COL_MACHINE_BRAND_ID))
-                datum.name = result.getString(result.getColumnIndex(COL_NAME))
-                datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
-                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
-                list.add(datum)
-            } while (result.moveToNext())
-        }
-        
-        result.close()
-        db.close()
-        return list
+    result.close()
+    db.close()
+    return datum
+  }
+  
+  @SuppressWarnings("unused")
+  fun getMachinesPlants(): ArrayList<OperatorAPI> {
+    
+    val list: ArrayList<OperatorAPI> = ArrayList()
+    val db = this.readableDatabase
+    
+    val query =
+      "Select * from $TABLE_MACHINES_PLANTS WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 ORDER BY $COL_ID DESC"
+    val result = db.rawQuery(query, null)
+    
+    if (result.moveToFirst()) {
+      do {
+        val datum = OperatorAPI()
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+        datum.machineBrandId = result.getInt(result.getColumnIndex(COL_MACHINE_BRAND_ID))
+        datum.name = result.getString(result.getColumnIndex(COL_NAME))
+        datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+        datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+        list.add(datum)
+      } while (result.moveToNext())
     }
     
-    fun getMachinesBrands(): ArrayList<OperatorAPI> {
-        
-        val list: ArrayList<OperatorAPI> = ArrayList()
-        val db = this.readableDatabase
-        
-        val query =
-            "Select * from $TABLE_MACHINES_BRANDS WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 ORDER BY $COL_ID DESC"
-        val result = db.rawQuery(query, null)
-        
-        if (result.moveToFirst()) {
-            do {
-                val datum = OperatorAPI()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-                datum.name = result.getString(result.getColumnIndex(COL_NAME))
-                datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
-                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
-                list.add(datum)
-            } while (result.moveToNext())
-        }
-        
-        result.close()
-        db.close()
-        return list
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun getMachinesBrands(): ArrayList<OperatorAPI> {
+    
+    val list: ArrayList<OperatorAPI> = ArrayList()
+    val db = this.readableDatabase
+    
+    val query =
+      "Select * from $TABLE_MACHINES_BRANDS WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 ORDER BY $COL_ID DESC"
+    val result = db.rawQuery(query, null)
+    
+    if (result.moveToFirst()) {
+      do {
+        val datum = OperatorAPI()
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+        datum.name = result.getString(result.getColumnIndex(COL_NAME))
+        datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+        datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+        list.add(datum)
+      } while (result.moveToNext())
     }
     
-    fun getMachinesTypes(): ArrayList<Material> {
-        
-        val list: ArrayList<Material> = ArrayList()
-        val db = this.readableDatabase
-        
-        val query =
-            "Select * from $TABLE_MACHINES_TYPES WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 ORDER BY $COL_ID DESC"
-        val result = db.rawQuery(query, null)
-        
-        if (result.moveToFirst()) {
-            do {
-                val datum = Material()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.name = result.getString(result.getColumnIndex(COL_NAME))
-                datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
-                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
-                list.add(datum)
-            } while (result.moveToNext())
-        }
-        
-        result.close()
-        db.close()
-        return list
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun getMachinesTypes(): ArrayList<Material> {
+    
+    val list: ArrayList<Material> = ArrayList()
+    val db = this.readableDatabase
+    
+    val query =
+      "Select * from $TABLE_MACHINES_TYPES WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 ORDER BY $COL_ID DESC"
+    val result = db.rawQuery(query, null)
+    
+    if (result.moveToFirst()) {
+      do {
+        val datum = Material()
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.name = result.getString(result.getColumnIndex(COL_NAME))
+        datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+        datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+        list.add(datum)
+      } while (result.moveToNext())
     }
     
-    fun getMachineTypeByID(id: Int): Material {
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun getMachineTypeByID(id: Int): Material {
 
 //        val list: ArrayList<Material> = ArrayList()
-        
-        val db = this.readableDatabase
-        
-        val query =
-            "Select * from $TABLE_MACHINES_TYPES WHERE $COL_ID = $id ORDER BY $COL_ID DESC"
-        val result = db.rawQuery(query, null)
-        val datum = Material()
-        
-        if (result.moveToFirst()) {
-            do {
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.name = result.getString(result.getColumnIndex(COL_NAME))
-                datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
-                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+    
+    val db = this.readableDatabase
+    
+    val query =
+      "Select * from $TABLE_MACHINES_TYPES WHERE $COL_ID = $id ORDER BY $COL_ID DESC"
+    val result = db.rawQuery(query, null)
+    val datum = Material()
+    
+    if (result.moveToFirst()) {
+      do {
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.name = result.getString(result.getColumnIndex(COL_NAME))
+        datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+        datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
 //                list.add(datum)
-            } while (result.moveToNext())
-        }
-        
-        result.close()
-        db.close()
-        return datum
+      } while (result.moveToNext())
     }
     
-    fun getSites(): ArrayList<Material> {
-        
-        val list: ArrayList<Material> = ArrayList()
-        val db = this.readableDatabase
-        
-        val query = "Select * from $TABLE_SITES WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 ORDER BY $COL_ID DESC"
-        val result = db.rawQuery(query, null)
-        
-        if (result.moveToFirst()) {
-            do {
-                val datum = Material()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.name = result.getString(result.getColumnIndex(COL_NAME))
-                datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
-                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
-                list.add(datum)
-            } while (result.moveToNext())
-        }
-        
-        result.close()
-        db.close()
-        return list
-    }
+    result.close()
+    db.close()
+    return datum
+  }
+  
+  fun getSites(): ArrayList<Material> {
     
-    fun getSiteByID(id: Int): Material {
-        
-        val db = this.readableDatabase
-        
-        val query = "Select * from $TABLE_SITES WHERE $COL_ID = $id ORDER BY $COL_ID DESC"
-        val result = db.rawQuery(query, null)
+    val list: ArrayList<Material> = ArrayList()
+    val db = this.readableDatabase
+    
+    val query = "Select * from $TABLE_SITES WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 ORDER BY $COL_ID DESC"
+    val result = db.rawQuery(query, null)
+    
+    if (result.moveToFirst()) {
+      do {
         val datum = Material()
-        if (result.moveToFirst()) {
-            do {
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.name = result.getString(result.getColumnIndex(COL_NAME))
-                datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
-                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
-                
-            } while (result.moveToNext())
-        }
-        
-        result.close()
-        db.close()
-        return datum
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.name = result.getString(result.getColumnIndex(COL_NAME))
+        datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+        datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+        list.add(datum)
+      } while (result.moveToNext())
     }
     
-    fun getOperators(): ArrayList<OperatorAPI> {
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun getSiteByID(id: Int): Material {
+    
+    val db = this.readableDatabase
+    
+    val query = "Select * from $TABLE_SITES WHERE $COL_ID = $id ORDER BY $COL_ID DESC"
+    val result = db.rawQuery(query, null)
+    val datum = Material()
+    if (result.moveToFirst()) {
+      do {
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.name = result.getString(result.getColumnIndex(COL_NAME))
+        datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+        datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
         
-        val list: ArrayList<OperatorAPI> = ArrayList()
-        val db = this.readableDatabase
-        
-        val query =
-            "Select * from $TABLE_OPERATORS WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 ORDER BY $COL_ID DESC"
-        val result = db.rawQuery(query, null)
-        
-        if (result.moveToFirst()) {
-            do {
-                val datum = OperatorAPI()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.name = result.getString(result.getColumnIndex(COL_NAME))
-                datum.pin = result.getString(result.getColumnIndex(COL_PIN))
-                datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
-                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
-                list.add(datum)
-            } while (result.moveToNext())
-        }
-        
-        result.close()
-        db.close()
-        return list
+      } while (result.moveToNext())
     }
     
-    fun getOperatorByID(id: Int): OperatorAPI {
-        
+    result.close()
+    db.close()
+    return datum
+  }
+  
+  fun getOperators(): ArrayList<OperatorAPI> {
+    
+    val list: ArrayList<OperatorAPI> = ArrayList()
+    val db = this.readableDatabase
+    
+    val query =
+      "Select * from $TABLE_OPERATORS WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 ORDER BY $COL_ID DESC"
+    val result = db.rawQuery(query, null)
+    
+    if (result.moveToFirst()) {
+      do {
         val datum = OperatorAPI()
-        
-        val db = this.readableDatabase
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.name = result.getString(result.getColumnIndex(COL_NAME))
+        datum.pin = result.getString(result.getColumnIndex(COL_PIN))
+        datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+        datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+        list.add(datum)
+      } while (result.moveToNext())
+    }
+    
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun getOperatorByID(id: Int): OperatorAPI {
+    
+    val datum = OperatorAPI()
+    
+    val db = this.readableDatabase
 
 //        val query = "Select * from $TABLE_OPERATORS WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 AND $COL_ID =? ORDER BY $COL_ID DESC"
-        val query = "SELECT * FROM $TABLE_OPERATORS WHERE $COL_ID = $id ORDER BY $COL_ID DESC"
-        val result = db.rawQuery(query, null)
+    val query = "SELECT * FROM $TABLE_OPERATORS WHERE $COL_ID = $id ORDER BY $COL_ID DESC"
+    val result = db.rawQuery(query, null)
+    
+    
+    if (result.moveToFirst()) {
+      do {
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.name = result.getString(result.getColumnIndex(COL_NAME))
+        datum.pin = result.getString(result.getColumnIndex(COL_PIN))
+        datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+        datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
         
-        
-        if (result.moveToFirst()) {
-            do {
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.name = result.getString(result.getColumnIndex(COL_NAME))
-                datum.pin = result.getString(result.getColumnIndex(COL_PIN))
-                datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
-                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
-                
-            } while (result.moveToNext())
-        }
-        
-        result.close()
-        db.close()
-        return datum
+      } while (result.moveToNext())
     }
     
-    fun getOperator(pin: String): OperatorAPI {
+    result.close()
+    db.close()
+    return datum
+  }
+  
+  fun getOperator(pin: String): OperatorAPI {
+    
+    val datum = OperatorAPI()
+    
+    val db = this.readableDatabase
+    
+    val query =
+      "Select * from $TABLE_OPERATORS WHERE $COL_PIN =? AND $COL_ORG_ID = ${myHelper.getLoginAPI().org_id} AND $COL_IS_DELETED = 0 AND $COL_STATUS = 1 ORDER BY $COL_ID DESC"
+    val result = db.rawQuery(query, arrayOf(pin))
+    
+    
+    if (result.moveToFirst()) {
+      do {
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.name = result.getString(result.getColumnIndex(COL_NAME))
+        datum.pin = result.getString(result.getColumnIndex(COL_PIN))
+        datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+        datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
         
-        val datum = OperatorAPI()
-        
-        val db = this.readableDatabase
-        
-        val query =
-            "Select * from $TABLE_OPERATORS WHERE $COL_PIN =? AND $COL_ORG_ID = ${myHelper.getLoginAPI().org_id} AND $COL_IS_DELETED = 0 AND $COL_STATUS = 1 ORDER BY $COL_ID DESC"
-        val result = db.rawQuery(query, arrayOf(pin))
-        
-        
-        if (result.moveToFirst()) {
-            do {
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.name = result.getString(result.getColumnIndex(COL_NAME))
-                datum.pin = result.getString(result.getColumnIndex(COL_PIN))
-                datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
-                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
-                
-            } while (result.moveToNext())
-        }
-        
-        result.close()
-        db.close()
-        return datum
+      } while (result.moveToNext())
     }
     
-    fun getStopReasons(): ArrayList<Material> {
-        
-        val list: ArrayList<Material> = ArrayList()
-        val db = this.readableDatabase
-        
-        val query =
-            "Select * from $TABLE_STOP_REASONS  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 ORDER BY $COL_ID"
-        val result = db.rawQuery(query, null)
-        
-        
-        if (result.moveToFirst()) {
-            do {
-                val datum = Material()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.name = result.getString(result.getColumnIndex(COL_NAME))
-                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
-                list.add(datum)
-                
-            } while (result.moveToNext())
-        }
-        
-        result.close()
-        db.close()
-        return list
-    }
+    result.close()
+    db.close()
+    return datum
+  }
+  
+  fun getStopReasons(): ArrayList<Material> {
     
-    fun getStopReasonByID(id: Int): Material {
-        
-        val db = this.readableDatabase
-        val query =
-            "Select * from $TABLE_STOP_REASONS  WHERE $COL_ID = $id  ORDER BY $COL_ID"
-        val result = db.rawQuery(query, null)
-        
-        
+    val list: ArrayList<Material> = ArrayList()
+    val db = this.readableDatabase
+    
+    val query =
+      "Select * from $TABLE_STOP_REASONS  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 ORDER BY $COL_ID"
+    val result = db.rawQuery(query, null)
+    
+    
+    if (result.moveToFirst()) {
+      do {
         val datum = Material()
-        if (result.moveToFirst()) {
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.name = result.getString(result.getColumnIndex(COL_NAME))
+        datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+        list.add(datum)
+        
+      } while (result.moveToNext())
+    }
+    
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun getStopReasonByID(id: Int): Material {
+    
+    val db = this.readableDatabase
+    val query =
+      "Select * from $TABLE_STOP_REASONS  WHERE $COL_ID = $id  ORDER BY $COL_ID"
+    val result = db.rawQuery(query, null)
+    
+    
+    val datum = Material()
+    if (result.moveToFirst()) {
 //            do {
-            datum.id = result.getInt(result.getColumnIndex(COL_ID))
-            datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-            datum.name = result.getString(result.getColumnIndex(COL_NAME))
-            datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+      datum.id = result.getInt(result.getColumnIndex(COL_ID))
+      datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+      datum.name = result.getString(result.getColumnIndex(COL_NAME))
+      datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
 
 //            } while (result.moveToNext())
-        }
-        
-        result.close()
-        db.close()
-        return datum
     }
     
-    fun getMaterialByID(id: Int): Material {
+    result.close()
+    db.close()
+    return datum
+  }
+  
+  fun getMaterialByID(id: Int): Material {
 
 //        val list: ArrayList<Material> = ArrayList()
-        val db = this.readableDatabase
+    val db = this.readableDatabase
+    
+    val query =
+      "Select * from $TABLE_MATERIALS  WHERE $COL_ID = $id ORDER BY $COL_ID DESC LIMIT 1"
+    val result = db.rawQuery(query, null)
+    val datum = Material()
+    if (result.moveToFirst()) {
+      do {
         
-        val query =
-            "Select * from $TABLE_MATERIALS  WHERE $COL_ID = $id ORDER BY $COL_ID DESC LIMIT 1"
-        val result = db.rawQuery(query, null)
-        val datum = Material()
-        if (result.moveToFirst()) {
-            do {
-                
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-                datum.name = result.getString(result.getColumnIndex(COL_NAME))
-                datum.priority = result.getInt(result.getColumnIndex(COL_PRIORITY))
-                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+        datum.name = result.getString(result.getColumnIndex(COL_NAME))
+        datum.priority = result.getInt(result.getColumnIndex(COL_PRIORITY))
+        datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
 //                list.add(datum)
-            
-            } while (result.moveToNext())
-        }
-        result.close()
-        db.close()
-        return datum
+      
+      } while (result.moveToNext())
     }
+    result.close()
+    db.close()
+    return datum
+  }
+  
+  fun getMaterials(): ArrayList<Material> {
     
-    fun getMaterials(): ArrayList<Material> {
-        
-        val list: ArrayList<Material> = ArrayList()
-        val db = this.readableDatabase
-        
-        val query =
-            "Select * from $TABLE_MATERIALS  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1  AND $COL_MACHINE_TYPE_ID = ${myHelper.getMachineTypeID()} AND $COL_SITE_ID = ${myHelper.getMachineSettings().siteId} ORDER BY $COL_PRIORITY < 0, $COL_PRIORITY ASC"
-        val result = db.rawQuery(query, null)
-        
-        if (result.moveToFirst()) {
-            do {
-                val datum = Material()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-                datum.name = result.getString(result.getColumnIndex(COL_NAME))
-                datum.priority = result.getInt(result.getColumnIndex(COL_PRIORITY))
-                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
-                list.add(datum)
-                
-            } while (result.moveToNext())
-        }
-        result.close()
-        db.close()
-        return list
-    }
+    val list: ArrayList<Material> = ArrayList()
+    val db = this.readableDatabase
     
-    fun getMachines(type: Int = 0): ArrayList<Material> {
-        
-        val list: ArrayList<Material> = ArrayList()
-        val db = this.readableDatabase
-        val query: String = if (type < 1) {
-            "Select * from $TABLE_MACHINES  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 AND $COL_SITE_ID = ${myHelper.getMachineSettings().siteId}   ORDER BY $COL_PRIORITY < 0, $COL_PRIORITY ASC"
-        } else {
-            "Select * from $TABLE_MACHINES  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 AND $COL_SITE_ID = ${myHelper.getMachineSettings().siteId} AND $COL_MACHINE_TYPE_ID = $type   ORDER BY $COL_PRIORITY < 0, $COL_PRIORITY ASC"
-        }
-        // myHelper.log("rawQuery:$query")
-        val result = db.rawQuery(query, null)
-        
-        if (result.moveToFirst()) {
-            do {
-                val datum = Material()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-                datum.number = result.getString(result.getColumnIndex(COL_NUMBER))
-                datum.totalHours = result.getString(result.getColumnIndex(COL_TOTAL_TIME))
-                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
-                list.add(datum)
-                
-            } while (result.moveToNext())
-        }
-        
-        result.close()
-        db.close()
-        return list
-    }
+    val query =
+      "Select * from $TABLE_MATERIALS  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1  AND $COL_MACHINE_TYPE_ID = ${myHelper.getMachineTypeID()} AND $COL_SITE_ID = ${myHelper.getMachineSettings().siteId} ORDER BY $COL_PRIORITY < 0, $COL_PRIORITY ASC"
+    val result = db.rawQuery(query, null)
     
-    fun getMachineByID(id: Int): Material {
-        
-        val db = this.readableDatabase
-        val query =
-            "Select * from $TABLE_MACHINES  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 AND $COL_SITE_ID = ${myHelper.getMachineSettings().siteId} AND $COL_ID = $id ORDER BY $COL_ID DESC"
-        
-        // myHelper.log("rawQuery:$query")
-        val result = db.rawQuery(query, null)
-        
+    if (result.moveToFirst()) {
+      do {
         val datum = Material()
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+        datum.name = result.getString(result.getColumnIndex(COL_NAME))
+        datum.priority = result.getInt(result.getColumnIndex(COL_PRIORITY))
+        datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+        list.add(datum)
         
-        if (result.moveToFirst()) {
-            do {
-                
-                // myHelper.log("Result:${result.toString()}")
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-                datum.number = result.getString(result.getColumnIndex(COL_NUMBER))
-                datum.totalHours = result.getString(result.getColumnIndex(COL_TOTAL_TIME))
-                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
-                datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
-                
-                
-            } while (result.moveToNext())
-        }
+      } while (result.moveToNext())
+    }
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun getMachines(type: Int = 0): ArrayList<Material> {
+    
+    val list: ArrayList<Material> = ArrayList()
+    val db = this.readableDatabase
+    val query: String = if (type < 1) {
+      "Select * from $TABLE_MACHINES  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 AND $COL_SITE_ID = ${myHelper.getMachineSettings().siteId}   ORDER BY $COL_PRIORITY < 0, $COL_PRIORITY ASC"
+    } else {
+      "Select * from $TABLE_MACHINES  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 AND $COL_SITE_ID = ${myHelper.getMachineSettings().siteId} AND $COL_MACHINE_TYPE_ID = $type   ORDER BY $COL_PRIORITY < 0, $COL_PRIORITY ASC"
+    }
+    // myHelper.log("rawQuery:$query")
+    val result = db.rawQuery(query, null)
+    
+    if (result.moveToFirst()) {
+      do {
+        val datum = Material()
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+        datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+        datum.number = result.getString(result.getColumnIndex(COL_NUMBER))
+        datum.totalHours = result.getString(result.getColumnIndex(COL_TOTAL_TIME))
+        datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+        list.add(datum)
         
-        result.close()
-        db.close()
-        return datum
+      } while (result.moveToNext())
     }
     
-    fun getLocationByID(id: Int): Material {
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun getMachineByID(id: Int): Material {
+    
+    val db = this.readableDatabase
+    val query =
+      "Select * from $TABLE_MACHINES  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 AND $COL_SITE_ID = ${myHelper.getMachineSettings().siteId} AND $COL_ID = $id ORDER BY $COL_ID DESC"
+    
+    // myHelper.log("rawQuery:$query")
+    val result = db.rawQuery(query, null)
+    
+    val datum = Material()
+    
+    if (result.moveToFirst()) {
+      do {
+        
+        // myHelper.log("Result:${result.toString()}")
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+        datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+        datum.number = result.getString(result.getColumnIndex(COL_NUMBER))
+        datum.totalHours = result.getString(result.getColumnIndex(COL_TOTAL_TIME))
+        datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+        datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+        
+        
+      } while (result.moveToNext())
+    }
+    
+    result.close()
+    db.close()
+    return datum
+  }
+  
+  fun getLocationByID(id: Int): Material {
 
 //        val list: ArrayList<Material> = ArrayList()
-        val db = this.readableDatabase
+    val db = this.readableDatabase
+    
+    val query =
+      "Select * from $TABLE_LOCATIONS  WHERE $COL_ID = $id ORDER BY $COL_ID DESC LIMIT 1"
+    val result = db.rawQuery(query, null)
+    
+    val datum = Material()
+    if (result.moveToFirst()) {
+      do {
         
-        val query =
-            "Select * from $TABLE_LOCATIONS  WHERE $COL_ID = $id ORDER BY $COL_ID DESC LIMIT 1"
-        val result = db.rawQuery(query, null)
-        
-        val datum = Material()
-        if (result.moveToFirst()) {
-            do {
-                
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-                datum.name = result.getString(result.getColumnIndex(COL_NAME))
-                datum.priority = result.getInt(result.getColumnIndex(COL_PRIORITY))
-                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+        datum.name = result.getString(result.getColumnIndex(COL_NAME))
+        datum.priority = result.getInt(result.getColumnIndex(COL_PRIORITY))
+        datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
 //                list.add(datum)
-            
-            } while (result.moveToNext())
-        }
-        
-        result.close()
-        db.close()
-        return datum
+      
+      } while (result.moveToNext())
     }
     
-    fun getLocations(): ArrayList<Material> {
+    result.close()
+    db.close()
+    return datum
+  }
+  
+  fun getLocations(): ArrayList<Material> {
+    
+    val list: ArrayList<Material> = ArrayList()
+    val db = this.readableDatabase
+    
+    val query =
+      "Select * from $TABLE_LOCATIONS  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 AND $COL_SITE_ID = ${myHelper.getMachineSettings().siteId} ORDER BY $COL_PRIORITY <0, $COL_PRIORITY ASC"
+    val result = db.rawQuery(query, null)
+    
+    
+    if (result.moveToFirst()) {
+      do {
+        val datum = Material()
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+        datum.name = result.getString(result.getColumnIndex(COL_NAME))
+        datum.priority = result.getInt(result.getColumnIndex(COL_PRIORITY))
+        datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
+        list.add(datum)
         
-        val list: ArrayList<Material> = ArrayList()
-        val db = this.readableDatabase
-        
-        val query =
-            "Select * from $TABLE_LOCATIONS  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 AND $COL_SITE_ID = ${myHelper.getMachineSettings().siteId} ORDER BY $COL_PRIORITY <0, $COL_PRIORITY ASC"
-        val result = db.rawQuery(query, null)
-        
-        
-        if (result.moveToFirst()) {
-            do {
-                val datum = Material()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-                datum.name = result.getString(result.getColumnIndex(COL_NAME))
-                datum.priority = result.getInt(result.getColumnIndex(COL_PRIORITY))
-                datum.isDeleted = result.getInt(result.getColumnIndex(COL_IS_DELETED))
-                list.add(datum)
-                
-            } while (result.moveToNext())
-        }
-        
-        result.close()
-        db.close()
-        return list
+      } while (result.moveToNext())
     }
     
-    fun getWaits(orderBy: String = "DESC"): ArrayList<EWork> {
-        
-        val list: ArrayList<EWork> = ArrayList()
-        val db = this.readableDatabase
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun getWaits(orderBy: String = "DESC"): ArrayList<EWork> {
+    
+    val list: ArrayList<EWork> = ArrayList()
+    val db = this.readableDatabase
 
 //        val query = "Select * from $TABLE_DELAY  WHERE $COL_MACHINE_TYPE_ID = ${myHelper.getMachineTypeID()} ORDER BY $COL_ID DESC"
-        val query = "Select * from $TABLE_WAITS  ORDER BY $COL_ID $orderBy"
-        val result = db.rawQuery(query, null)
+    val query = "Select * from $TABLE_WAITS  ORDER BY $COL_ID $orderBy"
+    val result = db.rawQuery(query, null)
+    
+    
+    if (result.moveToFirst()) {
+      do {
+        val datum = EWork()
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+        datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+        datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
         
+        datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
+        datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
+        datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
         
-        if (result.moveToFirst()) {
-            do {
-                val datum = EWork()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-                datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
-                
-                datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
-                datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
-                datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
-                
-                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
-                datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
-                datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
-                
-                datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
-                    result.getString(
-                        result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                    )
-                )
-                datum.loadingGPSLocationString = result.getString(
-                    result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                )
-                
-                datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
-                    result.getString(
-                        result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                    )
-                )
-                datum.unloadingGPSLocationString = result.getString(
-                    result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                )
-                
-                datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
-                datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
-                
-                list.add(datum)
-            } while (result.moveToNext())
-        }
+        datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
+        datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+        datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
         
-        result.close()
-        db.close()
-        return list
+        datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
+          result.getString(
+            result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+          )
+        )
+        datum.loadingGPSLocationString = result.getString(
+          result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+        )
+        
+        datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
+          result.getString(
+            result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+          )
+        )
+        datum.unloadingGPSLocationString = result.getString(
+          result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+        )
+        
+        datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
+        datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
+        
+        list.add(datum)
+      } while (result.moveToNext())
     }
     
-    fun getEWorksOffLoads(eWorkID: Int): ArrayList<EWork> {
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun getEWorksOffLoads(eWorkID: Int): ArrayList<EWork> {
+    
+    val list: ArrayList<EWork> = ArrayList()
+    val db = this.readableDatabase
+    
+    val query =
+      "Select * from $TABLE_E_WORK_ACTION_OFFLOADING WHERE $COL_EWORK_ID = $eWorkID ORDER BY $COL_ID DESC"
+    val result = db.rawQuery(query, null)
+    
+    
+    if (result.moveToFirst()) {
+      do {
+        val datum = EWork()
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+        datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+        datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
+        datum.eWorkId = result.getInt(result.getColumnIndex(COL_EWORK_ID))
         
-        val list: ArrayList<EWork> = ArrayList()
-        val db = this.readableDatabase
+        datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
+        datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+        datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
         
-        val query =
-            "Select * from $TABLE_E_WORK_ACTION_OFFLOADING WHERE $COL_EWORK_ID = $eWorkID ORDER BY $COL_ID DESC"
-        val result = db.rawQuery(query, null)
-        
-        
-        if (result.moveToFirst()) {
-            do {
-                val datum = EWork()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-                datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
-                datum.eWorkId = result.getInt(result.getColumnIndex(COL_EWORK_ID))
-                
-                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
-                datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
-                datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
-                
-                datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
-                    result.getString(
-                        result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                    )
-                )
-                datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
-                    result.getString(
-                        result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                    )
-                )
-                datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
-                datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
-                list.add(datum)
-            } while (result.moveToNext())
-        }
-        
-        result.close()
-        db.close()
-        return list
+        datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
+          result.getString(
+            result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+          )
+        )
+        datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
+          result.getString(
+            result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+          )
+        )
+        datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
+        datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
+        list.add(datum)
+      } while (result.moveToNext())
     }
     
-    // eWorkType 1 = General Digging
-    // eWorkType 2 = Trenching
-    // eWorkType 3 = Scraper Trimming
-    // eWorkActionType 1 = Side Casting
-    // eWorkActionType 2 = Off Loading
-    fun getEWorks(workType: Int, orderBy: String = "DESC"): ArrayList<EWork> {
+    result.close()
+    db.close()
+    return list
+  }
+  
+  // eWorkType 1 = General Digging
+  // eWorkType 2 = Trenching
+  // eWorkType 3 = Scraper Trimming
+  // eWorkActionType 1 = Side Casting
+  // eWorkActionType 2 = Off Loading
+  fun getEWorks(workType: Int, orderBy: String = "DESC"): ArrayList<EWork> {
+    
+    val list: ArrayList<EWork> = ArrayList()
+    val db = this.readableDatabase
+    
+    val query =
+      "Select * from $TABLE_E_WORK WHERE $COL_EWORK_TYPE = $workType ORDER BY $COL_ID $orderBy"
+    val result = db.rawQuery(query, null)
+    
+    
+    if (result.moveToFirst()) {
+      do {
+        val datum = EWork()
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+        datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+        datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
+        datum.workType = result.getInt(result.getColumnIndex(COL_EWORK_TYPE))
+        datum.workActionType = result.getInt(result.getColumnIndex(COL_EWORK_ACTION_TYPE))
+        datum.totalLoads = result.getInt(result.getColumnIndex(COL_TOTAL_LOADS))
+        datum.materialId = result.getInt(result.getColumnIndex(COL_LOADING_MATERIAL_ID))
+        datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
+        datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
+        datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
+        datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
+        datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+        datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
         
-        val list: ArrayList<EWork> = ArrayList()
-        val db = this.readableDatabase
-        
-        val query =
-            "Select * from $TABLE_E_WORK WHERE $COL_EWORK_TYPE = $workType ORDER BY $COL_ID $orderBy"
-        val result = db.rawQuery(query, null)
-        
-        
-        if (result.moveToFirst()) {
-            do {
-                val datum = EWork()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-                datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
-                datum.workType = result.getInt(result.getColumnIndex(COL_EWORK_TYPE))
-                datum.workActionType = result.getInt(result.getColumnIndex(COL_EWORK_ACTION_TYPE))
-                datum.totalLoads = result.getInt(result.getColumnIndex(COL_TOTAL_LOADS))
-                datum.materialId = result.getInt(result.getColumnIndex(COL_LOADING_MATERIAL_ID))
-                datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
-                datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
-                datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
-                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
-                datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
-                datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
-                
-                datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
-                    result.getString(
-                        result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                    )
-                )
-                datum.loadingGPSLocationString = result.getString(
-                    result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                )
-                datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
-                    result.getString(
-                        result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                    )
-                )
-                datum.unloadingGPSLocationString = result.getString(
-                    result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                )
-                datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
-                datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
+        datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
+          result.getString(
+            result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+          )
+        )
+        datum.loadingGPSLocationString = result.getString(
+          result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+        )
+        datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
+          result.getString(
+            result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+          )
+        )
+        datum.unloadingGPSLocationString = result.getString(
+          result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+        )
+        datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
+        datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
 //                myHelper.log("getEWorks:$datum")
-                list.add(datum)
-            } while (result.moveToNext())
-        }
-        
-        result.close()
-        db.close()
-        return list
+        list.add(datum)
+      } while (result.moveToNext())
     }
     
-    // eWorkType 1 = General Digging
-    // eWorkType 2 = Trenching
-    // eWorkType 3 = Scraper Trimming
-    // eWorkActionType 1 = Side Casting
-    // eWorkActionType 2 = Off Loading
-    fun getCurrentLoginEWorks(workType: Int, orderBy: String = "DESC"): ArrayList<EWork> {
+    result.close()
+    db.close()
+    return list
+  }
+  
+  // eWorkType 1 = General Digging
+  // eWorkType 2 = Trenching
+  // eWorkType 3 = Scraper Trimming
+  // eWorkActionType 1 = Side Casting
+  // eWorkActionType 2 = Off Loading
+  fun getCurrentLoginEWorks(workType: Int, orderBy: String = "DESC"): ArrayList<EWork> {
+    
+    val list: ArrayList<EWork> = ArrayList()
+    val db = this.readableDatabase
+    
+    val query =
+      "Select * from $TABLE_E_WORK WHERE $COL_EWORK_TYPE = $workType AND  $COL_START_TIME > ${myHelper.getMeter().hourStartTime} AND $COL_OPERATOR_ID  = ${myHelper.getOperatorAPI().id} ORDER BY $COL_ID $orderBy"
+    val result = db.rawQuery(query, null)
+    
+    
+    if (result.moveToFirst()) {
+      do {
+        val datum = EWork()
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+        datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+        datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
+        datum.workType = result.getInt(result.getColumnIndex(COL_EWORK_TYPE))
+        datum.workActionType = result.getInt(result.getColumnIndex(COL_EWORK_ACTION_TYPE))
+        datum.totalLoads = result.getInt(result.getColumnIndex(COL_TOTAL_LOADS))
+        datum.materialId = result.getInt(result.getColumnIndex(COL_LOADING_MATERIAL_ID))
+        datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
+        datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
+        datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
+        datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
+        datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+        datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
         
-        val list: ArrayList<EWork> = ArrayList()
-        val db = this.readableDatabase
-        
-        val query =
-            "Select * from $TABLE_E_WORK WHERE $COL_EWORK_TYPE = $workType AND  $COL_START_TIME > ${myHelper.getMeter().hourStartTime} AND $COL_OPERATOR_ID  = ${myHelper.getOperatorAPI().id} ORDER BY $COL_ID $orderBy"
-        val result = db.rawQuery(query, null)
-        
-        
-        if (result.moveToFirst()) {
-            do {
-                val datum = EWork()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-                datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
-                datum.workType = result.getInt(result.getColumnIndex(COL_EWORK_TYPE))
-                datum.workActionType = result.getInt(result.getColumnIndex(COL_EWORK_ACTION_TYPE))
-                datum.totalLoads = result.getInt(result.getColumnIndex(COL_TOTAL_LOADS))
-                datum.materialId = result.getInt(result.getColumnIndex(COL_LOADING_MATERIAL_ID))
-                datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
-                datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
-                datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
-                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
-                datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
-                datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
-                
-                datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
-                    result.getString(
-                        result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                    )
-                )
-                datum.loadingGPSLocationString = result.getString(
-                    result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                )
-                datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
-                    result.getString(
-                        result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                    )
-                )
-                datum.unloadingGPSLocationString = result.getString(
-                    result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                )
-                datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
-                datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
+        datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
+          result.getString(
+            result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+          )
+        )
+        datum.loadingGPSLocationString = result.getString(
+          result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+        )
+        datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
+          result.getString(
+            result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+          )
+        )
+        datum.unloadingGPSLocationString = result.getString(
+          result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+        )
+        datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
+        datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
 //                myHelper.log("getEWorks:$datum")
-                list.add(datum)
-            } while (result.moveToNext())
-        }
-        
-        result.close()
-        db.close()
-        return list
+        list.add(datum)
+      } while (result.moveToNext())
     }
     
-    fun getELoadHistory(orderBy: String = "DESC"): ArrayList<MyData> {
-        
-        val list: ArrayList<MyData> = ArrayList()
-        val db = this.readableDatabase
-        
-        val query =
-            "Select * from $TABLE_E_LOAD_HISTORY ORDER BY $COL_ID $orderBy"
-        val result = db.rawQuery(query, null)
-        
-        if (result.moveToFirst()) {
-            do {
-                val datum = MyData()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-                datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
-                datum.loadTypeId = result.getInt(result.getColumnIndex(COL_LOAD_TYPE_ID))
-                
-                datum.loading_material_id =
-                    result.getInt(result.getColumnIndex(COL_LOADING_MATERIAL_ID))
-                datum.loading_location_id =
-                    result.getInt(result.getColumnIndex(COL_LOADING_LOCATION_ID))
-                datum.unloadingWeight =
-                    result.getDouble(result.getColumnIndex(COL_UNLOADING_WEIGHT))
-                
-                datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
-                datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
-                datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
-                datum.time = result.getString(result.getColumnIndex(COL_TIME))
-                datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
-                datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
-                
-                datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
-                    result.getString(
-                        result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                    )
-                )
-                datum.loadingGPSLocationString = result.getString(
-                    result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                )
-                datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
-                    result.getString(
-                        result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                    )
-                )
-                datum.unloadingGPSLocationString = result.getString(
-                    result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                )
-                datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
-                datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
-                list.add(datum)
-            } while (result.moveToNext())
-        }
-        result.close()
-        db.close()
-        return list
-    }
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun getELoadHistory(orderBy: String = "DESC"): ArrayList<MyData> {
     
-    fun getCurrentLoginELoadHistory(orderBy: String = "DESC"): ArrayList<MyData> {
-        
-        val list: ArrayList<MyData> = ArrayList()
-        val db = this.readableDatabase
-        
-        val query =
-            "Select * from $TABLE_E_LOAD_HISTORY WHERE $COL_START_TIME > ${myHelper.getMeter().hourStartTime} AND $COL_OPERATOR_ID  = ${myHelper.getOperatorAPI().id} ORDER BY $COL_ID $orderBy"
-        val result = db.rawQuery(query, null)
-        
-        if (result.moveToFirst()) {
-            do {
-                val datum = MyData()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-                datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
-                datum.loadTypeId = result.getInt(result.getColumnIndex(COL_LOAD_TYPE_ID))
-                
-                datum.loading_material_id =
-                    result.getInt(result.getColumnIndex(COL_LOADING_MATERIAL_ID))
-                datum.loading_location_id =
-                    result.getInt(result.getColumnIndex(COL_LOADING_LOCATION_ID))
-                datum.unloadingWeight =
-                    result.getDouble(result.getColumnIndex(COL_UNLOADING_WEIGHT))
-                
-                datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
-                datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
-                datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
-                datum.time = result.getString(result.getColumnIndex(COL_TIME))
-                datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
-                datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
-                
-                datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
-                    result.getString(
-                        result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                    )
-                )
-                datum.loadingGPSLocationString = result.getString(
-                    result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                )
-                datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
-                    result.getString(
-                        result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                    )
-                )
-                datum.unloadingGPSLocationString = result.getString(
-                    result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                )
-                datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
-                datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
-                list.add(datum)
-            } while (result.moveToNext())
-        }
-        result.close()
-        db.close()
-        return list
-    }
+    val list: ArrayList<MyData> = ArrayList()
+    val db = this.readableDatabase
     
-    fun getTrip(id: Long): MyData {
-        
-        val db = this.readableDatabase
-        val query = "Select * from $TABLE_TRIP  WHERE $COL_ID = $id ORDER BY $COL_ID DESC"
-        val result = db.rawQuery(query, null)
-        
+    val query =
+      "Select * from $TABLE_E_LOAD_HISTORY ORDER BY $COL_ID $orderBy"
+    val result = db.rawQuery(query, null)
+    
+    if (result.moveToFirst()) {
+      do {
         val datum = MyData()
-        if (result.moveToFirst()) {
-            
-            datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-            datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-            datum.recordID = result.getLong(result.getColumnIndex(COL_ID))
-            datum.tripType = result.getInt(result.getColumnIndex(COL_TRIP_TYPE))
-            datum.trip0ID = result.getString(result.getColumnIndex(COL_TRIP0_ID))
-            datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-            datum.machineId =
-                result.getInt(result.getColumnIndex(COL_MACHINE_ID))
-            
-            datum.loading_machine_id = result.getInt(result.getColumnIndex(COL_LOADING_MACHINE_ID))
-            datum.loading_material_id = result.getInt(result.getColumnIndex(COL_LOADING_MATERIAL_ID))
-            
-            datum.loading_location_id = result.getInt(result.getColumnIndex(COL_LOADING_LOCATION_ID))
-            
-            datum.unloadingWeight = result.getDouble(result.getColumnIndex(COL_UNLOADING_WEIGHT))
-            datum.unloading_task_id = result.getInt(result.getColumnIndex(COL_UNLOADING_TASK_ID))
-            
-            datum.unloading_material_id = result.getInt(result.getColumnIndex(COL_UNLOADING_MATERIAL_ID))
-            
-            datum.unloading_location_id = result.getInt(result.getColumnIndex(COL_UNLOADING_LOCATION_ID))
-            
-            datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
-            datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
-            datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
-            
-            datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
-            datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
-            datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
-            
-            datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
-                result.getString(
-                    result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                )
-            )
-            datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
-                result.getString(
-                    result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                )
-            )
-            datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
-            datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
-        }
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+        datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+        datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
+        datum.loadTypeId = result.getInt(result.getColumnIndex(COL_LOAD_TYPE_ID))
         
-        result.close()
-        db.close()
-        return datum
+        datum.loading_material_id =
+          result.getInt(result.getColumnIndex(COL_LOADING_MATERIAL_ID))
+        datum.loading_location_id =
+          result.getInt(result.getColumnIndex(COL_LOADING_LOCATION_ID))
+        datum.unloadingWeight =
+          result.getDouble(result.getColumnIndex(COL_UNLOADING_WEIGHT))
+        
+        datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
+        datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
+        datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
+        datum.time = result.getString(result.getColumnIndex(COL_TIME))
+        datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+        datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
+        
+        datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
+          result.getString(
+            result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+          )
+        )
+        datum.loadingGPSLocationString = result.getString(
+          result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+        )
+        datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
+          result.getString(
+            result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+          )
+        )
+        datum.unloadingGPSLocationString = result.getString(
+          result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+        )
+        datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
+        datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
+        list.add(datum)
+      } while (result.moveToNext())
+    }
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun getCurrentLoginELoadHistory(orderBy: String = "DESC"): ArrayList<MyData> {
+    
+    val list: ArrayList<MyData> = ArrayList()
+    val db = this.readableDatabase
+    
+    val query =
+      "Select * from $TABLE_E_LOAD_HISTORY WHERE $COL_START_TIME > ${myHelper.getMeter().hourStartTime} AND $COL_OPERATOR_ID  = ${myHelper.getOperatorAPI().id} ORDER BY $COL_ID $orderBy"
+    val result = db.rawQuery(query, null)
+    
+    if (result.moveToFirst()) {
+      do {
+        val datum = MyData()
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+        datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+        datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
+        datum.loadTypeId = result.getInt(result.getColumnIndex(COL_LOAD_TYPE_ID))
+        
+        datum.loading_material_id =
+          result.getInt(result.getColumnIndex(COL_LOADING_MATERIAL_ID))
+        datum.loading_location_id =
+          result.getInt(result.getColumnIndex(COL_LOADING_LOCATION_ID))
+        datum.unloadingWeight =
+          result.getDouble(result.getColumnIndex(COL_UNLOADING_WEIGHT))
+        
+        datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
+        datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
+        datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
+        datum.time = result.getString(result.getColumnIndex(COL_TIME))
+        datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+        datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
+        
+        datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
+          result.getString(
+            result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+          )
+        )
+        datum.loadingGPSLocationString = result.getString(
+          result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+        )
+        datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
+          result.getString(
+            result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+          )
+        )
+        datum.unloadingGPSLocationString = result.getString(
+          result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+        )
+        datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
+        datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
+        list.add(datum)
+      } while (result.moveToNext())
+    }
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun getTrip(id: Long): MyData {
+    
+    val db = this.readableDatabase
+    val query = "Select * from $TABLE_TRIP  WHERE $COL_ID = $id ORDER BY $COL_ID DESC"
+    val result = db.rawQuery(query, null)
+    
+    val datum = MyData()
+    if (result.moveToFirst()) {
+      
+      datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+      datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+      datum.recordID = result.getLong(result.getColumnIndex(COL_ID))
+      datum.tripType = result.getInt(result.getColumnIndex(COL_TRIP_TYPE))
+      datum.trip0ID = result.getString(result.getColumnIndex(COL_TRIP0_ID))
+      datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+      datum.machineId =
+        result.getInt(result.getColumnIndex(COL_MACHINE_ID))
+      
+      datum.loading_machine_id = result.getInt(result.getColumnIndex(COL_LOADING_MACHINE_ID))
+      datum.loading_material_id = result.getInt(result.getColumnIndex(COL_LOADING_MATERIAL_ID))
+      
+      datum.loading_location_id = result.getInt(result.getColumnIndex(COL_LOADING_LOCATION_ID))
+      
+      datum.unloadingWeight = result.getDouble(result.getColumnIndex(COL_UNLOADING_WEIGHT))
+      datum.unloading_task_id = result.getInt(result.getColumnIndex(COL_UNLOADING_TASK_ID))
+      
+      datum.unloading_material_id = result.getInt(result.getColumnIndex(COL_UNLOADING_MATERIAL_ID))
+      
+      datum.unloading_location_id = result.getInt(result.getColumnIndex(COL_UNLOADING_LOCATION_ID))
+      
+      datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
+      datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
+      datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
+      
+      datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
+      datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+      datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
+      
+      datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
+        result.getString(
+          result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+        )
+      )
+      datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
+        result.getString(
+          result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+        )
+      )
+      datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
+      datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
     }
     
-    fun getTrips(): ArrayList<MyData> {
+    result.close()
+    db.close()
+    return datum
+  }
+  
+  fun getTrips(): ArrayList<MyData> {
+    
+    val list: ArrayList<MyData> = ArrayList()
+    val db = this.readableDatabase
+    val query = "Select * from $TABLE_TRIP  ORDER BY $COL_ID DESC"
+    val result = db.rawQuery(query, null)
+    
+    if (result.moveToFirst()) {
+      do {
+        val datum = MyData()
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+        datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+        datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
+        datum.recordID = result.getLong(result.getColumnIndex(COL_ID))
+        datum.tripType = result.getInt(result.getColumnIndex(COL_TRIP_TYPE))
+        datum.trip0ID = result.getString(result.getColumnIndex(COL_TRIP0_ID))
+        datum.loading_machine_id = result.getInt(result.getColumnIndex(COL_LOADING_MACHINE_ID))
+        datum.loading_material_id = result.getInt(result.getColumnIndex(COL_LOADING_MATERIAL_ID))
+        datum.loading_location_id = result.getInt(result.getColumnIndex(COL_LOADING_LOCATION_ID))
+        datum.unloadingWeight =
+          result.getDouble(result.getColumnIndex(COL_UNLOADING_WEIGHT))
+        datum.unloading_task_id = result.getInt(result.getColumnIndex(COL_UNLOADING_TASK_ID))
+        datum.unloading_material_id = result.getInt(result.getColumnIndex(COL_UNLOADING_MATERIAL_ID))
+        datum.unloading_location_id = result.getInt(result.getColumnIndex(COL_UNLOADING_LOCATION_ID))
         
-        val list: ArrayList<MyData> = ArrayList()
-        val db = this.readableDatabase
-        val query = "Select * from $TABLE_TRIP  ORDER BY $COL_ID DESC"
-        val result = db.rawQuery(query, null)
+        datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
+        datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
+        datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
         
-        if (result.moveToFirst()) {
-            do {
-                val datum = MyData()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-                datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
-                datum.recordID = result.getLong(result.getColumnIndex(COL_ID))
-                datum.tripType = result.getInt(result.getColumnIndex(COL_TRIP_TYPE))
-                datum.trip0ID = result.getString(result.getColumnIndex(COL_TRIP0_ID))
-                datum.loading_machine_id = result.getInt(result.getColumnIndex(COL_LOADING_MACHINE_ID))
-                datum.loading_material_id = result.getInt(result.getColumnIndex(COL_LOADING_MATERIAL_ID))
-                datum.loading_location_id = result.getInt(result.getColumnIndex(COL_LOADING_LOCATION_ID))
-                datum.unloadingWeight =
-                    result.getDouble(result.getColumnIndex(COL_UNLOADING_WEIGHT))
-                datum.unloading_task_id = result.getInt(result.getColumnIndex(COL_UNLOADING_TASK_ID))
-                datum.unloading_material_id = result.getInt(result.getColumnIndex(COL_UNLOADING_MATERIAL_ID))
-                datum.unloading_location_id = result.getInt(result.getColumnIndex(COL_UNLOADING_LOCATION_ID))
-                
-                datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
-                datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
-                datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
-                
-                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
-                datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
-                datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
-                
-                datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
-                    result.getString(
-                        result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                    )
-                )
-                datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
-                    result.getString(
-                        result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                    )
-                )
-                datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
-                datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
-                list.add(datum)
-            } while (result.moveToNext())
-        }
+        datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
+        datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+        datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
         
-        result.close()
-        db.close()
-        return list
+        datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
+          result.getString(
+            result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+          )
+        )
+        datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
+          result.getString(
+            result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+          )
+        )
+        datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
+        datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
+        list.add(datum)
+      } while (result.moveToNext())
     }
     
-    fun getTripsByTypes(type: Int, orderBy: String = "DESC"): ArrayList<MyData> {
-        
-        val list: ArrayList<MyData> = ArrayList()
-        val db = this.readableDatabase
-        val query = "Select * from $TABLE_TRIP   WHERE $COL_MACHINE_TYPE_ID = $type ORDER BY $COL_ID $orderBy"
-        val result = db.rawQuery(query, null)
-        
-        if (result.moveToFirst()) {
-            do {
-                val datum = MyData()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-                datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
-                datum.recordID = result.getLong(result.getColumnIndex(COL_ID))
-                datum.tripType = result.getInt(result.getColumnIndex(COL_TRIP_TYPE))
-                datum.trip0ID = result.getString(result.getColumnIndex(COL_TRIP0_ID))
-                
-                datum.loading_machine_id = result.getInt(result.getColumnIndex(COL_LOADING_MACHINE_ID))
-                
-                datum.loading_material_id = result.getInt(result.getColumnIndex(COL_LOADING_MATERIAL_ID))
-                
-                datum.loading_location_id = result.getInt(result.getColumnIndex(COL_LOADING_LOCATION_ID))
-                
-                datum.unloadingWeight =
-                    result.getDouble(result.getColumnIndex(COL_UNLOADING_WEIGHT))
-                datum.unloading_task_id = result.getInt(result.getColumnIndex(COL_UNLOADING_TASK_ID))
-                datum.unloading_material_id = result.getInt(result.getColumnIndex(COL_UNLOADING_MATERIAL_ID))
-                datum.unloading_location_id = result.getInt(result.getColumnIndex(COL_UNLOADING_LOCATION_ID))
-                
-                datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
-                datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
-                datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
-                
-                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
-                datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
-                datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
-                
-                datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
-                    result.getString(
-                        result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                    )
-                )
-                datum.loadingGPSLocationString = result.getString(
-                    result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                )
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun getTripsByTypes(type: Int, orderBy: String = "DESC"): ArrayList<MyData> {
     
-                datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
-                    result.getString(
-                        result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                    )
-                )
-                datum.unloadingGPSLocationString = result.getString(
-                    result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                )
-                datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
-                datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
-                myHelper.log("orderBy:$orderBy  tripData:$datum")
-                // For Server Sync; send data which has stop time greater than 0. As if stop_time=0 then
-                // Trip Unload data is not saved/updated yet. This could be the case when Load is done and machine is
-                // stopped. And when machine is started again data is synced with server but Unload is not done yet.
-                if (orderBy == "ASC") {
-                    if (datum.stopTime > 0)
-                        list.add(datum)
-                } else {
-                    list.add(datum)
-                }
-            } while (result.moveToNext())
-        }
+    val list: ArrayList<MyData> = ArrayList()
+    val db = this.readableDatabase
+    val query = "Select * from $TABLE_TRIP   WHERE $COL_MACHINE_TYPE_ID = $type ORDER BY $COL_ID $orderBy"
+    val result = db.rawQuery(query, null)
+    
+    if (result.moveToFirst()) {
+      do {
+        val datum = MyData()
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+        datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+        datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
+        datum.recordID = result.getLong(result.getColumnIndex(COL_ID))
+        datum.tripType = result.getInt(result.getColumnIndex(COL_TRIP_TYPE))
+        datum.trip0ID = result.getString(result.getColumnIndex(COL_TRIP0_ID))
         
-        result.close()
-        db.close()
-        return list
+        datum.loading_machine_id = result.getInt(result.getColumnIndex(COL_LOADING_MACHINE_ID))
+        
+        datum.loading_material_id = result.getInt(result.getColumnIndex(COL_LOADING_MATERIAL_ID))
+        
+        datum.loading_location_id = result.getInt(result.getColumnIndex(COL_LOADING_LOCATION_ID))
+        
+        datum.unloadingWeight =
+          result.getDouble(result.getColumnIndex(COL_UNLOADING_WEIGHT))
+        datum.unloading_task_id = result.getInt(result.getColumnIndex(COL_UNLOADING_TASK_ID))
+        datum.unloading_material_id = result.getInt(result.getColumnIndex(COL_UNLOADING_MATERIAL_ID))
+        datum.unloading_location_id = result.getInt(result.getColumnIndex(COL_UNLOADING_LOCATION_ID))
+        
+        datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
+        datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
+        datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
+        
+        datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
+        datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+        datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
+        
+        datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
+          result.getString(
+            result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+          )
+        )
+        datum.loadingGPSLocationString = result.getString(
+          result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+        )
+        
+        datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
+          result.getString(
+            result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+          )
+        )
+        datum.unloadingGPSLocationString = result.getString(
+          result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+        )
+        datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
+        datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
+        myHelper.log("orderBy:$orderBy  tripData:$datum")
+        // For Server Sync; send data which has stop time greater than 0. As if stop_time=0 then
+        // Trip Unload data is not saved/updated yet. This could be the case when Load is done and machine is
+        // stopped. And when machine is started again data is synced with server but Unload is not done yet.
+        if (orderBy == "ASC") {
+          if (datum.stopTime > 0)
+            list.add(datum)
+        } else {
+          list.add(datum)
+        }
+      } while (result.moveToNext())
     }
     
-    fun getCurrentLoginTrips(orderBy: String = "DESC"): ArrayList<MyData> {
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun getCurrentLoginTrips(orderBy: String = "DESC"): ArrayList<MyData> {
+    
+    val list: ArrayList<MyData> = ArrayList()
+    val db = this.readableDatabase
+    val query =
+      "Select * from $TABLE_TRIP   WHERE $COL_START_TIME > ${myHelper.getMeter().hourStartTime} AND $COL_OPERATOR_ID  = ${myHelper.getOperatorAPI().id} ORDER BY $COL_ID $orderBy"
+    val result = db.rawQuery(query, null)
+    
+    if (result.moveToFirst()) {
+      do {
+        val datum = MyData()
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+        datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+        datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
+        datum.recordID = result.getLong(result.getColumnIndex(COL_ID))
+        datum.tripType = result.getInt(result.getColumnIndex(COL_TRIP_TYPE))
+        datum.trip0ID = result.getString(result.getColumnIndex(COL_TRIP0_ID))
         
-        val list: ArrayList<MyData> = ArrayList()
-        val db = this.readableDatabase
-        val query =
-            "Select * from $TABLE_TRIP   WHERE $COL_START_TIME > ${myHelper.getMeter().hourStartTime} AND $COL_OPERATOR_ID  = ${myHelper.getOperatorAPI().id} ORDER BY $COL_ID $orderBy"
-        val result = db.rawQuery(query, null)
+        datum.loading_machine_id = result.getInt(result.getColumnIndex(COL_LOADING_MACHINE_ID))
         
-        if (result.moveToFirst()) {
-            do {
-                val datum = MyData()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-                datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
-                datum.recordID = result.getLong(result.getColumnIndex(COL_ID))
-                datum.tripType = result.getInt(result.getColumnIndex(COL_TRIP_TYPE))
-                datum.trip0ID = result.getString(result.getColumnIndex(COL_TRIP0_ID))
-                
-                datum.loading_machine_id = result.getInt(result.getColumnIndex(COL_LOADING_MACHINE_ID))
-                
-                datum.loading_material_id = result.getInt(result.getColumnIndex(COL_LOADING_MATERIAL_ID))
-                
-                datum.loading_location_id = result.getInt(result.getColumnIndex(COL_LOADING_LOCATION_ID))
-                
-                datum.unloadingWeight =
-                    result.getDouble(result.getColumnIndex(COL_UNLOADING_WEIGHT))
-                datum.unloading_task_id = result.getInt(result.getColumnIndex(COL_UNLOADING_TASK_ID))
-                datum.unloading_material_id = result.getInt(result.getColumnIndex(COL_UNLOADING_MATERIAL_ID))
-                datum.unloading_location_id = result.getInt(result.getColumnIndex(COL_UNLOADING_LOCATION_ID))
-                
-                datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
-                datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
-                datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
-                
-                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
-                datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
-                datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
-                
-                datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
-                    result.getString(
-                        result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                    )
-                )
-                datum.loadingGPSLocationString = result.getString(
-                    result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                )
-                
-                datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
-                    result.getString(
-                        result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                    )
-                )
-                datum.unloadingGPSLocationString = result.getString(
-                    result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                )
-                datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
-                datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
-                list.add(datum)
-            } while (result.moveToNext())
-        }
+        datum.loading_material_id = result.getInt(result.getColumnIndex(COL_LOADING_MATERIAL_ID))
         
-        result.close()
-        db.close()
-        return list
+        datum.loading_location_id = result.getInt(result.getColumnIndex(COL_LOADING_LOCATION_ID))
+        
+        datum.unloadingWeight =
+          result.getDouble(result.getColumnIndex(COL_UNLOADING_WEIGHT))
+        datum.unloading_task_id = result.getInt(result.getColumnIndex(COL_UNLOADING_TASK_ID))
+        datum.unloading_material_id = result.getInt(result.getColumnIndex(COL_UNLOADING_MATERIAL_ID))
+        datum.unloading_location_id = result.getInt(result.getColumnIndex(COL_UNLOADING_LOCATION_ID))
+        
+        datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
+        datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
+        datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
+        
+        datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
+        datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+        datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
+        
+        datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
+          result.getString(
+            result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+          )
+        )
+        datum.loadingGPSLocationString = result.getString(
+          result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+        )
+        
+        datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
+          result.getString(
+            result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+          )
+        )
+        datum.unloadingGPSLocationString = result.getString(
+          result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+        )
+        datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
+        datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
+        list.add(datum)
+      } while (result.moveToNext())
     }
     
-    fun getMachineStopByID(id: Long = 0): MyData {
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun getMachineStopByID(id: Long = 0): MyData {
 
 //        var list: ArrayList<MyData> = ArrayList()
-        val db = this.readableDatabase
-        
-        val query = "Select * from $TABLE_MACHINES_STOPS  WHERE $COL_ID = $id ORDER BY $COL_ID DESC"
-        val result = db.rawQuery(query, null)
-        
-        val datum = MyData()
-        
-        if (result.moveToFirst()) {
+    val db = this.readableDatabase
+    
+    val query = "Select * from $TABLE_MACHINES_STOPS  WHERE $COL_ID = $id ORDER BY $COL_ID DESC"
+    val result = db.rawQuery(query, null)
+    
+    val datum = MyData()
+    
+    if (result.moveToFirst()) {
 //            do {
-            datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-            datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-            datum.recordID = result.getLong(result.getColumnIndex(COL_ID))
-            datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-            datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
-            datum.machine_stop_reason_id =
-                result.getInt(result.getColumnIndex(COL_MACHINE_STOP_REASON_ID))
-            
-            
-            datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
-            datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
-            datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
-            
-            datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
-            datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
-            datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
-            
-            datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
-                result.getString(
-                    result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                )
-            )
-            datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
-                result.getString(
-                    result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                )
-            )
-            datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
-            datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
+      datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+      datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+      datum.recordID = result.getLong(result.getColumnIndex(COL_ID))
+      datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+      datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
+      datum.machine_stop_reason_id =
+        result.getInt(result.getColumnIndex(COL_MACHINE_STOP_REASON_ID))
+      
+      
+      datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
+      datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
+      datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
+      
+      datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
+      datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+      datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
+      
+      datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
+        result.getString(
+          result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+        )
+      )
+      datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
+        result.getString(
+          result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+        )
+      )
+      datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
+      datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
 //                list.add(datum)
 //            } while (result.moveToNext())
+    }
+    
+    result.close()
+    db.close()
+    return datum
+  }
+  
+  fun getMachinesStops(orderBy: String = "DESC"): ArrayList<MyData> {
+    
+    val list = ArrayList<MyData>()
+    val db = this.readableDatabase
+    
+    val query = "Select * from $TABLE_MACHINES_STOPS  ORDER BY $COL_ID $orderBy"
+    val result = db.rawQuery(query, null)
+    
+    if (result.moveToFirst()) {
+      do {
+        val datum = MyData()
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
+        datum.recordID = result.getLong(result.getColumnIndex(COL_ID))
+        datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
+        datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
+        datum.machine_stop_reason_id =
+          result.getInt(result.getColumnIndex(COL_MACHINE_STOP_REASON_ID))
+        
+        datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
+        datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
+        datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
+        
+        datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
+        datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+        datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
+        
+        datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
+          result.getString(
+            result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+          )
+        )
+        datum.loadingGPSLocationString = result.getString(
+          result.getColumnIndex(COL_LOADING_GPS_LOCATION)
+        )
+        datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
+          result.getString(
+            result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+          )
+        )
+        datum.unloadingGPSLocationString = result.getString(
+          result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
+        )
+        datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
+        datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
+        myHelper.log("getMachinesStops:$datum")
+        // When Server sync data is required then send only data which has stop_time greater than 0
+        // Machine stop entry is recorded in database when a machine is stopped and updated when a machine
+        // is started again. So send data to server when we have complete data e.g start_time and stop_time
+        if (orderBy == "ASC") {
+          if (datum.stopTime > 0)
+            list.add(datum)
+        } else {
+          list.add(datum)
         }
-        
-        result.close()
-        db.close()
-        return datum
+      } while (result.moveToNext())
     }
     
-    fun getMachinesStops(orderBy: String = "DESC"): ArrayList<MyData> {
-        
-        val list = ArrayList<MyData>()
-        val db = this.readableDatabase
-        
-        val query = "Select * from $TABLE_MACHINES_STOPS  ORDER BY $COL_ID $orderBy"
-        val result = db.rawQuery(query, null)
-        
-        if (result.moveToFirst()) {
-            do {
-                val datum = MyData()
-                datum.id = result.getInt(result.getColumnIndex(COL_ID))
-                datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
-                datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
-                datum.recordID = result.getLong(result.getColumnIndex(COL_ID))
-                datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
-                datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
-                datum.machine_stop_reason_id =
-                    result.getInt(result.getColumnIndex(COL_MACHINE_STOP_REASON_ID))
-                
-                datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
-                datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
-                datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
-                
-                datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
-                datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
-                datum.isDayWorks = result.getInt(result.getColumnIndex(COL_IS_DAY_WORKS))
-                
-                datum.loadingGPSLocation = myHelper.getStringToGPSLocation(
-                    result.getString(
-                        result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                    )
-                )
-                datum.loadingGPSLocationString = result.getString(
-                    result.getColumnIndex(COL_LOADING_GPS_LOCATION)
-                )
-                datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(
-                    result.getString(
-                        result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                    )
-                )
-                datum.unloadingGPSLocationString = result.getString(
-                    result.getColumnIndex(COL_UNLOADING_GPS_LOCATION)
-                )
-                datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
-                datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
-                myHelper.log("getMachinesStops:$datum")
-                // When Server sync data is required then send only data which has stop_time greater than 0
-                // Machine stop entry is recorded in database when a machine is stopped and updated when a machine
-                // is started again. So send data to server when we have complete data e.g start_time and stop_time
-                if (orderBy == "ASC") {
-                    if (datum.stopTime > 0)
-                        list.add(datum)
-                } else {
-                    list.add(datum)
-                }
-            } while (result.moveToNext())
-        }
-        
-        result.close()
-        db.close()
-        return list
-    }
+    result.close()
+    db.close()
+    return list
+  }
+  
+  fun updateDelay(eWork: EWork): Int {
     
-    fun updateDelay(eWork: EWork): Int {
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        cv.put(COL_IS_SYNC, eWork.isSync)
-        // myHelper.log("updatedID :$updatedID ")
-        return db.update(TABLE_WAITS, cv, "$COL_ID = ${eWork.id}", null)
-    }
-    
-    fun updateEWork(eWork: EWork): Int {
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    cv.put(COL_IS_SYNC, eWork.isSync)
+    // myHelper.log("updatedID :$updatedID ")
+    return db.update(TABLE_WAITS, cv, "$COL_ID = ${eWork.id}", null)
+  }
+  
+  fun updateEWork(eWork: EWork): Int {
 
 //        val currentTime = System.currentTimeMillis()
 //
@@ -3507,104 +3510,104 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
 //
 //        eWork.time = currentTime.toString()
 //        eWork.date = myHelper.getDate(currentTime)
-        
-        // myHelper.log("updateEWork:$eWork")
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        cv.put(COL_TOTAL_LOADS, eWork.totalLoads)
-        cv.put(COL_END_TIME, eWork.stopTime)
-        cv.put(COL_TOTAL_TIME, eWork.totalTime)
-        cv.put(COL_TIME, eWork.time.toLong())
-        cv.put(COL_DATE, eWork.date)
-        cv.put(
-            COL_UNLOADING_GPS_LOCATION,
-            myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
-        )
-        cv.put(COL_IS_SYNC, eWork.isSync)
-        cv.put(COL_LOADING_MATERIAL_ID, eWork.materialId)
-        cv.put(COL_IS_DAY_WORKS, eWork.isDayWorks)
-        cv.put(COL_IS_SYNC, eWork.isSync)
-        
-        // myHelper.log("updatedID :$updatedID ")
-        return db.update(TABLE_E_WORK, cv, "$COL_ID = ${eWork.id}", null)
-        
-    }
     
-    fun updateTrip(myData: MyData): Int {
-        myHelper.log("updateTrip:$myData")
-        val currentTime = System.currentTimeMillis()
-        
-        myData.stopTime = currentTime
-        myData.totalTime = currentTime - myData.startTime
-        
-        myData.time = currentTime.toString()
-        myData.date = myHelper.getDate(currentTime)
-        
-        // myHelper.log("updateTrip:$myData")
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        cv.put(COL_UNLOADING_WEIGHT, myData.unloadingWeight)
+    // myHelper.log("updateEWork:$eWork")
+    
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    cv.put(COL_TOTAL_LOADS, eWork.totalLoads)
+    cv.put(COL_END_TIME, eWork.stopTime)
+    cv.put(COL_TOTAL_TIME, eWork.totalTime)
+    cv.put(COL_TIME, eWork.time.toLong())
+    cv.put(COL_DATE, eWork.date)
+    cv.put(
+      COL_UNLOADING_GPS_LOCATION,
+      myHelper.getGPSLocationToString(eWork.unloadingGPSLocation)
+    )
+    cv.put(COL_IS_SYNC, eWork.isSync)
+    cv.put(COL_LOADING_MATERIAL_ID, eWork.materialId)
+    cv.put(COL_IS_DAY_WORKS, eWork.isDayWorks)
+    cv.put(COL_IS_SYNC, eWork.isSync)
+    
+    // myHelper.log("updatedID :$updatedID ")
+    return db.update(TABLE_E_WORK, cv, "$COL_ID = ${eWork.id}", null)
+    
+  }
+  
+  fun updateTrip(myData: MyData): Int {
+    myHelper.log("updateTrip:$myData")
+    val currentTime = System.currentTimeMillis()
+    
+    myData.stopTime = currentTime
+    myData.totalTime = currentTime - myData.startTime
+    
+    myData.time = currentTime.toString()
+    myData.date = myHelper.getDate(currentTime)
+    
+    // myHelper.log("updateTrip:$myData")
+    
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    cv.put(COL_UNLOADING_WEIGHT, myData.unloadingWeight)
 
 //        back unloading
-        if (myData.nextAction == 3) {
-            cv.put(COL_UNLOADING_TASK_ID, myData.back_unloading_task_id)
-            cv.put(COL_UNLOADING_MATERIAL_ID, myData.back_unloading_material_id)
-            cv.put(COL_UNLOADING_LOCATION_ID, myData.back_unloading_location_id)
-        } else {
-            cv.put(COL_UNLOADING_TASK_ID, myData.unloading_task_id)
-            cv.put(COL_UNLOADING_MATERIAL_ID, myData.unloading_material_id)
-            cv.put(COL_UNLOADING_LOCATION_ID, myData.unloading_location_id)
-        }
-        
-        
-        
-        cv.put(COL_MACHINE_TYPE_ID, myData.machineTypeId)
-        cv.put(COL_MACHINE_ID, myData.machineId)
-        
-        cv.put(COL_END_TIME, myData.stopTime)
-        cv.put(COL_TOTAL_TIME, myData.totalTime)
-        cv.put(COL_TIME, myData.time.toLong())
-        cv.put(COL_DATE, myData.date)
-        cv.put(COL_IS_DAY_WORKS, myData.isDayWorks)
-        cv.put(
-            COL_UNLOADING_GPS_LOCATION,
-            myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
-        )
-        cv.put(COL_IS_SYNC, myData.isSync)
-        return db.update(TABLE_TRIP, cv, "$COL_ID = ${myData.recordID}", null)
+    if (myData.nextAction == 3) {
+      cv.put(COL_UNLOADING_TASK_ID, myData.back_unloading_task_id)
+      cv.put(COL_UNLOADING_MATERIAL_ID, myData.back_unloading_material_id)
+      cv.put(COL_UNLOADING_LOCATION_ID, myData.back_unloading_location_id)
+    } else {
+      cv.put(COL_UNLOADING_TASK_ID, myData.unloading_task_id)
+      cv.put(COL_UNLOADING_MATERIAL_ID, myData.unloading_material_id)
+      cv.put(COL_UNLOADING_LOCATION_ID, myData.unloading_location_id)
     }
     
-    fun updateMachineStop(myData: MyData): Int {
-        
-        val currentTime = System.currentTimeMillis()
-        
-        myData.stopTime = currentTime
-        myData.totalTime = currentTime - myData.startTime
-        
-        myData.time = currentTime.toString()
-        myData.date = myHelper.getDate(currentTime)
-        
-        // myHelper.log("updateTrip:$myData")
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        
-        cv.put(COL_END_TIME, myData.stopTime)
-        cv.put(COL_TOTAL_TIME, myData.totalTime)
-        cv.put(COL_TIME, myData.time.toLong())
-        cv.put(COL_DATE, myData.date)
-        cv.put(COL_IS_DAY_WORKS, myData.isDayWorks)
-        cv.put(
-            COL_UNLOADING_GPS_LOCATION, myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
-        )
-        cv.put(COL_IS_SYNC, myData.isSync)
-        
-        // myHelper.log("updatedID :$updatedID ")
-        return db.update(TABLE_MACHINES_STOPS, cv, "$COL_ID = ${myData.recordID}", null)
-        
-    }
+    
+    
+    cv.put(COL_MACHINE_TYPE_ID, myData.machineTypeId)
+    cv.put(COL_MACHINE_ID, myData.machineId)
+    
+    cv.put(COL_END_TIME, myData.stopTime)
+    cv.put(COL_TOTAL_TIME, myData.totalTime)
+    cv.put(COL_TIME, myData.time.toLong())
+    cv.put(COL_DATE, myData.date)
+    cv.put(COL_IS_DAY_WORKS, myData.isDayWorks)
+    cv.put(
+      COL_UNLOADING_GPS_LOCATION,
+      myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
+    )
+    cv.put(COL_IS_SYNC, myData.isSync)
+    return db.update(TABLE_TRIP, cv, "$COL_ID = ${myData.recordID}", null)
+  }
+  
+  fun updateMachineStop(myData: MyData): Int {
+    
+    val currentTime = System.currentTimeMillis()
+    
+    myData.stopTime = currentTime
+    myData.totalTime = currentTime - myData.startTime
+    
+    myData.time = currentTime.toString()
+    myData.date = myHelper.getDate(currentTime)
+    
+    // myHelper.log("updateTrip:$myData")
+    
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    
+    cv.put(COL_END_TIME, myData.stopTime)
+    cv.put(COL_TOTAL_TIME, myData.totalTime)
+    cv.put(COL_TIME, myData.time.toLong())
+    cv.put(COL_DATE, myData.date)
+    cv.put(COL_IS_DAY_WORKS, myData.isDayWorks)
+    cv.put(
+      COL_UNLOADING_GPS_LOCATION, myHelper.getGPSLocationToString(myData.unloadingGPSLocation)
+    )
+    cv.put(COL_IS_SYNC, myData.isSync)
+    
+    // myHelper.log("updatedID :$updatedID ")
+    return db.update(TABLE_MACHINES_STOPS, cv, "$COL_ID = ${myData.recordID}", null)
+    
+  }
 
 /*    fun updateMachineHours(datum: MyData): Int {
         
@@ -3649,128 +3652,128 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
         // myHelper.log("MachinesHour:insertID:$insertID")
         return db.update(TABLE_MACHINES_HOURS, cv, "$COL_ID = ${datum.recordID}", null)
     }*/
+  
+  fun updateOperatorsHours(data: ArrayList<MyData>) {
     
-    fun updateOperatorsHours(data: ArrayList<MyData>) {
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        
-        for (datum in data) {
-            cv.put(COL_IS_SYNC, datum.isSync)
-            val updatedID = db.update(TABLE_OPERATORS_HOURS, cv, "$COL_ID = ${datum.id}", null)
-            myHelper.log("updateOperatorsHours:updateID:$updatedID")
-        }
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    
+    for (datum in data) {
+      cv.put(COL_IS_SYNC, datum.isSync)
+      val updatedID = db.update(TABLE_OPERATORS_HOURS, cv, "$COL_ID = ${datum.id}", null)
+      myHelper.log("updateOperatorsHours:updateID:$updatedID")
     }
+  }
+  
+  fun updateTrips(data: ArrayList<MyData>) {
     
-    fun updateTrips(data: ArrayList<MyData>) {
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        
-        for (datum in data) {
-            cv.put(COL_IS_SYNC, datum.isSync)
-            val updatedID = db.update(TABLE_TRIP, cv, "$COL_ID = ${datum.id}", null)
-            myHelper.log("updateTrips:updateID:$updatedID")
-        }
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    
+    for (datum in data) {
+      cv.put(COL_IS_SYNC, datum.isSync)
+      val updatedID = db.update(TABLE_TRIP, cv, "$COL_ID = ${datum.id}", null)
+      myHelper.log("updateTrips:updateID:$updatedID")
     }
+  }
+  
+  fun updateWaits(data: ArrayList<EWork>) {
     
-    fun updateWaits(data: ArrayList<EWork>) {
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        
-        for (datum in data) {
-            cv.put(COL_IS_SYNC, datum.isSync)
-            val updatedID = db.update(TABLE_WAITS, cv, "$COL_ID = ${datum.id}", null)
-            myHelper.log("updateWaits:updateID:$updatedID")
-        }
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    
+    for (datum in data) {
+      cv.put(COL_IS_SYNC, datum.isSync)
+      val updatedID = db.update(TABLE_WAITS, cv, "$COL_ID = ${datum.id}", null)
+      myHelper.log("updateWaits:updateID:$updatedID")
     }
+  }
+  
+  fun updateMachinesHours(data: ArrayList<MyData>) {
     
-    fun updateMachinesHours(data: ArrayList<MyData>) {
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        
-        for (datum in data) {
-            cv.put(COL_IS_SYNC, datum.isSync)
-            val updatedID = db.update(TABLE_MACHINES_HOURS, cv, "$COL_ID = ${datum.id}", null)
-            myHelper.log("updateMachinesHours:updateID:$updatedID")
-        }
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    
+    for (datum in data) {
+      cv.put(COL_IS_SYNC, datum.isSync)
+      val updatedID = db.update(TABLE_MACHINES_HOURS, cv, "$COL_ID = ${datum.id}", null)
+      myHelper.log("updateMachinesHours:updateID:$updatedID")
     }
+  }
+  
+  fun updateMachinesStops(data: ArrayList<MyData>) {
     
-    fun updateMachinesStops(data: ArrayList<MyData>) {
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        
-        for (datum in data) {
-            cv.put(COL_IS_SYNC, datum.isSync)
-            val updatedID = db.update(TABLE_MACHINES_STOPS, cv, "$COL_ID = ${datum.id}", null)
-            myHelper.log("updateMachinesStops:updateID:$updatedID")
-        }
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    
+    for (datum in data) {
+      cv.put(COL_IS_SYNC, datum.isSync)
+      val updatedID = db.update(TABLE_MACHINES_STOPS, cv, "$COL_ID = ${datum.id}", null)
+      myHelper.log("updateMachinesStops:updateID:$updatedID")
     }
+  }
+  
+  fun updateEWorks(data: ArrayList<EWork>) {
     
-    fun updateEWorks(data: ArrayList<EWork>) {
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        
-        for (datum in data) {
-            cv.put(COL_IS_SYNC, datum.isSync)
-            val updatedID = db.update(TABLE_E_WORK, cv, "$COL_ID = ${datum.id}", null)
-            myHelper.log("updateEWorks:updateID:$updatedID")
-        }
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    
+    for (datum in data) {
+      cv.put(COL_IS_SYNC, datum.isSync)
+      val updatedID = db.update(TABLE_E_WORK, cv, "$COL_ID = ${datum.id}", null)
+      myHelper.log("updateEWorks:updateID:$updatedID")
     }
+  }
+  
+  fun updateELoads(data: ArrayList<MyData>) {
     
-    fun updateELoads(data: ArrayList<MyData>) {
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        
-        for (datum in data) {
-            cv.put(COL_IS_SYNC, datum.isSync)
-            val updatedID = db.update(TABLE_E_LOAD_HISTORY, cv, "$COL_ID = ${datum.id}", null)
-            myHelper.log("updateELoads:updateID:$updatedID")
-        }
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    
+    for (datum in data) {
+      cv.put(COL_IS_SYNC, datum.isSync)
+      val updatedID = db.update(TABLE_E_LOAD_HISTORY, cv, "$COL_ID = ${datum.id}", null)
+      myHelper.log("updateELoads:updateID:$updatedID")
     }
+  }
+  
+  fun updateAdminCheckFormsData(data: ArrayList<CheckFormData>) {
     
-    fun updateAdminCheckFormsData(data: ArrayList<CheckFormData>) {
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        
-        for (datum in data) {
-            cv.put(COL_ADMIN_CHECKFORMS_COMPLETED_ID, datum.admin_checkforms_completed_id)
-            cv.put(COL_ANSWER, datum.answer)
-            cv.put(COL_ANSWER_DATA, myHelper.getAnswerDataToString(datum.answerDataObj))
-            cv.put(COL_IS_SYNC, datum.isSync)
-            
-            val updatedID = db.update(TABLE_ADMIN_CHECKFORMS_DATA, cv, "$COL_ID = ${datum.id}", null)
-            myHelper.log("updateAdminCheckFormsData:updateID:$updatedID")
-            myHelper.log("updateAdminCheckFormsData:$data")
-        }
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    
+    for (datum in data) {
+      cv.put(COL_ADMIN_CHECKFORMS_COMPLETED_ID, datum.admin_checkforms_completed_id)
+      cv.put(COL_ANSWER, datum.answer)
+      cv.put(COL_ANSWER_DATA, myHelper.getAnswerDataToString(datum.answerDataObj))
+      cv.put(COL_IS_SYNC, datum.isSync)
+      
+      val updatedID = db.update(TABLE_ADMIN_CHECKFORMS_DATA, cv, "$COL_ID = ${datum.id}", null)
+      myHelper.log("updateAdminCheckFormsData:updateID:$updatedID")
+      myHelper.log("updateAdminCheckFormsData:$data")
     }
+  }
+  
+  fun updateAdminCheckFormsCompleted(data: ArrayList<MyData>) {
     
-    fun updateAdminCheckFormsCompleted(data: ArrayList<MyData>) {
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        
-        for (datum in data) {
-            cv.put(COL_IS_SYNC, datum.isSync)
-            val updatedID = db.update(TABLE_ADMIN_CHECKFORMS_COMPLETED, cv, "$COL_ID = ${datum.id}", null)
-            myHelper.log("updateAdminCheckFormsCompleted:updateID:$updatedID")
-        }
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    
+    for (datum in data) {
+      cv.put(COL_IS_SYNC, datum.isSync)
+      val updatedID = db.update(TABLE_ADMIN_CHECKFORMS_COMPLETED, cv, "$COL_ID = ${datum.id}", null)
+      myHelper.log("updateAdminCheckFormsCompleted:updateID:$updatedID")
     }
+  }
+  
+  
+  fun updateOrgsMap(datum: MyData) {
     
+    val db = this.writableDatabase
+    val cv = ContentValues()
     
-    fun updateOrgsMap(datum: MyData) {
-        
-        val db = this.writableDatabase
-        val cv = ContentValues()
-        
-        cv.put(COL_IS_DOWNLOADED, datum.isDownloaded)
-        val updatedID = db.update(TABLE_ORGS_MAPS, cv, "$COL_ID = ${datum.id}", null)
-        myHelper.log("updateOrgsMap:updateID:$updatedID")
-    }
+    cv.put(COL_IS_DOWNLOADED, datum.isDownloaded)
+    val updatedID = db.update(TABLE_ORGS_MAPS, cv, "$COL_ID = ${datum.id}", null)
+    myHelper.log("updateOrgsMap:updateID:$updatedID")
+  }
 }

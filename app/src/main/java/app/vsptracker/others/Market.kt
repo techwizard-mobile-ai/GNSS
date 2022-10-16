@@ -5,5 +5,5 @@ import android.content.Context
 import android.net.Uri
 
 interface Market {
-    fun getMarketURI(context: Context): Uri
+  fun getMarketURI(context: Context): Uri
 }

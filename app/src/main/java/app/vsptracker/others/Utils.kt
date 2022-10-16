@@ -9,40 +9,41 @@ import app.vsptracker.apis.trip.MyData
 
 
 object Utils {
-    private var sTheme: Int = 0
-
-    const val tag = "Utils"
-    @SuppressLint("StaticFieldLeak")
-    private lateinit var myHelper: MyHelper
-
-    fun changeToTheme(activity: Activity, theme: Int) {
-        sTheme = theme
-
-        var dataNew = MyData()
-        val bundle: Bundle? = activity.intent.extras
-        if (bundle != null) {
-            if(bundle.getSerializable("myData") != null)
-            dataNew = bundle.getSerializable("myData") as MyData
-        }
-
-        activity.finish()
-
-        val intent = Intent(activity, activity.javaClass)
-        intent.putExtra("myData", dataNew)
-        activity.startActivity(intent)
-        activity.overridePendingTransition(
-                android.R.anim.fade_in,
-                android.R.anim.fade_out
-        )
+  private var sTheme: Int = 0
+  
+  const val tag = "Utils"
+  
+  @SuppressLint("StaticFieldLeak")
+  private lateinit var myHelper: MyHelper
+  
+  fun changeToTheme(activity: Activity, theme: Int) {
+    sTheme = theme
+    
+    var dataNew = MyData()
+    val bundle: Bundle? = activity.intent.extras
+    if (bundle != null) {
+      if (bundle.getSerializable("myData") != null)
+        dataNew = bundle.getSerializable("myData") as MyData
     }
-
-    fun onActivityCreateSetTheme(activity: Activity) {
-
-        myHelper = MyHelper(tag, activity)
-        when {
-            myHelper.isNightMode() -> activity.setTheme(R.style.AppTheme_NightMode)
-            else -> activity.setTheme(R.style.AppTheme_NoActionBar)
-        }
-
+    
+    activity.finish()
+    
+    val intent = Intent(activity, activity.javaClass)
+    intent.putExtra("myData", dataNew)
+    activity.startActivity(intent)
+    activity.overridePendingTransition(
+      android.R.anim.fade_in,
+      android.R.anim.fade_out
+    )
+  }
+  
+  fun onActivityCreateSetTheme(activity: Activity) {
+    
+    myHelper = MyHelper(tag, activity)
+    when {
+      myHelper.isNightMode() -> activity.setTheme(R.style.AppTheme_NightMode)
+      else -> activity.setTheme(R.style.AppTheme_NoActionBar)
     }
+    
+  }
 }

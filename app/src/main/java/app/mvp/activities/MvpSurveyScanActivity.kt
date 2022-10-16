@@ -59,226 +59,226 @@ import java.util.concurrent.Executors
 
 class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
                               GoogleMap.OnMarkerClickListener {
+  
+  private lateinit var location1: Location
+  private val tag = this::class.java.simpleName
+  private lateinit var lastLocation: Location
+  private var locationManager: LocationManager? = null
+  private var imageCapture: ImageCapture? = null
+  private var videoCapture: VideoCapture<Recorder>? = null
+  private var recording: Recording? = null
+  private lateinit var cameraExecutor: ExecutorService
+  
+  private lateinit var map: GoogleMap
+  private lateinit var fusedLocationClient: FusedLocationProviderClient
+  private var mapGPSLocation: GPSLocation = GPSLocation()
+  
+  
+  private var mInterval: Long = 1000 // 1 seconds by default, can be changed later
+  private var mHandler: Handler? = null
+  private var isCapturingImage = false
+  
+  var mStatusChecker: Runnable = object : Runnable {
+    override fun run() {
+      try {
+        takePhoto()
+      } finally {
+        mHandler!!.postDelayed(this, mInterval)
+      }
+    }
+  }
+  
+  var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+    if (result.resultCode == Activity.RESULT_OK) {
+      // There are no request codes
+      val intent: Intent? = result.data
+      myHelper.log("resultLauncher")
+      
+      val bundle: Bundle? = intent!!.extras
+      if (bundle != null) {
+        myData = bundle.getSerializable("myData") as MyData
+        myHelper.log("onActivityResult----:$myData")
+        mInterval = myData.timer_interval
+      }
+    }
+  }
+  
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
+    layoutInflater.inflate(R.layout.activity_mvp_survey_scan, contentFrameLayout)
+    val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
+    navigationView.menu.getItem(0).isChecked = true
     
-    private lateinit var location1: Location
-    private val tag = this::class.java.simpleName
-    private lateinit var lastLocation: Location
-    private var locationManager: LocationManager? = null
-    private var imageCapture: ImageCapture? = null
-    private var videoCapture: VideoCapture<Recorder>? = null
-    private var recording: Recording? = null
-    private lateinit var cameraExecutor: ExecutorService
-    
-    private lateinit var map: GoogleMap
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private var mapGPSLocation: GPSLocation = GPSLocation()
+    myHelper.setTag(tag)
+    myData = myHelper.getLastJourney()
+    myHelper.log("myData:$myData")
+    toolbar_title.text = myData.mvp_orgs_project_name + " / " + myData.mvp_orgs_folder_name + " / Data Collection / Scan"
     
     
-    private var mInterval: Long = 1000 // 1 seconds by default, can be changed later
-    private var mHandler: Handler? = null
-    private var isCapturingImage = false
-    
-    var mStatusChecker: Runnable = object : Runnable {
-        override fun run() {
-            try {
-                takePhoto()
-            } finally {
-                mHandler!!.postDelayed(this, mInterval)
-            }
-        }
+    if (allPermissionsGranted()) {
+      startCamera()
+    } else {
+      ActivityCompat.requestPermissions(
+        this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
+      )
     }
     
-    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            // There are no request codes
-            val intent: Intent? = result.data
-            myHelper.log("resultLauncher")
-            
-            val bundle: Bundle? = intent!!.extras
-            if (bundle != null) {
-                myData = bundle.getSerializable("myData") as MyData
-                myHelper.log("onActivityResult----:$myData")
-                mInterval = myData.timer_interval
-            }
-        }
-    }
+    val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+    mapFragment.getMapAsync(this)
+    fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+    cameraExecutor = Executors.newSingleThreadExecutor()
+    startGPS()
+    mHandler = Handler()
+    mvp_survey_scan_capture.text = "Start Image Capture"
     
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
-        layoutInflater.inflate(R.layout.activity_mvp_survey_scan, contentFrameLayout)
-        val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-        navigationView.menu.getItem(0).isChecked = true
-        
-        myHelper.setTag(tag)
-        myData = myHelper.getLastJourney()
-        myHelper.log("myData:$myData")
-        toolbar_title.text = myData.mvp_orgs_project_name + " / " + myData.mvp_orgs_folder_name + " / Data Collection / Scan"
-        
-        
-        if (allPermissionsGranted()) {
-            startCamera()
+    mvp_survey_scan_back.setOnClickListener(this)
+    mvp_survey_scan_capture.setOnClickListener(this)
+    mvp_survey_scan_pause.setOnClickListener(this)
+    mvp_survey_scan_settings.setOnClickListener(this)
+  }
+  
+  override fun onClick(view: View?) {
+    when (view!!.id) {
+      R.id.mvp_survey_scan_back -> {
+        finish()
+      }
+      R.id.mvp_survey_scan_capture -> {
+        myHelper.log("isCapturingImage:$isCapturingImage")
+        if (isCapturingImage) {
+          myHelper.log("stopRepeatingTask")
+          stopRepeatingTask()
+          mvp_survey_scan_pause.visibility = View.GONE
+          mvp_survey_scan_settings.visibility = View.VISIBLE
+          isCapturingImage = false
+          mvp_survey_scan_capture.text = "Start Image Capture"
+          mvp_survey_scan_label.text.clear()
         } else {
-            ActivityCompat.requestPermissions(
-                this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
-            )
+          myHelper.log("startRepeatingTask")
+          isCapturingImage = true
+          mvp_survey_scan_pause.visibility = View.VISIBLE
+          mvp_survey_scan_settings.visibility = View.GONE
+          startRepeatingTask()
+          mvp_survey_scan_capture.text = "Stop Image Capture"
         }
-        
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        cameraExecutor = Executors.newSingleThreadExecutor()
-        startGPS()
-        mHandler = Handler()
-        mvp_survey_scan_capture.text = "Start Image Capture"
-        
-        mvp_survey_scan_back.setOnClickListener(this)
-        mvp_survey_scan_capture.setOnClickListener(this)
-        mvp_survey_scan_pause.setOnClickListener(this)
-        mvp_survey_scan_settings.setOnClickListener(this)
-    }
-    
-    override fun onClick(view: View?) {
-        when (view!!.id) {
-            R.id.mvp_survey_scan_back -> {
-                finish()
-            }
-            R.id.mvp_survey_scan_capture -> {
-                myHelper.log("isCapturingImage:$isCapturingImage")
-                if (isCapturingImage) {
-                    myHelper.log("stopRepeatingTask")
-                    stopRepeatingTask()
-                    mvp_survey_scan_pause.visibility = View.GONE
-                    mvp_survey_scan_settings.visibility = View.VISIBLE
-                    isCapturingImage = false
-                    mvp_survey_scan_capture.text = "Start Image Capture"
-                    mvp_survey_scan_label.text.clear()
-                } else {
-                    myHelper.log("startRepeatingTask")
-                    isCapturingImage = true
-                    mvp_survey_scan_pause.visibility = View.VISIBLE
-                    mvp_survey_scan_settings.visibility = View.GONE
-                    startRepeatingTask()
-                    mvp_survey_scan_capture.text = "Stop Image Capture"
-                }
-            }
-            R.id.mvp_survey_scan_pause -> {
-                if (isCapturingImage) {
-                    myHelper.log("pauseRepeatingTask")
-                    stopRepeatingTask()
-                    isCapturingImage = false
-                    mvp_survey_scan_pause.text = "Resume"
-                } else {
-                    myHelper.log("resumeRepeatingTask")
-                    isCapturingImage = true
-                    startRepeatingTask()
-                    mvp_survey_scan_pause.text = "Pause"
-                }
-            }
-            R.id.mvp_survey_scan_settings -> {
-                val intent = Intent(this, SettingsActivity::class.java)
-                myData.name = "Scan Settings"
-                myData.type = MyEnum.SETTINGS_TYPE_MVP_SCAN
-                myData.timer_interval = mInterval
-                intent.putExtra("myData", myData)
+      }
+      R.id.mvp_survey_scan_pause -> {
+        if (isCapturingImage) {
+          myHelper.log("pauseRepeatingTask")
+          stopRepeatingTask()
+          isCapturingImage = false
+          mvp_survey_scan_pause.text = "Resume"
+        } else {
+          myHelper.log("resumeRepeatingTask")
+          isCapturingImage = true
+          startRepeatingTask()
+          mvp_survey_scan_pause.text = "Pause"
+        }
+      }
+      R.id.mvp_survey_scan_settings -> {
+        val intent = Intent(this, SettingsActivity::class.java)
+        myData.name = "Scan Settings"
+        myData.type = MyEnum.SETTINGS_TYPE_MVP_SCAN
+        myData.timer_interval = mInterval
+        intent.putExtra("myData", myData)
 //                startActivity(intent)
-                resultLauncher.launch(intent)
-            }
+        resultLauncher.launch(intent)
+      }
+    }
+  }
+  
+  private fun startCamera() {
+    val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
+    
+    cameraProviderFuture.addListener({
+      // Used to bind the lifecycle of cameras to the lifecycle owner
+      val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
+      
+      // Preview
+      val preview = Preview.Builder()
+        .build()
+        .also {
+          it.setSurfaceProvider(viewFinder.surfaceProvider)
         }
+      
+      imageCapture = ImageCapture.Builder()
+        .build()
+      
+      // Select back camera as a default
+      val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+      
+      try {
+        // Unbind use cases before rebinding
+        cameraProvider.unbindAll()
+        
+        // Bind use cases to camera
+        cameraProvider.bindToLifecycle(
+          this, cameraSelector, preview, imageCapture
+        )
+        
+      }
+      catch (exc: Exception) {
+        Log.e(TAG, "Use case binding failed", exc)
+      }
+      
+    }, ContextCompat.getMainExecutor(this))
+  }
+  
+  override fun onRequestPermissionsResult(
+    requestCode: Int, permissions: Array<String>, grantResults:
+    IntArray
+  ) {
+    if (requestCode == REQUEST_CODE_PERMISSIONS) {
+      if (allPermissionsGranted()) {
+        startCamera()
+      } else {
+        Toast.makeText(
+          this,
+          "Permissions not granted by the user.",
+          Toast.LENGTH_SHORT
+        ).show()
+        finish()
+      }
+    }
+  }
+  
+  private fun takePhoto() {
+    // Get a stable reference of the modifiable image capture use case
+    val imageCapture = imageCapture ?: return
+    
+    // Create time stamped name and MediaStore entry.
+    val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US)
+      .format(System.currentTimeMillis())
+    val contentValues = ContentValues().apply {
+      put(MediaStore.MediaColumns.DISPLAY_NAME, name)
+      put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+      if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+        put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image")
+      }
     }
     
-    private fun startCamera() {
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
-        
-        cameraProviderFuture.addListener({
-            // Used to bind the lifecycle of cameras to the lifecycle owner
-            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
-            
-            // Preview
-            val preview = Preview.Builder()
-                .build()
-                .also {
-                    it.setSurfaceProvider(viewFinder.surfaceProvider)
-                }
-            
-            imageCapture = ImageCapture.Builder()
-                .build()
-            
-            // Select back camera as a default
-            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-            
-            try {
-                // Unbind use cases before rebinding
-                cameraProvider.unbindAll()
-                
-                // Bind use cases to camera
-                cameraProvider.bindToLifecycle(
-                    this, cameraSelector, preview, imageCapture
-                )
-                
-            }
-            catch (exc: Exception) {
-                Log.e(TAG, "Use case binding failed", exc)
-            }
-            
-        }, ContextCompat.getMainExecutor(this))
-    }
+    // Create output options object which contains file + metadata
+    val outputOptions = ImageCapture.OutputFileOptions
+      .Builder(
+        contentResolver,
+        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+        contentValues
+      )
+      .build()
     
-    override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<String>, grantResults:
-        IntArray
-    ) {
-        if (requestCode == REQUEST_CODE_PERMISSIONS) {
-            if (allPermissionsGranted()) {
-                startCamera()
-            } else {
-                Toast.makeText(
-                    this,
-                    "Permissions not granted by the user.",
-                    Toast.LENGTH_SHORT
-                ).show()
-                finish()
-            }
-        }
-    }
-    
-    private fun takePhoto() {
-        // Get a stable reference of the modifiable image capture use case
-        val imageCapture = imageCapture ?: return
-        
-        // Create time stamped name and MediaStore entry.
-        val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US)
-            .format(System.currentTimeMillis())
-        val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
-            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image")
-            }
+    // Set up image capture listener, which is triggered after photo has
+    // been taken
+    imageCapture.takePicture(
+      outputOptions,
+      ContextCompat.getMainExecutor(this),
+      object : ImageCapture.OnImageSavedCallback {
+        override fun onError(exc: ImageCaptureException) {
+          myHelper.log("Photo capture failed: ${exc.message}")
         }
         
-        // Create output options object which contains file + metadata
-        val outputOptions = ImageCapture.OutputFileOptions
-            .Builder(
-                contentResolver,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                contentValues
-            )
-            .build()
-        
-        // Set up image capture listener, which is triggered after photo has
-        // been taken
-        imageCapture.takePicture(
-            outputOptions,
-            ContextCompat.getMainExecutor(this),
-            object : ImageCapture.OnImageSavedCallback {
-                override fun onError(exc: ImageCaptureException) {
-                    myHelper.log("Photo capture failed: ${exc.message}")
-                }
-                
-                override fun
-                        onImageSaved(output: ImageCapture.OutputFileResults) {
-                    val msg = "Image saved successfully: ${output.savedUri}"
+        override fun
+                onImageSaved(output: ImageCapture.OutputFileResults) {
+          val msg = "Image saved successfully: ${output.savedUri}"
 
 //                    var lalLong =
 //                    val marker = map.addMarker(
@@ -286,223 +286,223 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
 //                            .position(location1)
 //                            .title(mapGPSLocation.locationName)
 //                    )
-                    
-                    val location = LatLng(location1.latitude, location1.longitude)
-                    map.addMarker(
-                        MarkerOptions()
-                            .position(location)
-                            .icon(bitmapFromVector(applicationContext, R.drawable.ic_camera_scan))
-                    )
+          
+          val location = LatLng(location1.latitude, location1.longitude)
+          map.addMarker(
+            MarkerOptions()
+              .position(location)
+              .icon(bitmapFromVector(applicationContext, R.drawable.ic_camera_scan))
+          )
 
 //                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
 //                    myHelper.toast(msg)
-                    myHelper.log(msg)
+          myHelper.log(msg)
 //                    Log.d(TAG, msg)
-                }
-            }
-        )
-    }
-    
-    private fun bitmapFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
-        val vectorDrawable = ContextCompat.getDrawable(context, vectorResId)
-        vectorDrawable!!.setBounds(0, 0, vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight)
-        
-        val bitmap = Bitmap.createBitmap(vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
-        
-        val canvas = Canvas(bitmap)
-        vectorDrawable.draw(canvas)
-        
-        return BitmapDescriptorFactory.fromBitmap(bitmap)
-    }
-    
-    private fun captureVideo() {}
-    
-    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
-        ContextCompat.checkSelfPermission(
-            baseContext, it
-        ) == PackageManager.PERMISSION_GRANTED
-    }
-    
-    override fun onDestroy() {
-        super.onDestroy()
-        stopRepeatingTask()
-        cameraExecutor.shutdown()
-    }
-    
-    override fun onResume() {
-        super.onResume()
-        base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
-    }
-    
-    
-    fun startRepeatingTask() {
-        mStatusChecker.run()
-    }
-    
-    fun stopRepeatingTask() {
-        mHandler!!.removeCallbacks(mStatusChecker)
-    }
-    
-    private fun startGPS() {
-        myHelper.log("startGPS1111__called")
-        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
-        try {
-            locationManager?.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER,
-                1000,
-                0f,
-                locationListener
-            )
-            
         }
-        catch (ex: SecurityException) {
-            myHelper.log("No Location Available:${ex.message}")
-            myHelper.showGPSDisabledAlertToUser()
-        }
-        
+      }
+    )
+  }
+  
+  private fun bitmapFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
+    val vectorDrawable = ContextCompat.getDrawable(context, vectorResId)
+    vectorDrawable!!.setBounds(0, 0, vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight)
+    
+    val bitmap = Bitmap.createBitmap(vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+    
+    val canvas = Canvas(bitmap)
+    vectorDrawable.draw(canvas)
+    
+    return BitmapDescriptorFactory.fromBitmap(bitmap)
+  }
+  
+  private fun captureVideo() {}
+  
+  private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
+    ContextCompat.checkSelfPermission(
+      baseContext, it
+    ) == PackageManager.PERMISSION_GRANTED
+  }
+  
+  override fun onDestroy() {
+    super.onDestroy()
+    stopRepeatingTask()
+    cameraExecutor.shutdown()
+  }
+  
+  override fun onResume() {
+    super.onResume()
+    base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
+  }
+  
+  
+  fun startRepeatingTask() {
+    mStatusChecker.run()
+  }
+  
+  fun stopRepeatingTask() {
+    mHandler!!.removeCallbacks(mStatusChecker)
+  }
+  
+  private fun startGPS() {
+    myHelper.log("startGPS1111__called")
+    locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
+    try {
+      locationManager?.requestLocationUpdates(
+        LocationManager.GPS_PROVIDER,
+        1000,
+        0f,
+        locationListener
+      )
+      
+    }
+    catch (ex: SecurityException) {
+      myHelper.log("No Location Available:${ex.message}")
+      myHelper.showGPSDisabledAlertToUser()
     }
     
-    val locationListener: LocationListener = object : LocationListener {
-        override fun onLocationChanged(location: Location) {
-            location1 = location
-            myHelper.setGPSLayout(
-                location,
-                mvp_survey_scan_gps_data_acc,
-                mvp_survey_scan_gps_data_lat,
-                mvp_survey_scan_gps_data_long,
-                mvp_survey_scan_gps_data_alt,
-                mvp_survey_scan_gps_data_speed,
-                mvp_survey_scan_gps_data_bearing,
-                mvp_survey_scan_gps_data_time
-            )
-            
-            var zoomlevel: Float = map.cameraPosition.zoom
+  }
+  
+  val locationListener: LocationListener = object : LocationListener {
+    override fun onLocationChanged(location: Location) {
+      location1 = location
+      myHelper.setGPSLayout(
+        location,
+        mvp_survey_scan_gps_data_acc,
+        mvp_survey_scan_gps_data_lat,
+        mvp_survey_scan_gps_data_long,
+        mvp_survey_scan_gps_data_alt,
+        mvp_survey_scan_gps_data_speed,
+        mvp_survey_scan_gps_data_bearing,
+        mvp_survey_scan_gps_data_time
+      )
+      
+      var zoomlevel: Float = map.cameraPosition.zoom
 //            myHelper.log("zoomlevel: $zoomlevel")
-            if (zoomlevel < 12.0f) {
-                zoomlevel = MAP_ZOOM_LEVEL
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location1.latitude, location1.longitude), zoomlevel))
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location1.latitude, location1.longitude), zoomlevel))
-            } else {
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location1.latitude, location1.longitude), zoomlevel))
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location1.latitude, location1.longitude), zoomlevel))
-            }
-            
-            if (isCapturingImage) {
-                when {
-                    location.accuracy >= 1 -> {
-                        mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.red))
-                    }
-                    location.accuracy <= 0.05 -> {
-                        mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.green))
-                    }
-                    else -> {
-                        mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.yellow))
-                    }
-                }
-            } else {
-                mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.colorPrimary))
-                
-            }
+      if (zoomlevel < 12.0f) {
+        zoomlevel = MAP_ZOOM_LEVEL
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location1.latitude, location1.longitude), zoomlevel))
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location1.latitude, location1.longitude), zoomlevel))
+      } else {
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location1.latitude, location1.longitude), zoomlevel))
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location1.latitude, location1.longitude), zoomlevel))
+      }
+      
+      if (isCapturingImage) {
+        when {
+          location.accuracy >= 1 -> {
+            mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.red))
+          }
+          location.accuracy <= 0.05 -> {
+            mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.green))
+          }
+          else -> {
+            mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.yellow))
+          }
         }
+      } else {
+        mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.colorPrimary))
         
-        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
-            myHelper.log("Status Changed.")
-        }
-        
-        override fun onProviderEnabled(provider: String) {
-            myHelper.log("Location Enabled.")
-        }
-        
-        override fun onProviderDisabled(provider: String) {
-            myHelper.log("Location Disabled.")
-            myHelper.showGPSDisabledAlertToUser()
-        }
+      }
     }
     
-    companion object {
-        private const val TAG = "CameraXApp"
-        private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
-        private const val REQUEST_CODE_PERMISSIONS = 10
-        private val REQUIRED_PERMISSIONS =
-            mutableListOf(
-                Manifest.permission.CAMERA,
+    override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
+      myHelper.log("Status Changed.")
+    }
+    
+    override fun onProviderEnabled(provider: String) {
+      myHelper.log("Location Enabled.")
+    }
+    
+    override fun onProviderDisabled(provider: String) {
+      myHelper.log("Location Disabled.")
+      myHelper.showGPSDisabledAlertToUser()
+    }
+  }
+  
+  companion object {
+    private const val TAG = "CameraXApp"
+    private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
+    private const val REQUEST_CODE_PERMISSIONS = 10
+    private val REQUIRED_PERMISSIONS =
+      mutableListOf(
+        Manifest.permission.CAMERA,
 //                Manifest.permission.RECORD_AUDIO
-            ).apply {
-                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-                    add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                }
-            }.toTypedArray()
-    }
+      ).apply {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+          add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        }
+      }.toTypedArray()
+  }
+  
+  override fun onMapReady(googleMap: GoogleMap) {
+    map = googleMap
+    map.uiSettings.isZoomControlsEnabled = true
+    map.setOnMarkerClickListener(this)
+    setUpMap()
+  }
+  
+  @SuppressLint("MissingPermission")
+  private fun setUpMap() {
     
-    override fun onMapReady(googleMap: GoogleMap) {
-        map = googleMap
-        map.uiSettings.isZoomControlsEnabled = true
-        map.setOnMarkerClickListener(this)
-        setUpMap()
-    }
-    
-    @SuppressLint("MissingPermission")
-    private fun setUpMap() {
-        
-        if (mapGPSLocation.latitude != 0.0 && mapGPSLocation.longitude != 0.0) {
-            
-            val lat = mapGPSLocation.latitude
-            val longitude = mapGPSLocation.longitude
-            myHelper.log("In SetupMap:$mapGPSLocation")
-            val location1 = LatLng(lat, longitude)
-            val marker = map.addMarker(
-                MarkerOptions()
-                    .position(location1)
-                    .title(mapGPSLocation.locationName)
-            )
-            
-            
-            marker.showInfoWindow()
-            map.isMyLocationEnabled = true
-            fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
-                // Got last known location. In some rare situations this can be null.
-                if (location != null) {
-                    lastLocation = location
-                    val currentLatLng = LatLng(location.latitude, location.longitude)
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, MAP_ZOOM_LEVEL))
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, MAP_ZOOM_LEVEL))
-                }
-            }
-            
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, MAP_ZOOM_LEVEL))
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(location1, MAP_ZOOM_LEVEL))
-            
-        } else {
-            map.isMyLocationEnabled = true
-            fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
-                // Got last known location. In some rare situations this can be null.
-                if (location != null) {
-                    lastLocation = location
-                    val currentLatLng = LatLng(location.latitude, location.longitude)
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, MAP_ZOOM_LEVEL))
+    if (mapGPSLocation.latitude != 0.0 && mapGPSLocation.longitude != 0.0) {
+      
+      val lat = mapGPSLocation.latitude
+      val longitude = mapGPSLocation.longitude
+      myHelper.log("In SetupMap:$mapGPSLocation")
+      val location1 = LatLng(lat, longitude)
+      val marker = map.addMarker(
+        MarkerOptions()
+          .position(location1)
+          .title(mapGPSLocation.locationName)
+      )
+      
+      
+      marker.showInfoWindow()
+      map.isMyLocationEnabled = true
+      fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
+        // Got last known location. In some rare situations this can be null.
+        if (location != null) {
+          lastLocation = location
+          val currentLatLng = LatLng(location.latitude, location.longitude)
+          map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, MAP_ZOOM_LEVEL))
+          map.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, MAP_ZOOM_LEVEL))
+        }
+      }
+      
+      map.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, MAP_ZOOM_LEVEL))
+      map.animateCamera(CameraUpdateFactory.newLatLngZoom(location1, MAP_ZOOM_LEVEL))
+      
+    } else {
+      map.isMyLocationEnabled = true
+      fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
+        // Got last known location. In some rare situations this can be null.
+        if (location != null) {
+          lastLocation = location
+          val currentLatLng = LatLng(location.latitude, location.longitude)
+          map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, MAP_ZOOM_LEVEL))
 //                    val resourceID = R.raw.drury_xhunua
-                    try {
+          try {
 //                        val fileName = "drury_xhunua"
 ////                        val fileName = "dury_south"
 //                        val resourceID = this.resources.getIdentifier(fileName, "raw", this.packageName)
 //                        val layer = KmlLayer(map, resourceID, applicationContext)
 //                        layer.addLayerToMap()
-                        val currentOrgsMap = db.getCurrentOrgsMap()
-                        if (currentOrgsMap !== null && !currentOrgsMap.aws_path.isNullOrEmpty()) {
-                            val file = File(myHelper.getKMLFileName(currentOrgsMap.aws_path))
-                            myHelper.log("fileName:${currentOrgsMap.aws_path}")
-                            val inputStream: FileInputStream = file.inputStream()
-                            val layer = KmlLayer(map, inputStream, applicationContext)
-                            layer.addLayerToMap()
-                        }
-                    }
-                    catch (e: Exception) {
-                        myHelper.log("kmlLayerException:${e.localizedMessage}")
-                    }
-                }
+            val currentOrgsMap = db.getCurrentOrgsMap()
+            if (currentOrgsMap !== null && !currentOrgsMap.aws_path.isNullOrEmpty()) {
+              val file = File(myHelper.getKMLFileName(currentOrgsMap.aws_path))
+              myHelper.log("fileName:${currentOrgsMap.aws_path}")
+              val inputStream: FileInputStream = file.inputStream()
+              val layer = KmlLayer(map, inputStream, applicationContext)
+              layer.addLayerToMap()
             }
+          }
+          catch (e: Exception) {
+            myHelper.log("kmlLayerException:${e.localizedMessage}")
+          }
         }
+      }
     }
-    
-    override fun onMarkerClick(p0: Marker?) = false
+  }
+  
+  override fun onMarkerClick(p0: Marker?) = false
 }
