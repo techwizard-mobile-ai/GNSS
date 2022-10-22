@@ -704,7 +704,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     gpsLocation.bearing = location1.bearing
     gpsLocation.speed = location1.speed
     
-    gpsLocation.provider = location1.provider
+    gpsLocation.provider = location1.provider.toString()
     gpsLocation.elapsedRealtimeNanos = location1.elapsedRealtimeNanos
 //        gpsLocation.extras = location1.extras
     gpsLocation.time = location1.time

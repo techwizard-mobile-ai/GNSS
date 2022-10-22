@@ -102,7 +102,9 @@
 
         <service android:name="app.vsptracker.others.autologout.ForegroundService" />
 
-        <receiver android:name="app.vsptracker.others.autologout.RebootReceiver">
+        <receiver
+            android:exported="true"
+            android:name="app.vsptracker.others.autologout.RebootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -115,6 +117,7 @@
         <activity android:name=".activities.common.MachineBreakdownActivity" />
         <activity
             android:name=".activities.OperatorLoginActivity"
+            android:exported="true"
             android:theme="@style/splashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -183,6 +186,7 @@
 
         <service
             android:name=".others.MyFirebaseMessagingService"
+            android:exported="true"
             tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -199,7 +203,9 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <receiver android:name=".others.VSPTWidget">
+        <receiver
+            android:exported="true"
+            android:name=".others.VSPTWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

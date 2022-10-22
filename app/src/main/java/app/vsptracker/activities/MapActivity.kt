@@ -29,7 +29,7 @@ class MapActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback {
   private val DEFAULT_ZOOM: Float = 10.0f
   private var mLastKnownLocation: Location? = Location("GPS")
   
-  private val mDefaultLocation: LatLng? = LatLng(132.3, 63.1)
+  private val mDefaultLocation: LatLng = LatLng(132.3, 63.1)
   private var mLocationPermissionGranted: Boolean = false
   
   private val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: Int = 64
@@ -179,7 +179,7 @@ class MapActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback {
 //        updateLocationUI()
   }
   
-  override fun onMapReady(googleMap: GoogleMap?) {
+  override fun onMapReady(googleMap: GoogleMap) {
     
     // Do other setup activities here too, as described elsewhere in this tutorial.
     

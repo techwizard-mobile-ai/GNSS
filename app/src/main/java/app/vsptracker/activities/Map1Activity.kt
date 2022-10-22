@@ -105,7 +105,7 @@ class Map1Activity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
       )
       
       
-      marker.showInfoWindow()
+      marker!!.showInfoWindow()
       map.isMyLocationEnabled = true
       fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
         // Got last known location. In some rare situations this can be null.
@@ -153,6 +153,6 @@ class Map1Activity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
     }
   }
   
-  override fun onMarkerClick(p0: Marker?) = false
+  override fun onMarkerClick(p0: Marker) = false
   
 }

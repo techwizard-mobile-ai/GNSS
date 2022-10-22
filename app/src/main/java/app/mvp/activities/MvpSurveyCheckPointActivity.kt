@@ -154,7 +154,7 @@ class MvpSurveyCheckPointActivity : BaseActivity(), View.OnClickListener, OnMapR
       )
       
       
-      marker.showInfoWindow()
+      marker!!.showInfoWindow()
       map.isMyLocationEnabled = true
       fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
         // Got last known location. In some rare situations this can be null.
@@ -202,5 +202,5 @@ class MvpSurveyCheckPointActivity : BaseActivity(), View.OnClickListener, OnMapR
     }
   }
   
-  override fun onMarkerClick(p0: Marker?) = false
+  override fun onMarkerClick(p0: Marker) = false
 }
