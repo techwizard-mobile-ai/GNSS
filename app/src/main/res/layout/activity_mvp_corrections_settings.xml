@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  tools:context="app.mvp.activities.MvpCorrectionsSettingsActivity">
+
+  <TextView
+    style="@style/activity_title"
+    android:text="Corrections Settings" />
+
+  <LinearLayout
+    android:gravity="center_horizontal"
+    style="@style/default_linearlayout">
+
+    <Button
+      android:id="@+id/mvp_corrections_bluetooth_settings"
+      style="@style/next_button_single_corrections"
+      android:text="Bluetooth Settings" />
+
+    <Button
+      android:id="@+id/mvp_corrections_receiver_settings"
+      style="@style/next_button_single_corrections"
+      android:text="Receiver Settings" />
+
+    <Button
+      android:id="@+id/mvp_corrections_ntrip_settings"
+      style="@style/next_button_single_corrections"
+      android:text="NTRIP settings" />
+  </LinearLayout>
+
+
+</LinearLayout>

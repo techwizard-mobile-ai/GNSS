@@ -7,14 +7,19 @@ class LoginAPI : Serializable {
   
   @SerializedName("id")
   val id: Int = 0
+  
   @SerializedName("name")
   val name: String = ""
+  
   @SerializedName("email")
   val email: String = ""
+  
   @SerializedName("org_id")
   val org_id: Int = 0
+  
   @SerializedName("role")
   val role: Int = 0
+  
   @SerializedName("auth_token")
   val auth_token: String = ""
   var pass: String = ""

@@ -1,41 +1,41 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:gravity="center_horizontal"
+  tools:context=".activities.excavator.EHomeActivity">
+
+  <Button
+    android:id="@+id/ehome_logout"
+    style="@style/next_button_single"
+    android:layout_alignParentBottom="true" />
+
+  <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
     android:gravity="center_horizontal"
-    tools:context=".activities.excavator.EHomeActivity">
+    android:orientation="vertical">
 
-    <Button
-        android:id="@+id/ehome_logout"
-        style="@style/next_button_single"
-        android:layout_alignParentBottom="true" />
+    <TextView
+      style="@style/activity_title"
+      android:text="Select Action" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+    <TextView
+      android:id="@+id/ehome_loading"
+      style="@style/ehome_tv"
+      android:text="@string/activity_ehome_ehome_loading_text" />
 
-        <TextView
-            style="@style/activity_title"
-            android:text="Select Action" />
+    <TextView
+      android:id="@+id/ehome_trenching"
+      style="@style/ehome_tv"
+      android:text="@string/activity_ehome_ehome_trenching_text" />
 
-        <TextView
-            android:id="@+id/ehome_loading"
-            style="@style/ehome_tv"
-            android:text="@string/activity_ehome_ehome_loading_text" />
-
-        <TextView
-            android:id="@+id/ehome_trenching"
-            style="@style/ehome_tv"
-            android:text="@string/activity_ehome_ehome_trenching_text" />
-
-        <TextView
-            android:id="@+id/ehome_digging"
-            style="@style/ehome_tv"
-            android:text="@string/activity_ehome_ehome_digging_text" />
-    </LinearLayout>
+    <TextView
+      android:id="@+id/ehome_digging"
+      style="@style/ehome_tv"
+      android:text="@string/activity_ehome_ehome_digging_text" />
+  </LinearLayout>
 
 </RelativeLayout>

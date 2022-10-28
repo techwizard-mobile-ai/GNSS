@@ -3,14 +3,14 @@
   "IdentityManager": {
     "Default": {}
   },
-"CredentialsProvider": {
-  "CognitoIdentity": {
-    "Default": {
-      "PoolId": "ap-southeast-2:640b193e-9c31-415c-be30-8cde8cdfec17",
-      "Region": "ap-southeast-2"
+  "CredentialsProvider": {
+    "CognitoIdentity": {
+      "Default": {
+        "PoolId": "ap-southeast-2:640b193e-9c31-415c-be30-8cde8cdfec17",
+        "Region": "ap-southeast-2"
+      }
     }
-  }
-},
+  },
   "S3TransferUtility": {
     "Default": {
       "Bucket": "vsptracker",

@@ -1,53 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginStart="@dimen/_10sdp"
+  android:layout_marginEnd="@dimen/_10sdp"
+  android:gravity="center"
+  android:orientation="vertical">
+
+  <TextView
+    android:id="@+id/error_title"
+    android:layout_marginTop="@dimen/_20sdp"
+    android:gravity="center"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/_10sdp"
-    android:layout_marginEnd="@dimen/_10sdp"
+    android:text="@string/storage_permission_title"
+    android:textColor="@color/red"
+    android:textSize="@dimen/_16sdp"
+    style="@style/avenirnext_fontstyle"
+    android:textStyle="bold" />
+
+  <TextView
+    android:id="@+id/error_explanation"
+    android:layout_marginTop="@dimen/_2sdp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:gravity="center"
-    android:orientation="vertical">
+    android:visibility="gone"
+    android:textColor="@color/gray_dark"
+    style="@style/avenirnext_fontstyle"
+    android:text="@string/error_message"
+    android:textSize="@dimen/_12sdp" />
 
-    <TextView
-        android:id="@+id/error_title"
-        android:layout_marginTop="@dimen/_20sdp"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/storage_permission_title"
-        android:textColor="@color/red"
-        android:textSize="@dimen/_16sdp"
-        style="@style/avenirnext_fontstyle"
-        android:textStyle="bold"
-        />
-    <TextView
-        android:id="@+id/error_explanation"
-        android:layout_marginTop="@dimen/_2sdp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-         android:visibility="gone"
-        android:textColor="@color/gray_dark"
-        style="@style/avenirnext_fontstyle"
-        android:text="@string/error_message"
-        android:textSize="@dimen/_12sdp"
-        />
+  <View
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:layout_marginTop="@dimen/_10sdp"
+    android:layout_marginBottom="@dimen/_10sdp"
+    android:background="@color/light_white" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:layout_marginBottom="@dimen/_10sdp"
-        android:background="@color/light_white" />
-
-    <TextView
-        android:id="@+id/error_ok"
-        style="@style/avenirnext_fontstyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_20sdp"
-        android:background="@android:color/transparent"
-        android:gravity="center_horizontal"
-        android:text="@string/ok"
-        android:textColor="@color/blue"
-        android:textSize="@dimen/_16sdp" />
+  <TextView
+    android:id="@+id/error_ok"
+    style="@style/avenirnext_fontstyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/_20sdp"
+    android:background="@android:color/transparent"
+    android:gravity="center_horizontal"
+    android:text="@string/ok"
+    android:textColor="@color/blue"
+    android:textSize="@dimen/_16sdp" />
 </LinearLayout>

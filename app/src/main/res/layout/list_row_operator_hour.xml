@@ -1,170 +1,170 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/eth_row"
+  xmlns:card_view="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/eth_row"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_margin="@dimen/_5sdp">
+
+  <androidx.cardview.widget.CardView
+    style="?attr/cardStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/_5sdp">
+    android:layout_margin="@dimen/_5sdp"
+    card_view:cardCornerRadius="@dimen/_8sdp"
+    card_view:cardElevation="@dimen/_8sdp"
+    card_view:cardMaxElevation="@dimen/_10sdp"
+    card_view:contentPadding="@dimen/_5sdp">
 
-    <androidx.cardview.widget.CardView
-        style="?attr/cardStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_5sdp"
-        card_view:cardCornerRadius="@dimen/_8sdp"
-        card_view:cardElevation="@dimen/_8sdp"
-        card_view:cardMaxElevation="@dimen/_10sdp"
-        card_view:contentPadding="@dimen/_5sdp">
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center_horizontal"
+      android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+      <LinearLayout style="@style/load_history_row_item">
 
-            <LinearLayout style="@style/load_history_row_item">
+        <TextView
+          style="@style/load_history_text"
+          android:text="@string/id" />
 
-                <TextView
-                    style="@style/load_history_text"
-                    android:text="@string/id" />
+        <TextView
+          android:id="@+id/eth_record_number"
+          style="@style/load_history_desc"
+          android:text="@string/list_row_delay_history_eth_record_number_text" />
+      </LinearLayout>
 
-                <TextView
-                    android:id="@+id/eth_record_number"
-                    style="@style/load_history_desc"
-                    android:text="@string/list_row_delay_history_eth_record_number_text" />
-            </LinearLayout>
+      <LinearLayout style="@style/load_history_row_item">
 
-            <LinearLayout style="@style/load_history_row_item">
+        <TextView
+          style="@style/load_history_text"
+          android:text="@string/operating_site" />
 
-                <TextView
-                    style="@style/load_history_text"
-                    android:text="@string/operating_site" />
+        <TextView
+          android:id="@+id/oh_site"
+          style="@style/load_history_desc"
+          android:text="@string/list_row_delay_history_eth_machine_number_text" />
+      </LinearLayout>
 
-                <TextView
-                    android:id="@+id/oh_site"
-                    style="@style/load_history_desc"
-                    android:text="@string/list_row_delay_history_eth_machine_number_text" />
-            </LinearLayout>
+      <LinearLayout style="@style/load_history_row_item">
 
-            <LinearLayout style="@style/load_history_row_item">
+        <TextView
+          style="@style/load_history_text"
+          android:text="@string/operator" />
 
-                <TextView
-                    style="@style/load_history_text"
-                    android:text="@string/operator" />
-
-                <TextView
-                    android:id="@+id/eth_operator"
-                    style="@style/load_history_desc"
-                    android:text="@string/list_row_delay_history_eth_record_number_text" />
-            </LinearLayout>
+        <TextView
+          android:id="@+id/eth_operator"
+          style="@style/load_history_desc"
+          android:text="@string/list_row_delay_history_eth_record_number_text" />
+      </LinearLayout>
 
 
-            <LinearLayout
-                android:id="@+id/lhr_loading_machine_layout"
-                style="@style/load_history_row_item">
+      <LinearLayout
+        android:id="@+id/lhr_loading_machine_layout"
+        style="@style/load_history_row_item">
 
-                <TextView
-                    style="@style/load_history_text"
-                    android:text="@string/start_time" />
+        <TextView
+          style="@style/load_history_text"
+          android:text="@string/start_time" />
 
-                <TextView
-                    android:id="@+id/eth_start_time"
-                    style="@style/load_history_desc"
-                    android:text="@string/hrs" />
-            </LinearLayout>
+        <TextView
+          android:id="@+id/eth_start_time"
+          style="@style/load_history_desc"
+          android:text="@string/hrs" />
+      </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/lhr_gps_loading_layout"
-                style="@style/load_history_row_item">
+      <LinearLayout
+        android:id="@+id/lhr_gps_loading_layout"
+        style="@style/load_history_row_item">
 
-                <TextView
-                    style="@style/load_history_text"
-                    android:text="@string/start_gps" />
+        <TextView
+          style="@style/load_history_text"
+          android:text="@string/start_gps" />
 
-                <TextView
-                    android:id="@+id/mh_gps_loading"
-                    style="@style/load_history_desc"
-                    android:text="@string/list_row_delay_history_lhr_gps_loading_text" />
-            </LinearLayout>
+        <TextView
+          android:id="@+id/mh_gps_loading"
+          style="@style/load_history_desc"
+          android:text="@string/list_row_delay_history_lhr_gps_loading_text" />
+      </LinearLayout>
 
-            <LinearLayout style="@style/load_history_row_item">
+      <LinearLayout style="@style/load_history_row_item">
 
-                <TextView
-                    style="@style/load_history_text"
-                    android:text="@string/end_time" />
+        <TextView
+          style="@style/load_history_text"
+          android:text="@string/end_time" />
 
-                <TextView
-                    android:id="@+id/eth_end_time"
-                    style="@style/load_history_desc"
-                    android:text="@string/hrs" />
-            </LinearLayout>
+        <TextView
+          android:id="@+id/eth_end_time"
+          style="@style/load_history_desc"
+          android:text="@string/hrs" />
+      </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/mh_gps_unloading_layout"
-                style="@style/load_history_row_item">
+      <LinearLayout
+        android:id="@+id/mh_gps_unloading_layout"
+        style="@style/load_history_row_item">
 
-                <TextView
-                    style="@style/load_history_text"
-                    android:text="@string/stop_gps" />
+        <TextView
+          style="@style/load_history_text"
+          android:text="@string/stop_gps" />
 
-                <TextView
-                    android:id="@+id/lhr_gps_unloading"
-                    style="@style/load_history_desc"
-                    android:text="@string/list_row_delay_history_lhr_gps_unloading_text" />
-            </LinearLayout>
+        <TextView
+          android:id="@+id/lhr_gps_unloading"
+          style="@style/load_history_desc"
+          android:text="@string/list_row_delay_history_lhr_gps_unloading_text" />
+      </LinearLayout>
 
-            <LinearLayout style="@style/load_history_row_item">
+      <LinearLayout style="@style/load_history_row_item">
 
-                <TextView
-                    style="@style/load_history_text"
-                    android:text="@string/duration" />
+        <TextView
+          style="@style/load_history_text"
+          android:text="@string/duration" />
 
-                <TextView
-                    android:id="@+id/eth_duration"
-                    style="@style/load_history_desc"
-                    android:text="@string/list_row_delay_history_eth_duration_text" />
-            </LinearLayout>
+        <TextView
+          android:id="@+id/eth_duration"
+          style="@style/load_history_desc"
+          android:text="@string/list_row_delay_history_eth_duration_text" />
+      </LinearLayout>
 
-            <LinearLayout
-                style="@style/load_history_row_item"
-                android:visibility="gone">
+      <LinearLayout
+        style="@style/load_history_row_item"
+        android:visibility="gone">
 
-                <TextView
-                    style="@style/load_history_text"
-                    android:text="@string/date" />
+        <TextView
+          style="@style/load_history_text"
+          android:text="@string/date" />
 
-                <TextView
-                    android:id="@+id/eth_date"
-                    style="@style/load_history_desc"
-                    android:text="@string/list_row_delay_history_eth_date_text" />
-            </LinearLayout>
+        <TextView
+          android:id="@+id/eth_date"
+          style="@style/load_history_desc"
+          android:text="@string/list_row_delay_history_eth_date_text" />
+      </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/lhr_time_layout"
-                style="@style/load_history_row_item">
+      <LinearLayout
+        android:id="@+id/lhr_time_layout"
+        style="@style/load_history_row_item">
 
-                <TextView
-                    style="@style/load_history_text"
-                    android:text="@string/mode" />
+        <TextView
+          style="@style/load_history_text"
+          android:text="@string/mode" />
 
-                <TextView
-                    android:id="@+id/eth_mode"
-                    style="@style/load_history_desc"
-                    android:text="@string/list_row_delay_history_eth_mode_text" />
-            </LinearLayout>
+        <TextView
+          android:id="@+id/eth_mode"
+          style="@style/load_history_desc"
+          android:text="@string/list_row_delay_history_eth_mode_text" />
+      </LinearLayout>
 
-            <LinearLayout style="@style/load_history_row_item">
+      <LinearLayout style="@style/load_history_row_item">
 
-                <TextView
-                    style="@style/load_history_text"
-                    android:text="@string/server_sync" />
+        <TextView
+          style="@style/load_history_text"
+          android:text="@string/server_sync" />
 
-                <TextView
-                    android:id="@+id/eth_sync"
-                    style="@style/load_history_desc"
-                    android:text="@string/list_row_delay_history_eth_mode_text" />
-            </LinearLayout>
-        </LinearLayout>
+        <TextView
+          android:id="@+id/eth_sync"
+          style="@style/load_history_desc"
+          android:text="@string/list_row_delay_history_eth_mode_text" />
+      </LinearLayout>
+    </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
+  </androidx.cardview.widget.CardView>
 </LinearLayout>

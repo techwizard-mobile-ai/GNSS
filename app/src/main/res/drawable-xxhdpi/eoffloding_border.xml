@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:padding="15dp"
-    android:shape="rectangle">
-    <corners
-        android:bottomLeftRadius="0dp"
-        android:bottomRightRadius="0dp"
-        android:topLeftRadius="@dimen/edittext_radius"
-        android:topRightRadius="@dimen/edittext_radius" />
-    <stroke
-        android:width="1dip"
-        android:color="@color/light_gray" />
+  android:padding="15dp"
+  android:shape="rectangle">
+  <corners
+    android:bottomLeftRadius="0dp"
+    android:bottomRightRadius="0dp"
+    android:topLeftRadius="@dimen/edittext_radius"
+    android:topRightRadius="@dimen/edittext_radius" />
+  <stroke
+    android:width="1dip"
+    android:color="@color/light_gray" />
 </shape>

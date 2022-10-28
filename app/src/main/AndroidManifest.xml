@@ -1,219 +1,227 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="app.vsptracker">
+  xmlns:tools="http://schemas.android.com/tools"
+  package="app.vsptracker">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.REORDER_TASKS" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- This permissions required for RebootReceiver -->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.GET_TASKS" />
-    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
-    <uses-permission
-        android:name="android.permission.PACKAGE_USAGE_STATS"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission
-        android:name="android.permission.FORCE_STOP_PACKAGES"
-        tools:ignore="ProtectedPermissions" />
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+  <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.REORDER_TASKS" />
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- This permissions required for RebootReceiver -->
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+  <uses-permission android:name="android.permission.GET_TASKS" />
+  <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+  <uses-permission
+    android:name="android.permission.PACKAGE_USAGE_STATS"
+    tools:ignore="ProtectedPermissions" />
+  <uses-permission
+    android:name="android.permission.FORCE_STOP_PACKAGES"
+    tools:ignore="ProtectedPermissions" />
 
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
+  <uses-feature
+    android:name="android.hardware.camera"
+    android:required="false" />
 
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
-        tools:ignore="QueryAllPackagesPermission" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+  <uses-permission
+    android:name="android.permission.QUERY_ALL_PACKAGES"
+    tools:ignore="QueryAllPackagesPermission" />
 
-    <uses-feature android:name="android.hardware.camera.any" />
+  <uses-feature android:name="android.hardware.camera.any" />
 
-    <uses-permission android:name="android.permission.CAMERA" />
+  <uses-permission android:name="android.permission.CAMERA" />
 
-    <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/override_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:screenOrientation="sensor"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar">
-        <activity
-            android:name="app.mvp.activities.SettingsActivity"
-            android:configChanges="orientation"
-            android:exported="false"
-            android:screenOrientation="sensor" />
-        <activity
-            android:name="app.mvp.activities.MvpWorkHistoryActivity"
-            android:configChanges="orientation"
-            android:exported="false"
-            android:screenOrientation="sensor" />
-        <activity
-            android:name="app.mvp.activities.MvpOrgsCreateFolderActivity"
-            android:configChanges="orientation"
-            android:exported="false"
-            android:screenOrientation="sensor" />
-        <activity
-            android:name="app.mvp.activities.MvpSurveyCheckPointActivity"
-            android:configChanges="orientation"
-            android:exported="false"
-            android:screenOrientation="sensor" />
-        <activity
-            android:name="app.mvp.activities.MvpSurveySurveyActivity"
-            android:configChanges="orientation"
-            android:exported="false"
-            android:screenOrientation="sensor" />
-        <activity
-            android:name="app.mvp.activities.MvpSurveyScanActivity"
-            android:configChanges="orientation"
-            android:exported="false"
-            android:screenOrientation="sensor" />
-        <activity
-            android:name="app.mvp.activities.MvpSurveyHomeActivity"
-            android:configChanges="orientation"
-            android:exported="false"
-            android:screenOrientation="sensor" />
-        <activity
-            android:name="app.mvp.activities.MvpStartDataCollectionActivity"
-            android:configChanges="orientation"
-            android:exported="false"
-            android:screenOrientation="sensor" />
-        <activity
-            android:name="app.mvp.activities.MvpOrgsFoldersActivity"
-            android:configChanges="orientation"
-            android:exported="false"
-            android:screenOrientation="sensor" />
-        <activity
-            android:name="app.mvp.activities.MvpOrgsProjectsActivity"
-            android:configChanges="orientation"
-            android:exported="false"
-            android:screenOrientation="sensor" />
-        <activity
-            android:name="app.mvp.activities.MvpHomeActivity"
-            android:configChanges="orientation"
-            android:exported="false"
-            android:screenOrientation="sensor" />
-        <activity
-            android:name=".BaseActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
+  <application
+    android:allowBackup="true"
+    android:icon="@mipmap/ic_launcher"
+    android:label="@string/override_name"
+    android:roundIcon="@mipmap/ic_launcher_round"
+    android:screenOrientation="sensor"
+    android:supportsRtl="true"
+    android:theme="@style/AppTheme.NoActionBar">
+    <activity
+      android:name="app.mvp.activities.MvpCorrectionsSettingsActivity"
+      android:exported="false">
+      <meta-data
+        android:name="android.app.lib_name"
+        android:value="" />
+    </activity>
+    <activity
+      android:name="app.mvp.activities.SettingsActivity"
+      android:configChanges="orientation"
+      android:exported="false"
+      android:screenOrientation="sensor" />
+    <activity
+      android:name="app.mvp.activities.MvpWorkHistoryActivity"
+      android:configChanges="orientation"
+      android:exported="false"
+      android:screenOrientation="sensor" />
+    <activity
+      android:name="app.mvp.activities.MvpOrgsCreateFolderActivity"
+      android:configChanges="orientation"
+      android:exported="false"
+      android:screenOrientation="sensor" />
+    <activity
+      android:name="app.mvp.activities.MvpSurveyCheckPointActivity"
+      android:configChanges="orientation"
+      android:exported="false"
+      android:screenOrientation="sensor" />
+    <activity
+      android:name="app.mvp.activities.MvpSurveySurveyActivity"
+      android:configChanges="orientation"
+      android:exported="false"
+      android:screenOrientation="sensor" />
+    <activity
+      android:name="app.mvp.activities.MvpSurveyScanActivity"
+      android:configChanges="orientation"
+      android:exported="false"
+      android:screenOrientation="sensor" />
+    <activity
+      android:name="app.mvp.activities.MvpSurveyHomeActivity"
+      android:configChanges="orientation"
+      android:exported="false"
+      android:screenOrientation="sensor" />
+    <activity
+      android:name="app.mvp.activities.MvpStartDataCollectionActivity"
+      android:configChanges="orientation"
+      android:exported="false"
+      android:screenOrientation="sensor" />
+    <activity
+      android:name="app.mvp.activities.MvpOrgsFoldersActivity"
+      android:configChanges="orientation"
+      android:exported="false"
+      android:screenOrientation="sensor" />
+    <activity
+      android:name="app.mvp.activities.MvpOrgsProjectsActivity"
+      android:configChanges="orientation"
+      android:exported="false"
+      android:screenOrientation="sensor" />
+    <activity
+      android:name="app.mvp.activities.MvpHomeActivity"
+      android:configChanges="orientation"
+      android:exported="false"
+      android:screenOrientation="sensor" />
+    <activity
+      android:name=".BaseActivity"
+      android:label="@string/app_name"
+      android:theme="@style/AppTheme.NoActionBar" />
 
-        <service android:name="app.vsptracker.others.autologout.ForegroundService" />
+    <service android:name="app.vsptracker.others.autologout.ForegroundService" />
 
-        <receiver
-            android:exported="true"
-            android:name="app.vsptracker.others.autologout.RebootReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
+    <receiver
+      android:name="app.vsptracker.others.autologout.RebootReceiver"
+      android:exported="true">
+      <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED" />
+      </intent-filter>
+    </receiver>
 
-        <activity android:name=".activities.CheckFormTaskActivity" />
-        <activity android:name=".activities.CheckFormsActivity" />
-        <activity android:name=".activities.ServerSyncActivity" />
-        <activity android:name=".activities.HoursReportingActivity" />
-        <activity android:name=".activities.common.MachineBreakdownActivity" />
-        <activity
-            android:name=".activities.OperatorLoginActivity"
-            android:exported="true"
-            android:theme="@style/splashScreenTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.MAIN" />
+    <activity android:name=".activities.CheckFormTaskActivity" />
+    <activity android:name=".activities.CheckFormsActivity" />
+    <activity android:name=".activities.ServerSyncActivity" />
+    <activity android:name=".activities.HoursReportingActivity" />
+    <activity android:name=".activities.common.MachineBreakdownActivity" />
+    <activity
+      android:name=".activities.OperatorLoginActivity"
+      android:exported="true"
+      android:theme="@style/splashScreenTheme">
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+        <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".activities.scrapper.SHistoryActivity" />
-        <activity android:name=".activities.excavator.ETOffLoadingActivity" />
-        <activity android:name=".activities.Map1Activity" />
-        <activity android:name=".activities.MapActivity" />
-        <activity android:name=".activities.truck.THistoryActivity" />
-        <activity android:name=".activities.DelayActivity" />
-        <activity android:name=".activities.DayWorksActivity" />
-        <activity android:name=".activities.excavator.EOffLoadingActivity" />
-        <activity android:name=".activities.excavator.ESelectWorkActivity" />
-        <activity android:name=".activities.excavator.EHistoryActivity" />
-        <activity android:name=".activities.excavator.ESideCastingActivity" />
-        <activity android:name=".activities.excavator.EHomeActivity" />
-        <activity android:name=".activities.common.RUnloadActivity" />
-        <activity android:name=".activities.common.RLoadActivity" />
-        <activity android:name=".activities.common.UnloadTaskActivity" /> <!-- Hide Keyboard by default on Activity Launch -->
-        <activity
-            android:name=".activities.common.MachineStatusActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity android:name=".activities.common.WeightActivity" />
-        <activity android:name=".activities.common.LMachineActivity" />
-        <activity android:name=".activities.common.LocationActivity" />
-        <activity android:name=".activities.common.MaterialActivity" />
-        <activity android:name=".activities.truck.TUnloadAfterActivity" /> <!-- <activity android:name=".activities.notused.TUnloadActivity" /> -->
-        <!-- <activity android:name=".activities.notused.TLoadActivity" /> -->
-        <activity android:name=".activities.truck.THomeActivity" />
-        <activity android:name=".activities.HourMeterStartActivity" />
-        <activity android:name=".activities.HourMeterStopActivity" />
-        <activity android:name=".activities.scrapper.SUnloadAfterActivity" /> <!-- <activity android:name=".activities.notused.MachineStatusActivity" /> -->
-        <!-- <activity android:name=".activities.notused.SUnloadActivity" /> -->
-        <!-- <activity android:name=".activities.notused.SLoadActivity" /> -->
-        <activity android:name=".activities.scrapper.SHomeActivity" />
-        <activity android:name=".activities.MachineTypeActivity" />
-        <activity android:name=".activities.notused.LoadUnloadActivity" />
-        <activity android:name=".activities.notused.FinishActivity" />
-        <activity android:name=".activities.excavator.ELoadActivity" />
-        <activity android:name=".activities.LoginActivity" /> <!-- <activity android:name=".activities.notused.EHomeOldActivity" /> -->
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
+    <activity android:name=".activities.scrapper.SHistoryActivity" />
+    <activity android:name=".activities.excavator.ETOffLoadingActivity" />
+    <activity android:name=".activities.Map1Activity" />
+    <activity android:name=".activities.MapActivity" />
+    <activity android:name=".activities.truck.THistoryActivity" />
+    <activity android:name=".activities.DelayActivity" />
+    <activity android:name=".activities.DayWorksActivity" />
+    <activity android:name=".activities.excavator.EOffLoadingActivity" />
+    <activity android:name=".activities.excavator.ESelectWorkActivity" />
+    <activity android:name=".activities.excavator.EHistoryActivity" />
+    <activity android:name=".activities.excavator.ESideCastingActivity" />
+    <activity android:name=".activities.excavator.EHomeActivity" />
+    <activity android:name=".activities.common.RUnloadActivity" />
+    <activity android:name=".activities.common.RLoadActivity" />
+    <activity android:name=".activities.common.UnloadTaskActivity" /> <!-- Hide Keyboard by default on Activity Launch -->
+    <activity
+      android:name=".activities.common.MachineStatusActivity"
+      android:windowSoftInputMode="stateHidden|adjustResize" />
+    <activity android:name=".activities.common.WeightActivity" />
+    <activity android:name=".activities.common.LMachineActivity" />
+    <activity android:name=".activities.common.LocationActivity" />
+    <activity android:name=".activities.common.MaterialActivity" />
+    <activity android:name=".activities.truck.TUnloadAfterActivity" /> <!-- <activity android:name=".activities.notused.TUnloadActivity" /> -->
+    <!-- <activity android:name=".activities.notused.TLoadActivity" /> -->
+    <activity android:name=".activities.truck.THomeActivity" />
+    <activity android:name=".activities.HourMeterStartActivity" />
+    <activity android:name=".activities.HourMeterStopActivity" />
+    <activity android:name=".activities.scrapper.SUnloadAfterActivity" /> <!-- <activity android:name=".activities.notused.MachineStatusActivity" /> -->
+    <!-- <activity android:name=".activities.notused.SUnloadActivity" /> -->
+    <!-- <activity android:name=".activities.notused.SLoadActivity" /> -->
+    <activity android:name=".activities.scrapper.SHomeActivity" />
+    <activity android:name=".activities.MachineTypeActivity" />
+    <activity android:name=".activities.notused.LoadUnloadActivity" />
+    <activity android:name=".activities.notused.FinishActivity" />
+    <activity android:name=".activities.excavator.ELoadActivity" />
+    <activity android:name=".activities.LoginActivity" /> <!-- <activity android:name=".activities.notused.EHomeOldActivity" /> -->
+    <meta-data
+      android:name="com.google.android.gms.version"
+      android:value="@integer/google_play_services_version" />
+    <meta-data
+      android:name="com.google.android.geo.API_KEY"
+      android:value="@string/google_maps_key" />
 
-        <uses-library
-            android:name="org.apache.http.legacy"
-            android:required="false" />
+    <uses-library
+      android:name="org.apache.http.legacy"
+      android:required="false" />
 
-        <service
-            android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
-            android:enabled="true" />
-        <service
-            android:name=".aws.MyService"
-            android:enabled="true" />
+    <service
+      android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
+      android:enabled="true" />
+    <service
+      android:name=".aws.MyService"
+      android:enabled="true" />
 
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_launcher" />
+    <meta-data
+      android:name="com.google.firebase.messaging.default_notification_icon"
+      android:resource="@drawable/ic_launcher" />
 
-        <service
-            android:name=".others.MyFirebaseMessagingService"
-            android:exported="true"
-            tools:ignore="ExportedService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
+    <service
+      android:name=".others.MyFirebaseMessagingService"
+      android:exported="true"
+      tools:ignore="ExportedService">
+      <intent-filter>
+        <action android:name="com.google.firebase.MESSAGING_EVENT" />
+      </intent-filter>
+    </service>
 
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="@string/provider_name"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
-        </provider>
+    <provider
+      android:name="androidx.core.content.FileProvider"
+      android:authorities="@string/provider_name"
+      android:exported="false"
+      android:grantUriPermissions="true">
+      <meta-data
+        android:name="android.support.FILE_PROVIDER_PATHS"
+        android:resource="@xml/file_paths" />
+    </provider>
 
-        <receiver
-            android:exported="true"
-            android:name=".others.VSPTWidget">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
+    <receiver
+      android:name=".others.VSPTWidget"
+      android:exported="true">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+      </intent-filter>
 
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/vsptwidget_info" />
-        </receiver>
-    </application>
+      <meta-data
+        android:name="android.appwidget.provider"
+        android:resource="@xml/vsptwidget_info" />
+    </receiver>
+  </application>
 
 </manifest>

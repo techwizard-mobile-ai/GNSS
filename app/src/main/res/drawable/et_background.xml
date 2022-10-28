@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:padding="15dp"
-    android:shape="rectangle">
-    <corners
-        android:bottomLeftRadius="@dimen/_6sdp"
-        android:bottomRightRadius="@dimen/_6sdp"
-        android:topLeftRadius="@dimen/_6sdp"
-        android:topRightRadius="@dimen/_6sdp" />
-    <solid android:color="@color/white" />
-    <stroke
-        android:width="1dip"
-        android:dashWidth="10px"
-        android:dashGap="10px"
-        android:color="@color/gray_dark" />
+  android:padding="15dp"
+  android:shape="rectangle">
+  <corners
+    android:bottomLeftRadius="@dimen/_6sdp"
+    android:bottomRightRadius="@dimen/_6sdp"
+    android:topLeftRadius="@dimen/_6sdp"
+    android:topRightRadius="@dimen/_6sdp" />
+  <solid android:color="@color/white" />
+  <stroke
+    android:width="1dip"
+    android:dashWidth="10px"
+    android:dashGap="10px"
+    android:color="@color/gray_dark" />
 
 
 </shape>

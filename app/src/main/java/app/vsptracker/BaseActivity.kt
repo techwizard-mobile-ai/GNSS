@@ -29,6 +29,7 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.get
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.work.WorkManager
+import app.mvp.activities.MvpCorrectionsSettingsActivity
 import app.mvp.activities.MvpHomeActivity
 import app.vsptracker.activities.*
 import app.vsptracker.activities.common.MachineBreakdownActivity
@@ -516,7 +517,10 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         myHelper.setIsMapOpened(false)
       }
       R.id.nav_ntrip_client -> {
-        myHelper.launchNtripClient()
+//        myHelper.launchNtripClient()
+        val intent = Intent(this, MvpCorrectionsSettingsActivity::class.java)
+        startActivity(intent)
+        myHelper.setIsMapOpened(false)
       }
     }
     val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)

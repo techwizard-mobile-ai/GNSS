@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/navf_loading"
-        android:icon="@drawable/ic_survey"
-        android:title="@string/survey" />
-    <item
-        android:id="@+id/navf_delay"
-        android:icon="@drawable/ic_camera_enhance"
-        android:title="@string/scan" />
-    <item
-        android:id="@+id/navf_finish"
-        android:icon="@drawable/ic_action_cancel_presentation"
-        android:title="@string/finish" />
+  <item
+    android:id="@+id/navf_loading"
+    android:icon="@drawable/ic_survey"
+    android:title="@string/survey" />
+  <item
+    android:id="@+id/navf_delay"
+    android:icon="@drawable/ic_camera_enhance"
+    android:title="@string/scan" />
+  <item
+    android:id="@+id/navf_finish"
+    android:icon="@drawable/ic_action_cancel_presentation"
+    android:title="@string/finish" />
 
 </menu>

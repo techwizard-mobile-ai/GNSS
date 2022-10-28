@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
-    tools:context=".activities.excavator.ESelectWorkActivity">
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:gravity="center_horizontal"
+  android:orientation="vertical"
+  tools:context=".activities.excavator.ESelectWorkActivity">
 
-    <TextView
-        style="@style/activity_title"
-        android:text="Select Work Type" />
+  <TextView
+    style="@style/activity_title"
+    android:text="Select Work Type" />
 
-    <TextView
-        android:id="@+id/eswork_sidecasting"
-        style="@style/ehome_tv"
-        android:text="@string/activity_eselect_work_eswork_sidecasting_text" />
+  <TextView
+    android:id="@+id/eswork_sidecasting"
+    style="@style/ehome_tv"
+    android:text="@string/activity_eselect_work_eswork_sidecasting_text" />
 
-    <TextView
-        android:id="@+id/eswork_off_loading"
-        style="@style/ehome_tv"
-        android:text="@string/activity_eselect_work_eswork_off_loading_text" />
+  <TextView
+    android:id="@+id/eswork_off_loading"
+    style="@style/ehome_tv"
+    android:text="@string/activity_eselect_work_eswork_off_loading_text" />
 </LinearLayout>

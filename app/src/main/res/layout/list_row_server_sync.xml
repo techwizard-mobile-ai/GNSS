@@ -1,71 +1,71 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    style="?attr/cardStyle"
+  xmlns:card_view="http://schemas.android.com/apk/res-auto"
+  style="?attr/cardStyle"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_margin="@dimen/_5sdp"
+  card_view:cardCornerRadius="@dimen/_8sdp"
+  card_view:cardElevation="@dimen/_8sdp"
+  card_view:cardMaxElevation="@dimen/_10sdp"
+  card_view:contentPadding="@dimen/_5sdp">
+
+  <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_5sdp"
-        card_view:cardCornerRadius="@dimen/_8sdp"
-        card_view:cardElevation="@dimen/_8sdp"
-        card_view:cardMaxElevation="@dimen/_10sdp"
-        card_view:contentPadding="@dimen/_5sdp">
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+    <LinearLayout style="@style/load_history_row_item">
 
-        <LinearLayout style="@style/load_history_row_item">
+      <TextView
+        style="@style/server_sync_row"
+        android:text="@string/data_type" />
 
-            <TextView
-                style="@style/server_sync_row"
-                android:text="@string/data_type" />
-
-            <TextView
-                android:id="@+id/ssl_data_type"
-                style="@style/load_history_desc"
-                android:text="@string/truck_trips" />
-        </LinearLayout>
-
-        <LinearLayout style="@style/load_history_row_item">
-
-            <TextView
-                style="@style/server_sync_row"
-                android:text="@string/total" />
-
-            <TextView
-                android:id="@+id/ssl_total"
-                style="@style/load_history_desc"
-                android:text=":  27" />
-        </LinearLayout>
-
-        <LinearLayout style="@style/load_history_row_item">
-
-            <TextView
-                style="@style/server_sync_row"
-                android:text="@string/server_synced" />
-
-            <TextView
-                android:id="@+id/ssl_synced"
-                style="@style/load_history_desc"
-                android:text=":  24" />
-        </LinearLayout>
-
-        <LinearLayout style="@style/load_history_row_item">
-
-            <TextView
-                style="@style/server_sync_row"
-                android:text="@string/remaining" />
-
-            <TextView
-                android:id="@+id/ssl_remaining"
-                style="@style/load_history_desc"
-                android:text=":  03"
-                android:textColor="@color/red" />
-        </LinearLayout>
-
+      <TextView
+        android:id="@+id/ssl_data_type"
+        style="@style/load_history_desc"
+        android:text="@string/truck_trips" />
     </LinearLayout>
+
+    <LinearLayout style="@style/load_history_row_item">
+
+      <TextView
+        style="@style/server_sync_row"
+        android:text="@string/total" />
+
+      <TextView
+        android:id="@+id/ssl_total"
+        style="@style/load_history_desc"
+        android:text=":  27" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/load_history_row_item">
+
+      <TextView
+        style="@style/server_sync_row"
+        android:text="@string/server_synced" />
+
+      <TextView
+        android:id="@+id/ssl_synced"
+        style="@style/load_history_desc"
+        android:text=":  24" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/load_history_row_item">
+
+      <TextView
+        style="@style/server_sync_row"
+        android:text="@string/remaining" />
+
+      <TextView
+        android:id="@+id/ssl_remaining"
+        style="@style/load_history_desc"
+        android:text=":  03"
+        android:textColor="@color/red" />
+    </LinearLayout>
+
+  </LinearLayout>
 
 </androidx.cardview.widget.CardView>
 

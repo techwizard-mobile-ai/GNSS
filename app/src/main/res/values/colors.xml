@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--<color name="colorPrimary">#1906d6</color>-->
-    <!--<color name="colorPrimaryDark">#0d037c</color>-->
-    <!--<color name="colorAccent">#D81B60</color>-->
+  <!--<color name="colorPrimary">#1906d6</color>-->
+  <!--<color name="colorPrimaryDark">#0d037c</color>-->
+  <!--<color name="colorAccent">#D81B60</color>-->
 
-    <!--App Default-->
-    <!--<color name="colorPrimary">#02588B</color>-->
-    <!--<color name="colorPrimaryDark">#024064</color>-->
+  <!--App Default-->
+  <!--<color name="colorPrimary">#02588B</color>-->
+  <!--<color name="colorPrimaryDark">#024064</color>-->
 
-    <!--Client Suggested-->
-    <color name="colorPrimary">#106d14</color>
-    <color name="light_colorPrimary">#638065</color>
-    <color name="colorPrimaryDark">#0a430d</color>
+  <!--Client Suggested-->
+  <color name="colorPrimary">#106d14</color>
+  <color name="light_colorPrimary">#638065</color>
+  <color name="colorPrimaryDark">#0a430d</color>
 
 
-    <color name="colorAccent">#106d14</color>
+  <color name="colorAccent">#106d14</color>
 
-    <!--<color name="colorAccent">#1906d6</color>-->
-    <color name="white">#FFFFFF</color>
-    <color name="black">#222222</color>
+  <!--<color name="colorAccent">#1906d6</color>-->
+  <color name="white">#FFFFFF</color>
+  <color name="black">#222222</color>
 
-    <color name="light_gray">#e0e0e0</color>
-    <color name="gray">#b6b4b4</color>
-    <color name="gray_dark">#9f9e9e</color>
-    <color name="light_white">#f0f0f0</color>
-    <color name="red">#FF382A</color>
-    <color name="light_red">#D57E78</color>
-    <color name="blue">#0265aa</color>
-    <color name="grey">#9f9e9e</color>
-    <color name="yellow">#ffcc00</color>
-    <color name="green">#00ff00</color>
+  <color name="light_gray">#e0e0e0</color>
+  <color name="gray">#b6b4b4</color>
+  <color name="gray_dark">#9f9e9e</color>
+  <color name="light_white">#f0f0f0</color>
+  <color name="red">#FF382A</color>
+  <color name="light_red">#D57E78</color>
+  <color name="blue">#0265aa</color>
+  <color name="grey">#9f9e9e</color>
+  <color name="yellow">#ffcc00</color>
+  <color name="green">#00ff00</color>
 
 </resources>

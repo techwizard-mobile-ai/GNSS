@@ -1,102 +1,103 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  android:paddingBottom="@dimen/_10sdp"
+  tools:context="app.mvp.activities.SettingsActivity">
+
+  <TextView
+    android:id="@+id/settings_title"
+    style="@style/activity_title"
+    android:layout_alignParentTop="true"
+    android:layout_centerHorizontal="true"
+    android:text="@string/settings" />
+
+  <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/_10sdp"
-    tools:context="app.mvp.activities.SettingsActivity">
+    android:layout_height="wrap_content"
+    android:layout_below="@id/settings_title"
+    android:gravity="center"
+    android:orientation="vertical">
 
     <TextView
-        android:id="@+id/settings_title"
-        style="@style/activity_title"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:text="@string/settings" />
+      android:id="@+id/settings_timer_title"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/scan_interval"
+      android:visibility="gone"
+      android:textSize="@dimen/_14sdp"
+      android:textColor="@color/black" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+      android:id="@+id/settings_timer_layout"
+      style="@style/default_linearlayout"
+      android:visibility="invisible"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="0dp"
+      android:layout_marginTop="@dimen/_5sdp"
+      android:layout_marginBottom="@dimen/_50sdp"
+      android:layout_marginEnd="0dp"
+      android:gravity="center"
+      android:orientation="horizontal">
+
+      <ImageView
+        android:id="@+id/timer_minus"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:contentDescription="@string/subtract"
+        android:src="@drawable/ic_subtract" />
+
+      <TextView
+        android:id="@+id/timer"
+        style="@style/tv_background"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/settings_title"
-        android:gravity="center"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/settings_timer_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/scan_interval"
-            android:visibility="gone"
-            android:textSize="@dimen/_14sdp"
-            android:textColor="@color/black" />
+        android:layout_marginStart="@dimen/_5sdp"
+        android:layout_marginEnd="@dimen/_5sdp"
+        android:hint="Timer"
+        android:importantForAutofill="no"
+        android:inputType="numberDecimal"
+        android:text="1"
+        android:textColor="@color/black" />
 
-        <LinearLayout
-            android:id="@+id/settings_timer_layout"
-            style="@style/default_linearlayout"
-            android:visibility="invisible"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="@dimen/_5sdp"
-            android:layout_marginBottom="@dimen/_50sdp"
-            android:layout_marginEnd="0dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/timer_minus"
-                android:layout_width="@dimen/_30sdp"
-                android:layout_height="@dimen/_30sdp"
-                android:contentDescription="@string/subtract"
-                android:src="@drawable/ic_subtract" />
-
-            <TextView
-                android:id="@+id/timer"
-                style="@style/tv_background"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_5sdp"
-                android:layout_marginEnd="@dimen/_5sdp"
-                android:hint="Timer"
-                android:importantForAutofill="no"
-                android:inputType="numberDecimal"
-                android:text="1"
-                android:textColor="@color/black" />
-
-            <ImageView
-                android:id="@+id/timer_plus"
-                android:layout_width="@dimen/_30sdp"
-                android:layout_height="@dimen/_30sdp"
-                android:contentDescription="@string/add"
-                android:src="@drawable/ic_add" />
-        </LinearLayout>
-
-        <Button
-            style="@style/back_button_single"
-            android:drawableLeft="@drawable/ic_help"
-            android:text="@string/how_to_use" />
+      <ImageView
+        android:id="@+id/timer_plus"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:contentDescription="@string/add"
+        android:src="@drawable/ic_add" />
     </LinearLayout>
 
+    <Button
+      style="@style/back_button_single"
+      android:drawableLeft="@drawable/ic_help"
+      android:text="@string/how_to_use" />
+  </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/settings_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="@dimen/_5sdp"
-        android:layout_marginStart="@dimen/_10sdp"
-        android:layout_marginRight="@dimen/_10sdp">
 
-        <Button
-            android:id="@+id/settings_back"
-            style="@style/back_button_single"
-            android:layout_alignParentStart="true" />
+  <RelativeLayout
+    android:id="@+id/settings_bottom"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_centerHorizontal="true"
+    android:layout_margin="@dimen/_5sdp"
+    android:layout_marginStart="@dimen/_10sdp"
+    android:layout_marginRight="@dimen/_10sdp">
 
-        <Button
-            android:id="@+id/settings_save"
-            style="@style/back_button_single"
-            android:layout_alignParentEnd="true"
-            android:text="@string/save" />
-    </RelativeLayout>
+    <Button
+      android:id="@+id/settings_back"
+      style="@style/back_button_single"
+      android:layout_alignParentStart="true" />
+
+    <Button
+      android:id="@+id/settings_save"
+      style="@style/back_button_single"
+      android:layout_alignParentEnd="true"
+      android:text="@string/save" />
+  </RelativeLayout>
 
 </RelativeLayout>

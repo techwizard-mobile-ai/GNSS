@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:padding="@dimen/_4sdp">
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
+  android:padding="@dimen/_4sdp">
 
-    <TextView
-        android:id="@+id/grid_text"
-        style="@style/grid_tv"
-        android:visibility="gone"
-        android:text="@string/list_row_grid_grid_text_text" />
-    <ImageView
-        android:id="@+id/grid_image"
-        android:visibility="gone"
-        android:padding="@dimen/_5sdp"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_120sdp" />
+  <TextView
+    android:id="@+id/grid_text"
+    style="@style/grid_tv"
+    android:visibility="gone"
+    android:text="@string/list_row_grid_grid_text_text" />
+
+  <ImageView
+    android:id="@+id/grid_image"
+    android:visibility="gone"
+    android:padding="@dimen/_5sdp"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_120sdp" />
 </LinearLayout>

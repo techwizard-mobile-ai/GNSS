@@ -1,88 +1,90 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  tools:context=".activities.truck.THomeActivity">
+
+  <TextView
+    android:id="@+id/thome_title"
+    style="@style/activity_title"
+    android:layout_alignParentTop="true"
+    android:layout_centerHorizontal="true"
+    android:text="@string/select_action" />
+
+  <!--    Original paddingBottom = 30sdp-->
+  <LinearLayout
+    android:id="@+id/thome_settings_layout"
+    style="@style/default_linearlayout"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:layout_below="@id/thome_title"
+    android:layout_above="@id/thome_logout"
+    android:gravity="center_vertical"
     android:orientation="vertical"
-    tools:context=".activities.truck.THomeActivity">
-    <TextView
-        android:id="@+id/thome_title"
-        style="@style/activity_title"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:text="@string/select_action" />
+    android:paddingBottom="@dimen/_5sdp">
 
-<!--    Original paddingBottom = 30sdp-->
-    <LinearLayout
-        android:id="@+id/thome_settings_layout"
-        style="@style/default_linearlayout"
+    <FrameLayout
+      android:id="@+id/thome_load"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:visibility="gone"
+      android:layout_gravity="center">
+
+      <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_below="@id/thome_title"
-        android:layout_above="@id/thome_logout"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/_5sdp">
+        android:layout_gravity="center"
+        android:elevation="16dp"
+        android:gravity="center"
+        android:text="@string/load_settings"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@android:color/white" />
 
-        <FrameLayout
-            android:id="@+id/thome_load"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_gravity="center">
+      <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/thome_load_button"
+        android:layout_width="@dimen/_100sdp"
+        android:layout_height="@dimen/_100sdp"
+        android:layout_gravity="center_horizontal"
+        android:foregroundGravity="center_horizontal"
+        android:backgroundTint="@color/colorPrimary"
+        android:src="@android:color/transparent" />
+    </FrameLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:elevation="16dp"
-                android:gravity="center"
-                android:text="@string/load_settings"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@android:color/white" />
+    <FrameLayout
+      android:id="@+id/thome_unload"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:visibility="gone"
+      android:layout_gravity="center"
+      android:layout_marginTop="@dimen/_40sdp">
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/thome_load_button"
-                android:layout_width="@dimen/_100sdp"
-                android:layout_height="@dimen/_100sdp"
-                android:layout_gravity="center_horizontal"
-                android:foregroundGravity="center_horizontal"
-                android:backgroundTint="@color/colorPrimary"
-                android:src="@android:color/transparent" />
-        </FrameLayout>
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:elevation="16dp"
+        android:gravity="center"
+        android:text="@string/unload_settings"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@android:color/white" />
 
-        <FrameLayout
-            android:id="@+id/thome_unload"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/_40sdp">
+      <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/thome_unload_button"
+        android:layout_width="@dimen/_100sdp"
+        android:layout_height="@dimen/_100sdp"
+        android:layout_gravity="center_horizontal"
+        android:foregroundGravity="center_horizontal"
+        android:backgroundTint="@color/colorPrimary"
+        android:src="@android:color/transparent" />
+    </FrameLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:elevation="16dp"
-                android:gravity="center"
-                android:text="@string/unload_settings"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@android:color/white" />
+  </LinearLayout>
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/thome_unload_button"
-                android:layout_width="@dimen/_100sdp"
-                android:layout_height="@dimen/_100sdp"
-                android:layout_gravity="center_horizontal"
-                android:foregroundGravity="center_horizontal"
-                android:backgroundTint="@color/colorPrimary"
-                android:src="@android:color/transparent" />
-        </FrameLayout>
-
-    </LinearLayout>
-    <Button
-        android:id="@+id/thome_logout"
-        style="@style/next_button_single"
-        android:layout_marginBottom="@dimen/_10sdp"
-        android:layout_alignParentBottom="true" />
+  <Button
+    android:id="@+id/thome_logout"
+    style="@style/next_button_single"
+    android:layout_marginBottom="@dimen/_10sdp"
+    android:layout_alignParentBottom="true" />
 </RelativeLayout>

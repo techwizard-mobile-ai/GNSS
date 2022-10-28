@@ -1,49 +1,51 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_gravity="center_horizontal"
+  android:gravity="center_horizontal"
+  android:layout_height="match_parent"
+  tools:context=".activities.CheckFormTaskActivity">
+
+  <TextView
+    android:id="@+id/cft_title"
+    android:layout_alignParentTop="true"
+    style="@style/activity_title"
     android:layout_width="match_parent"
-    android:layout_gravity="center_horizontal"
     android:gravity="center_horizontal"
-    android:layout_height="match_parent"
-    tools:context=".activities.CheckFormTaskActivity"
-    >
-    <TextView
-        android:id="@+id/cft_title"
-        android:layout_alignParentTop="true"
-        style="@style/activity_title"
-        android:layout_width="match_parent"
-        android:gravity="center_horizontal"
-        android:text="@string/checkforms" />
+    android:text="@string/checkforms" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/cft_rv"
-        android:layout_below="@id/cft_title"
-        android:layout_above="@id/cft_finish_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/cft_rv"
+    android:layout_below="@id/cft_title"
+    android:layout_above="@id/cft_finish_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
 
-    <LinearLayout
-        android:id="@+id/cft_finish_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/_10sdp"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/cft_skip"
-            android:text="@string/skip"
-            android:layout_width="0dp"
-            android:layout_weight=".4"
-            style="@style/next_button"
-            android:background="@drawable/bdue_background" />
-        <Button
-            android:id="@+id/cft_finish"
-            android:text="@string/save"
-            android:layout_width="0dp"
-            android:layout_weight=".4"
-            style="@style/next_button"
-            android:background="@drawable/bnext_background" />
+  <LinearLayout
+    android:id="@+id/cft_finish_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/_10sdp"
+    android:layout_alignParentBottom="true"
+    android:layout_marginBottom="@dimen/_10sdp"
+    android:orientation="horizontal">
 
-    </LinearLayout>
+    <Button
+      android:id="@+id/cft_skip"
+      android:text="@string/skip"
+      android:layout_width="0dp"
+      android:layout_weight=".4"
+      style="@style/next_button"
+      android:background="@drawable/bdue_background" />
+
+    <Button
+      android:id="@+id/cft_finish"
+      android:text="@string/save"
+      android:layout_width="0dp"
+      android:layout_weight=".4"
+      style="@style/next_button"
+      android:background="@drawable/bnext_background" />
+
+  </LinearLayout>
 
 </RelativeLayout>

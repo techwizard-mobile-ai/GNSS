@@ -1,180 +1,183 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:orientation="vertical"
-tools:context="app.mvp.activities.MvpSurveySurveyActivity">
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  tools:context="app.mvp.activities.MvpSurveySurveyActivity">
 
-    <RelativeLayout
-        android:id="@+id/gps_data"
-        android:layout_width="match_parent"
+  <RelativeLayout
+    android:id="@+id/gps_data"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/light_gray">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentStart="true"
+      android:orientation="horizontal">
+
+      <TextView
+        android:id="@+id/mvp_survey_survey_gps_data_acc"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/light_gray">
+        android:padding="@dimen/_5sdp"
+        android:text="@string/gps_location"
+        android:textColor="@color/black"
+        android:textSize="10sp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:orientation="horizontal">
+      <TextView
+        android:id="@+id/mvp_survey_survey_gps_data_lat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_5sdp"
+        android:text="@string/gps_location"
+        android:textColor="@color/black"
+        android:textSize="10sp" />
 
-            <TextView
-                android:id="@+id/mvp_survey_survey_gps_data_acc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/_5sdp"
-                android:text="@string/gps_location"
-                android:textColor="@color/black"
-                android:textSize="10sp" />
+      <TextView
+        android:id="@+id/mvp_survey_survey_gps_data_long"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_5sdp"
+        android:text="@string/gps_location"
+        android:textColor="@color/black"
+        android:textSize="10sp" />
 
-            <TextView
-                android:id="@+id/mvp_survey_survey_gps_data_lat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/_5sdp"
-                android:text="@string/gps_location"
-                android:textColor="@color/black"
-                android:textSize="10sp" />
+      <TextView
+        android:id="@+id/mvp_survey_survey_gps_data_alt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_5sdp"
+        android:text="@string/gps_location"
+        android:textColor="@color/black"
+        android:textSize="10sp" />
 
-            <TextView
-                android:id="@+id/mvp_survey_survey_gps_data_long"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/_5sdp"
-                android:text="@string/gps_location"
-                android:textColor="@color/black"
-                android:textSize="10sp" />
+      <TextView
+        android:id="@+id/mvp_survey_survey_gps_data_speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_5sdp"
+        android:text="@string/gps_location"
+        android:textColor="@color/black"
+        android:textSize="10sp" />
 
-            <TextView
-                android:id="@+id/mvp_survey_survey_gps_data_alt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/_5sdp"
-                android:text="@string/gps_location"
-                android:textColor="@color/black"
-                android:textSize="10sp" />
+      <TextView
+        android:id="@+id/mvp_survey_survey_gps_data_bearing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_5sdp"
+        android:text="@string/gps_location"
+        android:textColor="@color/black"
+        android:textSize="10sp" />
 
-            <TextView
-                android:id="@+id/mvp_survey_survey_gps_data_speed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/_5sdp"
-                android:text="@string/gps_location"
-                android:textColor="@color/black"
-                android:textSize="10sp" />
+      <TextView
+        android:id="@+id/mvp_survey_survey_gps_data_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_5sdp"
+        android:text="@string/gps_location"
+        android:textColor="@color/black"
+        android:textSize="10sp" />
+    </LinearLayout>
 
-            <TextView
-                android:id="@+id/mvp_survey_survey_gps_data_bearing"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/_5sdp"
-                android:text="@string/gps_location"
-                android:textColor="@color/black"
-                android:textSize="10sp" />
+    <TextView
+      android:id="@+id/mvp_survey_survey_gps_data_antenna_height"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentEnd="true"
+      android:padding="@dimen/_5sdp"
+      android:text="@string/antenna_height"
+      android:textColor="@color/black"
+      android:textSize="12sp" />
+  </RelativeLayout>
 
-            <TextView
-                android:id="@+id/mvp_survey_survey_gps_data_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/_5sdp"
-                android:text="@string/gps_location"
-                android:textColor="@color/black"
-                android:textSize="10sp" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/mvp_survey_survey_gps_data_antenna_height"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:padding="@dimen/_5sdp"
-            android:text="@string/antenna_height"
-            android:textColor="@color/black"
-            android:textSize="12sp" />
-    </RelativeLayout>
-<LinearLayout
+  <LinearLayout
     android:layout_width="match_parent"
     android:layout_below="@id/gps_data"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    >
+    android:orientation="horizontal">
+
     <RelativeLayout
-        android:id="@+id/bottom_buttons"
-        android:layout_width="0dp"
-        android:layout_weight="0.25"
-        android:layout_below="@id/gps_data"
-        android:background="@color/gray"
-        android:padding="@dimen/_5sdp"
-        android:layout_height="match_parent">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentBottom="true"
-            android:orientation="vertical">
+      android:id="@+id/bottom_buttons"
+      android:layout_width="0dp"
+      android:layout_weight="0.25"
+      android:layout_below="@id/gps_data"
+      android:background="@color/gray"
+      android:padding="@dimen/_5sdp"
+      android:layout_height="match_parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Point ID:"
-                android:textColor="@color/black"
-                />
-            <EditText
-                style="@style/et_background"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="@dimen/_1sdp"
-                android:layout_marginEnd="0dp"
-                android:text="001"
-                android:textColor="@color/black" />
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_15sdp"
-                android:text="Current Label:"
-                android:textColor="@color/black"
-                />
-            <EditText
-                style="@style/et_background"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="@dimen/_1sdp"
-                android:layout_marginEnd="0dp"
-                android:text="Fence"
-                android:textColor="@color/black" />
-        </LinearLayout>
+        <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Point ID:"
+          android:textColor="@color/black" />
+
+        <EditText
+          style="@style/et_background"
+          android:layout_marginStart="0dp"
+          android:layout_marginTop="@dimen/_1sdp"
+          android:layout_marginEnd="0dp"
+          android:text="001"
+          android:textColor="@color/black" />
+
+        <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/_15sdp"
+          android:text="Current Label:"
+          android:textColor="@color/black" />
+
+        <EditText
+          style="@style/et_background"
+          android:layout_marginStart="0dp"
+          android:layout_marginTop="@dimen/_1sdp"
+          android:layout_marginEnd="0dp"
+          android:text="Fence"
+          android:textColor="@color/black" />
+      </LinearLayout>
+
+      <Button
+        style="@style/back_button_single"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:background="@color/colorPrimary"
+        android:layout_above="@id/mvp_survey_checkpoint_bottom"
+        android:text="@string/survey_point" />
+
+      <LinearLayout
+        android:id="@+id/mvp_survey_checkpoint_bottom"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
 
         <Button
-            style="@style/back_button_single"
-            android:layout_marginBottom="@dimen/_10sdp"
-            android:background="@color/colorPrimary"
-            android:layout_above="@id/mvp_survey_checkpoint_bottom"
-            android:text="@string/survey_point" />
+          android:id="@+id/mvp_survey_survey_settings"
+          style="@style/back_button_single"
+          android:text="@string/settings" />
 
-        <LinearLayout
-            android:id="@+id/mvp_survey_checkpoint_bottom"
-            android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/mvp_survey_survey_settings"
-                style="@style/back_button_single"
-                android:text="@string/settings" />
-
-            <Button
-                android:id="@+id/mvp_survey_survey_back"
-                style="@style/back_button_single" />
-        </LinearLayout>
+        <Button
+          android:id="@+id/mvp_survey_survey_back"
+          style="@style/back_button_single" />
+      </LinearLayout>
     </RelativeLayout>
+
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="0dp"
-        android:layout_weight="0.7"
-        android:layout_height="match_parent"/>
-</LinearLayout>
+      xmlns:tools="http://schemas.android.com/tools"
+      android:id="@+id/map"
+      android:name="com.google.android.gms.maps.SupportMapFragment"
+      android:layout_width="0dp"
+      android:layout_weight="0.7"
+      android:layout_height="match_parent" />
+  </LinearLayout>
 </RelativeLayout>

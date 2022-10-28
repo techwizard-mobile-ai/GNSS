@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/navf_loading"
-        android:icon="@drawable/ic_action_save_alt"
-        android:title="@string/loading" />
+  <item
+    android:id="@+id/navf_loading"
+    android:icon="@drawable/ic_action_save_alt"
+    android:title="@string/loading" />
 
-    <item
-        android:id="@+id/navf_digging"
-        android:icon="@drawable/ic_action_panorama_horizontal"
-        android:title="@string/trimming" />
+  <item
+    android:id="@+id/navf_digging"
+    android:icon="@drawable/ic_action_panorama_horizontal"
+    android:title="@string/trimming" />
 
-    <item
-        android:id="@+id/navf_delay"
-        android:icon="@drawable/ic_delay_started"
-        android:title="@string/delay" />
+  <item
+    android:id="@+id/navf_delay"
+    android:icon="@drawable/ic_delay_started"
+    android:title="@string/delay" />
 
-    <item
-        android:id="@+id/navf_finish"
-        android:icon="@drawable/ic_action_cancel_presentation"
-        android:title="@string/finish" />
+  <item
+    android:id="@+id/navf_finish"
+    android:icon="@drawable/ic_action_cancel_presentation"
+    android:title="@string/finish" />
 
 </menu>

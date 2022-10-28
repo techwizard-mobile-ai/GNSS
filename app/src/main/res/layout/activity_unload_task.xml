@@ -1,36 +1,38 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginStart="@dimen/_10sdp"
-    android:layout_marginEnd="@dimen/_10sdp"
-    android:orientation="vertical"
-    tools:context=".activities.common.UnloadTaskActivity">
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:layout_marginStart="@dimen/_10sdp"
+  android:layout_marginEnd="@dimen/_10sdp"
+  android:orientation="vertical"
+  tools:context=".activities.common.UnloadTaskActivity">
 
-    <TextView
-        android:id="@+id/task_title"
-        style="@style/activity_title"
-        android:layout_marginBottom="@dimen/_5sdp"
-        android:layout_alignParentTop="true"
-        android:layout_centerInParent="true" />
-    <GridView
-        android:id="@+id/tasks_gridview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/tasks_back"
-        android:layout_below="@id/task_title"
-        android:layout_margin="@dimen/_5sdp"
-        android:columnWidth="@dimen/_120sdp"
-        android:gravity="center"
-        android:horizontalSpacing="0dp"
-        android:numColumns="auto_fit"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="0dp" />
-    <Button
-        android:id="@+id/tasks_back"
-        style="@style/back_button_single"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true" />
+  <TextView
+    android:id="@+id/task_title"
+    style="@style/activity_title"
+    android:layout_marginBottom="@dimen/_5sdp"
+    android:layout_alignParentTop="true"
+    android:layout_centerInParent="true" />
+
+  <GridView
+    android:id="@+id/tasks_gridview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_above="@id/tasks_back"
+    android:layout_below="@id/task_title"
+    android:layout_margin="@dimen/_5sdp"
+    android:columnWidth="@dimen/_120sdp"
+    android:gravity="center"
+    android:horizontalSpacing="0dp"
+    android:numColumns="auto_fit"
+    android:stretchMode="columnWidth"
+    android:verticalSpacing="0dp" />
+
+  <Button
+    android:id="@+id/tasks_back"
+    style="@style/back_button_single"
+    android:layout_alignParentBottom="true"
+    android:layout_centerInParent="true" />
 
 </RelativeLayout>

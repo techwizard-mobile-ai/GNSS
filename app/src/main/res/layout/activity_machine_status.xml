@@ -1,113 +1,113 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:layout_gravity="center_horizontal"
+  android:layout_marginBottom="@dimen/_10sdp"
+  android:gravity="center_horizontal"
+  android:orientation="vertical">
+
+
+  <LinearLayout
+    android:id="@+id/machine_status_hour_meter_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center_horizontal"
-    android:layout_marginBottom="@dimen/_10sdp"
-    android:gravity="center_horizontal"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
     android:orientation="vertical">
 
+    <TextView
+      android:id="@+id/hm_stop_top"
+      style="@style/home_tv"
+      android:gravity="center"
+      android:text="@string/hour_meter_finish" />
 
     <LinearLayout
-        android:id="@+id/machine_status_hour_meter_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical">
+      style="@style/default_linearlayout"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="0dp"
+      android:layout_marginEnd="0dp"
+      android:gravity="center"
+      android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/hm_stop_top"
-            style="@style/home_tv"
-            android:gravity="center"
-            android:text="@string/hour_meter_finish" />
+      <ImageView
+        android:id="@+id/sfinish_minus"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:src="@drawable/ic_subtract"
+        android:contentDescription="@string/subtract_0_1_to_hour_meter" />
 
-        <LinearLayout
-            style="@style/default_linearlayout"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
-            android:layout_marginEnd="0dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+      <EditText
+        android:id="@+id/sfinish_reading"
+        style="@style/tv_background"
+        android:layout_width="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:hint="@string/hour_meter_finish"
+        android:inputType="numberDecimal"
+        android:text="@string/activity_hour_meter_stop_sfinish_reading_text"
+        android:textColor="@color/black"
+        android:importantForAutofill="no" />
 
-            <ImageView
-                android:id="@+id/sfinish_minus"
-                android:layout_width="@dimen/_30sdp"
-                android:layout_height="@dimen/_30sdp"
-                android:src="@drawable/ic_subtract"
-                android:contentDescription="@string/subtract_0_1_to_hour_meter" />
-
-            <EditText
-                android:id="@+id/sfinish_reading"
-                style="@style/tv_background"
-                android:layout_width="wrap_content"
-                android:layout_marginStart="@dimen/_10sdp"
-                android:layout_marginEnd="@dimen/_10sdp"
-                android:hint="@string/hour_meter_finish"
-                android:inputType="numberDecimal"
-                android:text="@string/activity_hour_meter_stop_sfinish_reading_text"
-                android:textColor="@color/black"
-                android:importantForAutofill="no" />
-
-            <ImageView
-                android:id="@+id/sfinish_plus"
-                android:layout_width="@dimen/_30sdp"
-                android:layout_height="@dimen/_30sdp"
-                android:src="@drawable/ic_add"
-                android:contentDescription="@string/add_0_1_to_hour_meter" />
-        </LinearLayout>
+      <ImageView
+        android:id="@+id/sfinish_plus"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:src="@drawable/ic_add"
+        android:contentDescription="@string/add_0_1_to_hour_meter" />
     </LinearLayout>
+  </LinearLayout>
+
+  <TextView
+    android:id="@+id/machine_status_title"
+    style="@style/activity_title"
+    android:layout_below="@id/machine_status_hour_meter_layout"
+    android:layout_centerInParent="true"
+    android:layout_marginBottom="@dimen/_10sdp"
+    android:text="@string/activity_machine_status1_machine_status_title_text" />
+
+  <LinearLayout
+    android:id="@+id/machine_start_layout"
+    style="@style/default_linearlayout"
+    android:layout_above="@id/machine_status_back"
+    android:layout_below="@id/machine_status_title"
+    android:visibility="visible">
 
     <TextView
-        android:id="@+id/machine_status_title"
-        style="@style/activity_title"
-        android:layout_below="@id/machine_status_hour_meter_layout"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="@dimen/_10sdp"
-        android:text="@string/activity_machine_status1_machine_status_title_text" />
-
-    <LinearLayout
-        android:id="@+id/machine_start_layout"
-        style="@style/default_linearlayout"
-        android:layout_above="@id/machine_status_back"
-        android:layout_below="@id/machine_status_title"
-        android:visibility="visible">
-
-        <TextView
-            android:id="@+id/machine_stopped_reason"
-            style="@style/activity_title"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:text="@string/activity_machine_status1_machine_stopped_reason_text" />
-
-        <Button
-            android:id="@+id/machine_status_start"
-            style="@style/next_button"
-            android:layout_marginTop="@dimen/_30sdp"
-            android:text="@string/activity_machine_status1_machine_status_start_text" />
-
-        <Button
-            android:id="@+id/machine_status_logout"
-            style="@style/next_button"
-            android:layout_marginTop="@dimen/_30sdp"
-            android:layout_marginBottom="@dimen/_30sdp"
-            android:text="@string/logout" />
-
-
-    </LinearLayout>
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/machine_status_rv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/machine_status_back"
-        android:layout_below="@id/machine_status_title"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="@dimen/_10sdp"
-        android:foregroundGravity="center_horizontal" />
+      android:id="@+id/machine_stopped_reason"
+      style="@style/activity_title"
+      android:layout_marginTop="@dimen/_10sdp"
+      android:text="@string/activity_machine_status1_machine_stopped_reason_text" />
 
     <Button
-        android:id="@+id/machine_status_back"
-        style="@style/back_button_single"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+      android:id="@+id/machine_status_start"
+      style="@style/next_button"
+      android:layout_marginTop="@dimen/_30sdp"
+      android:text="@string/activity_machine_status1_machine_status_start_text" />
+
+    <Button
+      android:id="@+id/machine_status_logout"
+      style="@style/next_button"
+      android:layout_marginTop="@dimen/_30sdp"
+      android:layout_marginBottom="@dimen/_30sdp"
+      android:text="@string/logout" />
+
+
+  </LinearLayout>
+
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/machine_status_rv"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_above="@id/machine_status_back"
+    android:layout_below="@id/machine_status_title"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginBottom="@dimen/_10sdp"
+    android:foregroundGravity="center_horizontal" />
+
+  <Button
+    android:id="@+id/machine_status_back"
+    style="@style/back_button_single"
+    android:layout_alignParentBottom="true"
+    android:layout_centerHorizontal="true" />
 </RelativeLayout>

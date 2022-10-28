@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">Tapu Tapu</string>
-    <string name="nav_header_subtitle">support@theconstructionexchangehub.co.nz</string>
-    <string name="privacy_url">https://theconstructionexchangehub.co.nz/mvp/IW-122140-1-48-3_Privacy_Policy.docx</string>
-    <string name="portal_url">https://tvspt.com/</string>
-    <string name="api_url">https://tvspt.com/api/v1/</string>
-    <string name="provider_name">app.mvp.provider</string>
-    <string name="provider_path">Android/data/app.mvp/files/Pictures</string>
-    <string name="db_name">mvp</string>
+  <string name="app_name">Tapu Tapu</string>
+  <string name="nav_header_subtitle">support@theconstructionexchangehub.co.nz</string>
+  <string name="privacy_url">https://theconstructionexchangehub.co.nz/mvp/IW-122140-1-48-3_Privacy_Policy.docx</string>
+  <string name="portal_url">https://tvspt.com/</string>
+  <string name="api_url">https://tvspt.com/api/v1/</string>
+  <string name="provider_name">app.mvp.provider</string>
+  <string name="provider_path">Android/data/app.mvp/files/Pictures</string>
+  <string name="db_name">mvp</string>
 </resources>
