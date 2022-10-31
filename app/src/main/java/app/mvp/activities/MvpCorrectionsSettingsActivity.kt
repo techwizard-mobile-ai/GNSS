@@ -1,5 +1,6 @@
 package app.mvp.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
@@ -16,7 +17,7 @@ class MvpCorrectionsSettingsActivity : BaseActivity(), View.OnClickListener {
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_mvp_corrections_settings, contentFrameLayout)
     val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(0).isChecked = true
+    navigationView.menu.getItem(5).isChecked = true
     myHelper.setTag(tag)
     
     mvp_corrections_bluetooth_settings.setOnClickListener(this);
@@ -29,6 +30,8 @@ class MvpCorrectionsSettingsActivity : BaseActivity(), View.OnClickListener {
     when (view!!.id) {
       R.id.mvp_corrections_bluetooth_settings -> {
         myHelper.log("mvp_corrections_bluetooth_settings")
+        val intent = Intent(this, MvpBluetoothSettingsActivity::class.java)
+        startActivity(intent)
       }
       R.id.mvp_corrections_receiver_settings -> {
         myHelper.log("mvp_corrections_receiver_settings")
