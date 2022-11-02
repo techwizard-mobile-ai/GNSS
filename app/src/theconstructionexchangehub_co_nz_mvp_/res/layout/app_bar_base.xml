@@ -40,7 +40,18 @@
     android:layout_height="match_parent"
     android:layout_marginTop="?attr/actionBarSize"
     android:orientation="vertical">
-
+    <TextView
+      android:id="@+id/no_internet"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:layout_margin="@dimen/_5sdp"
+      android:drawablePadding="@dimen/_5sdp"
+      android:text="@string/no_internet_connection"
+      android:textColor="@color/red"
+      android:textSize="@dimen/_10sdp"
+      app:drawableLeftCompat="@drawable/wifi_off"
+      app:drawableTint="@color/red" />
     <LinearLayout
       android:id="@+id/base_machine_status_layout"
       android:layout_width="match_parent"

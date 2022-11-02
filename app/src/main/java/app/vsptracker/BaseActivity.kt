@@ -52,6 +52,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.app_bar_base.*
+import kotlinx.android.synthetic.main.app_bar_base.base_content_frame
+import kotlinx.android.synthetic.main.app_bar_base.base_daily_mode
+import kotlinx.android.synthetic.main.app_bar_base.base_machine_status
+import kotlinx.android.synthetic.main.app_bar_base.base_machine_status_icon
+import kotlinx.android.synthetic.main.app_bar_base.base_machine_status_layout
+import kotlinx.android.synthetic.main.app_bar_base.toolbar_title
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
@@ -400,6 +406,11 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
       menu.findItem(R.id.navb_delay).title = getString(R.string.start_waiting)
       menu.findItem(R.id.navb_delay).icon = ContextCompat.getDrawable(this, R.drawable.ic_stopped)
       menu.findItem(R.id.navb_map).isChecked = true
+    }
+    
+    when{
+      !myHelper.isOnline() && BuildConfig.APPLICATION_ID.equals("app.mvp") -> no_internet.visibility = View.VISIBLE
+      else -> no_internet.visibility = View.GONE
     }
     
   }

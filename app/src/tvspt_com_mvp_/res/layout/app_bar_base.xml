@@ -41,6 +41,19 @@
     android:layout_marginTop="?attr/actionBarSize"
     android:orientation="vertical">
 
+    <TextView
+      android:id="@+id/no_internet"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:layout_margin="@dimen/_5sdp"
+      android:drawablePadding="@dimen/_5sdp"
+      android:text="@string/no_internet_connection"
+      android:textColor="@color/red"
+      android:textSize="@dimen/_10sdp"
+      app:drawableLeftCompat="@drawable/wifi_off"
+      app:drawableTint="@color/red" />
+
     <LinearLayout
       android:id="@+id/base_machine_status_layout"
       android:layout_width="match_parent"
@@ -57,33 +70,37 @@
         <ImageView
           android:id="@+id/base_machine_status_icon"
           android:layout_width="@dimen/_20sdp"
-          android:layout_toLeftOf="@id/base_machine_status_text"
           android:layout_height="@dimen/_20sdp"
-          android:layout_gravity="center"
           android:layout_centerInParent="true"
-          android:layout_marginStart="@dimen/_30sdp" />
+          android:layout_gravity="center"
+          android:layout_marginStart="@dimen/_30sdp"
+          android:layout_toLeftOf="@id/base_machine_status_text" />
 
         <TextView
           android:id="@+id/base_machine_status_text"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_centerInParent="true"
+          android:layout_marginStart="@dimen/_5sdp"
+          android:layout_marginTop="@dimen/_5sdp"
+          android:layout_marginEnd="@dimen/_5sdp"
+          android:layout_marginBottom="@dimen/_5sdp"
           android:gravity="center_horizontal"
-          android:layout_margin="@dimen/_5sdp"
-          android:textSize="@dimen/_16sdp"
           android:text="@string/machine_is_stopped"
-          android:textColor="@color/red" />
+          android:textColor="@color/red"
+          android:textSize="@dimen/_16sdp" />
       </RelativeLayout>
 
       <TextView
         android:id="@+id/base_machine_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
         android:layout_margin="@dimen/_5sdp"
-        android:textSize="@dimen/_16sdp"
+        android:gravity="center_horizontal"
         android:text="@string/app_bar_base_base_machine_status_text"
-        android:textColor="@color/red" />
+        android:textColor="@color/red"
+        android:textSize="@dimen/_16sdp" />
+
     </LinearLayout>
 
     <TextView
@@ -109,11 +126,11 @@
     android:layout_alignParentBottom="true"
     android:layout_gravity="bottom"
     android:layout_marginStart="0dp"
+    android:background="@color/light_white"
     android:visibility="gone"
+    app:itemBackground="@color/light_white"
     app:itemIconTint="@drawable/bottom_navigation_selector"
     app:itemTextColor="@drawable/bottom_navigation_selector"
-    android:background="@color/light_white"
-    app:itemBackground="@color/light_white"
     app:labelVisibilityMode="auto"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintLeft_toLeftOf="parent"
