@@ -32,7 +32,6 @@
   <uses-feature android:name="android.hardware.camera.any" />
 
   <uses-permission android:name="android.permission.CAMERA" />
-
   <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
   <uses-permission
     android:name="android.permission.BLUETOOTH"
@@ -55,6 +54,13 @@
     android:screenOrientation="sensor"
     android:supportsRtl="true"
     android:theme="@style/AppTheme.NoActionBar">
+    <activity
+      android:name="app.mvp.activities.MvpOrgsCreateProjectActivity"
+      android:exported="false">
+      <meta-data
+        android:name="android.app.lib_name"
+        android:value="" />
+    </activity>
     <activity
       android:name="app.mvp.activities.MvpBluetoothSettingsActivity"
       android:exported="true">
