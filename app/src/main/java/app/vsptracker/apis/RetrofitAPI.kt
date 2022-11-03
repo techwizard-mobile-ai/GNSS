@@ -2,6 +2,7 @@ package app.vsptracker.apis
 
 import app.vsptracker.apis.login.LoginResponse
 import app.vsptracker.apis.mvporgsfiles.MvpOrgsFilesResponse
+import app.vsptracker.apis.mvporgsfiles.MvpOrgsProjectsResponse
 import app.vsptracker.apis.serverSync.ServerSyncDataAPI
 import app.vsptracker.apis.serverSync.ServerSyncResponse
 import app.vsptracker.apis.trip.MyData
@@ -43,6 +44,7 @@ interface RetrofitAPI {
     const val ORGS_SERVER_SYNC = "orgsserversync/store"
     const val ORGS_SERVER_SYNC_LIST = "orgsserversync/list"
     const val MVP_ORGS_FILES_LIST = "mvporgsprojects/show"
+    const val MVP_ORGS_PROJECTS_LIST = "mvporgsprojects/list"
   }
   
   
@@ -91,5 +93,11 @@ interface RetrofitAPI {
     @Query("isAdminLoggedIn") isAdminLoggedIn: Boolean = false,
     @Query("token") token: String?
   ): Call<MvpOrgsFilesResponse>
+  
+  @GET(MVP_ORGS_PROJECTS_LIST)
+  fun listMvpProjects(
+    @Query("org_id") id: Int?,
+    @Query("token") token: String?
+  ): Call<MvpOrgsProjectsResponse>
   
 }

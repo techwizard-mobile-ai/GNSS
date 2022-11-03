@@ -2,24 +2,36 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
-  android:layout_height="match_parent"
+  android:layout_height="wrap_content"
   android:orientation="vertical"
   android:paddingBottom="@dimen/_10sdp"
   tools:context="app.mvp.activities.MvpOrgsProjectsActivity">
 
   <TextView
-    android:layout_alignParentTop="true"
-    android:layout_centerHorizontal="true"
     android:id="@+id/mvp_orgs_projects_title"
     style="@style/activity_title"
+    android:layout_alignParentTop="true"
+    android:layout_centerHorizontal="true"
     android:text="@string/select_site" />
 
+  <ProgressBar
+    android:layout_gravity="center_horizontal"
+    android:id="@+id/mvp_orgs_projects_pb"
+    style="?android:attr/progressBarStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:indeterminate="true"
+    android:indeterminateTint="@color/colorPrimary"
+    android:indeterminateTintMode="src_atop"
+    android:visibility="gone" />
+
   <GridView
-    android:layout_above="@id/mvp_orgs_projects_bottom"
-    android:layout_below="@id/mvp_orgs_projects_title"
     android:id="@+id/mvp_orgs_projects_gridview"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_above="@id/mvp_orgs_projects_bottom"
+    android:layout_below="@id/mvp_orgs_projects_title"
     android:layout_margin="@dimen/_5sdp"
     android:columnWidth="@dimen/_120sdp"
     android:gravity="center"
@@ -33,22 +45,21 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
+    android:layout_centerHorizontal="true"
     android:layout_margin="@dimen/_5sdp"
-    android:layout_marginRight="@dimen/_10sdp"
     android:layout_marginStart="@dimen/_10sdp"
-    android:layout_centerHorizontal="true">
+    android:layout_marginRight="@dimen/_10sdp">
 
     <Button
       android:id="@+id/mvp_orgs_projects_create"
+      style="@style/back_button_single"
       android:layout_alignParentStart="true"
-      android:text="@string/create_new"
-      android:backgroundTint="@color/gray_dark"
-      style="@style/back_button_single" />
+      android:text="@string/create_new" />
 
     <Button
       android:id="@+id/mvp_orgs_projects_back"
-      android:layout_alignParentEnd="true"
-      style="@style/back_button_single" />
+      style="@style/back_button_single"
+      android:layout_alignParentEnd="true" />
   </RelativeLayout>
 
 </RelativeLayout>

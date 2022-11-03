@@ -61,6 +61,7 @@ import app.vsptracker.aws.Util
 import app.vsptracker.classes.*
 import app.vsptracker.others.MyEnum.Companion.MVP
 import app.vsptracker.others.MyEnum.Companion.VSPT
+import com.amazonaws.mobile.auth.core.internal.util.ThreadUtils.runOnUiThread
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility
 import com.bumptech.glide.Glide
@@ -72,6 +73,7 @@ import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.dialog_error.view.*
 import kotlinx.android.synthetic.main.dialog_permissions.view.*
 import okhttp3.*
+import okio.Buffer
 import org.json.JSONObject
 import retrofit2.Retrofit
 import java.io.File
@@ -84,6 +86,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.net.ssl.*
 import kotlin.math.roundToLong
+
 
 @SuppressLint("SimpleDateFormat")
 class MyHelper(var TAG: String, val context: Context) {
@@ -98,6 +101,25 @@ class MyHelper(var TAG: String, val context: Context) {
   // AWS Upload variables
   var util: Util = Util()
   var transferUtility: TransferUtility? = util.getTransferUtility(context)
+  
+  fun getOrgID () : Int {
+    return getLoginAPI().id
+  }
+  fun isDuplicateEntry (message : String): Boolean {
+    return message.contains("Duplicate entry")
+  }
+  
+  fun requestToString(request: Request): String? {
+    return try {
+      val copy = request.newBuilder().build()
+      val buffer = Buffer()
+      copy.body!!.writeTo(buffer)
+      buffer.readUtf8()
+    }
+    catch (e: IOException) {
+      "did not work"
+    }
+  }
   
   fun getOldMachineStatus() = sessionManager.getOldMachineStatus()
   fun setOldMachineStatus(myData: MyData) {
@@ -157,24 +179,23 @@ class MyHelper(var TAG: String, val context: Context) {
   
   fun awsFileDownload(currentOrgsMap: MyData?) {
     log("awsFileDownload:${currentOrgsMap?.aws_path}")
-    if (currentOrgsMap !== null)
-      if (!currentOrgsMap.aws_path.isNullOrEmpty() && currentOrgsMap.isDownloaded == 0) {
-        if (isOnline()) {
-          toast(context.getString(R.string.downloading_site_map))
-          log("startDownload:$currentOrgsMap")
-          val key = currentOrgsMap.aws_path
-          val file = File(getKMLFileName(currentOrgsMap.aws_path))
-          val context: Context = context.applicationContext
-          val intent = Intent(context, MyService::class.java)
-          intent.putExtra(MyService.INTENT_KEY_NAME, key)
-          intent.putExtra("currentOrgsMap", currentOrgsMap)
-          intent.putExtra(MyService.INTENT_TRANSFER_OPERATION, MyService.TRANSFER_OPERATION_DOWNLOAD)
-          intent.putExtra(MyService.INTENT_FILE, file)
-          context.startService(intent)
-        } else {
-          toast(context.getString(R.string.map_not_updated))
-        }
+    if (currentOrgsMap !== null) if (!currentOrgsMap.aws_path.isNullOrEmpty() && currentOrgsMap.isDownloaded == 0) {
+      if (isOnline()) {
+        toast(context.getString(R.string.downloading_site_map))
+        log("startDownload:$currentOrgsMap")
+        val key = currentOrgsMap.aws_path
+        val file = File(getKMLFileName(currentOrgsMap.aws_path))
+        val context: Context = context.applicationContext
+        val intent = Intent(context, MyService::class.java)
+        intent.putExtra(MyService.INTENT_KEY_NAME, key)
+        intent.putExtra("currentOrgsMap", currentOrgsMap)
+        intent.putExtra(MyService.INTENT_TRANSFER_OPERATION, MyService.TRANSFER_OPERATION_DOWNLOAD)
+        intent.putExtra(MyService.INTENT_FILE, file)
+        context.startService(intent)
+      } else {
+        toast(context.getString(R.string.map_not_updated))
       }
+    }
   }
   
   fun getFcmToken(): String = sessionManager.getFcmToken()
@@ -224,16 +245,9 @@ class MyHelper(var TAG: String, val context: Context) {
   fun refreshToken() {
     log("inside refreshToken")
     val client = skipSSLOkHttpClient().build()
-    val formBody = FormBody.Builder()
-      .add("email", getLoginAPI().email)
-      .add("password", getLoginAPI().pass)
-      .add("role", MyEnum.ROLE_OPERATOR)
-      .add("ttl", MyEnum.TTL)
-      .build()
-    val request = Request.Builder()
-      .url("${context.getString(R.string.api_url)}org/users/login1")
-      .post(formBody)
-      .build()
+    val formBody =
+      FormBody.Builder().add("email", getLoginAPI().email).add("password", getLoginAPI().pass).add("role", MyEnum.ROLE_OPERATOR).add("ttl", MyEnum.TTL).build()
+    val request = Request.Builder().url("${context.getString(R.string.api_url)}org/users/login1").post(formBody).build()
     
     client.newCall(request).enqueue(object : Callback {
       override fun onResponse(call: Call, response: Response) {
@@ -258,8 +272,7 @@ class MyHelper(var TAG: String, val context: Context) {
             log("app:$app")
             setLatestVSPTVersion(app)
             val appVersionCode = BuildConfig.VERSION_CODE
-            @Suppress("ConstantConditionIf")
-            if (app.version_code > appVersionCode && app.is_critical > 0) {
+            @Suppress("ConstantConditionIf") if (app.version_code > appVersionCode && app.is_critical > 0) {
               log("Update App")
               val appRater = AppRater()
               appRater.rateNow(context)
@@ -320,8 +333,7 @@ class MyHelper(var TAG: String, val context: Context) {
   fun getUserID() = getOperatorAPI().id
   fun getStringToGPSLocation(stringGPSLocation: String?): GPSLocation {
 //        log("getStringToGPSLocation:$stringGPSLocation")
-    return if (stringGPSLocation == null)
-      GPSLocation()
+    return if (stringGPSLocation == null) GPSLocation()
     else gson.fromJson(stringGPSLocation, GPSLocation::class.java)
     
     
@@ -363,8 +375,7 @@ class MyHelper(var TAG: String, val context: Context) {
     val width = context.resources.getDimensionPixelSize(R.dimen._120sdp)
     val height = context.resources.getDimensionPixelSize(R.dimen._120sdp)
     val layoutParams = FrameLayout.LayoutParams(width, height)
-    @Suppress("USELESS_CAST")
-    view.layoutParams = layoutParams as ViewGroup.LayoutParams?
+    @Suppress("USELESS_CAST") view.layoutParams = layoutParams as ViewGroup.LayoutParams?
   }
   
   fun getWorkMode(): String {
@@ -426,9 +437,7 @@ class MyHelper(var TAG: String, val context: Context) {
       val startTime = meter.dailyModeStartTime
       val totalTime = (currentTime - startTime) + meter.dailyModeTotalTime
       toast(
-        "Day Works Already Started." +
-                "\nStart Time: ${getTime(getMeter().dailyModeStartTime)}." +
-                "\nTotal Time: ${getMinutesFromMillisec(totalTime)}"
+        "Day Works Already Started." + "\nStart Time: ${getTime(getMeter().dailyModeStartTime)}." + "\nTotal Time: ${getMinutesFromMillisec(totalTime)}"
       )
     }
     
@@ -438,16 +447,15 @@ class MyHelper(var TAG: String, val context: Context) {
   fun isDailyModeStarted() = sessionManager.getMeter().isDailyModeStarted
   fun showStopMessage(startTime: Long) {
     toast(
-      "Please Stop Work First.\n" +
-              "Work Duration : ${getTotalTimeVSP(startTime)} (VSP Meter).\n" +
-              "Work Duration : ${getTotalTimeMinutes(startTime)} (Minutes)"
+      "Please Stop Work First.\n" + "Work Duration : ${getTotalTimeVSP(startTime)} (VSP Meter).\n" + "Work Duration : ${getTotalTimeMinutes(startTime)} (Minutes)"
     )
   }
   
   fun getFormattedTime(millis: Long): String {
     
     return String.format(
-      "%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
+      "%02d:%02d:%02d",
+      TimeUnit.MILLISECONDS.toHours(millis),
       TimeUnit.MILLISECONDS.toMinutes(millis) % TimeUnit.HOURS.toMinutes(1),
       TimeUnit.MILLISECONDS.toSeconds(millis) % TimeUnit.MINUTES.toSeconds(1)
     )
@@ -688,8 +696,7 @@ class MyHelper(var TAG: String, val context: Context) {
   
   @Suppress("DEPRECATION")
   private fun isNetworkAvailable(): Boolean? {
-    val connectivityManager =
-      context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val activeNetworkInfo = connectivityManager.activeNetworkInfo
     return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting
   }
@@ -704,31 +711,26 @@ class MyHelper(var TAG: String, val context: Context) {
   
   fun hideKeyboard(view: View) {
     view.requestFocus()
-    val inputManager =
-      context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    val inputManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     inputManager.hideSoftInputFromWindow(
-      view.windowToken,
-      InputMethodManager.HIDE_IMPLICIT_ONLY
+      view.windowToken, InputMethodManager.HIDE_IMPLICIT_ONLY
     )
   }
   
   fun showKeyboard(view: View) {
     view.requestFocus()
-    val imm =
-      context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    val imm = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
   }
   
   fun showProgressBar() {
-    if (progressBar!!.visibility == View.GONE && progressBar != null)
-      progressBar!!.visibility = View.VISIBLE
+    if (progressBar!!.visibility == View.GONE && progressBar != null) progressBar!!.visibility = View.VISIBLE
   }
   
   @Suppress("SENSELESS_COMPARISON")
   fun hideProgressBar() {
     try {
-      if (progressBar!!.visibility == View.VISIBLE)
-        progressBar!!.visibility = View.GONE
+      if (progressBar!!.visibility == View.VISIBLE) progressBar!!.visibility = View.GONE
     }
     catch (e: java.lang.Exception) {
       log("hideProgressBarExp:${e.message}")
@@ -743,6 +745,19 @@ class MyHelper(var TAG: String, val context: Context) {
 //            val v = toast.view.findViewById(android.R.id.message) as TextView
 //            v.gravity = Gravity.CENTER
       toast.show()
+    }
+    catch (e: Exception) {
+      log("toastException:${e.message}")
+    }
+    
+  }
+  
+  fun toastOnUi(message: String) {
+    try {
+      runOnUiThread(Runnable {
+        val toast = Toast.makeText(context, message, Toast.LENGTH_LONG)
+        toast.show()
+      })
     }
     catch (e: Exception) {
       log("toastException:${e.message}")
@@ -883,8 +898,7 @@ class MyHelper(var TAG: String, val context: Context) {
   }
   
   fun hideDialog() {
-    if (dialog!!.isShowing)
-      dialog!!.dismiss()
+    if (dialog!!.isShowing) dialog!!.dismiss()
   }
   
   @Suppress("DEPRECATION")
@@ -939,8 +953,7 @@ class MyHelper(var TAG: String, val context: Context) {
   
   fun getStringToAnswerData(answerData: String?): AnswerData {
 //        log("getStringToGPSLocation:$stringGPSLocation")
-    return if (answerData == null)
-      AnswerData()
+    return if (answerData == null) AnswerData()
     else gson.fromJson(answerData, AnswerData::class.java)
     
     
@@ -955,32 +968,22 @@ class MyHelper(var TAG: String, val context: Context) {
 //        log("imageLoadFromURL:$url")
     if (!url.isBlank()) {
       
-      Glide.with(myContext)
-        .load(url)
-        .listener(object : RequestListener<Drawable> {
-          override fun onLoadFailed(
-            e: GlideException?,
-            model: Any?,
-            target: com.bumptech.glide.request.target.Target<Drawable>?,
-            isFirstResource: Boolean
-          ): Boolean {
+      Glide.with(myContext).load(url).listener(object : RequestListener<Drawable> {
+        override fun onLoadFailed(
+          e: GlideException?, model: Any?, target: com.bumptech.glide.request.target.Target<Drawable>?, isFirstResource: Boolean
+        ): Boolean {
 //                                myHelper.hideDialog()
-            return false
-          }
-          
-          override fun onResourceReady(
-            resource: Drawable?,
-            model: Any?,
-            target: com.bumptech.glide.request.target.Target<Drawable>?,
-            dataSource: DataSource?,
-            isFirstResource: Boolean
-          ): Boolean {
+          return false
+        }
+        
+        override fun onResourceReady(
+          resource: Drawable?, model: Any?, target: com.bumptech.glide.request.target.Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean
+        ): Boolean {
 //                                myHelper.hideDialog()
-            return false
-          }
-          
-        })
-        .into(imageView)
+          return false
+        }
+        
+      }).into(imageView)
     } else {
 //                    myHelper.hideDialog()
       log("else$url")
@@ -1024,11 +1027,7 @@ class MyHelper(var TAG: String, val context: Context) {
    * of completed checkforms. No need to remove image on Long Clicked
    */
   fun addImageToPhotoLayout(
-    context: Context,
-    imageBitmap: Bitmap?,
-    imageURI: Uri?,
-    imagesList: ArrayList<Images>,
-    isCompletedCheckFormsDetails: Boolean = false
+    context: Context, imageBitmap: Bitmap?, imageURI: Uri?, imagesList: ArrayList<Images>, isCompletedCheckFormsDetails: Boolean = false
   ): LinearLayout? {
     val linearLayout = LinearLayout(context)
     val layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -1057,24 +1056,22 @@ class MyHelper(var TAG: String, val context: Context) {
     linearLayout.addView(imageView, 0)
     
     // If this method is used for Viewing images of Completed CheckForms then there is no need to Remove Image
-    if (!isCompletedCheckFormsDetails)
-      imageView.setOnLongClickListener {
-        
-        var position = -1
-        for (i in 0 until imagesList.size) {
-          if (imagesList[i].localImagePath.equals(imagePath.localImagePath, true)) {
-            position = i
-          }
-          
+    if (!isCompletedCheckFormsDetails) imageView.setOnLongClickListener {
+      
+      var position = -1
+      for (i in 0 until imagesList.size) {
+        if (imagesList[i].localImagePath.equals(imagePath.localImagePath, true)) {
+          position = i
         }
-        // Remove Image from Image List
-        if (position != -1)
-          imagesList.removeAt(position)
-        // Remove Image from Image Layout
-        linearLayout.removeView(imageView)
-        toast("Image removed.")
-        return@setOnLongClickListener true
+        
       }
+      // Remove Image from Image List
+      if (position != -1) imagesList.removeAt(position)
+      // Remove Image from Image Layout
+      linearLayout.removeView(imageView)
+      toast("Image removed.")
+      return@setOnLongClickListener true
+    }
     return linearLayout
   }
   
@@ -1108,8 +1105,7 @@ class MyHelper(var TAG: String, val context: Context) {
     }
     
     
-    val mBuilder = AlertDialog.Builder(context)
-      .setView(mDialogView)
+    val mBuilder = AlertDialog.Builder(context).setView(mDialogView)
     val mAlertDialog = mBuilder.show()
     mAlertDialog.setCancelable(true)
     
@@ -1122,6 +1118,29 @@ class MyHelper(var TAG: String, val context: Context) {
     mDialogView.error_ok.setOnClickListener {
       mAlertDialog.dismiss()
     }
+  }
+  
+  fun showErrorDialogOnUi(title: String, explanation: String = "") {
+    
+    runOnUiThread(Runnable {
+      val mDialogView = LayoutInflater.from(context).inflate(R.layout.dialog_error, null)
+      mDialogView.error_title.text = title
+      if (explanation.isNotBlank()) {
+        mDialogView.error_explanation.text = explanation
+        mDialogView.error_explanation.visibility = View.VISIBLE
+      }
+      val mBuilder = AlertDialog.Builder(context).setView(mDialogView)
+      val mAlertDialog = mBuilder.show()
+      mAlertDialog.setCancelable(true)
+      val window = mAlertDialog.window
+      val wlp = window!!.attributes
+      wlp.gravity = Gravity.CENTER
+      window.attributes = wlp
+      mDialogView.error_ok.setOnClickListener {
+        mAlertDialog.dismiss()
+      }
+    })
+    
   }
   
   /**
@@ -1140,8 +1159,7 @@ class MyHelper(var TAG: String, val context: Context) {
       mDialogView.permissions_no.visibility = View.VISIBLE
       
       
-      val mBuilder = AlertDialog.Builder(context)
-        .setView(mDialogView)
+      val mBuilder = AlertDialog.Builder(context).setView(mDialogView)
       val mAlertDialog = mBuilder.show()
       mAlertDialog.setCancelable(true)
       
@@ -1177,58 +1195,44 @@ class MyHelper(var TAG: String, val context: Context) {
     
     // request GPS Permission
     if (ContextCompat.checkSelfPermission(
-        (context as Activity),
-        Manifest.permission.ACCESS_FINE_LOCATION
-      )
-      != PackageManager.PERMISSION_GRANTED
+        (context as Activity), Manifest.permission.ACCESS_FINE_LOCATION
+      ) != PackageManager.PERMISSION_GRANTED
     ) {
       log("Permission is not granted")
       if (ActivityCompat.shouldShowRequestPermissionRationale(
-          (context as Activity),
-          Manifest.permission.ACCESS_FINE_LOCATION
+          (context as Activity), Manifest.permission.ACCESS_FINE_LOCATION
         )
       ) {
         ActivityCompat.requestPermissions(
-          (context as Activity),
-          arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-          MyEnum.REQUEST_ACCESS_FINE_LOCATION
+          (context as Activity), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), MyEnum.REQUEST_ACCESS_FINE_LOCATION
         )
         
       } else {
         // No explanation needed, we can request the permission.
         ActivityCompat.requestPermissions(
-          (context as Activity),
-          arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-          MyEnum.REQUEST_ACCESS_FINE_LOCATION
+          (context as Activity), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), MyEnum.REQUEST_ACCESS_FINE_LOCATION
         )
       }
     }
     
     // request Storage Permission
     if (ContextCompat.checkSelfPermission(
-        (context as Activity),
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
-      )
-      != PackageManager.PERMISSION_GRANTED
+        (context as Activity), Manifest.permission.WRITE_EXTERNAL_STORAGE
+      ) != PackageManager.PERMISSION_GRANTED
     ) {
       log("Permission is not granted")
       if (ActivityCompat.shouldShowRequestPermissionRationale(
-          (context as Activity),
-          Manifest.permission.WRITE_EXTERNAL_STORAGE
+          (context as Activity), Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
       ) {
         ActivityCompat.requestPermissions(
-          (context as Activity),
-          arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-          MyEnum.REQUEST_WRITE_EXTERNAL_STORAGE
+          (context as Activity), arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), MyEnum.REQUEST_WRITE_EXTERNAL_STORAGE
         )
         
       } else {
         // No explanation needed, we can request the permission.
         ActivityCompat.requestPermissions(
-          (context as Activity),
-          arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-          MyEnum.REQUEST_WRITE_EXTERNAL_STORAGE
+          (context as Activity), arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), MyEnum.REQUEST_WRITE_EXTERNAL_STORAGE
         )
       }
     }
@@ -1245,8 +1249,7 @@ class MyHelper(var TAG: String, val context: Context) {
     mDialogView.permissions_title.text = title
     mDialogView.permissions_sub_title.text = sub_title
     
-    val mBuilder = AlertDialog.Builder(context)
-      .setView(mDialogView)
+    val mBuilder = AlertDialog.Builder(context).setView(mDialogView)
     val mAlertDialog = mBuilder.show()
     mAlertDialog.setCancelable(false)
     
@@ -1259,8 +1262,7 @@ class MyHelper(var TAG: String, val context: Context) {
     mDialogView.permissions_yes.setOnClickListener {
       mAlertDialog.dismiss()
       val intent = Intent(
-        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-        Uri.fromParts("package", context.packageName, null)
+        Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", context.packageName, null)
       )
       intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
       context.startActivity(intent)
@@ -1329,9 +1331,7 @@ class MyHelper(var TAG: String, val context: Context) {
    * Check if CheckForm is Due after days passed.
    */
   fun isDueCheckFormAfterDaysPassed(
-    adminCheckForm: MyData,
-    adminCheckFormsCompleted: MyData?,
-    firstMachineHours: MyData
+    adminCheckForm: MyData, adminCheckFormsCompleted: MyData?, firstMachineHours: MyData
   ): Boolean {
     var isDueCheckFormAfterDaysPassed = false
     var lastDaysReading: Double = 0.0
@@ -1446,11 +1446,7 @@ class MyHelper(var TAG: String, val context: Context) {
   fun skipSSLOkHttpClient(): OkHttpClient.Builder {
     val okHttpClient = OkHttpClient.Builder()
     
-    okHttpClient
-      .connectTimeout(3, TimeUnit.MINUTES)
-      .readTimeout(3, TimeUnit.MINUTES)
-      .writeTimeout(3, TimeUnit.MINUTES)
-      .retryOnConnectionFailure(false)
+    okHttpClient.connectTimeout(3, TimeUnit.MINUTES).readTimeout(3, TimeUnit.MINUTES).writeTimeout(3, TimeUnit.MINUTES).retryOnConnectionFailure(false)
       .addNetworkInterceptor(object : Interceptor {
         @Throws(IOException::class)
         override fun intercept(chain: Interceptor.Chain): Response {
@@ -1608,14 +1604,7 @@ class MyHelper(var TAG: String, val context: Context) {
    * This method will be used to set GPS data to view being used in MVP activities.
    */
   fun setGPSLayout(
-    location: Location,
-    acc: TextView,
-    lat: TextView,
-    long: TextView,
-    alt: TextView,
-    speed: TextView,
-    bearing: TextView,
-    time: TextView
+    location: Location, acc: TextView, lat: TextView, long: TextView, alt: TextView, speed: TextView, bearing: TextView, time: TextView
   ) {
     acc.text = "Accuracy: ${location.accuracy}"
     when {

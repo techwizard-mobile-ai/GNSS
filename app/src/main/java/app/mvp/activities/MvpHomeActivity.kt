@@ -43,9 +43,14 @@ class MvpHomeActivity : BaseActivity(), View.OnClickListener {
   override fun onClick(view: View?) {
     when (view!!.id) {
       R.id.mvp_main_taputapu -> {
-        val intent = Intent(this, MvpOrgsProjectsActivity::class.java)
-        intent.putExtra("myData", MyData())
-        startActivity(intent)
+        when {
+          !myHelper.isOnline() -> myHelper.showErrorDialog(getString(R.string.no_internet_connection), getString(R.string.no_internet_explanation))
+          else -> {
+            val intent = Intent(this, MvpOrgsProjectsActivity::class.java)
+            intent.putExtra("myData", MyData())
+            startActivity(intent)
+          }
+        }
       }
       R.id.mvp_main_portal -> {
         val url = getString(R.string.portal_url)
