@@ -17,7 +17,6 @@ import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_mvp_orgs_folders.*
 import kotlinx.android.synthetic.main.app_bar_base.*
-import java.util.ArrayList
 
 class MvpOrgsFoldersActivity : BaseActivity(), View.OnClickListener {
   
@@ -41,7 +40,7 @@ class MvpOrgsFoldersActivity : BaseActivity(), View.OnClickListener {
       myData = bundle.getSerializable("myData") as MyData
       myHelper.log("myData:$myData")
       getOrgsFiles(myData.mvp_orgs_project_id)
-      toolbar_title.text = myData.name
+      toolbar_title.text = myData.mvp_orgs_project_name
     }
     
     gv = findViewById<GridView>(R.id.mvp_orgs_files_gridview)
@@ -75,6 +74,13 @@ class MvpOrgsFoldersActivity : BaseActivity(), View.OnClickListener {
   override fun onResume() {
     super.onResume()
     base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
+    when {
+      myHelper.isOnline() -> {
+        mvp_orgs_folders_create.setBackgroundColor(resources.getColor(R.color.colorPrimary)); }
+      else -> {
+        mvp_orgs_folders_create.setBackgroundColor(resources.getColor(R.color.gray_dark));
+      }
+    }
   }
   
   
@@ -84,9 +90,16 @@ class MvpOrgsFoldersActivity : BaseActivity(), View.OnClickListener {
         finish()
       }
       R.id.mvp_orgs_folders_create -> {
-        val intent = Intent(this, MvpOrgsCreateFolderActivity::class.java)
-        intent.putExtra("myData", myData)
-        startActivity(intent)
+        when {
+          myHelper.isOnline() -> {
+            val intent = Intent(this, MvpOrgsCreateFolderActivity::class.java)
+            intent.putExtra("myData", myData)
+            startActivity(intent)
+          }
+          else -> {
+            myHelper.showErrorDialog(resources.getString(R.string.no_internet_connection), "Please connect to Internet to create new task.")
+          }
+        }
       }
     }
   }
@@ -94,9 +107,11 @@ class MvpOrgsFoldersActivity : BaseActivity(), View.OnClickListener {
   
   internal fun getOrgsFiles(mvpOrgsProjectId: Int) {
     myHelper.showProgressBar()
+    val prefix = "taputapu/${myHelper.getCurrentYear()}/${myHelper.getCurrentMonth()}/${myHelper.getCurrentDay()}/"
+    myHelper.log("prefix:$prefix")
     val call = this.retrofitAPI.getMvpOrgsFiles(
       mvpOrgsProjectId,
-      "",
+      prefix,
       myHelper.getLoginAPI().role,
       false,
       myHelper.getLoginAPI().auth_token,
@@ -110,15 +125,13 @@ class MvpOrgsFoldersActivity : BaseActivity(), View.OnClickListener {
         try {
           val responseBody = response.body()
           if (responseBody!!.success) {
-//                        myHelper.log("responseBodyTapu: $responseBody")
+//            myHelper.log("responseBodyTapu: $responseBody")
             responseBody.separateFolders?.forEach {
               val material = Material()
               material.id = it.id!!
               material.number = it.fileFolder?.name!!.dropLast(1)
-              myHelper.log("material: $material")
               mvpOrgsFolders.add(material)
             }
-            myHelper.log("mvpOrgsFolders: $mvpOrgsFolders")
             val adapter = CustomGridLMachine(this@MvpOrgsFoldersActivity, mvpOrgsFolders)
             gv.adapter = adapter
             
