@@ -102,10 +102,35 @@ class MyHelper(var TAG: String, val context: Context) {
   var util: Util = Util()
   var transferUtility: TransferUtility? = util.getTransferUtility(context)
   
-  fun getOrgID () : Int {
+  fun getCurrentDay(): Int {
+    val calendar = Calendar.getInstance()
+    return calendar[Calendar.DAY_OF_MONTH]
+  }
+  
+  fun getCurrentMonth(): Int {
+    val calendar = Calendar.getInstance()
+    return calendar[Calendar.MONTH]
+  }
+  
+  fun getCurrentYear(): Int {
+    val calendar = Calendar.getInstance()
+    return calendar[Calendar.YEAR]
+  }
+  
+  fun getValidFileName (relative_path : String) :String {
+    val nonAlphaNum = "[^a-zA-Z0-9.]".toRegex()
+    return relative_path.replace(nonAlphaNum, "_")
+  }
+  
+  fun arrayToString(selectedFiles: ArrayList<MyData>): String {
+    return gson.toJson(selectedFiles)
+  }
+  
+  fun getOrgID(): Int {
     return getLoginAPI().id
   }
-  fun isDuplicateEntry (message : String): Boolean {
+  
+  fun isDuplicateEntry(message: String): Boolean {
     return message.contains("Duplicate entry")
   }
   
