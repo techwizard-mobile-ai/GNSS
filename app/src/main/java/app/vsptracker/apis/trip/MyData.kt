@@ -8,6 +8,42 @@ import java.io.Serializable
 
 class MyData : Serializable {
   
+  @SerializedName("size")
+  @Expose
+  var size: Int = 0
+  
+  @SerializedName("security_level")
+  @Expose
+  var security_level: Int = 0
+  
+  @SerializedName("file_level")
+  @Expose
+  var file_level: Int = 0
+  
+  @SerializedName("upload_status")
+  @Expose
+  var upload_status: Int = 0
+  
+  @SerializedName("file_description")
+  @Expose
+  var file_description: String = ""
+  
+  @SerializedName("file_details")
+  @Expose
+  var file_details: String = ""
+  
+  @SerializedName("relative_path")
+  @Expose
+  var relative_path: String = ""
+  
+  @SerializedName("processing_status")
+  @Expose
+  var processing_status: Int = 0
+  
+  @SerializedName("admin_file_type_id")
+  @Expose
+  var admin_file_type_id: Int = 0
+  
   var isDownloaded: Int = 0
   
   @SerializedName("updated_at")
@@ -24,7 +60,7 @@ class MyData : Serializable {
   
   @SerializedName("org_id")
   @Expose
-  var orgId: Int = 0
+  var org_id: Int = 0
   
   @SerializedName("site_id")
   @Expose
@@ -282,9 +318,20 @@ class MyData : Serializable {
   var mvp_orgs_folder_id: Int = 0
   var mvp_orgs_project_name: String = ""
   var mvp_orgs_folder_name: String = ""
-  
   override fun toString(): String {
-    return "MyData(timer_interval=$timer_interval,id=$id, orgId=$orgId, operatorId=$operatorId, mvp_orgs_project_id='$mvp_orgs_project_id', mvp_orgs_folder_id='$mvp_orgs_folder_id')"
+    return "MyData(" +
+            "size=$size, " +
+            "security_level=$security_level, " +
+            "file_level=$file_level, " +
+            "upload_status=$upload_status, " +
+            "file_description='$file_description', " +
+            "file_details='$file_details', " +
+            "relative_path='$relative_path', " +
+            "mvp_orgs_project_id=$mvp_orgs_project_id, " +
+            "mvp_orgs_folder_id=$mvp_orgs_folder_id, " +
+            "mvp_orgs_project_name='$mvp_orgs_project_name', " +
+            "mvp_orgs_folder_name='$mvp_orgs_folder_name'" +
+            ")"
   }
   
   

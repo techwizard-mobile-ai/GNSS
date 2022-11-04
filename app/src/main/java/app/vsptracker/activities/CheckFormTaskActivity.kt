@@ -87,7 +87,7 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
   private fun initCheckFormCompleted() {
     checkFormCompleted = MyData()
     
-    checkFormCompleted.orgId = myHelper.getLoginAPI().org_id
+    checkFormCompleted.org_id = myHelper.getLoginAPI().org_id
     checkFormCompleted.siteId = myHelper.getMachineSettings().siteId
     checkFormCompleted.operatorId = myHelper.getOperatorAPI().id
     checkFormCompleted.machineTypeId = myHelper.getMachineTypeID()

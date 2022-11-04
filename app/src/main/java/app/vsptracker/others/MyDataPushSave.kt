@@ -231,7 +231,7 @@ class MyDataPushSave(private val context: Context) {
     
     myData.siteId = myHelper.getMachineSettings().siteId
     myData.machineId = myHelper.getMachineID()
-    myData.orgId = myHelper.getLoginAPI().org_id
+    myData.org_id = myHelper.getLoginAPI().org_id
     myData.operatorId = myHelper.getOperatorAPI().id
     myData.machineTypeId = myHelper.getMachineTypeID()
     myData.machineId = myHelper.getMachineID()
@@ -256,7 +256,7 @@ class MyDataPushSave(private val context: Context) {
   fun insertOperatorHour(gpsLocation: GPSLocation) {
     val operatorAPI = myHelper.getOperatorAPI()
     operatorAPI.unloadingGPSLocation = gpsLocation
-    operatorAPI.orgId = myHelper.getLoginAPI().org_id
+    operatorAPI.org_id = myHelper.getLoginAPI().org_id
     operatorAPI.siteId = myHelper.getMachineSettings().siteId
     operatorAPI.operatorId = operatorAPI.id
     when {
@@ -305,7 +305,7 @@ class MyDataPushSave(private val context: Context) {
     // and there is call to updateMachineStops
     myData.time = currentTime.toString()
     
-    myData.orgId = myHelper.getLoginAPI().org_id
+    myData.org_id = myHelper.getLoginAPI().org_id
     myData.siteId = myHelper.getMachineSettings().siteId
     myData.operatorId = myHelper.getOperatorAPI().id
     myData.machineTypeId = myHelper.getMachineTypeID()
@@ -671,7 +671,7 @@ class MyDataPushSave(private val context: Context) {
       myData.startTime = meter.machineStartTime
       myData.loadingGPSLocation = meter.hourStartGPSLocation
       operatorAPI.unloadingGPSLocation = gpsLocation
-      operatorAPI.orgId = myHelper.getLoginAPI().org_id
+      operatorAPI.org_id = myHelper.getLoginAPI().org_id
       operatorAPI.siteId = myHelper.getMachineSettings().siteId
       operatorAPI.operatorId = operatorAPI.id
       when {

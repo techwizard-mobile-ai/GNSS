@@ -96,7 +96,8 @@ interface RetrofitAPI {
   
   @GET(MVP_ORGS_PROJECTS_LIST)
   fun listMvpProjects(
-    @Query("org_id") id: Int?,
+    @Query("org_id") org_id: Int?,
+    @Query("showInactive") showInactive: Int?,
     @Query("token") token: String?
   ): Call<MvpOrgsProjectsResponse>
   

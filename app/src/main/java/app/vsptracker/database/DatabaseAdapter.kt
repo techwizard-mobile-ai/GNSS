@@ -652,7 +652,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     
     for (datum in data) {
       cv.put(COL_ID, datum.id)
-      cv.put(COL_ORG_ID, datum.orgId)
+      cv.put(COL_ORG_ID, datum.org_id)
       cv.put(COL_NAME, datum.name)
       cv.put(COL_DETAILS, datum.details)
       cv.put(COL_STATUS, datum.status)
@@ -701,7 +701,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     
     for (datum in data) {
       cv.put(COL_ID, datum.id)
-      cv.put(COL_ORG_ID, datum.orgId)
+      cv.put(COL_ORG_ID, datum.org_id)
       cv.put(COL_SITE_ID, datum.siteId)
       cv.put(COL_AWS_PATH, datum.aws_path)
       cv.put(COL_STATUS, datum.status)
@@ -726,7 +726,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     
     for (datum in data) {
       cv.put(COL_ID, datum.id)
-      cv.put(COL_ORG_ID, datum.orgId)
+      cv.put(COL_ORG_ID, datum.org_id)
       cv.put(COL_SITE_ID, datum.siteId)
       cv.put(COL_OPERATOR_ID, datum.operatorId)
       cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
@@ -778,7 +778,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     val cv = ContentValues()
     val tableName = TABLE_ADMIN_CHECKFORMS_COMPLETED
     
-    cv.put(COL_ORG_ID, datum.orgId)
+    cv.put(COL_ORG_ID, datum.org_id)
     cv.put(COL_SITE_ID, datum.siteId)
     cv.put(COL_OPERATOR_ID, datum.operatorId)
     cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
@@ -810,7 +810,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     val tableName = TABLE_ADMIN_CHECKFORMS_COMPLETED
     
     for (datum in data) {
-      cv.put(COL_ORG_ID, datum.orgId)
+      cv.put(COL_ORG_ID, datum.org_id)
       cv.put(COL_SITE_ID, datum.siteId)
       cv.put(COL_OPERATOR_ID, datum.operatorId)
       cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
@@ -842,7 +842,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     
     for (datum in data) {
       cv.put(COL_ID, datum.id)
-      cv.put(COL_ORG_ID, datum.orgId)
+      cv.put(COL_ORG_ID, datum.org_id)
       cv.put(COL_SITE_ID, datum.siteId)
       cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
       cv.put(COL_MACHINE_ID, datum.machineId)
@@ -883,7 +883,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     
     for (datum in data) {
       cv.put(COL_ID, datum.id)
-      cv.put(COL_ORG_ID, datum.orgId)
+      cv.put(COL_ORG_ID, datum.org_id)
       cv.put(COL_ADMIN_QUESTIONS_TYPES_ID, datum.admin_questions_types_id)
       cv.put(COL_IMAGES_LIMIT, datum.images_limit)
       cv.put(COL_IMAGES_QUALITY, datum.images_quality)
@@ -922,7 +922,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     
     val db = this.writableDatabase
     val cv = ContentValues()
-    cv.put(COL_ORG_ID, myData.orgId)
+    cv.put(COL_ORG_ID, myData.org_id)
     cv.put(COL_SITE_ID, myData.siteId)
     cv.put(COL_OPERATOR_ID, myData.operatorId)
     cv.put(COL_START_TIME, myData.startTime)
@@ -972,7 +972,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
 //        datum.time = time.toString()
 //        datum.date = myHelper.getDate(time.toString())
     
-    cv.put(COL_ORG_ID, datum.orgId)
+    cv.put(COL_ORG_ID, datum.org_id)
     cv.put(COL_SITE_ID, datum.siteId)
     cv.put(COL_MACHINE_TYPE_ID, datum.machineTypeId)
     cv.put(COL_MACHINE_ID, datum.machineId)
@@ -1234,7 +1234,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     
     val db = this.writableDatabase
     val cv = ContentValues()
-    cv.put(COL_ORG_ID, myData.orgId)
+    cv.put(COL_ORG_ID, myData.org_id)
     cv.put(COL_SITE_ID, myData.siteId)
     cv.put(COL_MACHINE_TYPE_ID, myData.machineTypeId)
     cv.put(COL_MACHINE_ID, myData.machineId)
@@ -1277,7 +1277,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     
     val db = this.writableDatabase
     val cv = ContentValues()
-    cv.put(COL_ORG_ID, myData.orgId)
+    cv.put(COL_ORG_ID, myData.org_id)
     cv.put(COL_SITE_ID, myData.siteId)
     cv.put(COL_TRIP_TYPE, myData.tripType)
     cv.put(COL_TRIP0_ID, myData.trip0ID)
@@ -1439,7 +1439,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     
     val db = this.writableDatabase
     val cv = ContentValues()
-    cv.put(COL_ORG_ID, myData.orgId)
+    cv.put(COL_ORG_ID, myData.org_id)
     cv.put(COL_SITE_ID, myData.siteId)
     cv.put(COL_MACHINE_ID, myData.machineId)
     cv.put(COL_LOAD_TYPE_ID, myData.loadTypeId)
@@ -1483,7 +1483,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
       
       datum = MyData()
       datum.id = result.getInt(result.getColumnIndex(COL_ID))
-      datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+      datum.org_id = result.getInt(result.getColumnIndex(COL_ORG_ID))
       datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
       datum.aws_path = result.getString(result.getColumnIndex(COL_AWS_PATH))
       datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
@@ -1509,7 +1509,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
       do {
         val datum = MyData()
         datum.id = result.getInt(result.getColumnIndex(COL_ID))
-        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.org_id = result.getInt(result.getColumnIndex(COL_ORG_ID))
         datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
         datum.aws_path = result.getString(result.getColumnIndex(COL_AWS_PATH))
         datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
@@ -1537,7 +1537,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     if (result.moveToFirst()) {
       datum = MyData()
       datum.id = result.getInt(result.getColumnIndex(COL_ID))
-      datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+      datum.org_id = result.getInt(result.getColumnIndex(COL_ORG_ID))
       datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
       datum.aws_path = result.getString(result.getColumnIndex(COL_AWS_PATH))
       datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
@@ -1563,7 +1563,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
       do {
         val datum = MyData()
         datum.id = result.getInt(result.getColumnIndex(COL_ID))
-        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.org_id = result.getInt(result.getColumnIndex(COL_ORG_ID))
         datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
         datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
         datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
@@ -1769,7 +1769,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     if (result.moveToFirst()) {
       datum = MyData()
       datum.id = result.getInt(result.getColumnIndex(COL_ID))
-      datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+      datum.org_id = result.getInt(result.getColumnIndex(COL_ORG_ID))
       datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
       datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
       datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
@@ -1823,7 +1823,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
       do {
         val datum = MyData()
         datum.id = result.getInt(result.getColumnIndex(COL_ID))
-        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.org_id = result.getInt(result.getColumnIndex(COL_ORG_ID))
         datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
         datum.operatorId = result.getInt(result.getColumnIndex(COL_OPERATOR_ID))
         datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
@@ -1880,7 +1880,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     val datum = MyData()
     if (result.moveToFirst()) {
       datum.id = result.getInt(result.getColumnIndex(COL_ID))
-      datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+      datum.org_id = result.getInt(result.getColumnIndex(COL_ORG_ID))
       datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
       datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
       datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
@@ -1909,7 +1909,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
       do {
         val datum = MyData()
         datum.id = result.getInt(result.getColumnIndex(COL_ID))
-        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.org_id = result.getInt(result.getColumnIndex(COL_ORG_ID))
         datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
         datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
         datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
@@ -1962,7 +1962,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     val datum = MyData()
     if (result.moveToFirst()) {
       datum.id = result.getInt(result.getColumnIndex(COL_ID))
-      datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+      datum.org_id = result.getInt(result.getColumnIndex(COL_ORG_ID))
       datum.admin_questions_types_id = result.getInt(result.getColumnIndex(COL_ADMIN_QUESTIONS_TYPES_ID))
       datum.images_limit = result.getInt(result.getColumnIndex(COL_IMAGES_LIMIT))
       datum.images_quality = result.getInt(result.getColumnIndex(COL_IMAGES_QUALITY))
@@ -1999,7 +1999,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
       do {
         val datum = MyData()
         datum.id = result.getInt(result.getColumnIndex(COL_ID))
-        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.org_id = result.getInt(result.getColumnIndex(COL_ORG_ID))
         datum.admin_questions_types_id = result.getInt(result.getColumnIndex(COL_ADMIN_QUESTIONS_TYPES_ID))
         datum.images_limit = result.getInt(result.getColumnIndex(COL_IMAGES_LIMIT))
         datum.images_quality = result.getInt(result.getColumnIndex(COL_IMAGES_QUALITY))
@@ -2048,7 +2048,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
       do {
         val datum = MyData()
         datum.id = result.getInt(result.getColumnIndex(COL_ID))
-        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.org_id = result.getInt(result.getColumnIndex(COL_ORG_ID))
         datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
         datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
         datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
@@ -2147,7 +2147,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     if (result.moveToFirst()) {
       
       datum.id = result.getInt(result.getColumnIndex(COL_ID))
-      datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+      datum.org_id = result.getInt(result.getColumnIndex(COL_ORG_ID))
       datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
       
       datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
@@ -2207,7 +2207,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
       do {
         val datum = MyData()
         datum.id = result.getInt(result.getColumnIndex(COL_ID))
-        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.org_id = result.getInt(result.getColumnIndex(COL_ORG_ID))
         datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
         
         datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
@@ -3016,7 +3016,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
       do {
         val datum = MyData()
         datum.id = result.getInt(result.getColumnIndex(COL_ID))
-        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.org_id = result.getInt(result.getColumnIndex(COL_ORG_ID))
         datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
         datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
         datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
@@ -3075,7 +3075,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
       do {
         val datum = MyData()
         datum.id = result.getInt(result.getColumnIndex(COL_ID))
-        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.org_id = result.getInt(result.getColumnIndex(COL_ORG_ID))
         datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
         datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
         datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
@@ -3130,7 +3130,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     val datum = MyData()
     if (result.moveToFirst()) {
       
-      datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+      datum.org_id = result.getInt(result.getColumnIndex(COL_ORG_ID))
       datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
       datum.recordID = result.getLong(result.getColumnIndex(COL_ID))
       datum.tripType = result.getInt(result.getColumnIndex(COL_TRIP_TYPE))
@@ -3189,7 +3189,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
       do {
         val datum = MyData()
         datum.id = result.getInt(result.getColumnIndex(COL_ID))
-        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.org_id = result.getInt(result.getColumnIndex(COL_ORG_ID))
         datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
         datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
         datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
@@ -3245,7 +3245,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
       do {
         val datum = MyData()
         datum.id = result.getInt(result.getColumnIndex(COL_ID))
-        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.org_id = result.getInt(result.getColumnIndex(COL_ORG_ID))
         datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
         datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
         datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
@@ -3322,7 +3322,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
       do {
         val datum = MyData()
         datum.id = result.getInt(result.getColumnIndex(COL_ID))
-        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.org_id = result.getInt(result.getColumnIndex(COL_ORG_ID))
         datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
         datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
         datum.machineId = result.getInt(result.getColumnIndex(COL_MACHINE_ID))
@@ -3390,7 +3390,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     
     if (result.moveToFirst()) {
 //            do {
-      datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+      datum.org_id = result.getInt(result.getColumnIndex(COL_ORG_ID))
       datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
       datum.recordID = result.getLong(result.getColumnIndex(COL_ID))
       datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))
@@ -3440,7 +3440,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
       do {
         val datum = MyData()
         datum.id = result.getInt(result.getColumnIndex(COL_ID))
-        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.org_id = result.getInt(result.getColumnIndex(COL_ORG_ID))
         datum.siteId = result.getInt(result.getColumnIndex(COL_SITE_ID))
         datum.recordID = result.getLong(result.getColumnIndex(COL_ID))
         datum.machineTypeId = result.getInt(result.getColumnIndex(COL_MACHINE_TYPE_ID))

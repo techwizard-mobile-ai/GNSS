@@ -124,7 +124,7 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
                 val myData = MyData()
                 myData.siteId = myHelper.getMachineSettings().siteId
                 myData.machineId = myHelper.getMachineID()
-                myData.orgId = myHelper.getLoginAPI().org_id
+                myData.org_id = myHelper.getLoginAPI().org_id
                 myData.operatorId = myHelper.getOperatorAPI().id
                 myData.machineId = myHelper.getMachineID()
                 val currentTime = System.currentTimeMillis()

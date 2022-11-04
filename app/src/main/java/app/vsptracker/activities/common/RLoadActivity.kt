@@ -92,7 +92,7 @@ class RLoadActivity : BaseActivity(), View.OnClickListener {
       R.id.trload_load -> {
         
         myData.loadingGPSLocation = gpsLocation
-        myData.orgId = myHelper.getLoginAPI().org_id
+        myData.org_id = myHelper.getLoginAPI().org_id
         myData.siteId = myHelper.getMachineSettings().siteId
         myData.operatorId = myHelper.getOperatorAPI().id
         myData.machineTypeId = myHelper.getMachineTypeID()

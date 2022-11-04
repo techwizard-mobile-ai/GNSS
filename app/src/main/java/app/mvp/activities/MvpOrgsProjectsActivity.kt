@@ -62,8 +62,8 @@ class MvpOrgsProjectsActivity : BaseActivity(), View.OnClickListener {
   override fun onResume() {
     super.onResume()
     base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
-    when (myHelper.isOnline()) {
-      true -> {
+    when {
+      myHelper.isOnline() -> {
         mvp_orgs_projects_create.setBackgroundColor(resources.getColor(R.color.colorPrimary)); }
       else -> {
         mvp_orgs_projects_create.setBackgroundColor(resources.getColor(R.color.gray_dark));
@@ -75,15 +75,15 @@ class MvpOrgsProjectsActivity : BaseActivity(), View.OnClickListener {
   override fun onClick(view: View?) {
     when (view!!.id) {
       R.id.mvp_orgs_projects_create -> {
-        when (myHelper.isOnline()) {
-          true -> {
+        when {
+          myHelper.isOnline() -> {
             myHelper.log("create project")
             val intent = Intent(this, MvpOrgsCreateProjectActivity::class.java)
             intent.putExtra("myData", myData)
             startActivity(intent)
           }
           else -> {
-            myHelper.showErrorDialog("No Internet connection", "Please connect to Internet to create new site.")
+            myHelper.showErrorDialog(resources.getString(R.string.no_internet_connection), "Please connect to Internet to create new site.")
           }
         }
       }
@@ -97,6 +97,7 @@ class MvpOrgsProjectsActivity : BaseActivity(), View.OnClickListener {
     myHelper.showProgressBar()
     val call = this.retrofitAPI.listMvpProjects(
       myHelper.getOrgID(),
+      0,
       myHelper.getLoginAPI().auth_token,
     )
     call.enqueue(object : retrofit2.Callback<MvpOrgsProjectsResponse> {
@@ -108,15 +109,15 @@ class MvpOrgsProjectsActivity : BaseActivity(), View.OnClickListener {
         try {
           val responseBody = response.body()
           if (responseBody!!.success) {
-            myHelper.log("responseBodyTapu: $responseBody")
+//            myHelper.log("responseBodyTapu: $responseBody")
             responseBody.data?.forEach {
               val material = Material()
               material.id = it.id!!
               material.number = it.name.toString()
-              myHelper.log("material: $material")
+//              myHelper.log("material: $material")
               mvpOrgsProjects.add(material)
             }
-            myHelper.log("mvpOrgsProjects: $mvpOrgsProjects")
+//            myHelper.log("mvpOrgsProjects: $mvpOrgsProjects")
             val adapter = CustomGridLMachine(this@MvpOrgsProjectsActivity, mvpOrgsProjects)
             gv.adapter = adapter
             

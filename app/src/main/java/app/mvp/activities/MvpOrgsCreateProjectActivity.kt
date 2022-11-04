@@ -15,6 +15,7 @@ import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_mvp_orgs_create_folder.back
 import kotlinx.android.synthetic.main.activity_mvp_orgs_create_folder.create
 import kotlinx.android.synthetic.main.activity_mvp_orgs_create_project.*
+import kotlinx.android.synthetic.main.app_bar_base.*
 import okhttp3.*
 import okio.IOException
 import org.json.JSONObject
@@ -34,6 +35,7 @@ class MvpOrgsCreateProjectActivity : BaseActivity(), View.OnClickListener {
     if (bundle != null) {
       myData = bundle.getSerializable("myData") as MyData
       myHelper.log("myData:$myData")
+      toolbar_title.text = myData.name
     }
     back.setOnClickListener(this)
     create.setOnClickListener(this)
@@ -50,7 +52,7 @@ class MvpOrgsCreateProjectActivity : BaseActivity(), View.OnClickListener {
         
         val project_name = project_name.text.toString()
         when {
-          project_name.length < 3 -> myHelper.toast("Please provide minimum 3 characters site name.")
+          project_name.length < 3 -> myHelper.showErrorDialog("Site not created!","Please provide minimum 3 characters site name.")
           else -> createProject(project_name)
         }
       }
@@ -58,7 +60,6 @@ class MvpOrgsCreateProjectActivity : BaseActivity(), View.OnClickListener {
   }
   
   fun createProject(name: String) {
-    myHelper.log("inside createProject")
     val client = myHelper.skipSSLOkHttpClient().build()
     val formBody =
       FormBody.Builder().add("name", name).add("org_id", myHelper.getLoginAPI().id.toString()).add("details", myHelper.getGPSLocationToString(gpsLocation))

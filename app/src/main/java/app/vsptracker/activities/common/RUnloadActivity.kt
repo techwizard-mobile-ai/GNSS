@@ -141,7 +141,7 @@ class RUnloadActivity : BaseActivity(), View.OnClickListener {
   
   private fun unload() {
     myData.unloadingGPSLocation = gpsLocation
-    myData.orgId = myHelper.getLoginAPI().org_id
+    myData.org_id = myHelper.getLoginAPI().org_id
     myData.siteId = myHelper.getMachineSettings().siteId
     myData.operatorId = myHelper.getOperatorAPI().id
     myData.machineTypeId = myHelper.getMachineTypeID()

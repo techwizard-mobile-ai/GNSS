@@ -14,7 +14,6 @@ import app.vsptracker.activities.common.LocationActivity
 import app.vsptracker.activities.common.MaterialActivity
 import app.vsptracker.adapters.ELoadingAdapter
 import app.vsptracker.apis.trip.MyData
-import app.vsptracker.apis.trip.MyDataResponse
 import app.vsptracker.others.MyHelper
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_base.*
@@ -77,12 +76,12 @@ class ELoadActivity : BaseActivity(), View.OnClickListener {
         
         myData.loadingGPSLocation = gpsLocation
         myData.loadTypeId = 1
-        myData.orgId = myHelper.getLoginAPI().org_id
+        myData.org_id = myHelper.getLoginAPI().org_id
         myData.operatorId = myHelper.getOperatorAPI().id
         
         
         myData.loadingGPSLocation = gpsLocation
-        myData.orgId = myHelper.getLoginAPI().org_id
+        myData.org_id = myHelper.getLoginAPI().org_id
         myData.siteId = myHelper.getMachineSettings().siteId
         myData.operatorId = myHelper.getOperatorAPI().id
         myData.machineTypeId = myHelper.getMachineTypeID()

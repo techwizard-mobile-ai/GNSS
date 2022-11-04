@@ -121,7 +121,7 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
         machineData.loadingGPSLocationString = myHelper.getGPSLocationToString(machineData.loadingGPSLocation)
         machineData.unloadingGPSLocationString = myHelper.getGPSLocationToString(machineData.unloadingGPSLocation)
         
-        machineData.orgId = myHelper.getLoginAPI().org_id
+        machineData.org_id = myHelper.getLoginAPI().org_id
         machineData.siteId = myHelper.getMachineSettings().siteId
         machineData.operatorId = myHelper.getOperatorAPI().id
         machineData.machineTypeId = myHelper.getMachineTypeID()
