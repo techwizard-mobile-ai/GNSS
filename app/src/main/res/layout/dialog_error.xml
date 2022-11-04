@@ -16,20 +16,21 @@
     android:text="@string/storage_permission_title"
     android:textColor="@color/red"
     android:textSize="@dimen/_16sdp"
+    android:padding="@dimen/_10sdp"
     style="@style/avenirnext_fontstyle"
     android:textStyle="bold" />
 
   <TextView
     android:id="@+id/error_explanation"
-    android:layout_marginTop="@dimen/_2sdp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
+    android:padding="@dimen/_10sdp"
     android:visibility="gone"
     android:textColor="@color/gray_dark"
     style="@style/avenirnext_fontstyle"
     android:text="@string/error_message"
-    android:textSize="@dimen/_12sdp" />
+    android:textSize="@dimen/_10sdp" />
 
   <View
     android:layout_width="match_parent"

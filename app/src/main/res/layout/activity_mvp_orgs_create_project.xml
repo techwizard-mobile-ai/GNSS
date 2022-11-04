@@ -68,14 +68,14 @@ tools:context="app.mvp.activities.MvpOrgsCreateProjectActivity">
   android:layout_marginRight="@dimen/_10sdp">
 
   <Button
-    android:id="@+id/back"
-    style="@style/back_button_single"
-    android:layout_alignParentStart="true" />
-
-  <Button
     android:id="@+id/create"
     style="@style/back_button_single"
     android:text="@string/save"
+    android:layout_alignParentStart="true" />
+
+  <Button
+    android:id="@+id/back"
+    style="@style/back_button_single"
     android:layout_alignParentEnd="true" />
 </RelativeLayout>
 
