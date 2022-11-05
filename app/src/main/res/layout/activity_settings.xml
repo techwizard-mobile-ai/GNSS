@@ -89,15 +89,16 @@
     android:layout_marginRight="@dimen/_10sdp">
 
     <Button
-      android:id="@+id/settings_back"
+      android:id="@+id/settings_save"
       style="@style/back_button_single"
+      android:text="@string/save"
       android:layout_alignParentStart="true" />
 
     <Button
-      android:id="@+id/settings_save"
+      android:id="@+id/settings_back"
       style="@style/back_button_single"
       android:layout_alignParentEnd="true"
-      android:text="@string/save" />
+       />
   </RelativeLayout>
 
 </RelativeLayout>

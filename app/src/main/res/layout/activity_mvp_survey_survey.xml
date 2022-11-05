@@ -149,7 +149,6 @@
       <Button
         style="@style/back_button_single"
         android:layout_marginBottom="@dimen/_10sdp"
-        android:background="@color/colorPrimary"
         android:layout_above="@id/mvp_survey_checkpoint_bottom"
         android:text="@string/survey_point" />
 

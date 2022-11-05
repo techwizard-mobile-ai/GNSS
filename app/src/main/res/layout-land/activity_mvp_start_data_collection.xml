@@ -38,24 +38,22 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
-    android:layout_marginBottom="@dimen/_10sdp"
-    android:orientation="horizontal">
-
-    <Button
-      android:id="@+id/mvp_load_home"
-      style="@style/next_button"
-      android:layout_width="0dp"
-      android:layout_weight=".3"
-      android:background="@color/colorPrimary"
-      android:text="@string/home" />
+    android:layout_marginBottom="@dimen/_10sdp">
 
     <Button
       android:id="@+id/mvp_load_load"
       style="@style/next_button"
       android:layout_width="0dp"
+      android:layout_weight=".3"
+      android:text="@string/begin_data_collection" />
+
+    <Button
+      android:id="@+id/mvp_load_home"
+      style="@style/next_button"
+      android:layout_width="0dp"
       android:layout_marginEnd="0dp"
       android:layout_weight="0.3"
-      android:text="@string/begin_data_collection" />
+      android:text="@string/home" />
   </LinearLayout>
 
 

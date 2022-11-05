@@ -55,7 +55,6 @@
     style="@style/next_button_single"
     android:layout_alignParentBottom="true"
     android:layout_centerHorizontal="true"
-    android:background="@color/colorPrimary"
     android:text="@string/home" />
 
 </RelativeLayout>

@@ -141,14 +141,12 @@
           android:id="@+id/mvp_survey_scan_capture"
           style="@style/back_button_single"
           android:layout_width="match_parent"
-          android:background="@color/colorPrimary"
           android:text="@string/image_capture" />
 
         <Button
           android:id="@+id/mvp_survey_scan_pause"
           style="@style/back_button_single"
           android:layout_width="match_parent"
-          android:background="@color/colorPrimary"
           android:text="@string/pause"
           android:visibility="gone" />
       </LinearLayout>
@@ -157,14 +155,12 @@
         android:id="@+id/mvp_survey_scan_settings"
         style="@style/back_button_single"
         android:layout_above="@id/mvp_survey_scan_back"
-        android:background="@color/colorPrimary"
         android:text="@string/settings" />
 
       <Button
         android:id="@+id/mvp_survey_scan_back"
         style="@style/back_button_single"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimary"
         android:paddingTop="@dimen/_10sdp" />
     </RelativeLayout>
 
