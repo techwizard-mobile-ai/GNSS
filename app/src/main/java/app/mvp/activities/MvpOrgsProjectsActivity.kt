@@ -46,7 +46,7 @@ class MvpOrgsProjectsActivity : BaseActivity(), View.OnClickListener {
       
       myHelper.log(mvpOrgsProjects[position].toString())
       val intent = Intent(this, MvpOrgsFoldersActivity::class.java)
-      myData.mvp_orgs_project_id = mvpOrgsProjects[position].id
+      myData.project_id = mvpOrgsProjects[position].id
       myData.mvp_orgs_project_name = mvpOrgsProjects[position].number
       myData.isForLoadResult = false
       myData.name = mvpOrgsProjects[position].number
@@ -95,6 +95,7 @@ class MvpOrgsProjectsActivity : BaseActivity(), View.OnClickListener {
   
   internal fun listProjects() {
     myHelper.showProgressBar()
+    myHelper.log("listProjects--")
     val call = this.retrofitAPI.listMvpProjects(
       myHelper.getOrgID(),
       0,
@@ -109,12 +110,12 @@ class MvpOrgsProjectsActivity : BaseActivity(), View.OnClickListener {
         try {
           val responseBody = response.body()
           if (responseBody!!.success) {
-//            myHelper.log("responseBodyTapu: $responseBody")
+            myHelper.log("responseBodyTapu: $responseBody")
             responseBody.data?.forEach {
               val material = Material()
               material.id = it.id!!
               material.number = it.name.toString()
-//              myHelper.log("material: $material")
+              myHelper.log("myData: $it")
               mvpOrgsProjects.add(material)
             }
 //            myHelper.log("mvpOrgsProjects: $mvpOrgsProjects")

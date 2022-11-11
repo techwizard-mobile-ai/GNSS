@@ -33,7 +33,7 @@ class MvpStartDataCollectionActivity : BaseActivity(), View.OnClickListener {
         myData = bundle.getSerializable("myData") as MyData
         myHelper.log("onActivityResult----:$myData")
         mvp_load_project.text = myData.mvp_orgs_project_name
-        mvp_load_folder.text = myData.mvp_orgs_folder_name
+        mvp_load_folder.text = myData.mvp_orgs_files_name
         myData.isForLoadResult = false
         myHelper.setLastJourney(myData)
       }
@@ -55,7 +55,7 @@ class MvpStartDataCollectionActivity : BaseActivity(), View.OnClickListener {
     mvp_load_title.text = getString(R.string.data_collection_details)
     
     mvp_load_project.text = myData.mvp_orgs_project_name
-    mvp_load_folder.text = myData.mvp_orgs_folder_name
+    mvp_load_folder.text = myData.mvp_orgs_files_name
     
     mvp_load_project.setOnClickListener(this)
     mvp_load_folder.setOnClickListener(this)

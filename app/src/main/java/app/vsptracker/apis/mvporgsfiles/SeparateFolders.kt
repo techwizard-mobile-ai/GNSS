@@ -34,11 +34,11 @@ class SeparateFolders {
   
   @SerializedName("aws_path")
   @Expose
-  var awsPath: String? = null
+  var awsPath: String = ""
   
   @SerializedName("relative_path")
   @Expose
-  var relativePath: String? = null
+  var relativePath: String = ""
   
   @SerializedName("size")
   @Expose

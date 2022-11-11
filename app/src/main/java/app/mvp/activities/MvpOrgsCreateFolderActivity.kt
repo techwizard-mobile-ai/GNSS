@@ -65,10 +65,11 @@ class MvpOrgsCreateFolderActivity : BaseActivity(), View.OnClickListener {
     myHelper.log("inside createProject")
     val client = myHelper.skipSSLOkHttpClient().build()
     val selectedFiles = ArrayList<MyData>()
-  
-    val aws_path = "${myHelper.getOrgID()}/taputapu/${myHelper.getCurrentYear()}/${myHelper.getCurrentMonth()}/${myHelper.getCurrentDay()}/${myHelper.getValidFileName(name)}/"
+    
+    val aws_path =
+      "${myHelper.getOrgID()}/mpv_project_files/${myData.project_id}/taputapu/${myHelper.getCurrentYear()}/${myHelper.getCurrentMonth()}/${myHelper.getCurrentDay()}/${myHelper.getValidFileName(name)}/"
     val relative_path = "taputapu/${myHelper.getCurrentYear()}/${myHelper.getCurrentMonth()}/${myHelper.getCurrentDay()}/${name}/"
-
+    
     val myData1 = MyData()
     
     myData1.org_id = myHelper.getOrgID()
@@ -86,10 +87,10 @@ class MvpOrgsCreateFolderActivity : BaseActivity(), View.OnClickListener {
     selectedFiles.add(myData1)
     
     myHelper.log("selectedFiles:${myHelper.arrayToString(selectedFiles)}")
-
+    
     val formBody =
       FormBody.Builder()
-        .add("project_id", "${myData.mvp_orgs_project_id}")
+        .add("project_id", "${myData.project_id}")
         .add("is_folder_creation", "true")
         .add("selected_files", myHelper.arrayToString(selectedFiles))
         .add("token", myHelper.getLoginAPI().auth_token).build()
@@ -99,7 +100,7 @@ class MvpOrgsCreateFolderActivity : BaseActivity(), View.OnClickListener {
     
     client.newCall(request).enqueue(object : Callback {
       override fun onResponse(call: Call, response: Response) {
-
+        
         val responseString = response.body!!.string()
         try {
           val responseJObject = JSONObject(responseString)
@@ -107,19 +108,20 @@ class MvpOrgsCreateFolderActivity : BaseActivity(), View.OnClickListener {
           val success = responseJObject.getBoolean("success")
           if (success) {
             val gson = GsonBuilder().create()
-
+            
             val myDataResponse = gson.fromJson(responseJObject.getString("data"), MyData::class.java)
             myHelper.log("myDataResponse:$myDataResponse")
             myDataPushSave.fetchOrgData()
             
             val intent = Intent(this@MvpOrgsCreateFolderActivity, MvpStartDataCollectionActivity::class.java)
-            myData.mvp_orgs_folder_id = myDataResponse.id
-            myData.mvp_orgs_folder_name = name
+            myData.mvp_orgs_files_id = myDataResponse.id
+            myData.mvp_orgs_files_name = name
+            myData.aws_path = myDataResponse.aws_path
             myData.relative_path = myDataResponse.relative_path
             myHelper.setLastJourney(myData)
             intent.putExtra("myData", myData)
             startActivity(intent)
-
+            
           } else if (responseJObject.getString("message").contains("Folder already exists.")) {
             myHelper.showErrorDialogOnUi("'$name' already created", "Please provide unique task name")
           } else {
@@ -133,6 +135,7 @@ class MvpOrgsCreateFolderActivity : BaseActivity(), View.OnClickListener {
           startActivity(intent)
         }
       }
+      
       override fun onFailure(call: Call, e: IOException) {
         myHelper.toastOnUi("onFailure: ${e.printStackTrace()}")
         myHelper.log("onFailure: ${e.printStackTrace()}")

@@ -93,5 +93,7 @@ class MyEnum {
     const val SETTINGS_TYPE_MVP_SCAN = 1
     const val SETTINGS_TYPE_MVP_SURVEY = 2
     const val SETTINGS_TYPE_MVP_RECORD_CHECKPOINT = 3
+    
+    const val ADMIN_FILE_TYPE_TAPU_CHECKPOINT = 1
   }
 }

@@ -95,6 +95,10 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
       serverSyncList.add(it)
       it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
     }
+    myDataPushSave.addToList(12, myHelper.getTypeName(12), db.getMvpOrgsFiles("ASC"))?.let {
+      serverSyncList.add(it)
+      it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+    }
     refreshAdapter()
   }
   
@@ -150,8 +154,8 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
         myHelper.hideDialog()
         val responseString = response.body!!.string()
         myHelper.log("pushUpdateServerSync:${response}")
-        myHelper.log("pushUpdateServerSync:${response.body.toString()}")
         val responseJObject = JSONObject(responseString)
+        myHelper.log("responseJObject:$responseJObject")
         val success = responseJObject.getBoolean("success")
         myHelper.log("success:$success")
         val message = responseJObject.getString("message")

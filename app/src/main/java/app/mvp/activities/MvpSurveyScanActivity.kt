@@ -113,7 +113,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     myHelper.setTag(tag)
     myData = myHelper.getLastJourney()
     myHelper.log("myData:$myData")
-    toolbar_title.text = myData.mvp_orgs_project_name + " / " + myData.mvp_orgs_folder_name + " / Data Collection / Scan"
+    toolbar_title.text = myData.mvp_orgs_project_name + " / " + myData.mvp_orgs_files_name + " / Data Collection / Scan"
     
     
     if (allPermissionsGranted()) {
@@ -228,6 +228,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     requestCode: Int, permissions: Array<String>, grantResults:
     IntArray
   ) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     if (requestCode == REQUEST_CODE_PERMISSIONS) {
       if (allPermissionsGranted()) {
         startCamera()
@@ -343,7 +344,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     mHandler!!.removeCallbacks(mStatusChecker)
   }
   
-  private fun startGPS() {
+  private fun startGPS1() {
     myHelper.log("startGPS1111__called")
     locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
     try {
@@ -362,7 +363,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     
   }
   
-  val locationListener: LocationListener = object : LocationListener {
+  val locationListener1: LocationListener = object : LocationListener {
     override fun onLocationChanged(location: Location) {
       location1 = location
       myHelper.setGPSLayout(

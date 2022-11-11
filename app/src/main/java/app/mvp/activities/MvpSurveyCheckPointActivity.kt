@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.FrameLayout
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
+import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.GPSLocation
 import app.vsptracker.others.MyEnum
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -53,16 +54,17 @@ class MvpSurveyCheckPointActivity : BaseActivity(), View.OnClickListener, OnMapR
     myHelper.setTag(tag)
     myData = myHelper.getLastJourney()
     myHelper.log("myData:$myData")
-    toolbar_title.text = myData.mvp_orgs_project_name + " / " + myData.mvp_orgs_folder_name + " / Data Collection / Check Point"
+    toolbar_title.text = myData.mvp_orgs_project_name + " / " + myData.mvp_orgs_files_name + " / Data Collection / Check Point"
     
     val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
     mapFragment.getMapAsync(this)
     
     fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-    startGPS()
+    startGPS1()
     
     mvp_survey_checkpoint_back.setOnClickListener(this)
     mvp_survey_checkpoint_settings.setOnClickListener(this)
+    mvp_survey_checkpoint_record.setOnClickListener(this)
   }
   
   override fun onClick(view: View?) {
@@ -77,11 +79,56 @@ class MvpSurveyCheckPointActivity : BaseActivity(), View.OnClickListener, OnMapR
         intent.putExtra("myData", myData)
         startActivity(intent)
       }
+      R.id.mvp_survey_checkpoint_record -> {
+        myHelper.log("Record Checkpoint")
+        myHelper.log("myData:$myData")
+        
+        val checkpoint_label = mvp_survey_checkpoint_details.text.toString()
+        myHelper.log("checkpoint_label:${checkpoint_label.length}")
+        myHelper.log(checkpoint_label)
+        when {
+          checkpoint_label.isEmpty() -> {
+            myHelper.showErrorDialog("CheckPoint Details", "Please enter checkpoint details to record checkpoint.")
+          }
+          else -> {
+            val myData1 = MyData()
+            val aws_path =
+              myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/CheckPoints/${myHelper.getValidFileName(checkpoint_label)}/${myHelper.getOrgID()}_${
+                myHelper
+                  .getUserID()
+              }_${
+                myData
+                  .project_id
+              }_${myData.mvp_orgs_files_id}_${myHelper.getCurrentTimeMillis()}"
+            val relative_path =
+              myData.relative_path + "${myHelper.getLoginAPI().name}_${myHelper.getLoginAPI().id}/CheckPoints/${checkpoint_label}/${myHelper.getOrgID()}_${myHelper.getUserID()}_${myData.project_id}_${
+                myData
+                  .mvp_orgs_files_id
+              }_${myHelper.getCurrentTimeMillis()}"
+            
+            myData1.org_id = myHelper.getOrgID()
+            myData1.user_id = myHelper.getUserID()
+            myData1.project_id = myData.project_id
+            myData1.mvp_orgs_files_id = myData.mvp_orgs_files_id
+            myData1.admin_file_type_id = MyEnum.ADMIN_FILE_TYPE_TAPU_CHECKPOINT
+            myData1.security_level = myHelper.getLoginAPI().role
+            myData1.aws_path = aws_path
+            myData1.relative_path = relative_path
+            myData1.file_description = mvp_survey_checkpoint_details.text.toString()
+            myData1.loadingGPSLocation = gpsLocation
+            myData1.unloadingGPSLocation = gpsLocation
+            myData1.file_level = (relative_path.split("/").size - 1)
+            myData1.security_level = myHelper.getLoginAPI().role
+            if (myDataPushSave.pushInsertSurveyRecordCheckPoint(myData1) > 0) myHelper.toast("CheckPoint recorded successfully") else myHelper.showErrorDialog("CheckPoint not recorded", "Please try again later.")
+            
+          }
+        }
+      }
     }
   }
   
   
-  private fun startGPS() {
+  private fun startGPS1() {
     myHelper.log("startGPS1111__called")
     locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
     try {
@@ -89,7 +136,7 @@ class MvpSurveyCheckPointActivity : BaseActivity(), View.OnClickListener, OnMapR
         LocationManager.GPS_PROVIDER,
         1000,
         0f,
-        locationListener
+        locationListener1
       )
       
     }
@@ -100,7 +147,7 @@ class MvpSurveyCheckPointActivity : BaseActivity(), View.OnClickListener, OnMapR
     
   }
   
-  val locationListener: LocationListener = object : LocationListener {
+  val locationListener1: LocationListener = object : LocationListener {
     @SuppressLint("SetTextI18n")
     override fun onLocationChanged(location: Location) {
 

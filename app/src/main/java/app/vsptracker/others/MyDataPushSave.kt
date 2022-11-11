@@ -321,6 +321,14 @@ class MyDataPushSave(private val context: Context) {
     return insertID
   }
   
+  fun pushInsertSurveyRecordCheckPoint(myData: MyData): Long {
+    val insertID = db.insertMvpOrgsFile(myData)
+    
+    if (insertID > 0)
+      checkUpdateServerSyncData()
+    return insertID
+  }
+  
   /**
    * This method is called when Loading is done on RLoadActivity. Load data is saved in database but not
    * pushed to server. When Unloading is done, this data is first retrieved from database and updated
@@ -428,6 +436,7 @@ class MyDataPushSave(private val context: Context) {
     addToList(8, myHelper.getTypeName(8), db.getMachinesStops("ASC"))?.let { serverSyncList.add(it) }
     addToList(9, myHelper.getTypeName(9), db.getMachinesHours("ASC"))?.let { serverSyncList.add(it) }
     addToList(10, myHelper.getTypeName(10), db.getWaits("ASC"))?.let { serverSyncList.add(it) }
+    addToList(12, myHelper.getTypeName(12), db.getMvpOrgsFiles("ASC"))?.let { serverSyncList.add(it) }
     // Uploading Completed CheckForms images to AWS might take time so skip Completed CheckForms upload to server and
     // uploading images to AWS Bucket when operator logout from app.
     if (type != MyEnum.SERVER_SYNC_DATA_LOGOUT)
@@ -458,19 +467,7 @@ class MyDataPushSave(private val context: Context) {
   fun addToList(type: Int, name: String, list: ArrayList<MyData>): ServerSyncAPI? {
     val total = list.size
     val synced = list.filter { it.isSync == 1 }.size
-    // TODO uncomment this code when all machine stops entries are updated to Portal
-    // val remaining = list.filter { it.isSync == 0 }
-    // As some machines stops entries are not updated on Portal, it is better to update all records for a limited time.
-    // Purpose of this block of code is to sync machine stops data with portal, when all data will be synced to portal
-    // we can remove this code with val remaining = list.filter { it.isSync == 0 }
-    val remaining: List<MyData> = when (type) {
-      8 -> {
-        list
-      }
-      else -> {
-        list.filter { it.isSync == 0 }
-      }
-    }
+    val remaining = list.filter { it.isSync == 0 }
     myHelper.log("$name:$total, isSynced:$synced, isRemaining:${remaining.size}")
     var serverSyncAPI: ServerSyncAPI? = null
     if (remaining.isNotEmpty()) {
@@ -646,6 +643,11 @@ class MyDataPushSave(private val context: Context) {
             // As Completed CheckForms are fetched from Server, making this API call will update
             // Company Completed CheckForms Data
             fetchOrgData()
+          }
+          
+          12 -> {
+            myHelper.log("Survey CheckPoints:${serverSyncAPI.myDataList}")
+            db.updateMvpOrgsFiles(serverSyncAPI.myDataList)
           }
         }
       }

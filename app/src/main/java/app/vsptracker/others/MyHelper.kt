@@ -127,7 +127,7 @@ class MyHelper(var TAG: String, val context: Context) {
   }
   
   fun getOrgID(): Int {
-    return getLoginAPI().id
+    return getLoginAPI().org_id
   }
   
   fun isDuplicateEntry(message: String): Boolean {
@@ -355,7 +355,7 @@ class MyHelper(var TAG: String, val context: Context) {
     sessionManager.setLastJourney(lastJourney)
   }
   
-  fun getUserID() = getOperatorAPI().id
+  fun getUserID() = getLoginAPI().id
   fun getStringToGPSLocation(stringGPSLocation: String?): GPSLocation {
 //        log("getStringToGPSLocation:$stringGPSLocation")
     return if (stringGPSLocation == null) GPSLocation()
@@ -400,7 +400,7 @@ class MyHelper(var TAG: String, val context: Context) {
     val width = context.resources.getDimensionPixelSize(R.dimen._120sdp)
     val height = context.resources.getDimensionPixelSize(R.dimen._120sdp)
     val layoutParams = FrameLayout.LayoutParams(width, height)
-    @Suppress("USELESS_CAST") view.layoutParams = layoutParams as ViewGroup.LayoutParams?
+    @Suppress("USELESS_CAST") view.layoutParams = layoutParams
   }
   
   fun getWorkMode(): String {
@@ -1069,7 +1069,7 @@ class MyHelper(var TAG: String, val context: Context) {
     imageView.layoutParams = imageViewParam
     imageView.contentDescription = context.resources.getString(R.string.image_showing_issue)
     
-    val imagePath = Images("", "");
+    val imagePath = Images("", "")
     if (imageBitmap != null) {
       imageLoad(imageBitmap, imageView)
       imagePath.localImagePath = imageBitmap.toString()
@@ -1225,39 +1225,39 @@ class MyHelper(var TAG: String, val context: Context) {
     ) {
       log("Permission is not granted")
       if (ActivityCompat.shouldShowRequestPermissionRationale(
-          (context as Activity), Manifest.permission.ACCESS_FINE_LOCATION
+          context, Manifest.permission.ACCESS_FINE_LOCATION
         )
       ) {
         ActivityCompat.requestPermissions(
-          (context as Activity), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), MyEnum.REQUEST_ACCESS_FINE_LOCATION
+          context, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), MyEnum.REQUEST_ACCESS_FINE_LOCATION
         )
         
       } else {
         // No explanation needed, we can request the permission.
         ActivityCompat.requestPermissions(
-          (context as Activity), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), MyEnum.REQUEST_ACCESS_FINE_LOCATION
+          context, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), MyEnum.REQUEST_ACCESS_FINE_LOCATION
         )
       }
     }
     
     // request Storage Permission
     if (ContextCompat.checkSelfPermission(
-        (context as Activity), Manifest.permission.WRITE_EXTERNAL_STORAGE
+        context, Manifest.permission.WRITE_EXTERNAL_STORAGE
       ) != PackageManager.PERMISSION_GRANTED
     ) {
       log("Permission is not granted")
       if (ActivityCompat.shouldShowRequestPermissionRationale(
-          (context as Activity), Manifest.permission.WRITE_EXTERNAL_STORAGE
+          context, Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
       ) {
         ActivityCompat.requestPermissions(
-          (context as Activity), arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), MyEnum.REQUEST_WRITE_EXTERNAL_STORAGE
+          context, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), MyEnum.REQUEST_WRITE_EXTERNAL_STORAGE
         )
         
       } else {
         // No explanation needed, we can request the permission.
         ActivityCompat.requestPermissions(
-          (context as Activity), arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), MyEnum.REQUEST_WRITE_EXTERNAL_STORAGE
+          context, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), MyEnum.REQUEST_WRITE_EXTERNAL_STORAGE
         )
       }
     }
@@ -1370,7 +1370,7 @@ class MyHelper(var TAG: String, val context: Context) {
         if (adminCheckFormsCompleted.admin_checkforms_schedules_value != null && firstMachineHours.startTime > 0) {
           lastDaysReading =
             if ((adminCheckFormsCompleted.admin_checkforms_schedules_value!!.toDouble()) > (firstMachineHours.startTime) / MyEnum.ONE_DAY) adminCheckFormsCompleted.admin_checkforms_schedules_value!!.toDouble() else (firstMachineHours.startTime / MyEnum.ONE_DAY).toDouble()
-          log("adminCheckFormsCompleted_startTime:${getDateTime(adminCheckFormsCompleted!!.admin_checkforms_schedules_value!!.toLong())}")
+          log("adminCheckFormsCompleted_startTime:${getDateTime(adminCheckFormsCompleted.admin_checkforms_schedules_value!!.toLong())}")
         }
       } else {
         lastDaysReading = (firstMachineHours.startTime / MyEnum.ONE_DAY).toDouble()
@@ -1550,6 +1550,7 @@ class MyHelper(var TAG: String, val context: Context) {
       9 -> typeName = context.getString(R.string.machines_hours1)
       10 -> typeName = context.getString(R.string.operators_waitings)
       11 -> typeName = context.getString(R.string.checkforms_completed)
+      12 -> typeName = context.getString(R.string.survey_checkpoints)
     }
     return typeName
   }

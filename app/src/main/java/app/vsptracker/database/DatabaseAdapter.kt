@@ -45,6 +45,7 @@ const val TABLE_ADMIN_CHECKFORMS_DATA = "admin_checkforms_data"
 const val TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER = "admin_checkforms_completed_server"
 const val TABLE_ORGS_MAPS = "orgs_maps"
 const val TABLE_MVP_ORGS_PROJECTS = "mvp_orgs_projects"
+const val TABLE_MVP_ORGS_FILES = "mvp_orgs_files"
 
 const val COL_TIME = "time"
 const val COL_DATE = "date"
@@ -93,6 +94,7 @@ const val COL_MACHINE_STOP_REASON_ID = "machine_stop_reason_id"
 const val COL_NAME = "name"
 const val COL_IS_DELETED = "is_deleted"
 const val COL_STATUS = "status"
+const val COL_UPLOAD_STATUS = "upload_status"
 const val COL_IS_START_HOURS_CUSTOM = "is_start_hours_custom"
 const val COL_IS_TOTAL_HOURS_CUSTOM = "is_total_hours_custom"
 
@@ -129,6 +131,20 @@ const val COL_UPDATED_AT = "updated_at"
 const val COL_IS_DOWNLOADED = "is_downloaded"
 const val COL_CREATED_AT = "created_at"
 const val COL_DETAILS = "details"
+
+const val COL_USER_ID = "user_id"
+const val COL_PROJECTS_ID = "mvp_orgs_projects_id"
+const val COL_MVP_ORGS_FILES_ID = "mvp_orgs_files_id"
+const val COL_RELATIVE_PATH = "relative_path"
+const val COL_FILE_DETAILS = "file_details"
+const val COL_FILE_DESCRIPTION = "file_description"
+const val COL_ADMIN_FILE_TYPE_ID = "admin_file_type_id"
+const val COL_PROCESSING_STATUS = "processing_status"
+const val COL_FILE_LEVEL = "file_level"
+const val COL_SECURITY_LEVEL = "security_level"
+const val COL_SIZE = "size"
+const val COL_PRESIGNED_URL = "presigned_url"
+const val COL_IMAGE_PATH = "image_path"
 
 // Completed CheckForm Entry Type
 // 0 : automatically completed when due
@@ -529,6 +545,39 @@ const val createMvpOrgsProjectsTable = "CREATE TABLE IF NOT EXISTS $TABLE_MVP_OR
         "$COL_UPDATED_AT TEXT " +
         " )"
 
+const val createMvpOrgsFilesTable = "CREATE TABLE IF NOT EXISTS $TABLE_MVP_ORGS_FILES ( " +
+        "$COL_ID INTEGER PRIMARY KEY, " +
+        "$COL_ORG_ID INTEGER, " +
+        "$COL_USER_ID INTEGER, " +
+        "$COL_PROJECTS_ID INTEGER, " +
+        "$COL_MVP_ORGS_FILES_ID INTEGER, " +
+        "$COL_ADMIN_FILE_TYPE_ID INTEGER, " +
+        "$COL_PROCESSING_STATUS INTEGER, " +
+        "$COL_FILE_LEVEL INTEGER, " +
+        "$COL_SECURITY_LEVEL INTEGER, " +
+        "$COL_AWS_PATH TEXT, " +
+        "$COL_RELATIVE_PATH TEXT, " +
+        "$COL_PRESIGNED_URL TEXT, " +
+        "$COL_IMAGE_PATH TEXT, " +
+        "$COL_SIZE INTEGER, " +
+        "$COL_FILE_DETAILS TEXT, " +
+        "$COL_FILE_DESCRIPTION TEXT, " +
+        "$COL_LOADING_GPS_LOCATION  TEXT," +
+        "$COL_UNLOADING_GPS_LOCATION  TEXT," +
+        "$COL_START_TIME  INTEGER," +
+        "$COL_END_TIME INTEGER," +
+        "$COL_TOTAL_TIME INTEGER," +
+        "$COL_DATE  TEXT," +
+        "$COL_TIME  INTEGER," +
+        "$COL_IS_SYNC  INTEGER," +
+        "$COL_STATUS INTEGER, " +
+        "$COL_UPLOAD_STATUS INTEGER, " +
+        "$COL_IS_DELETED INTEGER, " +
+        "$COL_CREATED_AT TEXT, " +
+        "$COL_UPDATED_AT TEXT " +
+        " )"
+
+const val DROP_TABLE_MVP_ORGS_FILES = "DROP TABLE IF EXISTS $TABLE_MVP_ORGS_FILES"
 const val DROP_TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER = "DROP TABLE IF EXISTS $TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER"
 const val DROP_TABLE_ADMIN_CHECKFORMS_DATA = "DROP TABLE IF EXISTS $TABLE_ADMIN_CHECKFORMS_DATA"
 const val DROP_TABLE_ADMIN_CHECKFORMS_COMPLETED = "DROP TABLE IF EXISTS $TABLE_ADMIN_CHECKFORMS_COMPLETED"
@@ -598,10 +647,12 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     db?.execSQL(createEWorkTable)
     db?.execSQL(createLoadHistoryTable)
     db?.execSQL(createMvpOrgsProjectsTable)
+    db?.execSQL(createMvpOrgsFilesTable)
   }
   
   override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
     myHelper.log("onUpgrade")
+    db?.execSQL(DROP_TABLE_MVP_ORGS_FILES)
     db?.execSQL(DROP_TABLE_MVP_ORGS_PROJECTS)
     db?.execSQL(DROP_TABLE_ORGS_MAPS)
     db?.execSQL(DROP_TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER)
@@ -631,6 +682,102 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     db?.execSQL(DROP_TABLE_E_WORK)
     db?.execSQL(DROP_TABLE_E_LOAD_HISTORY)
     onCreate(db)
+  }
+  
+  fun insertMvpOrgsFile(datum: MyData): Long {
+    
+    val tableName = TABLE_MVP_ORGS_FILES
+    
+    val currentTime = System.currentTimeMillis()
+    datum.startTime = currentTime
+    datum.stopTime = currentTime
+    datum.totalTime = 0
+    
+    val time = System.currentTimeMillis()
+    datum.time = time.toString()
+    datum.date = myHelper.getDate(time.toString())
+    
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    cv.put(COL_ORG_ID, datum.org_id)
+    cv.put(COL_USER_ID, datum.user_id)
+    cv.put(COL_PROJECTS_ID, datum.project_id)
+    cv.put(COL_MVP_ORGS_FILES_ID, datum.mvp_orgs_files_id)
+    cv.put(COL_ADMIN_FILE_TYPE_ID, datum.admin_file_type_id)
+    cv.put(COL_PROCESSING_STATUS, datum.processing_status)
+    cv.put(COL_FILE_LEVEL, datum.file_level)
+    cv.put(COL_SECURITY_LEVEL, datum.security_level)
+    cv.put(COL_AWS_PATH, datum.aws_path)
+    cv.put(COL_RELATIVE_PATH, datum.relative_path)
+    cv.put(COL_PRESIGNED_URL, datum.presignedUrl)
+    cv.put(COL_IMAGE_PATH, datum.image_path)
+    cv.put(COL_SIZE, datum.size)
+    cv.put(COL_FILE_DETAILS, datum.file_details)
+    cv.put(COL_FILE_DESCRIPTION, datum.file_description)
+    cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.loadingGPSLocation))
+    cv.put(COL_UNLOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.unloadingGPSLocation))
+    cv.put(COL_START_TIME, datum.startTime)
+    cv.put(COL_END_TIME, datum.stopTime)
+    cv.put(COL_TOTAL_TIME, datum.totalTime)
+    cv.put(COL_DATE, datum.date)
+    cv.put(COL_TIME, datum.time)
+    cv.put(COL_IS_SYNC, datum.isSync)
+    cv.put(COL_STATUS, datum.status)
+    cv.put(COL_UPLOAD_STATUS, datum.upload_status)
+    cv.put(COL_IS_DELETED, datum.isDeleted)
+    
+    val insertedID = db.insert(tableName, null, cv)
+    myHelper.printInsertion(tableName, insertedID, datum)
+    return insertedID
+  }
+  
+  
+  fun getMvpOrgsFiles(orderBy: String = "DESC"): ArrayList<MyData> {
+    
+    val list: ArrayList<MyData> = ArrayList()
+    val db = this.readableDatabase
+    val query = "Select * from $TABLE_MVP_ORGS_FILES  ORDER BY $COL_ID $orderBy"
+    val result = db.rawQuery(query, null)
+    
+    if (result.moveToFirst()) {
+      do {
+        val datum = MyData()
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.org_id = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.user_id = result.getInt(result.getColumnIndex(COL_USER_ID))
+        datum.project_id = result.getInt(result.getColumnIndex(COL_PROJECTS_ID))
+        datum.admin_file_type_id = result.getInt(result.getColumnIndex(COL_ADMIN_FILE_TYPE_ID))
+        datum.processing_status = result.getInt(result.getColumnIndex(COL_PROCESSING_STATUS))
+        datum.file_level = result.getInt(result.getColumnIndex(COL_FILE_LEVEL))
+        datum.security_level = result.getInt(result.getColumnIndex(COL_SECURITY_LEVEL))
+        datum.aws_path = result.getString(result.getColumnIndex(COL_AWS_PATH))
+        datum.relative_path = result.getString(result.getColumnIndex(COL_RELATIVE_PATH))
+        datum.presignedUrl = result.getString(result.getColumnIndex(COL_PRESIGNED_URL))
+        datum.image_path = result.getString(result.getColumnIndex(COL_IMAGE_PATH))
+        datum.size = result.getInt(result.getColumnIndex(COL_SIZE))
+        datum.file_details = result.getString(result.getColumnIndex(COL_FILE_DETAILS))
+        datum.file_description = result.getString(result.getColumnIndex(COL_FILE_DESCRIPTION))
+        datum.loadingGPSLocationString = result.getString(result.getColumnIndex(COL_LOADING_GPS_LOCATION))
+        datum.loadingGPSLocation = myHelper.getStringToGPSLocation(datum.loadingGPSLocationString)
+        datum.unloadingGPSLocationString = result.getString(result.getColumnIndex(COL_UNLOADING_GPS_LOCATION))
+        datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(datum.unloadingGPSLocationString)
+        datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
+        datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
+        datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
+        datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
+        datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+        datum.upload_status = result.getInt(result.getColumnIndex(COL_UPLOAD_STATUS))
+        datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+        datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
+        
+        list.add(datum)
+      } while (result.moveToNext())
+    }
+    
+    result.close()
+    db.close()
+    myHelper.log("getMvpOrgsFiles:$list")
+    return list
   }
   
   fun updateMap(datum: MyData): Boolean {
@@ -3775,5 +3922,21 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     cv.put(COL_IS_DOWNLOADED, datum.isDownloaded)
     val updatedID = db.update(TABLE_ORGS_MAPS, cv, "$COL_ID = ${datum.id}", null)
     myHelper.log("updateOrgsMap:updateID:$updatedID")
+  }
+  
+  fun updateMvpOrgsFiles(data: ArrayList<MyData>) {
+    
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    
+    for (datum in data) {
+      cv.put(COL_MVP_ORGS_FILES_ID, datum.mvp_orgs_files_id)
+      cv.put(COL_PRESIGNED_URL, datum.presignedUrl)
+      cv.put(COL_CREATED_AT, datum.created_at)
+      cv.put(COL_UPDATED_AT, datum.updated_at)
+      cv.put(COL_IS_SYNC, datum.isSync)
+      val updatedID = db.update(TABLE_MVP_ORGS_FILES, cv, "$COL_ID = ${datum.id}", null)
+      myHelper.log("updateMvpOrgsFiles:updateID:$0")
+    }
   }
 }

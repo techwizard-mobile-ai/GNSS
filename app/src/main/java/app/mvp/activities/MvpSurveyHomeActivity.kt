@@ -52,7 +52,7 @@ class MvpSurveyHomeActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     myHelper.setTag(tag)
     myData = myHelper.getLastJourney()
     myHelper.log("myData:$myData")
-    toolbar_title.text = myData.mvp_orgs_project_name + " / " + myData.mvp_orgs_folder_name + " / Data Collection"
+    toolbar_title.text = myData.mvp_orgs_project_name + " / " + myData.mvp_orgs_files_name + " / Data Collection"
     
     
     val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
@@ -92,7 +92,7 @@ class MvpSurveyHomeActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
   }
   
   
-  private fun startGPS() {
+  private fun startGPS1() {
     myHelper.log("startGPS1111__called")
     locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
     try {
@@ -111,7 +111,7 @@ class MvpSurveyHomeActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     
   }
   
-  val locationListener: LocationListener = object : LocationListener {
+  val locationListener1: LocationListener = object : LocationListener {
     @SuppressLint("SetTextI18n")
     override fun onLocationChanged(location: Location) {
 

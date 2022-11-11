@@ -30,7 +30,7 @@ class MyData : Serializable {
   
   @SerializedName("file_details")
   @Expose
-  var file_details: String = ""
+  var file_details: String = "{ \"size\": 0 }"
   
   @SerializedName("relative_path")
   @Expose
@@ -38,11 +38,11 @@ class MyData : Serializable {
   
   @SerializedName("processing_status")
   @Expose
-  var processing_status: Int = 0
+  var processing_status: Int = -1
   
   @SerializedName("admin_file_type_id")
   @Expose
-  var admin_file_type_id: Int = 0
+  var admin_file_type_id: Int = -1
   
   var isDownloaded: Int = 0
   
@@ -61,6 +61,10 @@ class MyData : Serializable {
   @SerializedName("org_id")
   @Expose
   var org_id: Int = 0
+  
+  @SerializedName("user_id")
+  @Expose
+  var user_id: Int = 0
   
   @SerializedName("site_id")
   @Expose
@@ -246,11 +250,11 @@ class MyData : Serializable {
   
   @SerializedName("status")
   @Expose
-  var status: Int? = null
+  var status: Int = 1
   
   @SerializedName("is_deleted")
   @Expose
-  var isDeleted: Int? = null
+  var isDeleted: Int = 0
   
   @SerializedName("answers_options")
   @Expose
@@ -314,25 +318,55 @@ class MyData : Serializable {
   @SerializedName("details")
   @Expose
   var details = ""
-  var mvp_orgs_project_id: Int = 0
-  var mvp_orgs_folder_id: Int = 0
+  
+  @SerializedName("project_id")
+  @Expose
+  var project_id: Int = 0
+  
+  @SerializedName("mvp_orgs_files_id")
+  @Expose
+  var mvp_orgs_files_id: Int = 0
+  
+  @SerializedName("presignedUrl")
+  @Expose
+  var presignedUrl: String = ""
+  var image_path: String = ""
+  
   var mvp_orgs_project_name: String = ""
-  var mvp_orgs_folder_name: String = ""
+  var mvp_orgs_files_name: String = ""
+  
   override fun toString(): String {
     return "MyData(" +
-            "size=$size, " +
-            "security_level=$security_level, " +
+            "id=$id, " +
+            "org_id=$org_id, " +
+            "presignedUrl=$presignedUrl, " +
+            "image_path=$image_path, " +
+            "user_id=$user_id, " +
+            "project_id=$project_id, " +
+            "mvp_orgs_project_name=$mvp_orgs_project_name, " +
+            "mvp_orgs_files_id=$mvp_orgs_files_id, " +
+            "mvp_orgs_files_name=$mvp_orgs_files_name, " +
+            "admin_file_type_id=$admin_file_type_id, " +
+            "processing_status=$processing_status, " +
             "file_level=$file_level, " +
-            "upload_status=$upload_status, " +
-            "file_description='$file_description', " +
-            "file_details='$file_details', " +
-            "relative_path='$relative_path', " +
-            "mvp_orgs_project_id=$mvp_orgs_project_id, " +
-            "mvp_orgs_folder_id=$mvp_orgs_folder_id, " +
-            "mvp_orgs_project_name='$mvp_orgs_project_name', " +
-            "mvp_orgs_folder_name='$mvp_orgs_folder_name'" +
+            "security_level=$security_level, " +
+            "aws_path=$aws_path, " +
+            "relative_path=$relative_path, " +
+            "size=$size, " +
+            "file_details=$file_details, " +
+            "file_description=$file_description, " +
+            "loadingGPSLocation=$loadingGPSLocation, " +
+            "startTime=$startTime, " +
+            "stopTime=$stopTime, " +
+            "totalTime=$totalTime, " +
+            "date=$date, " +
+            "time=$time, " +
+            "isSync=$isSync, " +
+            "status=$status, " +
+            "isDeleted=$isDeleted, " +
+            "created_at=$created_at, " +
+            "updated_at=$updated_at, " +
             ")"
   }
-  
   
 }

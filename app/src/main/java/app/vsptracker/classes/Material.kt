@@ -61,6 +61,14 @@ class Material : Serializable {
   @Expose
   var priority: Int = -1
   
+  @SerializedName("relative_path")
+  @Expose
+  var relative_path: String = ""
+  
+  @SerializedName("aws_path")
+  @Expose
+  var aws_path: String = ""
+  
   constructor()
   
   constructor(id: Int, name: String) {
@@ -69,7 +77,8 @@ class Material : Serializable {
   }
   
   override fun toString(): String {
-    return "Material(id=$id, orgId=$orgId, siteId=$siteId, machineTypeId=$machineTypeId, machineBrandId=$machineBrandId, machinePlantId=$machinePlantId, machineTaskId=$machineTaskId, isDeleted=$isDeleted, status=$status, totalHours=$totalHours, pin=$pin, name='$name', number='$number')"
+    return "Material(id=$id, orgId=$orgId, siteId=$siteId, machineTypeId=$machineTypeId, machineBrandId=$machineBrandId, machinePlantId=$machinePlantId, machineTaskId=$machineTaskId, " +
+            "isDeleted=$isDeleted, status=$status, totalHours=$totalHours, pin=$pin, name='$name', number='$number')"
   }
   
   

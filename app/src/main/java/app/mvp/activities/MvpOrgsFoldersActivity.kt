@@ -39,7 +39,7 @@ class MvpOrgsFoldersActivity : BaseActivity(), View.OnClickListener {
     if (bundle != null) {
       myData = bundle.getSerializable("myData") as MyData
       myHelper.log("myData:$myData")
-      getOrgsFiles(myData.mvp_orgs_project_id)
+      getOrgsFiles(myData.project_id)
       toolbar_title.text = myData.mvp_orgs_project_name
     }
     
@@ -50,16 +50,20 @@ class MvpOrgsFoldersActivity : BaseActivity(), View.OnClickListener {
       when {
         myData.isForLoadResult -> {
           val intent = intent
-          myData.mvp_orgs_folder_id = mvpOrgsFolders[position].id
-          myData.mvp_orgs_folder_name = mvpOrgsFolders[position].number
+          myData.mvp_orgs_files_id = mvpOrgsFolders[position].id
+          myData.mvp_orgs_files_name = mvpOrgsFolders[position].number
+          myData.aws_path = mvpOrgsFolders[position].aws_path
+          myData.relative_path = mvpOrgsFolders[position].relative_path
           intent.putExtra("myData", myData)
           setResult(Activity.RESULT_OK, intent)
           finish()
         }
         else -> {
           myHelper.log(mvpOrgsFolders[position].toString())
-          myData.mvp_orgs_folder_id = mvpOrgsFolders[position].id
-          myData.mvp_orgs_folder_name = mvpOrgsFolders[position].number
+          myData.mvp_orgs_files_id = mvpOrgsFolders[position].id
+          myData.mvp_orgs_files_name = mvpOrgsFolders[position].number
+          myData.aws_path = mvpOrgsFolders[position].aws_path
+          myData.relative_path = mvpOrgsFolders[position].relative_path
           myHelper.setLastJourney(myData)
           val intent = Intent(this, MvpStartDataCollectionActivity::class.java)
           startActivity(intent)
@@ -125,10 +129,12 @@ class MvpOrgsFoldersActivity : BaseActivity(), View.OnClickListener {
         try {
           val responseBody = response.body()
           if (responseBody!!.success) {
-//            myHelper.log("responseBodyTapu: $responseBody")
+            myHelper.log("responseBodyTapu: $responseBody")
             responseBody.separateFolders?.forEach {
               val material = Material()
               material.id = it.id!!
+              material.aws_path = it.awsPath
+              material.relative_path = it.relativePath
               material.number = it.fileFolder?.name!!.dropLast(1)
               mvpOrgsFolders.add(material)
             }

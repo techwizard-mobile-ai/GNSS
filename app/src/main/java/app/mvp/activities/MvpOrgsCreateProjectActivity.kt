@@ -52,7 +52,7 @@ class MvpOrgsCreateProjectActivity : BaseActivity(), View.OnClickListener {
         
         val project_name = project_name.text.toString()
         when {
-          project_name.length < 3 -> myHelper.showErrorDialog("Site not created!","Please provide minimum 3 characters site name.")
+          project_name.length < 3 -> myHelper.showErrorDialog("Site not created!", "Please provide minimum 3 characters site name.")
           else -> createProject(project_name)
         }
       }
@@ -84,7 +84,7 @@ class MvpOrgsCreateProjectActivity : BaseActivity(), View.OnClickListener {
             
             myDataPushSave.fetchOrgData()
             val intent = Intent(this@MvpOrgsCreateProjectActivity, MvpOrgsFoldersActivity::class.java)
-            myData.mvp_orgs_project_id = loginAPI.id
+            myData.project_id = loginAPI.id
             myData.mvp_orgs_project_name = loginAPI.name
             myData.isForLoadResult = false
             myData.name = loginAPI.name
