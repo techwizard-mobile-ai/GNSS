@@ -732,11 +732,11 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
   }
   
   
-  fun getMvpOrgsFiles(orderBy: String = "DESC"): ArrayList<MyData> {
+  fun getMvpOrgsFiles(admin_file_type_id: Int, orderBy: String = "DESC"): ArrayList<MyData> {
     
     val list: ArrayList<MyData> = ArrayList()
     val db = this.readableDatabase
-    val query = "Select * from $TABLE_MVP_ORGS_FILES  ORDER BY $COL_ID $orderBy"
+    val query = "Select * from $TABLE_MVP_ORGS_FILES WHERE $COL_ADMIN_FILE_TYPE_ID=${admin_file_type_id} ORDER BY $COL_ID $orderBy"
     val result = db.rawQuery(query, null)
     
     if (result.moveToFirst()) {
@@ -3936,7 +3936,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
       cv.put(COL_UPDATED_AT, datum.updated_at)
       cv.put(COL_IS_SYNC, datum.isSync)
       val updatedID = db.update(TABLE_MVP_ORGS_FILES, cv, "$COL_ID = ${datum.id}", null)
-      myHelper.log("updateMvpOrgsFiles:updateID:$0")
+      myHelper.log("updateMvpOrgsFiles:updateID:$updatedID")
     }
   }
 }

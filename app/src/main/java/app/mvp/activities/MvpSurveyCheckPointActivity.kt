@@ -117,6 +117,7 @@ class MvpSurveyCheckPointActivity : BaseActivity(), View.OnClickListener, OnMapR
             myData1.file_description = mvp_survey_checkpoint_details.text.toString()
             myData1.loadingGPSLocation = gpsLocation
             myData1.unloadingGPSLocation = gpsLocation
+            myData1.upload_status = 2
             myData1.file_level = (relative_path.split("/").size - 1)
             myData1.security_level = myHelper.getLoginAPI().role
             if (myDataPushSave.pushInsertSurveyRecordCheckPoint(myData1) > 0) myHelper.toast("CheckPoint recorded successfully") else myHelper.showErrorDialog("CheckPoint not recorded", "Please try again later.")

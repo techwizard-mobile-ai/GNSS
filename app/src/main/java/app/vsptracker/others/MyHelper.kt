@@ -1551,6 +1551,7 @@ class MyHelper(var TAG: String, val context: Context) {
       10 -> typeName = context.getString(R.string.operators_waitings)
       11 -> typeName = context.getString(R.string.checkforms_completed)
       12 -> typeName = context.getString(R.string.survey_checkpoints)
+      13 -> typeName = context.getString(R.string.survey_scan)
     }
     return typeName
   }

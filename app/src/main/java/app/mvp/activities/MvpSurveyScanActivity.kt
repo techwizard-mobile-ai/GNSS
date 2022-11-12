@@ -68,15 +68,13 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
   private var videoCapture: VideoCapture<Recorder>? = null
   private var recording: Recording? = null
   private lateinit var cameraExecutor: ExecutorService
-  
   private lateinit var map: GoogleMap
   private lateinit var fusedLocationClient: FusedLocationProviderClient
   private var mapGPSLocation: GPSLocation = GPSLocation()
-  
-  
   private var mInterval: Long = 1000 // 1 seconds by default, can be changed later
   private var mHandler: Handler? = null
   private var isCapturingImage = false
+  var checkpoint_label = "Label Scan"
   
   var mStatusChecker: Runnable = object : Runnable {
     override fun run() {
@@ -128,7 +126,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     mapFragment.getMapAsync(this)
     fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
     cameraExecutor = Executors.newSingleThreadExecutor()
-    startGPS()
+    startGPS1()
     mHandler = Handler()
     mvp_survey_scan_capture.text = "Start Image Capture"
     
@@ -144,22 +142,35 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
         finish()
       }
       R.id.mvp_survey_scan_capture -> {
-        myHelper.log("isCapturingImage:$isCapturingImage")
-        if (isCapturingImage) {
-          myHelper.log("stopRepeatingTask")
-          stopRepeatingTask()
-          mvp_survey_scan_pause.visibility = View.GONE
-          mvp_survey_scan_settings.visibility = View.VISIBLE
-          isCapturingImage = false
-          mvp_survey_scan_capture.text = "Start Image Capture"
-          mvp_survey_scan_label.text.clear()
-        } else {
-          myHelper.log("startRepeatingTask")
-          isCapturingImage = true
-          mvp_survey_scan_pause.visibility = View.VISIBLE
-          mvp_survey_scan_settings.visibility = View.GONE
-          startRepeatingTask()
-          mvp_survey_scan_capture.text = "Stop Image Capture"
+        checkpoint_label = mvp_survey_scan_label.text.toString()
+        myHelper.log("checkpoint_label:${checkpoint_label.length}")
+        myHelper.log(checkpoint_label)
+        
+        when {
+          checkpoint_label.isEmpty() -> {
+            myHelper.showErrorDialog("Label Scan", "Please enter label scan to continue scan.")
+          }
+          else -> {
+            myHelper.log("isCapturingImage:$isCapturingImage")
+            if (isCapturingImage) {
+              myHelper.log("stopRepeatingTask:$checkpoint_label")
+              stopRepeatingTask()
+              mvp_survey_scan_pause.visibility = View.GONE
+              mvp_survey_scan_settings.visibility = View.VISIBLE
+              isCapturingImage = false
+              mvp_survey_scan_label.isEnabled = true
+              mvp_survey_scan_capture.text = "Start Image Capture"
+              mvp_survey_scan_label.text.clear()
+            } else {
+              myHelper.log("startRepeatingTask")
+              mvp_survey_scan_label.isEnabled = false
+              isCapturingImage = true
+              mvp_survey_scan_pause.visibility = View.VISIBLE
+              mvp_survey_scan_settings.visibility = View.GONE
+              startRepeatingTask()
+              mvp_survey_scan_capture.text = "Stop Image Capture"
+            }
+          }
         }
       }
       R.id.mvp_survey_scan_pause -> {
@@ -277,28 +288,32 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
           myHelper.log("Photo capture failed: ${exc.message}")
         }
         
-        override fun
-                onImageSaved(output: ImageCapture.OutputFileResults) {
+        override fun onImageSaved(output: ImageCapture.OutputFileResults) {
           val msg = "Image saved successfully: ${output.savedUri}"
-
-//                    var lalLong =
-//                    val marker = map.addMarker(
-//                        MarkerOptions()
-//                            .position(location1)
-//                            .title(mapGPSLocation.locationName)
-//                    )
-          
           val location = LatLng(location1.latitude, location1.longitude)
-          map.addMarker(
-            MarkerOptions()
-              .position(location)
-              .icon(bitmapFromVector(applicationContext, R.drawable.ic_camera_scan))
-          )
-
-//                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
-//                    myHelper.toast(msg)
+          map.addMarker(MarkerOptions().position(location).icon(bitmapFromVector(applicationContext, R.drawable.ic_camera_scan)))
+          val myData1 = MyData()
+          val aws_path =
+            myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Scan/${myHelper.getValidFileName(checkpoint_label)}/${myHelper.getOrgID()}_${myHelper.getUserID()}_${myData.project_id}_${myData.mvp_orgs_files_id}_${myHelper.getCurrentTimeMillis()}"
+          val relative_path =
+            myData.relative_path + "${myHelper.getLoginAPI().name}_${myHelper.getLoginAPI().id}/Scan/${checkpoint_label}/${myHelper.getOrgID()}_${myHelper.getUserID()}_${myData.project_id}_${myData.mvp_orgs_files_id}_${myHelper.getCurrentTimeMillis()}"
+          
+          myData1.org_id = myHelper.getOrgID()
+          myData1.user_id = myHelper.getUserID()
+          myData1.project_id = myData.project_id
+          myData1.mvp_orgs_files_id = myData.mvp_orgs_files_id
+          myData1.admin_file_type_id = MyEnum.ADMIN_FILE_TYPE_TAPU_SCAN
+          myData1.security_level = myHelper.getLoginAPI().role
+          myData1.aws_path = aws_path
+          myData1.relative_path = relative_path
+          myData1.file_description = checkpoint_label
+          myData1.loadingGPSLocation = gpsLocation
+          myData1.unloadingGPSLocation = gpsLocation
+          myData1.upload_status = 2
+          myData1.file_level = (relative_path.split("/").size - 1)
+          myData1.security_level = myHelper.getLoginAPI().role
+          if (myDataPushSave.pushInsertSurveyRecordCheckPoint(myData1) > 0) myHelper.log("Scan recorded successfully") else myHelper.showErrorDialog("Scan image not captured!", "Please try again later.")
           myHelper.log(msg)
-//                    Log.d(TAG, msg)
         }
       }
     )
@@ -352,7 +367,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
         LocationManager.GPS_PROVIDER,
         1000,
         0f,
-        locationListener
+        locationListener1
       )
       
     }

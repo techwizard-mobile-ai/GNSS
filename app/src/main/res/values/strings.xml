@@ -387,4 +387,5 @@
   <string name="label_scan1">Label scan</string>
   <string name="create_site">Create Site</string>
   <string name="survey_checkpoints">Survey CheckPoints</string>
+  <string name="survey_scan">Survey Scan</string>
 </resources>

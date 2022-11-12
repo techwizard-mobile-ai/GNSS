@@ -95,7 +95,11 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
       serverSyncList.add(it)
       it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
     }
-    myDataPushSave.addToList(12, myHelper.getTypeName(12), db.getMvpOrgsFiles("ASC"))?.let {
+    myDataPushSave.addToList(12, myHelper.getTypeName(12), db.getMvpOrgsFiles(MyEnum.ADMIN_FILE_TYPE_TAPU_CHECKPOINT, "ASC"))?.let {
+      serverSyncList.add(it)
+      it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+    }
+    myDataPushSave.addToList(13, myHelper.getTypeName(13), db.getMvpOrgsFiles(MyEnum.ADMIN_FILE_TYPE_TAPU_SCAN, "ASC"))?.let {
       serverSyncList.add(it)
       it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
     }
