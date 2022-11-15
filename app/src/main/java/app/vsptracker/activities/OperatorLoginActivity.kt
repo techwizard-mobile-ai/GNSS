@@ -124,17 +124,15 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
       if (packageName.equals(MVP)) {
         val intent = Intent(this, MvpHomeActivity::class.java)
         startActivity(intent)
-      } else {
+      } else if (myHelper.getOperatorAPI().id > 0) {
+        /**
+         * If Operator is Logged in and App is Launched this Code block will be executed.
+         * If Internet is Available Fetch Company Data and Replace Old Data.
+         * Call launchHomeForLoggedIn() method.
+         */
         fetchOrgData()
+        launchHomeForLoggedIn()
       }
-    } else if (myHelper.getOperatorAPI().id > 0) {
-      /**
-       * If Operator is Logged in and App is Launched this Code block will be executed.
-       * If Internet is Available Fetch Company Data and Replace Old Data.
-       * Call launchHomeForLoggedIn() method.
-       */
-      fetchOrgData()
-      launchHomeForLoggedIn()
     } else {
       val intent = Intent(this, LoginActivity::class.java)
       startActivity(intent)

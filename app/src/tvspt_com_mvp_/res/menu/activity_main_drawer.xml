@@ -35,6 +35,10 @@
       android:visible="false"
       android:title="@string/day_works" />
     <item
+      android:id="@+id/nav_last_task"
+      android:icon="@drawable/ic_last_task"
+      android:title="@string/last_task" />
+    <item
       android:id="@+id/nav_ntrip_client"
       android:icon="@drawable/ic_ntrip_client"
       android:title="@string/corrections_settings" />

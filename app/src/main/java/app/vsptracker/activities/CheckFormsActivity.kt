@@ -29,7 +29,7 @@ class CheckFormsActivity : BaseActivity(), View.OnClickListener,
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_check_forms, contentFrameLayout)
     val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(9).isChecked = true
+    navigationView.menu.getItem(11).isChecked = true
     
     myHelper.setTag(tag)
     val bundle: Bundle? = intent.extras

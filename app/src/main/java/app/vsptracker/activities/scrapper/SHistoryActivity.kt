@@ -32,7 +32,7 @@ class SHistoryActivity : BaseActivity(), View.OnClickListener,
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_shistory, contentFrameLayout)
     val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(6).isChecked = true
+    navigationView.menu.getItem(8).isChecked = true
     
     myHelper.setTag(tag)
     

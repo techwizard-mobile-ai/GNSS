@@ -33,7 +33,7 @@ class HoursReportingActivity : BaseActivity(), View.OnClickListener,
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_hours_reporting, contentFrameLayout)
     val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(8).isChecked = true
+    navigationView.menu.getItem(10).isChecked = true
     myHelper.setTag(tag)
     val bundle: Bundle? = intent.extras
     if (bundle != null) {

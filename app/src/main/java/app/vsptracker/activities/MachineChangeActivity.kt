@@ -16,7 +16,6 @@ import app.vsptracker.classes.Material
 import app.vsptracker.others.MyEnum.Companion.LOGOUT_TYPE_MACHINE_CHANGED
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_machine_change.*
-import java.util.*
 
 private const val REQUEST_ACCESS_FINE_LOCATION = 1
 
@@ -37,7 +36,7 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_machine_change, contentFrameLayout)
     val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(7).isChecked = true
+    navigationView.menu.getItem(9).isChecked = true
     
     myHelper.log("meter.hourStartGPSLocation:${myHelper.getMeter().hourStartGPSLocation}")
 //        if(myHelper.getIsMachineStopped() || myHelper.getMachineID() <1){

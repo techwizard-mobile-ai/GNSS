@@ -31,10 +31,15 @@
       android:icon="@drawable/ic_action_departure_board"
       android:title="@string/day_works" />
     <item
+      android:id="@+id/nav_last_task"
+      android:icon="@drawable/ic_last_task"
+      android:visible="false"
+      android:title="@string/last_task" />
+    <item
       android:id="@+id/nav_ntrip_client"
       android:icon="@drawable/ic_ntrip_client"
       android:visible="false"
-      android:title="Corrections settings " />
+      android:title="@string/corrections_settings" />
     <item
       android:id="@+id/nav_night_mode"
       android:icon="@drawable/ic_dark_mode"
@@ -59,7 +64,6 @@
       android:id="@+id/nav_server_sync"
       android:icon="@drawable/ic_server_sync"
       android:title="@string/server_sync" />
-
     <item
       android:id="@+id/nav_logout"
       android:icon="@drawable/ic_logout"

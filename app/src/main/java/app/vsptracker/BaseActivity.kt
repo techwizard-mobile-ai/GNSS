@@ -31,6 +31,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.work.WorkManager
 import app.mvp.activities.MvpCorrectionsSettingsActivity
 import app.mvp.activities.MvpHomeActivity
+import app.mvp.activities.MvpSurveyHomeActivity
 import app.vsptracker.activities.*
 import app.vsptracker.activities.common.MachineBreakdownActivity
 import app.vsptracker.activities.common.MachineStatusActivity
@@ -524,6 +525,11 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
       R.id.nav_ntrip_client -> {
 //        myHelper.launchNtripClient()
         val intent = Intent(this, MvpCorrectionsSettingsActivity::class.java)
+        startActivity(intent)
+        myHelper.setIsMapOpened(false)
+      }
+      R.id.nav_last_task -> {
+        val intent = Intent(this, MvpSurveyHomeActivity::class.java)
         startActivity(intent)
         myHelper.setIsMapOpened(false)
       }

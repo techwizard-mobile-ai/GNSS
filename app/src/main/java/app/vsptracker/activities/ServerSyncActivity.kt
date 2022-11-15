@@ -38,7 +38,7 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_server_sync, contentFrameLayout)
     val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(10).isChecked = true
+    navigationView.menu.getItem(12).isChecked = true
     populateLists()
     
     server_sync_upload.setOnClickListener(this)

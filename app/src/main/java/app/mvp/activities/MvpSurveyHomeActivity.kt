@@ -47,11 +47,17 @@ class MvpSurveyHomeActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_mvp_survey_home, contentFrameLayout)
     val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(0).isChecked = true
+    navigationView.menu.getItem(5).isChecked = true
     
     myHelper.setTag(tag)
     myData = myHelper.getLastJourney()
     myHelper.log("myData:$myData")
+    if (myData.project_id == 0 || myData.mvp_orgs_files_id == 0) {
+      // if no project_id and no task_id(folder id) is set then go to home screen.
+      val intent = Intent(this, MvpHomeActivity::class.java)
+      intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+      startActivity(intent)
+    }
     toolbar_title.text = myData.mvp_orgs_project_name + " / " + myData.mvp_orgs_files_name + " / Data Collection"
     
     
