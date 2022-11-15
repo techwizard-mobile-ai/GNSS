@@ -102,6 +102,10 @@ class MyHelper(var TAG: String, val context: Context) {
   var util: Util = Util()
   var transferUtility: TransferUtility? = util.getTransferUtility(context)
   
+  fun getCurrentTimeMillis(): Long {
+    return System.currentTimeMillis()
+  }
+  
   fun getCurrentDay(): Int {
     val calendar = Calendar.getInstance()
     return calendar[Calendar.DAY_OF_MONTH]
@@ -109,7 +113,7 @@ class MyHelper(var TAG: String, val context: Context) {
   
   fun getCurrentMonth(): Int {
     val calendar = Calendar.getInstance()
-    return calendar[Calendar.MONTH]
+    return calendar[Calendar.MONTH] + 1 // due to 0 indexing we need to add 1 to get correct month number
   }
   
   fun getCurrentYear(): Int {
@@ -117,7 +121,7 @@ class MyHelper(var TAG: String, val context: Context) {
     return calendar[Calendar.YEAR]
   }
   
-  fun getValidFileName (relative_path : String) :String {
+  fun getValidFileName(relative_path: String): String {
     val nonAlphaNum = "[^a-zA-Z0-9.]".toRegex()
     return relative_path.replace(nonAlphaNum, "_")
   }
@@ -198,7 +202,7 @@ class MyHelper(var TAG: String, val context: Context) {
   fun awsFileUpload(path: String, file: File) {
 //        TransferObserver observer = transferUtility.upload("checkforms/"+file.getName(),file);
     
-    val observer: TransferObserver = transferUtility!!.upload(path + file.name, file)
+    val observer: TransferObserver = transferUtility!!.upload(path, file)
     log("awsFileUpload:$observer")
   }
   
@@ -1303,7 +1307,7 @@ class MyHelper(var TAG: String, val context: Context) {
             try {
               val file = readContentToFile(Uri.parse(images.localImagePath))
               val filePath = getAWSFilePath(MyEnum.CHECKFORMS_IMAGES)
-              awsFileUpload(filePath, file)
+              awsFileUpload(filePath + file.name, file)
               images.awsImagePath = filePath + file.name
               log("fileAdded:${checkFormDatum.answerDataObj}")
             }

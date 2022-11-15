@@ -67,7 +67,7 @@ class MvpOrgsCreateFolderActivity : BaseActivity(), View.OnClickListener {
     val selectedFiles = ArrayList<MyData>()
     
     val aws_path =
-      "${myHelper.getOrgID()}/mpv_project_files/${myData.project_id}/taputapu/${myHelper.getCurrentYear()}/${myHelper.getCurrentMonth()}/${myHelper.getCurrentDay()}/${myHelper.getValidFileName(name)}/"
+      "${myHelper.getOrgID()}/mvp_project_files/${myData.project_id}/taputapu/${myHelper.getCurrentYear()}/${myHelper.getCurrentMonth()}/${myHelper.getCurrentDay()}/${myHelper.getValidFileName(name)}/"
     val relative_path = "taputapu/${myHelper.getCurrentYear()}/${myHelper.getCurrentMonth()}/${myHelper.getCurrentDay()}/${name}/"
     
     val myData1 = MyData()

@@ -128,7 +128,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     cameraExecutor = Executors.newSingleThreadExecutor()
     startGPS1()
     mHandler = Handler()
-    mvp_survey_scan_capture.text = "Start Image Capture"
+    mvp_survey_scan_capture.text = resources.getString(R.string.start_image_capture)
     
     mvp_survey_scan_back.setOnClickListener(this)
     mvp_survey_scan_capture.setOnClickListener(this)
@@ -159,7 +159,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
               mvp_survey_scan_settings.visibility = View.VISIBLE
               isCapturingImage = false
               mvp_survey_scan_label.isEnabled = true
-              mvp_survey_scan_capture.text = "Start Image Capture"
+              mvp_survey_scan_capture.text = resources.getString(R.string.start_image_capture)
               mvp_survey_scan_label.text.clear()
             } else {
               myHelper.log("startRepeatingTask")
@@ -168,7 +168,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
               mvp_survey_scan_pause.visibility = View.VISIBLE
               mvp_survey_scan_settings.visibility = View.GONE
               startRepeatingTask()
-              mvp_survey_scan_capture.text = "Stop Image Capture"
+              mvp_survey_scan_capture.text = resources.getString(R.string.stop_image_caputer)
             }
           }
         }
@@ -254,28 +254,51 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     }
   }
   
+  private fun getOutputDirectory(): File {
+    val mediaDir = externalMediaDirs.firstOrNull()?.let {
+      File(it, resources.getString(R.string.app_name)).apply { mkdirs() }
+    }
+    return if (mediaDir != null && mediaDir.exists()) {
+      Log.i(TAG, mediaDir.path); mediaDir
+    } else {
+      filesDir
+    }
+  }
+  
   private fun takePhoto() {
     // Get a stable reference of the modifiable image capture use case
     val imageCapture = imageCapture ?: return
     
     // Create time stamped name and MediaStore entry.
-    val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US)
-      .format(System.currentTimeMillis())
+    val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US).format(System.currentTimeMillis())
     val contentValues = ContentValues().apply {
       put(MediaStore.MediaColumns.DISPLAY_NAME, name)
       put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+      put(MediaStore.MediaColumns.DATA, "image/jpeg")
       if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
         put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image")
       }
     }
-    
+    val metadata = ImageCapture.Metadata()
+    metadata.location = location1
     // Create output options object which contains file + metadata
+    
+    val photoFile = File.createTempFile(
+      SimpleDateFormat(FILENAME_FORMAT, Locale.US).format(System.currentTimeMillis()),
+      ".jpg",
+      getOutputDirectory()
+    )
+    
     val outputOptions = ImageCapture.OutputFileOptions
       .Builder(
-        contentResolver,
-        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-        contentValues
+        photoFile
       )
+//      .Builder(
+//        contentResolver,
+//        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+//        contentValues
+//      )
+      .setMetadata(metadata)
       .build()
     
     // Set up image capture listener, which is triggered after photo has
@@ -285,7 +308,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
       ContextCompat.getMainExecutor(this),
       object : ImageCapture.OnImageSavedCallback {
         override fun onError(exc: ImageCaptureException) {
-          myHelper.log("Photo capture failed: ${exc.message}")
+          myHelper.toast("Photo capture failed:" + exc.message)
         }
         
         override fun onImageSaved(output: ImageCapture.OutputFileResults) {
@@ -294,9 +317,14 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
           map.addMarker(MarkerOptions().position(location).icon(bitmapFromVector(applicationContext, R.drawable.ic_camera_scan)))
           val myData1 = MyData()
           val aws_path =
-            myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Scan/${myHelper.getValidFileName(checkpoint_label)}/${myHelper.getOrgID()}_${myHelper.getUserID()}_${myData.project_id}_${myData.mvp_orgs_files_id}_${myHelper.getCurrentTimeMillis()}"
+            myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Scan/${myHelper.getValidFileName(checkpoint_label)}/${myHelper.getOrgID()}_${
+              myHelper.getUserID()
+            }_${myData.project_id}_${myData.mvp_orgs_files_id}_${myHelper.getCurrentTimeMillis()}.jpg"
           val relative_path =
-            myData.relative_path + "${myHelper.getLoginAPI().name}_${myHelper.getLoginAPI().id}/Scan/${checkpoint_label}/${myHelper.getOrgID()}_${myHelper.getUserID()}_${myData.project_id}_${myData.mvp_orgs_files_id}_${myHelper.getCurrentTimeMillis()}"
+            myData.relative_path + "${myHelper.getLoginAPI().name}_${myHelper.getLoginAPI().id}/Scan/${checkpoint_label}/${myHelper.getOrgID()}_${myHelper.getUserID()}_${myData.project_id}_${
+              myData
+                .mvp_orgs_files_id
+            }_${myHelper.getCurrentTimeMillis()}.jpg"
           
           myData1.org_id = myHelper.getOrgID()
           myData1.user_id = myHelper.getUserID()
@@ -312,8 +340,12 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
           myData1.upload_status = 2
           myData1.file_level = (relative_path.split("/").size - 1)
           myData1.security_level = myHelper.getLoginAPI().role
+          myData1.size = photoFile.length().toInt()
+          myData1.file_details = "{ \"size\": ${photoFile.length()} }"
           if (myDataPushSave.pushInsertSurveyRecordCheckPoint(myData1) > 0) myHelper.log("Scan recorded successfully") else myHelper.showErrorDialog("Scan image not captured!", "Please try again later.")
           myHelper.log(msg)
+          
+          myHelper.awsFileUpload(aws_path, photoFile)
         }
       }
     )
@@ -360,7 +392,6 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
   }
   
   private fun startGPS1() {
-    myHelper.log("startGPS1111__called")
     locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
     try {
       locationManager?.requestLocationUpdates(
@@ -369,7 +400,6 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
         0f,
         locationListener1
       )
-      
     }
     catch (ex: SecurityException) {
       myHelper.log("No Location Available:${ex.message}")
@@ -496,13 +526,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
           lastLocation = location
           val currentLatLng = LatLng(location.latitude, location.longitude)
           map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, MAP_ZOOM_LEVEL))
-//                    val resourceID = R.raw.drury_xhunua
           try {
-//                        val fileName = "drury_xhunua"
-////                        val fileName = "dury_south"
-//                        val resourceID = this.resources.getIdentifier(fileName, "raw", this.packageName)
-//                        val layer = KmlLayer(map, resourceID, applicationContext)
-//                        layer.addLayerToMap()
             val currentOrgsMap = db.getCurrentOrgsMap()
             if (currentOrgsMap !== null && !currentOrgsMap.aws_path.isNullOrEmpty()) {
               val file = File(myHelper.getKMLFileName(currentOrgsMap.aws_path))
