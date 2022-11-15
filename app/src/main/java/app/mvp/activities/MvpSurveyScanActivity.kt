@@ -317,11 +317,11 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
           map.addMarker(MarkerOptions().position(location).icon(bitmapFromVector(applicationContext, R.drawable.ic_camera_scan)))
           val myData1 = MyData()
           val aws_path =
-            myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Scan/${myHelper.getValidFileName(checkpoint_label)}/${myHelper.getOrgID()}_${
+            myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/Scan/${myHelper.getValidFileName(checkpoint_label)}/${myHelper.getOrgID()}_${
               myHelper.getUserID()
             }_${myData.project_id}_${myData.mvp_orgs_files_id}_${myHelper.getCurrentTimeMillis()}.jpg"
           val relative_path =
-            myData.relative_path + "${myHelper.getLoginAPI().name}_${myHelper.getLoginAPI().id}/Scan/${checkpoint_label}/${myHelper.getOrgID()}_${myHelper.getUserID()}_${myData.project_id}_${
+            myData.relative_path + "${myHelper.getLoginAPI().name}_${myHelper.getLoginAPI().id}/Data Collection/Scan/${checkpoint_label}/${myHelper.getOrgID()}_${myHelper.getUserID()}_${myData.project_id}_${
               myData
                 .mvp_orgs_files_id
             }_${myHelper.getCurrentTimeMillis()}.jpg"

@@ -93,18 +93,9 @@ class MvpSurveyCheckPointActivity : BaseActivity(), View.OnClickListener, OnMapR
           else -> {
             val myData1 = MyData()
             val aws_path =
-              myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/CheckPoints/${myHelper.getValidFileName(checkpoint_label)}/${myHelper.getOrgID()}_${
-                myHelper
-                  .getUserID()
-              }_${
-                myData
-                  .project_id
-              }_${myData.mvp_orgs_files_id}_${myHelper.getCurrentTimeMillis()}"
+              myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/CheckPoints/${myHelper.getValidFileName(checkpoint_label)}/${myHelper.getOrgID()}_${myHelper.getUserID()}_${myData.project_id}_${myData.mvp_orgs_files_id}_${myHelper.getCurrentTimeMillis()}"
             val relative_path =
-              myData.relative_path + "${myHelper.getLoginAPI().name}_${myHelper.getLoginAPI().id}/CheckPoints/${checkpoint_label}/${myHelper.getOrgID()}_${myHelper.getUserID()}_${myData.project_id}_${
-                myData
-                  .mvp_orgs_files_id
-              }_${myHelper.getCurrentTimeMillis()}"
+              myData.relative_path + "${myHelper.getLoginAPI().name}_${myHelper.getLoginAPI().id}/Data Collection/CheckPoints/${checkpoint_label}/${myHelper.getOrgID()}_${myHelper.getUserID()}_${myData.project_id}_${myData.mvp_orgs_files_id}_${myHelper.getCurrentTimeMillis()}"
             
             myData1.org_id = myHelper.getOrgID()
             myData1.user_id = myHelper.getUserID()
