@@ -48,7 +48,7 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_mvp_survey_survey, contentFrameLayout)
     val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(0).isChecked = true
+    navigationView.menu.getItem(5).isChecked = true
     
     myHelper.setTag(tag)
     myData = myHelper.getLastJourney()
@@ -59,7 +59,7 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
     mapFragment.getMapAsync(this)
     
     fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-    startGPS()
+    startGPS1()
     
     mvp_survey_survey_gps_data_antenna_height.text = "Antenna Height: 2.000m"
     mvp_survey_survey_gps_data_antenna_height.setOnClickListener(this)
@@ -87,30 +87,19 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
   
   
   private fun startGPS1() {
-    myHelper.log("startGPS1111__called")
     locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
     try {
-      locationManager?.requestLocationUpdates(
-        LocationManager.GPS_PROVIDER,
-        1000,
-        0f,
-        locationListener
-      )
-      
+      locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0f, locationListener1)
     }
     catch (ex: SecurityException) {
       myHelper.log("No Location Available:${ex.message}")
       myHelper.showGPSDisabledAlertToUser()
     }
-    
   }
   
   val locationListener1: LocationListener = object : LocationListener {
     @SuppressLint("SetTextI18n")
     override fun onLocationChanged(location: Location) {
-
-//            myHelper.log("location----$location")
-      
       myHelper.setGPSLayout(
         location,
         mvp_survey_survey_gps_data_acc,
@@ -153,14 +142,9 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
       val longitude = mapGPSLocation.longitude
       myHelper.log("In SetupMap:$mapGPSLocation")
       val location1 = LatLng(lat, longitude)
-      val marker = map.addMarker(
-        MarkerOptions()
-          .position(location1)
-          .title(mapGPSLocation.locationName)
-      )
+      val marker = map.addMarker(MarkerOptions().position(location1).title(mapGPSLocation.locationName))
       
-      
-      marker!!.showInfoWindow()
+      marker?.showInfoWindow()
       map.isMyLocationEnabled = true
       fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
         // Got last known location. In some rare situations this can be null.
@@ -184,13 +168,7 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
           lastLocation = location
           val currentLatLng = LatLng(location.latitude, location.longitude)
           map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, ZOOM_LEVEL))
-//                    val resourceID = R.raw.drury_xhunua
           try {
-//                        val fileName = "drury_xhunua"
-////                        val fileName = "dury_south"
-//                        val resourceID = this.resources.getIdentifier(fileName, "raw", this.packageName)
-//                        val layer = KmlLayer(map, resourceID, applicationContext)
-//                        layer.addLayerToMap()
             val currentOrgsMap = db.getCurrentOrgsMap()
             if (currentOrgsMap !== null && !currentOrgsMap.aws_path.isNullOrEmpty()) {
               val file = File(myHelper.getKMLFileName(currentOrgsMap.aws_path))

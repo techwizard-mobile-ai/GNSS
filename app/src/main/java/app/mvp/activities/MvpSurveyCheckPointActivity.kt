@@ -49,7 +49,7 @@ class MvpSurveyCheckPointActivity : BaseActivity(), View.OnClickListener, OnMapR
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_mvp_survey_check_point, contentFrameLayout)
     val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(0).isChecked = true
+    navigationView.menu.getItem(5).isChecked = true
     
     myHelper.setTag(tag)
     myData = myHelper.getLastJourney()
@@ -217,13 +217,7 @@ class MvpSurveyCheckPointActivity : BaseActivity(), View.OnClickListener, OnMapR
           lastLocation = location
           val currentLatLng = LatLng(location.latitude, location.longitude)
           map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, ZOOM_LEVEL))
-//                    val resourceID = R.raw.drury_xhunua
           try {
-//                        val fileName = "drury_xhunua"
-////                        val fileName = "dury_south"
-//                        val resourceID = this.resources.getIdentifier(fileName, "raw", this.packageName)
-//                        val layer = KmlLayer(map, resourceID, applicationContext)
-//                        layer.addLayerToMap()
             val currentOrgsMap = db.getCurrentOrgsMap()
             if (currentOrgsMap !== null && !currentOrgsMap.aws_path.isNullOrEmpty()) {
               val file = File(myHelper.getKMLFileName(currentOrgsMap.aws_path))

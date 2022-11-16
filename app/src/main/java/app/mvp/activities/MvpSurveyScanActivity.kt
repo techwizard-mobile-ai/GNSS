@@ -106,7 +106,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_mvp_survey_scan, contentFrameLayout)
     val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(0).isChecked = true
+    navigationView.menu.getItem(5).isChecked = true
     
     myHelper.setTag(tag)
     myData = myHelper.getLastJourney()
@@ -379,7 +379,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
   
   override fun onResume() {
     super.onResume()
-    base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
+    base_nav_view.setCheckedItem(base_nav_view.menu.getItem(5))
   }
   
   
