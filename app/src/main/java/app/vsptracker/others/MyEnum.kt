@@ -96,5 +96,7 @@ class MyEnum {
     
     const val ADMIN_FILE_TYPE_TAPU_CHECKPOINT = 1
     const val ADMIN_FILE_TYPE_TAPU_SCAN = 2
+    const val ADMIN_FILE_TYPE_TAPU_SURVEY_POINT = 3
+    const val ADMIN_FILE_TYPE_TAPU_SURVEY_LINE = 4
   }
 }

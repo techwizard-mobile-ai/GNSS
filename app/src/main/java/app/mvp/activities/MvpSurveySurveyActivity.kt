@@ -8,11 +8,18 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
 import android.widget.FrameLayout
+import android.widget.GridView
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
+import app.vsptracker.adapters.CustomGridLMachine
+import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.GPSLocation
+import app.vsptracker.classes.Material
 import app.vsptracker.others.MyEnum
+import app.vsptracker.others.MyEnum.Companion.ADMIN_FILE_TYPE_TAPU_SURVEY_LINE
+import app.vsptracker.others.MyEnum.Companion.ADMIN_FILE_TYPE_TAPU_SURVEY_POINT
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -34,14 +41,16 @@ private const val ZOOM_LEVEL: Float = 19.0f
 class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
                                 GoogleMap.OnMarkerClickListener {
   
+  private val mvpOrgsProjects: ArrayList<Material> = ArrayList<Material>()
+  private lateinit var gv: GridView
   private val tag = this::class.java.simpleName
   private lateinit var map: GoogleMap
-  
   private lateinit var fusedLocationClient: FusedLocationProviderClient
   private lateinit var lastLocation: Location
   private var locationManager: LocationManager? = null
-  
   private var mapGPSLocation: GPSLocation = GPSLocation()
+  private var selectedLabel: Material = Material()
+  private lateinit var location1: Location
   
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -61,10 +70,30 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
     fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
     startGPS1()
     
+    gv = findViewById<GridView>(R.id.survey_labels_gridview)
+    
+    mvpOrgsProjects.add(Material(1, "Fence", ADMIN_FILE_TYPE_TAPU_SURVEY_LINE))
+    mvpOrgsProjects.add(Material(2, "Well", ADMIN_FILE_TYPE_TAPU_SURVEY_POINT))
+    mvpOrgsProjects.add(Material(3, "Pond", ADMIN_FILE_TYPE_TAPU_SURVEY_LINE))
+    mvpOrgsProjects.add(Material(4, "Road", ADMIN_FILE_TYPE_TAPU_SURVEY_LINE))
+    mvpOrgsProjects.add(Material(5, "Gas Station", ADMIN_FILE_TYPE_TAPU_SURVEY_POINT))
+    mvpOrgsProjects.add(Material(6, "Pipeline", ADMIN_FILE_TYPE_TAPU_SURVEY_LINE))
+    
+    val adapter = CustomGridLMachine(this@MvpSurveySurveyActivity, mvpOrgsProjects, 1)
+    gv.adapter = adapter
+    
+    gv.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+      
+      myHelper.log(mvpOrgsProjects[position].toString())
+      current_point.setText(mvpOrgsProjects[position].number + "")
+      selectedLabel = mvpOrgsProjects[position]
+    }
+    
     mvp_survey_survey_gps_data_antenna_height.text = "Antenna Height: 2.000m"
     mvp_survey_survey_gps_data_antenna_height.setOnClickListener(this)
     mvp_survey_survey_back.setOnClickListener(this)
     mvp_survey_survey_settings.setOnClickListener(this)
+    mvp_survey_point.setOnClickListener(this)
   }
   
   override fun onClick(view: View?) {
@@ -81,6 +110,43 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
         myData.type = MyEnum.SETTINGS_TYPE_MVP_SURVEY
         intent.putExtra("myData", myData)
         startActivity(intent)
+      }
+      R.id.mvp_survey_point -> {
+        myHelper.log("survey point:$selectedLabel")
+        when (selectedLabel.id) {
+          0 -> myHelper.showErrorDialog("Empty Label!", "Please select a label to continue survey")
+          else -> {
+            myHelper.log("Record survey check point")
+            
+            val location = LatLng(location1.latitude, location1.longitude)
+            map.addMarker(MarkerOptions().position(location).icon(myHelper.bitmapFromVector(R.drawable.ic_circle_16)))
+            val myData1 = MyData()
+            val aws_path =
+              myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/Survey/${myHelper.getValidFileName(selectedLabel.number)}/${myHelper.getOrgID()}_${myHelper.getUserID()}_${myData.project_id}_${myData.mvp_orgs_files_id}_${myHelper.getCurrentTimeMillis()}"
+            val relative_path =
+              myData.relative_path + "${myHelper.getLoginAPI().name}_${myHelper.getLoginAPI().id}/Data Collection/Survey/${selectedLabel.number}/${myHelper.getOrgID()}_${myHelper.getUserID()}_${myData.project_id}_${myData.mvp_orgs_files_id}_${myHelper.getCurrentTimeMillis()}"
+            
+            myData1.org_id = myHelper.getOrgID()
+            myData1.user_id = myHelper.getUserID()
+            myData1.project_id = myData.project_id
+            myData1.mvp_orgs_files_id = myData.mvp_orgs_files_id
+            myData1.admin_file_type_id = selectedLabel.admin_file_type_id
+            myData1.security_level = myHelper.getLoginAPI().role
+            myData1.aws_path = aws_path
+            myData1.relative_path = relative_path
+            myData1.file_description = selectedLabel.number
+            myData1.loadingGPSLocation = gpsLocation
+            myData1.unloadingGPSLocation = gpsLocation
+            myData1.upload_status = 2
+            myData1.file_level = (relative_path.split("/").size - 1)
+            myData1.security_level = myHelper.getLoginAPI().role
+            myData1.size = 0
+            myData1.file_details = "{ \"size\": 0 }"
+            if (myDataPushSave.pushInsertSurveyRecordCheckPoint(myData1) > 0) myHelper.log("Survey recorded successfully") else myHelper.showErrorDialog("Scan image not captured!", "Please try again later.")
+            myHelper.log(myData1.toString())
+            
+          }
+        }
       }
     }
   }
@@ -100,6 +166,7 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
   val locationListener1: LocationListener = object : LocationListener {
     @SuppressLint("SetTextI18n")
     override fun onLocationChanged(location: Location) {
+      location1 = location
       myHelper.setGPSLayout(
         location,
         mvp_survey_survey_gps_data_acc,

@@ -438,6 +438,8 @@ class MyDataPushSave(private val context: Context) {
     addToList(10, myHelper.getTypeName(10), db.getWaits("ASC"))?.let { serverSyncList.add(it) }
     addToList(12, myHelper.getTypeName(12), db.getMvpOrgsFiles(MyEnum.ADMIN_FILE_TYPE_TAPU_CHECKPOINT, "ASC"))?.let { serverSyncList.add(it) }
     addToList(13, myHelper.getTypeName(13), db.getMvpOrgsFiles(MyEnum.ADMIN_FILE_TYPE_TAPU_SCAN, "ASC"))?.let { serverSyncList.add(it) }
+    addToList(14, myHelper.getTypeName(14), db.getMvpOrgsFiles(MyEnum.ADMIN_FILE_TYPE_TAPU_SURVEY_POINT, "ASC"))?.let { serverSyncList.add(it) }
+    addToList(15, myHelper.getTypeName(15), db.getMvpOrgsFiles(MyEnum.ADMIN_FILE_TYPE_TAPU_SURVEY_LINE, "ASC"))?.let { serverSyncList.add(it) }
     // Uploading Completed CheckForms images to AWS might take time so skip Completed CheckForms upload to server and
     // uploading images to AWS Bucket when operator logout from app.
     if (type != MyEnum.SERVER_SYNC_DATA_LOGOUT)
@@ -646,7 +648,7 @@ class MyDataPushSave(private val context: Context) {
             fetchOrgData()
           }
           
-          12, 13 -> {
+          12, 13, 14, 15 -> {
             myHelper.log("Survey CheckPoints:${serverSyncAPI.myDataList}")
             db.updateMvpOrgsFiles(serverSyncAPI.myDataList)
           }

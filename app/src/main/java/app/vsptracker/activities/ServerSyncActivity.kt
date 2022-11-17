@@ -103,6 +103,14 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
       serverSyncList.add(it)
       it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
     }
+    myDataPushSave.addToList(14, myHelper.getTypeName(14), db.getMvpOrgsFiles(MyEnum.ADMIN_FILE_TYPE_TAPU_SURVEY_LINE, "ASC"))?.let {
+      serverSyncList.add(it)
+      it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+    }
+    myDataPushSave.addToList(15, myHelper.getTypeName(15), db.getMvpOrgsFiles(MyEnum.ADMIN_FILE_TYPE_TAPU_SURVEY_POINT, "ASC"))?.let {
+      serverSyncList.add(it)
+      it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+    }
     refreshAdapter()
   }
   

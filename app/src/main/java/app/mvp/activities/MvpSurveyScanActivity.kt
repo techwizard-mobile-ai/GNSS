@@ -7,8 +7,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -314,7 +312,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
         override fun onImageSaved(output: ImageCapture.OutputFileResults) {
           val msg = "Image saved successfully: ${output.savedUri}"
           val location = LatLng(location1.latitude, location1.longitude)
-          map.addMarker(MarkerOptions().position(location).icon(bitmapFromVector(applicationContext, R.drawable.ic_camera_scan)))
+          map.addMarker(MarkerOptions().position(location).icon(myHelper.bitmapFromVector(R.drawable.ic_camera_scan)))
           val myData1 = MyData()
           val aws_path =
             myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/Scan/${myHelper.getValidFileName(checkpoint_label)}/${myHelper.getOrgID()}_${
@@ -349,18 +347,6 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
         }
       }
     )
-  }
-  
-  private fun bitmapFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
-    val vectorDrawable = ContextCompat.getDrawable(context, vectorResId)
-    vectorDrawable!!.setBounds(0, 0, vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight)
-    
-    val bitmap = Bitmap.createBitmap(vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
-    
-    val canvas = Canvas(bitmap)
-    vectorDrawable.draw(canvas)
-    
-    return BitmapDescriptorFactory.fromBitmap(bitmap)
   }
   
   private fun captureVideo() {}

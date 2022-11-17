@@ -14,6 +14,7 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.location.Location
 import android.net.ConnectivityManager
@@ -68,6 +69,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.dialog_error.view.*
@@ -1556,6 +1559,8 @@ class MyHelper(var TAG: String, val context: Context) {
       11 -> typeName = context.getString(R.string.checkforms_completed)
       12 -> typeName = context.getString(R.string.survey_checkpoints)
       13 -> typeName = context.getString(R.string.survey_scan)
+      14 -> typeName = context.getString(R.string.survey_point)
+      15 -> typeName = context.getString(R.string.survey_polygon)
     }
     return typeName
   }
@@ -1671,6 +1676,19 @@ class MyHelper(var TAG: String, val context: Context) {
     }
     return type
   }
+  
+  fun bitmapFromVector(vectorResId: Int): BitmapDescriptor? {
+    val vectorDrawable = ContextCompat.getDrawable(context, vectorResId)
+    vectorDrawable!!.setBounds(0, 0, vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight)
+    
+    val bitmap = Bitmap.createBitmap(vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+    
+    val canvas = Canvas(bitmap)
+    vectorDrawable.draw(canvas)
+    
+    return BitmapDescriptorFactory.fromBitmap(bitmap)
+  }
+  
   
 }
 

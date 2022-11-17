@@ -69,16 +69,29 @@ class Material : Serializable {
   @Expose
   var aws_path: String = ""
   
+  @SerializedName("admin_file_type_id")
+  @Expose
+  var admin_file_type_id: Int = -1
+  
   constructor()
   
   constructor(id: Int, name: String) {
     this.id = id
-    this.name = name
+    this.number = name
+  }
+  
+  constructor(id: Int, name: String, admin_file_type_id: Int) {
+    this.id = id
+    this.number = name
+    this.admin_file_type_id = admin_file_type_id
   }
   
   override fun toString(): String {
-    return "Material(id=$id, orgId=$orgId, siteId=$siteId, machineTypeId=$machineTypeId, machineBrandId=$machineBrandId, machinePlantId=$machinePlantId, machineTaskId=$machineTaskId, " +
-            "isDeleted=$isDeleted, status=$status, totalHours=$totalHours, pin=$pin, name='$name', number='$number')"
+    return "Material(" +
+            "id=$id, " +
+            "number='$number', " +
+            "admin_file_type_id=$admin_file_type_id" +
+            ")"
   }
   
   

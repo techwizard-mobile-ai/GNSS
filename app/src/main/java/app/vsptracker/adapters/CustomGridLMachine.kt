@@ -9,7 +9,7 @@ import android.widget.TextView
 import app.vsptracker.R
 import app.vsptracker.classes.Material
 
-class CustomGridLMachine(private val mContext: Context, private val arrayList: ArrayList<Material>) :
+class CustomGridLMachine(private val mContext: Context, private val arrayList: ArrayList<Material>, private val type: Int = 0) :
         BaseAdapter() {
   
   override fun getCount(): Int {
@@ -26,11 +26,13 @@ class CustomGridLMachine(private val mContext: Context, private val arrayList: A
   
   override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
     val grid: View
-    val inflater = mContext
-      .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    val inflater = mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     
     if (convertView == null) {
-      grid = inflater.inflate(R.layout.list_row_grid, null)
+      grid = when (type) {
+        1 -> inflater.inflate(R.layout.list_row_grid_survey, null)
+        else -> inflater.inflate(R.layout.list_row_grid, null)
+      }
     } else {
       grid = (convertView as View?)!!
     }
