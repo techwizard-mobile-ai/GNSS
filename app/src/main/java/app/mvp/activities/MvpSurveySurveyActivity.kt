@@ -47,10 +47,11 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
   private lateinit var map: GoogleMap
   private lateinit var fusedLocationClient: FusedLocationProviderClient
   private lateinit var lastLocation: Location
-  private var locationManager: LocationManager? = null
+  private var locationManager1: LocationManager? = null
   private var mapGPSLocation: GPSLocation = GPSLocation()
   private var selectedLabel: Material = Material()
-  private lateinit var location1: Location
+  private var location1: Location? = null
+  private var selectedLabel_aws_path: String? = null
   
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -85,8 +86,10 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
     gv.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
       
       myHelper.log(mvpOrgsProjects[position].toString())
-      current_point.setText(mvpOrgsProjects[position].number + "")
       selectedLabel = mvpOrgsProjects[position]
+      selectedLabel_aws_path = myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/Survey/${myHelper.getValidFileName(selectedLabel.number)}/"
+      current_point.setText(selectedLabel.number + " - ${db.getMvpOrgsFiles(selectedLabel_aws_path!!).size}")
+      addMarkers(db.getMvpOrgsFiles(selectedLabel_aws_path!!))
     }
     
     mvp_survey_survey_gps_data_antenna_height.text = "Antenna Height: 2.000m"
@@ -113,12 +116,11 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
       }
       R.id.mvp_survey_point -> {
         myHelper.log("survey point:$selectedLabel")
-        when (selectedLabel.id) {
-          0 -> myHelper.showErrorDialog("Empty Label!", "Please select a label to continue survey")
+        when {
+          selectedLabel.id == 0 -> myHelper.showErrorDialog("Empty Label!", "Please select a label to continue survey")
+          location1 == null -> myHelper.showErrorDialog("No GPS Data", "Please change your location to continue.")
           else -> {
-            myHelper.log("Record survey check point")
-            
-            val location = LatLng(location1.latitude, location1.longitude)
+            val location = LatLng(location1!!.latitude, location1!!.longitude)
             map.addMarker(MarkerOptions().position(location).icon(myHelper.bitmapFromVector(R.drawable.ic_circle_16)))
             val myData1 = MyData()
             val aws_path =
@@ -144,7 +146,7 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
             myData1.file_details = "{ \"size\": 0 }"
             if (myDataPushSave.pushInsertSurveyRecordCheckPoint(myData1) > 0) myHelper.log("Survey recorded successfully") else myHelper.showErrorDialog("Scan image not captured!", "Please try again later.")
             myHelper.log(myData1.toString())
-            
+            current_point.setText(selectedLabel.number + " - ${db.getMvpOrgsFiles(selectedLabel_aws_path!!).size}")
           }
         }
       }
@@ -153,9 +155,9 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
   
   
   private fun startGPS1() {
-    locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
+    locationManager1 = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
     try {
-      locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0f, locationListener1)
+      locationManager1?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0f, locationListener1)
     }
     catch (ex: SecurityException) {
       myHelper.log("No Location Available:${ex.message}")
@@ -250,6 +252,15 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
           }
         }
       }
+    }
+  }
+  
+  fun addMarkers(myDataList: ArrayList<MyData>) {
+    map.clear()
+    myDataList.forEach {
+      myHelper.log("AddMarker:${it.loadingGPSLocation.latitude}")
+      val location = LatLng(it.loadingGPSLocation.latitude, it.loadingGPSLocation.longitude)
+      map.addMarker(MarkerOptions().position(location).icon(myHelper.bitmapFromVector(R.drawable.ic_circle_16)))
     }
   }
   

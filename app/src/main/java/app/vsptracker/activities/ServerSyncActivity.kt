@@ -198,7 +198,8 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
               myHelper.log("Token Expired:$responseJObject")
               myHelper.refreshToken()
             } else {
-              myHelper.toast(responseJObject.getString("message"))
+              myHelper.toastOnUi(responseJObject.getString("message"))
+              myHelper.log("message:${responseJObject.getString("message")}")
             }
           }
         }
@@ -210,7 +211,7 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
       override fun onFailure(call: Call, e: IOException) {
         myHelper.run {
           hideDialog()
-          toast(e.message.toString())
+          toastOnUi(e.message.toString())
           log("Exception: ${e.printStackTrace()}")
         }
       }

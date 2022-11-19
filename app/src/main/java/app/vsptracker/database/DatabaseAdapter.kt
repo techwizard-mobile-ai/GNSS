@@ -732,6 +732,54 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
   }
   
   
+  fun getMvpOrgsFiles(aws_path: String, orderBy: String = "DESC"): ArrayList<MyData> {
+    
+    val list: ArrayList<MyData> = ArrayList()
+    val db = this.readableDatabase
+    val query = "Select * from $TABLE_MVP_ORGS_FILES WHERE $COL_AWS_PATH LIKE '$aws_path%' ORDER BY $COL_ID $orderBy"
+    val result = db.rawQuery(query, null)
+    
+    if (result.moveToFirst()) {
+      do {
+        val datum = MyData()
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.org_id = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.user_id = result.getInt(result.getColumnIndex(COL_USER_ID))
+        datum.project_id = result.getInt(result.getColumnIndex(COL_PROJECTS_ID))
+        datum.admin_file_type_id = result.getInt(result.getColumnIndex(COL_ADMIN_FILE_TYPE_ID))
+        datum.processing_status = result.getInt(result.getColumnIndex(COL_PROCESSING_STATUS))
+        datum.file_level = result.getInt(result.getColumnIndex(COL_FILE_LEVEL))
+        datum.security_level = result.getInt(result.getColumnIndex(COL_SECURITY_LEVEL))
+        datum.aws_path = result.getString(result.getColumnIndex(COL_AWS_PATH))
+        datum.relative_path = result.getString(result.getColumnIndex(COL_RELATIVE_PATH))
+        datum.presignedUrl = result.getString(result.getColumnIndex(COL_PRESIGNED_URL))
+        datum.image_path = result.getString(result.getColumnIndex(COL_IMAGE_PATH))
+        datum.size = result.getInt(result.getColumnIndex(COL_SIZE))
+        datum.file_details = result.getString(result.getColumnIndex(COL_FILE_DETAILS))
+        datum.file_description = result.getString(result.getColumnIndex(COL_FILE_DESCRIPTION))
+        datum.loadingGPSLocationString = result.getString(result.getColumnIndex(COL_LOADING_GPS_LOCATION))
+        datum.loadingGPSLocation = myHelper.getStringToGPSLocation(datum.loadingGPSLocationString)
+        datum.unloadingGPSLocationString = result.getString(result.getColumnIndex(COL_UNLOADING_GPS_LOCATION))
+        datum.unloadingGPSLocation = myHelper.getStringToGPSLocation(datum.unloadingGPSLocationString)
+        datum.startTime = result.getLong(result.getColumnIndex(COL_START_TIME))
+        datum.stopTime = result.getLong(result.getColumnIndex(COL_END_TIME))
+        datum.totalTime = result.getLong(result.getColumnIndex(COL_TOTAL_TIME))
+        datum.time = result.getLong(result.getColumnIndex(COL_TIME)).toString()
+        datum.date = myHelper.getDateTime(result.getLong(result.getColumnIndex(COL_TIME)))
+        datum.upload_status = result.getInt(result.getColumnIndex(COL_UPLOAD_STATUS))
+        datum.status = result.getInt(result.getColumnIndex(COL_STATUS))
+        datum.isSync = result.getInt(result.getColumnIndex(COL_IS_SYNC))
+        
+        list.add(datum)
+      } while (result.moveToNext())
+    }
+    
+    result.close()
+    db.close()
+    myHelper.log("getMvpOrgsFiles:$list")
+    return list
+  }
+  
   fun getMvpOrgsFiles(admin_file_type_id: Int, orderBy: String = "DESC"): ArrayList<MyData> {
     
     val list: ArrayList<MyData> = ArrayList()
