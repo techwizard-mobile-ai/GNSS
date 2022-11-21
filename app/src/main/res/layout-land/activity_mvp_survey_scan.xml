@@ -108,9 +108,9 @@
         <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/label_scan"
+          android:text="@string/scan_label"
           android:textColor="@color/black"
-          android:visibility="gone" />
+          android:visibility="visible" />
 
         <EditText
           android:id="@+id/mvp_survey_scan_label"

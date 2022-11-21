@@ -391,4 +391,5 @@
   <string name="survey_scan">Survey Scan</string>
   <string name="last_task">Last Task</string>
   <string name="survey_polygon">Survey Polygon</string>
+  <string name="scan_label">Scan Label:</string>
 </resources>
