@@ -73,6 +73,10 @@ class Material : Serializable {
   @Expose
   var admin_file_type_id: Int = -1
   
+  @SerializedName("is_favorite")
+  @Expose
+  var is_favorite: Int = 0
+  
   constructor()
   
   constructor(id: Int, name: String) {
@@ -91,6 +95,7 @@ class Material : Serializable {
             "id=$id, " +
             "number='$number', " +
             "admin_file_type_id=$admin_file_type_id" +
+            "is_favorite=$is_favorite" +
             ")"
   }
   

@@ -42,6 +42,6 @@
     android:layout_alignParentBottom="true"
     android:layout_centerHorizontal="true"
     style="@style/back_button_single"
-    android:text="@string/upload_data" />
+    android:text="@string/sync_data" />
 
 </RelativeLayout>

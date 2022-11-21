@@ -241,6 +241,7 @@
   <string name="prod_dig">Prod. Dig</string>
   <string name="gen_dig">Gen. Dig</string>
   <string name="no_offline_data_to_sync_to_server">No offline data to sync.</string>
+  <string name="no_offline_data_to_sync_to_server1">No offline data to sync. Synchronizing server resources.</string>
   <string name="stop_reason">Stop Reason</string>
   <string name="remarks">Remarks</string>
   <string name="production_digging_history">Production Digging History</string>
@@ -392,4 +393,5 @@
   <string name="last_task">Last Task</string>
   <string name="survey_polygon">Survey Polygon</string>
   <string name="scan_label">Scan Label:</string>
+  <string name="sync_data">Sync Data</string>
 </resources>

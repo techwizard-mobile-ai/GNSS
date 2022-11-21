@@ -327,6 +327,14 @@ class MyData : Serializable {
   @Expose
   var mvp_orgs_files_id: Int = 0
   
+  @SerializedName("admin_surveys_labels_type_id")
+  @Expose
+  var admin_surveys_labels_type_id: Int = 0
+  
+  @SerializedName("is_favorite")
+  @Expose
+  var is_favorite: Int = 0
+  
   @SerializedName("presignedUrl")
   @Expose
   var presignedUrl: String = ""
@@ -339,33 +347,14 @@ class MyData : Serializable {
     return "MyData(" +
             "id=$id, " +
             "org_id=$org_id, " +
-            "presignedUrl=$presignedUrl, " +
-            "image_path=$image_path, " +
             "user_id=$user_id, " +
-            "project_id=$project_id, " +
-            "mvp_orgs_project_name=$mvp_orgs_project_name, " +
-            "mvp_orgs_files_id=$mvp_orgs_files_id, " +
-            "mvp_orgs_files_name=$mvp_orgs_files_name, " +
-            "admin_file_type_id=$admin_file_type_id, " +
-            "processing_status=$processing_status, " +
-            "file_level=$file_level, " +
-            "security_level=$security_level, " +
-            "aws_path=$aws_path, " +
-            "relative_path=$relative_path, " +
-            "size=$size, " +
-            "file_details=$file_details, " +
-            "file_description=$file_description, " +
-            "loadingGPSLocation=$loadingGPSLocation, " +
-            "startTime=$startTime, " +
-            "stopTime=$stopTime, " +
-            "totalTime=$totalTime, " +
-            "date=$date, " +
-            "time=$time, " +
-            "isSync=$isSync, " +
+            "name=$name, " +
+            "admin_surveys_labels_type_id='$admin_surveys_labels_type_id', " +
+            "file_description='$file_description', " +
+            "is_favorite='$is_favorite', " +
+            "loadingGPSLocationString='$loadingGPSLocationString', " +
             "status=$status, " +
             "isDeleted=$isDeleted, " +
-            "created_at=$created_at, " +
-            "updated_at=$updated_at, " +
             ")"
   }
   

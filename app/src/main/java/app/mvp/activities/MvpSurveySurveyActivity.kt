@@ -18,8 +18,6 @@ import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.GPSLocation
 import app.vsptracker.classes.Material
 import app.vsptracker.others.MyEnum
-import app.vsptracker.others.MyEnum.Companion.ADMIN_FILE_TYPE_TAPU_SURVEY_LINE
-import app.vsptracker.others.MyEnum.Companion.ADMIN_FILE_TYPE_TAPU_SURVEY_POINT
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -41,7 +39,7 @@ private const val ZOOM_LEVEL: Float = 19.0f
 class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
                                 GoogleMap.OnMarkerClickListener {
   
-  private val mvpOrgsProjects: ArrayList<Material> = ArrayList<Material>()
+  private var mvpOrgsProjects: ArrayList<Material> = ArrayList<Material>()
   private lateinit var gv: GridView
   private val tag = this::class.java.simpleName
   private lateinit var map: GoogleMap
@@ -72,13 +70,15 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
     startGPS1()
     
     gv = findViewById<GridView>(R.id.survey_labels_gridview)
+
+//    mvpOrgsProjects.add(Material(1, "Fence", ADMIN_FILE_TYPE_TAPU_SURVEY_LINE))
+//    mvpOrgsProjects.add(Material(2, "Well", ADMIN_FILE_TYPE_TAPU_SURVEY_POINT))
+//    mvpOrgsProjects.add(Material(3, "Pond", ADMIN_FILE_TYPE_TAPU_SURVEY_LINE))
+//    mvpOrgsProjects.add(Material(4, "Road", ADMIN_FILE_TYPE_TAPU_SURVEY_LINE))
+//    mvpOrgsProjects.add(Material(5, "Gas Station", ADMIN_FILE_TYPE_TAPU_SURVEY_POINT))
+//    mvpOrgsProjects.add(Material(6, "Pipeline", ADMIN_FILE_TYPE_TAPU_SURVEY_LINE))
     
-    mvpOrgsProjects.add(Material(1, "Fence", ADMIN_FILE_TYPE_TAPU_SURVEY_LINE))
-    mvpOrgsProjects.add(Material(2, "Well", ADMIN_FILE_TYPE_TAPU_SURVEY_POINT))
-    mvpOrgsProjects.add(Material(3, "Pond", ADMIN_FILE_TYPE_TAPU_SURVEY_LINE))
-    mvpOrgsProjects.add(Material(4, "Road", ADMIN_FILE_TYPE_TAPU_SURVEY_LINE))
-    mvpOrgsProjects.add(Material(5, "Gas Station", ADMIN_FILE_TYPE_TAPU_SURVEY_POINT))
-    mvpOrgsProjects.add(Material(6, "Pipeline", ADMIN_FILE_TYPE_TAPU_SURVEY_LINE))
+    mvpOrgsProjects = db.getAdminMvpSurveysLabels()
     
     val adapter = CustomGridLMachine(this@MvpSurveySurveyActivity, mvpOrgsProjects, 1)
     gv.adapter = adapter

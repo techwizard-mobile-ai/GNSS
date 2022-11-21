@@ -140,7 +140,10 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
             }
             pushUpdateServerSync(serverSyncList)
           } else myHelper.showErrorDialog(resources.getString(R.string.no_internet_connection), resources.getString(R.string.no_internet_explanation))
-        } else myHelper.toast(resources.getString(R.string.no_offline_data_to_sync_to_server))
+        } else {
+          myHelper.toast(resources.getString(R.string.no_offline_data_to_sync_to_server1))
+          myDataPushSave.fetchOrgData()
+        }
       }
     }
   }

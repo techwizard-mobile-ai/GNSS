@@ -121,6 +121,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
     // If Company credentials are saved then fetched Company Data otherwise redirect to Company Login Page.
     if (!myHelper.getLoginAPI().email.isNullOrBlank() && !myHelper.getLoginAPI().pass.isNullOrBlank()) {
       myHelper.log("packageName.equals(TAPUTAPU):" + packageName.equals(MVP))
+      fetchOrgData()
       if (packageName.equals(MVP)) {
         val intent = Intent(this, MvpHomeActivity::class.java)
         startActivity(intent)
@@ -130,7 +131,6 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
          * If Internet is Available Fetch Company Data and Replace Old Data.
          * Call launchHomeForLoggedIn() method.
          */
-        fetchOrgData()
         launchHomeForLoggedIn()
       }
     } else {

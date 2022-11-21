@@ -46,6 +46,7 @@ const val TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER = "admin_checkforms_completed_
 const val TABLE_ORGS_MAPS = "orgs_maps"
 const val TABLE_MVP_ORGS_PROJECTS = "mvp_orgs_projects"
 const val TABLE_MVP_ORGS_FILES = "mvp_orgs_files"
+const val TABLE_ADMIN_MVP_SURVEYS_LABELS = "admin_mvp_surveys_labels"
 
 const val COL_TIME = "time"
 const val COL_DATE = "date"
@@ -145,6 +146,8 @@ const val COL_SECURITY_LEVEL = "security_level"
 const val COL_SIZE = "size"
 const val COL_PRESIGNED_URL = "presigned_url"
 const val COL_IMAGE_PATH = "image_path"
+const val COL_ADMIN_SURVEYS_LABELS_TYPE_ID = "admin_surveys_labels_type_id"
+const val COL_IS_FAVORITE = "is_favorite"
 
 // Completed CheckForm Entry Type
 // 0 : automatically completed when due
@@ -577,6 +580,24 @@ const val createMvpOrgsFilesTable = "CREATE TABLE IF NOT EXISTS $TABLE_MVP_ORGS_
         "$COL_UPDATED_AT TEXT " +
         " )"
 
+const val createAdminMvpSurveysLabelsTable = "CREATE TABLE IF NOT EXISTS $TABLE_ADMIN_MVP_SURVEYS_LABELS ( " +
+        "$COL_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+        "$COL_ORG_ID INTEGER, " +
+        "$COL_USER_ID INTEGER, " +
+        "$COL_NAME TEXT UNIQUE, " +
+        "$COL_ADMIN_SURVEYS_LABELS_TYPE_ID INTEGER, " +
+        "$COL_ADMIN_FILE_TYPE_ID INTEGER, " +
+        "$COL_FILE_DESCRIPTION TEXT, " +
+        "$COL_LOADING_GPS_LOCATION  TEXT," +
+        "$COL_IS_FAVORITE INTEGER, " +
+        "$COL_IS_SYNC  INTEGER," +
+        "$COL_STATUS INTEGER, " +
+        "$COL_IS_DELETED INTEGER, " +
+        "$COL_CREATED_AT TEXT, " +
+        "$COL_UPDATED_AT TEXT " +
+        " )"
+
+const val DROP_TABLE_ADMIN_MVP_SURVEYS_LABELS = "DROP TABLE IF EXISTS $TABLE_ADMIN_MVP_SURVEYS_LABELS"
 const val DROP_TABLE_MVP_ORGS_FILES = "DROP TABLE IF EXISTS $TABLE_MVP_ORGS_FILES"
 const val DROP_TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER = "DROP TABLE IF EXISTS $TABLE_ADMIN_CHECKFORMS_COMPLETED_SERVER"
 const val DROP_TABLE_ADMIN_CHECKFORMS_DATA = "DROP TABLE IF EXISTS $TABLE_ADMIN_CHECKFORMS_DATA"
@@ -608,7 +629,7 @@ const val DROP_TABLE_ORGS_MAPS = "DROP TABLE IF EXISTS $TABLE_ORGS_MAPS"
 const val DROP_TABLE_MVP_ORGS_PROJECTS = "DROP TABLE IF EXISTS $TABLE_MVP_ORGS_PROJECTS"
 
 @SuppressLint("Range")
-class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.getString(R.string.db_name), null, 18) {
+class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.getString(R.string.db_name), null, 19) {
   
   val tag = "DatabaseAdapter"
   private var myHelper: MyHelper
@@ -619,6 +640,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
   
   override fun onCreate(db: SQLiteDatabase?) {
     myHelper.log("DatabaseAdapter-onCreate")
+    db?.execSQL(createAdminMvpSurveysLabelsTable)
     db?.execSQL(createOrgsMapsTable)
     db?.execSQL(createAdminCheckFormsCompletedServerTable)
     db?.execSQL(createAdminCheckFormsDataTable)
@@ -652,6 +674,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
   
   override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
     myHelper.log("onUpgrade")
+    db?.execSQL(DROP_TABLE_ADMIN_MVP_SURVEYS_LABELS)
     db?.execSQL(DROP_TABLE_MVP_ORGS_FILES)
     db?.execSQL(DROP_TABLE_MVP_ORGS_PROJECTS)
     db?.execSQL(DROP_TABLE_ORGS_MAPS)
@@ -682,6 +705,64 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     db?.execSQL(DROP_TABLE_E_WORK)
     db?.execSQL(DROP_TABLE_E_LOAD_HISTORY)
     onCreate(db)
+  }
+  
+  fun insertAdminMvpSurveysLabels(data: ArrayList<MyData>) {
+    myHelper.log("insertAdminMvpSurveysLabels:${data.size}")
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    val tableName = TABLE_ADMIN_MVP_SURVEYS_LABELS
+    
+    for (datum in data) {
+      cv.put(COL_ID, datum.id)
+      cv.put(COL_ORG_ID, datum.org_id)
+      cv.put(COL_USER_ID, datum.user_id)
+      cv.put(COL_NAME, datum.name)
+      cv.put(COL_ADMIN_SURVEYS_LABELS_TYPE_ID, datum.admin_surveys_labels_type_id)
+      cv.put(COL_ADMIN_FILE_TYPE_ID, datum.admin_file_type_id)
+      cv.put(COL_FILE_DESCRIPTION, datum.file_description)
+      cv.put(COL_IS_FAVORITE, datum.is_favorite)
+      cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.loadingGPSLocation))
+      cv.put(COL_IS_SYNC, datum.isSync)
+      cv.put(COL_STATUS, datum.status)
+      cv.put(COL_IS_DELETED, datum.isDeleted)
+      cv.put(COL_CREATED_AT, datum.created_at)
+      cv.put(COL_UPDATED_AT, datum.updated_at)
+      
+      val insertedID = db.replace(tableName, null, cv)
+      myHelper.printInsertion(tableName, insertedID, datum)
+    }
+  }
+  
+  /**
+   * Here we are using number instead of name parameter as Adapter [CustomGridLMachine] is used and that is showing number instead of name.
+   */
+  fun getAdminMvpSurveysLabels(): ArrayList<Material> {
+    
+    val list: ArrayList<Material> = ArrayList()
+    val db = this.readableDatabase
+    val query: String =
+//      "Select * from $TABLE_ADMIN_MVP_SURVEYS_LABELS  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 AND $COL_ORG_ID = ${myHelper.getLoginAPI().org_id}   ORDER BY $COL_NAME ASC"
+      "Select * from $TABLE_ADMIN_MVP_SURVEYS_LABELS  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 ORDER BY $COL_NAME ASC"
+    
+    val result = db.rawQuery(query, null)
+    
+    if (result.moveToFirst()) {
+      do {
+        val datum = Material()
+        datum.id = result.getInt(result.getColumnIndex(COL_ID))
+        datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
+        datum.number = result.getString(result.getColumnIndex(COL_NAME))
+        datum.admin_file_type_id = result.getInt(result.getColumnIndex(COL_ADMIN_FILE_TYPE_ID))
+        datum.is_favorite = result.getInt(result.getColumnIndex(COL_IS_FAVORITE))
+        list.add(datum)
+        
+      } while (result.moveToNext())
+    }
+    
+    result.close()
+    db.close()
+    return list
   }
   
   fun insertMvpOrgsFile(datum: MyData): Long {
