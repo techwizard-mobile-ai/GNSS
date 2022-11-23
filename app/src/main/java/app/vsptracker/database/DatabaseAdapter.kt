@@ -148,6 +148,9 @@ const val COL_PRESIGNED_URL = "presigned_url"
 const val COL_IMAGE_PATH = "image_path"
 const val COL_ADMIN_SURVEYS_LABELS_TYPE_ID = "admin_surveys_labels_type_id"
 const val COL_IS_FAVORITE = "is_favorite"
+const val COL_COLOR_HEX = "color_hex"
+const val COL_COLOR_RGB = "color_rgb"
+const val COL_COLOR = "color"
 
 // Completed CheckForm Entry Type
 // 0 : automatically completed when due
@@ -589,6 +592,9 @@ const val createAdminMvpSurveysLabelsTable = "CREATE TABLE IF NOT EXISTS $TABLE_
         "$COL_ADMIN_FILE_TYPE_ID INTEGER, " +
         "$COL_FILE_DESCRIPTION TEXT, " +
         "$COL_LOADING_GPS_LOCATION  TEXT," +
+        "$COL_COLOR_HEX TEXT," +
+        "$COL_COLOR_RGB TEXT," +
+        "$COL_COLOR TEXT," +
         "$COL_IS_FAVORITE INTEGER, " +
         "$COL_IS_SYNC  INTEGER," +
         "$COL_STATUS INTEGER, " +
@@ -629,7 +635,7 @@ const val DROP_TABLE_ORGS_MAPS = "DROP TABLE IF EXISTS $TABLE_ORGS_MAPS"
 const val DROP_TABLE_MVP_ORGS_PROJECTS = "DROP TABLE IF EXISTS $TABLE_MVP_ORGS_PROJECTS"
 
 @SuppressLint("Range")
-class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.getString(R.string.db_name), null, 19) {
+class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.getString(R.string.db_name), null, 20) {
   
   val tag = "DatabaseAdapter"
   private var myHelper: MyHelper
@@ -709,6 +715,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
   
   fun insertAdminMvpSurveysLabels(data: ArrayList<MyData>) {
     myHelper.log("insertAdminMvpSurveysLabels:${data.size}")
+    myHelper.log("insertAdminMvpSurveysLabels:${data}")
     val db = this.writableDatabase
     val cv = ContentValues()
     val tableName = TABLE_ADMIN_MVP_SURVEYS_LABELS
@@ -722,6 +729,9 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
       cv.put(COL_ADMIN_FILE_TYPE_ID, datum.admin_file_type_id)
       cv.put(COL_FILE_DESCRIPTION, datum.file_description)
       cv.put(COL_IS_FAVORITE, datum.is_favorite)
+      cv.put(COL_COLOR_HEX, datum.color_hex)
+      cv.put(COL_COLOR_RGB, datum.color_rgb)
+      cv.put(COL_COLOR, datum.color)
       cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.loadingGPSLocation))
       cv.put(COL_IS_SYNC, datum.isSync)
       cv.put(COL_STATUS, datum.status)
@@ -753,6 +763,9 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
         datum.id = result.getInt(result.getColumnIndex(COL_ID))
         datum.orgId = result.getInt(result.getColumnIndex(COL_ORG_ID))
         datum.number = result.getString(result.getColumnIndex(COL_NAME))
+        datum.color_hex = result.getString(result.getColumnIndex(COL_COLOR_HEX))
+        datum.color_rgb = result.getString(result.getColumnIndex(COL_COLOR_RGB))
+        datum.color = result.getString(result.getColumnIndex(COL_COLOR))
         datum.admin_file_type_id = result.getInt(result.getColumnIndex(COL_ADMIN_FILE_TYPE_ID))
         datum.is_favorite = result.getInt(result.getColumnIndex(COL_IS_FAVORITE))
         list.add(datum)

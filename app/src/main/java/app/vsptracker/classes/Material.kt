@@ -77,6 +77,18 @@ class Material : Serializable {
   @Expose
   var is_favorite: Int = 0
   
+  @SerializedName("color_hex")
+  @Expose
+  var color_hex: String = ""
+  
+  @SerializedName("color_rgb")
+  @Expose
+  var color_rgb: String = ""
+  
+  @SerializedName("color")
+  @Expose
+  var color: String = ""
+  
   constructor()
   
   constructor(id: Int, name: String) {

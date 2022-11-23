@@ -1,6 +1,7 @@
 package app.vsptracker.adapters
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,6 +43,8 @@ class CustomGridLMachine(private val mContext: Context, private val arrayList: A
     if (type == 1) {
       val minus = grid.findViewById(R.id.grid_minus) as ImageView
       val plus = grid.findViewById(R.id.grid_image) as ImageView
+      minus.setColorFilter(Color.parseColor(arrayList[position].color_hex))
+      plus.setColorFilter(Color.parseColor(arrayList[position].color_hex))
       minus.setOnClickListener { (mContext as MvpSurveySurveyActivity).minus(position) }
       plus.setOnClickListener { (mContext as MvpSurveySurveyActivity).plus(position) }
     }

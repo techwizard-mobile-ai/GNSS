@@ -343,6 +343,18 @@ class MyData : Serializable {
   var mvp_orgs_project_name: String = ""
   var mvp_orgs_files_name: String = ""
   
+  @SerializedName("color_hex")
+  @Expose
+  var color_hex: String = ""
+  
+  @SerializedName("color_rgb")
+  @Expose
+  var color_rgb: String = ""
+  
+  @SerializedName("color")
+  @Expose
+  var color: String = ""
+  
   override fun toString(): String {
     return "MyData(" +
             "id=$id, " +
@@ -354,6 +366,9 @@ class MyData : Serializable {
             "file_description='$file_description', " +
             "is_favorite='$is_favorite', " +
             "loadingGPSLocationString='$loadingGPSLocationString', " +
+            "color_hex='$color_hex', " +
+            "color_rgb='$color_rgb', " +
+            "color='$color', " +
             "status=$status, " +
             "isDeleted=$isDeleted, " +
             ")"
