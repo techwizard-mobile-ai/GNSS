@@ -11,6 +11,14 @@
     android:text="@string/list_row_grid_grid_text_text" />
 
   <ImageView
+    android:id="@+id/grid_minus"
+    android:layout_width="@dimen/_14sdp"
+    android:layout_height="@dimen/_14sdp"
+    android:layout_marginEnd="@dimen/_5sdp"
+    android:src="@drawable/ic_subtract"
+    android:visibility="gone" />
+
+  <ImageView
     android:id="@+id/grid_image"
     android:visibility="gone"
     android:padding="@dimen/_5sdp"

@@ -65,6 +65,7 @@
       android:layout_height="wrap_content"
       android:padding="@dimen/_5sdp"
       android:text="@string/gps_location"
+      android:visibility="gone"
       android:textColor="@color/black"
       android:textSize="10sp" />
 
@@ -72,6 +73,7 @@
       android:id="@+id/mvp_survey_home_gps_data_time"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:visibility="gone"
       android:padding="@dimen/_5sdp"
       android:text="@string/gps_location"
       android:textColor="@color/black"
@@ -111,8 +113,7 @@
       android:layout_marginStart="@dimen/_5sdp"
       android:layout_marginRight="@dimen/_5sdp"
       android:layout_weight=".2"
-      android:text="@string/record_onto_check_point"
-      />
+      android:text="@string/record_onto_check_point" />
 
     <Button
       android:id="@+id/mvp_survey_home_start_survey"

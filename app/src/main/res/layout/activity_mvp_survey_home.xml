@@ -65,6 +65,7 @@
       android:layout_height="wrap_content"
       android:padding="@dimen/_5sdp"
       android:text="@string/gps_location"
+      android:visibility="gone"
       android:textColor="@color/black"
       android:textSize="10sp" />
 
@@ -72,6 +73,7 @@
       android:id="@+id/mvp_survey_home_gps_data_time"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:visibility="gone"
       android:padding="@dimen/_5sdp"
       android:text="@string/gps_location"
       android:textColor="@color/black"
@@ -104,8 +106,7 @@
       android:layout_marginRight="@dimen/_5sdp"
       android:layout_weight=".2"
       android:textSize="12sp"
-      android:text="@string/start_scan"
-      />
+      android:text="@string/start_scan" />
 
     <Button
       android:id="@+id/mvp_survey_home_check_point"
@@ -136,8 +137,7 @@
       android:layout_marginEnd="0dp"
       android:layout_weight="0.2"
       android:textSize="12sp"
-      android:text="@string/back"
-      />
+      android:text="@string/back" />
   </LinearLayout>
 
 </RelativeLayout>

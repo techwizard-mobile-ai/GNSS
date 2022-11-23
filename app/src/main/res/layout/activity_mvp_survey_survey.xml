@@ -83,6 +83,7 @@
         android:padding="@dimen/_5sdp"
         android:text="@string/gps_location"
         android:textColor="@color/black"
+        android:visibility="gone"
         android:textSize="10sp" />
 
       <TextView
@@ -91,6 +92,7 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/_5sdp"
         android:text="@string/gps_location"
+        android:visibility="gone"
         android:textColor="@color/black"
         android:textSize="10sp" />
 
@@ -136,7 +138,9 @@
 
         <EditText
           android:id="@+id/current_point"
-          style="@style/et_background"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="@drawable/disabled_spinner_border"
           android:layout_marginStart="0dp"
           android:layout_marginTop="@dimen/_1sdp"
           android:layout_marginEnd="0dp"

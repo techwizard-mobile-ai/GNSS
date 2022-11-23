@@ -70,6 +70,7 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/_5sdp"
         android:text="@string/gps_location"
+        android:visibility="gone"
         android:textColor="@color/black"
         android:textSize="10sp" />
 
@@ -79,6 +80,7 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/_5sdp"
         android:text="@string/gps_location"
+        android:visibility="gone"
         android:textColor="@color/black"
         android:textSize="10sp" />
     </LinearLayout>
@@ -124,12 +126,15 @@
 
         <EditText
           android:id="@+id/current_point"
-          style="@style/et_background"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="@drawable/disabled_spinner_border"
           android:layout_marginStart="0dp"
           android:layout_marginTop="@dimen/_1sdp"
           android:layout_marginEnd="0dp"
           android:focusable="false"
           android:inputType="none"
+          android:minHeight="48dp"
           android:text=""
           android:textColor="@color/black" />
 
@@ -159,6 +164,7 @@
         style="@style/back_button_single"
         android:layout_marginBottom="@dimen/_10sdp"
         android:layout_above="@id/mvp_survey_bottom"
+        android:layout_centerHorizontal="true"
         android:text="@string/survey_point" />
 
       <LinearLayout
@@ -166,6 +172,7 @@
         android:layout_width="match_parent"
         android:layout_marginTop="@dimen/_10sdp"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         android:layout_alignParentBottom="true"
         android:orientation="vertical">
 
@@ -178,6 +185,7 @@
           android:id="@+id/mvp_survey_survey_back"
           style="@style/back_button_single" />
       </LinearLayout>
+
     </RelativeLayout>
 
     <fragment

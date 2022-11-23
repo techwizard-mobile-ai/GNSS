@@ -349,7 +349,8 @@ class MyData : Serializable {
             "org_id=$org_id, " +
             "user_id=$user_id, " +
             "name=$name, " +
-            "admin_surveys_labels_type_id='$admin_surveys_labels_type_id', " +
+            "aws_path='$aws_path', " +
+            "relative_path='$relative_path', " +
             "file_description='$file_description', " +
             "is_favorite='$is_favorite', " +
             "loadingGPSLocationString='$loadingGPSLocationString', " +

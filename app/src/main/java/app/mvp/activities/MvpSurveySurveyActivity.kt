@@ -50,6 +50,8 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
   private var selectedLabel: Material = Material()
   private var location1: Location? = null
   private var selectedLabel_aws_path: String? = null
+  private var current_label_number = 0
+  private var selected_label_position = -1
   
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -86,9 +88,11 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
     gv.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
       
       myHelper.log(mvpOrgsProjects[position].toString())
+      selected_label_position = position
       selectedLabel = mvpOrgsProjects[position]
-      selectedLabel_aws_path = myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/Survey/${myHelper.getValidFileName(selectedLabel.number)}/"
-      current_point.setText(selectedLabel.number + " - ${db.getMvpOrgsFiles(selectedLabel_aws_path!!).size}")
+      current_label_number = 0
+      selectedLabel_aws_path = myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/Survey/${myHelper.getValidFileName(selectedLabel.number)}/${myHelper.getValidFileName("${selectedLabel.number}_${current_label_number}")}/"
+      current_point.setText("${selectedLabel.number}_${current_label_number}_${db.getMvpOrgsFiles(selectedLabel_aws_path!!).size}")
       addMarkers(db.getMvpOrgsFiles(selectedLabel_aws_path!!))
     }
     
@@ -97,6 +101,28 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
     mvp_survey_survey_back.setOnClickListener(this)
     mvp_survey_survey_settings.setOnClickListener(this)
     mvp_survey_point.setOnClickListener(this)
+  }
+  
+  fun plus(position: Int) {
+//    myHelper.log(mvpOrgsProjects[position].toString())
+    if (selected_label_position == position) {
+      if (current_label_number < 20)
+        current_label_number++
+      selectedLabel_aws_path = myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/Survey/${myHelper.getValidFileName(selectedLabel.number)}/${myHelper.getValidFileName("${selectedLabel.number}_${current_label_number}")}/"
+      current_point.setText("${selectedLabel.number}_${current_label_number}_${db.getMvpOrgsFiles(selectedLabel_aws_path!!).size}")
+      addMarkers(db.getMvpOrgsFiles(selectedLabel_aws_path!!))
+    }
+  }
+  
+  fun minus(position: Int) {
+//    myHelper.log(mvpOrgsProjects[position].toString())
+    if (selected_label_position == position) {
+      if (current_label_number > 0)
+        current_label_number--
+      selectedLabel_aws_path = myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/Survey/${myHelper.getValidFileName(selectedLabel.number)}/${myHelper.getValidFileName("${selectedLabel.number}_${current_label_number}")}/"
+      current_point.setText("${selectedLabel.number}_${current_label_number}_${db.getMvpOrgsFiles(selectedLabel_aws_path!!).size}")
+      addMarkers(db.getMvpOrgsFiles(selectedLabel_aws_path!!))
+    }
   }
   
   override fun onClick(view: View?) {
@@ -122,11 +148,15 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
           else -> {
             val location = LatLng(location1!!.latitude, location1!!.longitude)
             map.addMarker(MarkerOptions().position(location).icon(myHelper.bitmapFromVector(R.drawable.ic_circle_16)))
+            val file_name = "${selectedLabel.number}_${current_label_number}_${db.getMvpOrgsFiles(selectedLabel_aws_path!!).size + 1}"
+            current_point.setText(file_name)
             val myData1 = MyData()
             val aws_path =
-              myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/Survey/${myHelper.getValidFileName(selectedLabel.number)}/${myHelper.getOrgID()}_${myHelper.getUserID()}_${myData.project_id}_${myData.mvp_orgs_files_id}_${myHelper.getCurrentTimeMillis()}"
+//              myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/Survey/${myHelper.getValidFileName(selectedLabel.number)}/${myHelper.getOrgID()}_${myHelper.getUserID()}_${myData.project_id}_${myData.mvp_orgs_files_id}_${myHelper.getCurrentTimeMillis()}"
+              myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/Survey/${myHelper.getValidFileName(selectedLabel.number)}/${myHelper.getValidFileName("${selectedLabel.number}_${current_label_number}")}/${myHelper.getOrgID()}_${myHelper.getUserID()}_${myData.project_id}_${myData.mvp_orgs_files_id}_${myHelper.getCurrentTimeMillis()}"
             val relative_path =
-              myData.relative_path + "${myHelper.getLoginAPI().name}_${myHelper.getLoginAPI().id}/Data Collection/Survey/${selectedLabel.number}/${myHelper.getOrgID()}_${myHelper.getUserID()}_${myData.project_id}_${myData.mvp_orgs_files_id}_${myHelper.getCurrentTimeMillis()}"
+//              myData.relative_path + "${myHelper.getLoginAPI().name}_${myHelper.getLoginAPI().id}/Data Collection/Survey/${selectedLabel.number}/${myHelper.getOrgID()}_${myHelper.getUserID()}_${myData.project_id}_${myData.mvp_orgs_files_id}_${myHelper.getCurrentTimeMillis()}"
+              myData.relative_path + "${myHelper.getLoginAPI().name}_${myHelper.getLoginAPI().id}/Data Collection/Survey/${selectedLabel.number}/${selectedLabel.number}_$current_label_number/${file_name}"
             
             myData1.org_id = myHelper.getOrgID()
             myData1.user_id = myHelper.getUserID()
@@ -146,7 +176,6 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
             myData1.file_details = "{ \"size\": 0 }"
             if (myDataPushSave.pushInsertSurveyRecordCheckPoint(myData1) > 0) myHelper.log("Survey recorded successfully") else myHelper.showErrorDialog("Scan image not captured!", "Please try again later.")
             myHelper.log(myData1.toString())
-            current_point.setText(selectedLabel.number + " - ${db.getMvpOrgsFiles(selectedLabel_aws_path!!).size}")
           }
         }
       }

@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.ImageView
 import android.widget.TextView
+import app.mvp.activities.MvpSurveySurveyActivity
 import app.vsptracker.R
 import app.vsptracker.classes.Material
 
@@ -36,6 +38,14 @@ class CustomGridLMachine(private val mContext: Context, private val arrayList: A
     } else {
       grid = (convertView as View?)!!
     }
+    
+    if (type == 1) {
+      val minus = grid.findViewById(R.id.grid_minus) as ImageView
+      val plus = grid.findViewById(R.id.grid_image) as ImageView
+      minus.setOnClickListener { (mContext as MvpSurveySurveyActivity).minus(position) }
+      plus.setOnClickListener { (mContext as MvpSurveySurveyActivity).plus(position) }
+    }
+    
     val textView = grid.findViewById(R.id.grid_text) as TextView
     textView.visibility = View.VISIBLE
     textView.text = arrayList[position].number
