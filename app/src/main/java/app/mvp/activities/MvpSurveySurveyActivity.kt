@@ -7,10 +7,14 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.text.InputType
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
 import android.widget.FrameLayout
 import android.widget.GridView
+import androidx.appcompat.app.AlertDialog
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.adapters.CustomGridLMachine
@@ -31,13 +35,19 @@ import com.google.android.material.navigation.NavigationView
 import com.google.maps.android.data.kml.KmlLayer
 import kotlinx.android.synthetic.main.activity_mvp_survey_survey.*
 import kotlinx.android.synthetic.main.app_bar_base.*
+import kotlinx.android.synthetic.main.dialog_error.view.*
+import kotlinx.android.synthetic.main.dialog_error.view.error_explanation
+import kotlinx.android.synthetic.main.dialog_error.view.error_ok
+import kotlinx.android.synthetic.main.dialog_error.view.error_title
+import kotlinx.android.synthetic.main.dialog_input.*
+import kotlinx.android.synthetic.main.dialog_input.view.*
 import java.io.File
 import java.io.FileInputStream
 
+
 private const val ZOOM_LEVEL: Float = 19.0f
 
-class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
-                                GoogleMap.OnMarkerClickListener {
+class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
   
   private var mvpOrgsProjects: ArrayList<Material> = ArrayList<Material>()
   private lateinit var gv: GridView
@@ -95,9 +105,10 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
       current_point.setText("${selectedLabel.number}_${current_label_number}_${db.getMvpOrgsFiles(selectedLabel_aws_path!!).size}")
       addMarkers(db.getMvpOrgsFiles(selectedLabel_aws_path!!))
     }
-    
-    mvp_survey_survey_gps_data_antenna_height.text = "Antenna Height: 2.000m"
+
+//    mvp_survey_survey_gps_data_antenna_height.text = "Antenna Height: 2.000m"
     mvp_survey_survey_gps_data_antenna_height.setOnClickListener(this)
+    mvp_survey_survey_file_description.setOnClickListener(this)
     mvp_survey_survey_back.setOnClickListener(this)
     mvp_survey_survey_settings.setOnClickListener(this)
     mvp_survey_point.setOnClickListener(this)
@@ -106,8 +117,7 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
   fun plus(position: Int) {
 //    myHelper.log(mvpOrgsProjects[position].toString())
     if (selected_label_position == position) {
-      if (current_label_number < 20)
-        current_label_number++
+      if (current_label_number < 20) current_label_number++
       selectedLabel_aws_path = myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/Survey/${myHelper.getValidFileName(selectedLabel.number)}/${myHelper.getValidFileName("${selectedLabel.number}_${current_label_number}")}/"
       current_point.setText("${selectedLabel.number}_${current_label_number}_${db.getMvpOrgsFiles(selectedLabel_aws_path!!).size}")
       addMarkers(db.getMvpOrgsFiles(selectedLabel_aws_path!!))
@@ -117,8 +127,7 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
   fun minus(position: Int) {
 //    myHelper.log(mvpOrgsProjects[position].toString())
     if (selected_label_position == position) {
-      if (current_label_number > 0)
-        current_label_number--
+      if (current_label_number > 0) current_label_number--
       selectedLabel_aws_path = myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/Survey/${myHelper.getValidFileName(selectedLabel.number)}/${myHelper.getValidFileName("${selectedLabel.number}_${current_label_number}")}/"
       current_point.setText("${selectedLabel.number}_${current_label_number}_${db.getMvpOrgsFiles(selectedLabel_aws_path!!).size}")
       addMarkers(db.getMvpOrgsFiles(selectedLabel_aws_path!!))
@@ -128,7 +137,12 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
   override fun onClick(view: View?) {
     when (view!!.id) {
       R.id.mvp_survey_survey_gps_data_antenna_height -> {
-        myHelper.toast("Antenna Height")
+        myHelper.log("last Journey:${myHelper.getLastJourney()}")
+        showInputDialog(1, this)
+      }
+      R.id.mvp_survey_survey_file_description -> {
+        myHelper.log("last Journey:${myHelper.getLastJourney()}")
+        showInputDialog(2, this)
       }
       R.id.mvp_survey_survey_back -> {
         finish()
@@ -149,15 +163,17 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
             val location = LatLng(location1!!.latitude, location1!!.longitude)
             map.addMarker(MarkerOptions().position(location).icon(myHelper.bitmapFromVector(R.drawable.ic_circle_16)))
             val file_name = "${selectedLabel.number}_${current_label_number}_${db.getMvpOrgsFiles(selectedLabel_aws_path!!).size + 1}"
+            // get Point attribute and then reset value of point attribute as it should only be used for next point capturing
+            val lastJourney = myHelper.getLastJourney()
+            val file_description = lastJourney.file_description
+            lastJourney.file_description = ""
+            myHelper.setLastJourney(lastJourney)
             current_point.setText(file_name)
             val myData1 = MyData()
             val aws_path =
-//              myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/Survey/${myHelper.getValidFileName(selectedLabel.number)}/${myHelper.getOrgID()}_${myHelper.getUserID()}_${myData.project_id}_${myData.mvp_orgs_files_id}_${myHelper.getCurrentTimeMillis()}"
               myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/Survey/${myHelper.getValidFileName(selectedLabel.number)}/${myHelper.getValidFileName("${selectedLabel.number}_${current_label_number}")}/${myHelper.getOrgID()}_${myHelper.getUserID()}_${myData.project_id}_${myData.mvp_orgs_files_id}_${myHelper.getCurrentTimeMillis()}"
             val relative_path =
-//              myData.relative_path + "${myHelper.getLoginAPI().name}_${myHelper.getLoginAPI().id}/Data Collection/Survey/${selectedLabel.number}/${myHelper.getOrgID()}_${myHelper.getUserID()}_${myData.project_id}_${myData.mvp_orgs_files_id}_${myHelper.getCurrentTimeMillis()}"
               myData.relative_path + "${myHelper.getLoginAPI().name}_${myHelper.getLoginAPI().id}/Data Collection/Survey/${selectedLabel.number}/${selectedLabel.number}_$current_label_number/${file_name}"
-            
             myData1.org_id = myHelper.getOrgID()
             myData1.user_id = myHelper.getUserID()
             myData1.project_id = myData.project_id
@@ -166,7 +182,7 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
             myData1.security_level = myHelper.getLoginAPI().role
             myData1.aws_path = aws_path
             myData1.relative_path = relative_path
-            myData1.file_description = selectedLabel.number
+            myData1.file_description = file_description
             myData1.loadingGPSLocation = gpsLocation
             myData1.unloadingGPSLocation = gpsLocation
             myData1.upload_status = 2
@@ -182,6 +198,72 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
     }
   }
   
+  private fun showInputDialog(type: Int, context: Context) {
+    
+    val mDialogView = LayoutInflater.from(context).inflate(R.layout.dialog_input, null)
+    var title = "Antenna Height"
+    var explanation = "Please enter valid antenna height in m."
+    when (type) {
+      1 -> {
+        title = "Antenna Height"
+        explanation = "Please enter valid antenna height in m."
+        mDialogView.mvp_survey_dialog_input.hint = "Please enter decimal value for antenna height"
+        mDialogView.mvp_survey_dialog_input.setText(myHelper.getLastJourney().antenna_height.toString())
+      }
+      2 -> {
+        title = "Point Attribute"
+        explanation = "Please enter point attribute for next survey point."
+        mDialogView.mvp_survey_dialog_input.hint = "Please enter point attribute text"
+        mDialogView.mvp_survey_dialog_input.inputType = InputType.TYPE_CLASS_TEXT
+      }
+    }
+    
+    mDialogView.error_title.text = title
+    if (explanation.isNotBlank()) {
+      mDialogView.error_explanation.text = explanation
+      mDialogView.error_explanation.visibility = View.VISIBLE
+    }
+    
+    val mBuilder = AlertDialog.Builder(context).setView(mDialogView)
+    val mAlertDialog = mBuilder.show()
+    mAlertDialog.setCancelable(true)
+    
+    val window = mAlertDialog.window
+    val wlp = window!!.attributes
+    
+    wlp.gravity = Gravity.CENTER
+    window.attributes = wlp
+    
+    mDialogView.error_cancel.setOnClickListener {
+      mAlertDialog.dismiss()
+    }
+    
+    mDialogView.error_ok.setOnClickListener {
+      when {
+        type == 1 && myHelper.isDecimal(mDialogView.mvp_survey_dialog_input.text.toString()) -> {
+          val lastJourney = myHelper.getLastJourney()
+          lastJourney.antenna_height = mDialogView.mvp_survey_dialog_input.text.toString().toDouble()
+          myHelper.setLastJourney(lastJourney)
+          mvp_survey_survey_gps_data_antenna_height.text = "Antenna Height: ${myHelper.getLastJourney().antenna_height} m"
+          mAlertDialog.dismiss()
+        }
+        type == 2 -> {
+          val lastJourney = myHelper.getLastJourney()
+          lastJourney.file_description = mDialogView.mvp_survey_dialog_input.text.toString()
+          myHelper.setLastJourney(lastJourney)
+          mAlertDialog.dismiss()
+        }
+        else -> {
+          myHelper.toast("Please enter valid antenna height in m.")
+        }
+      }
+    }
+  }
+  
+  override fun onResume() {
+    super.onResume()
+    mvp_survey_survey_gps_data_antenna_height.text = "Antenna Height: ${myHelper.getLastJourney().antenna_height} m"
+  }
   
   private fun startGPS1() {
     locationManager1 = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
@@ -199,14 +281,7 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
     override fun onLocationChanged(location: Location) {
       location1 = location
       myHelper.setGPSLayout(
-        location,
-        mvp_survey_survey_gps_data_acc,
-        mvp_survey_survey_gps_data_lat,
-        mvp_survey_survey_gps_data_long,
-        mvp_survey_survey_gps_data_alt,
-        mvp_survey_survey_gps_data_speed,
-        mvp_survey_survey_gps_data_bearing,
-        mvp_survey_survey_gps_data_time
+        location, mvp_survey_survey_gps_data_acc, mvp_survey_survey_gps_data_lat, mvp_survey_survey_gps_data_long, mvp_survey_survey_gps_data_alt, mvp_survey_survey_gps_data_speed, mvp_survey_survey_gps_data_bearing, mvp_survey_survey_gps_data_time
       )
     }
     

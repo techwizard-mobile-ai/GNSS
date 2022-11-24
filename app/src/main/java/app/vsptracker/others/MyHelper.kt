@@ -105,6 +105,24 @@ class MyHelper(var TAG: String, val context: Context) {
   var util: Util = Util()
   var transferUtility: TransferUtility? = util.getTransferUtility(context)
   
+  fun isDecimal(toCheck: String): Boolean {
+    return toCheck.toDoubleOrNull() != null
+  }
+  
+  /**
+   * This method will return hex random color e.g. #085a54
+   */
+  fun getRandomColorHex(): String {
+
+//    val random = Random()
+//    val color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256))
+//    minus.setColorFilter(color)
+    
+    val obj = Random()
+    val rand_num = obj.nextInt(0xffffff + 1)
+    return String.format("#%06x", rand_num);
+  }
+  
   fun getCurrentTimeMillis(): Long {
     return System.currentTimeMillis()
   }

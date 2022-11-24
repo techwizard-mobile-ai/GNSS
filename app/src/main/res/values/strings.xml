@@ -394,4 +394,5 @@
   <string name="survey_polygon">Survey Polygon</string>
   <string name="scan_label">Scan Label:</string>
   <string name="sync_data">Sync Data</string>
+  <string name="point_attribute">Point attribute</string>
 </resources>

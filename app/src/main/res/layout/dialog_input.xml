@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginStart="@dimen/_10sdp"
+  android:layout_marginEnd="@dimen/_10sdp"
+  android:gravity="center"
+  android:orientation="vertical">
+
+  <TextView
+    android:id="@+id/error_title"
+    android:layout_marginTop="@dimen/_20sdp"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/antenna_height"
+    android:textSize="@dimen/_16sdp"
+    android:padding="@dimen/_10sdp"
+    style="@style/avenirnext_fontstyle"
+    android:textStyle="bold" />
+
+  <TextView
+    android:id="@+id/error_explanation"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:padding="@dimen/_10sdp"
+    android:visibility="gone"
+    android:textColor="@color/gray_dark"
+    style="@style/avenirnext_fontstyle"
+    android:text="@string/error_message"
+    android:textSize="@dimen/_10sdp" />
+
+  <EditText
+    android:id="@+id/mvp_survey_dialog_input"
+    style="@style/et_background"
+    android:layout_width="match_parent"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginStart="@dimen/_20sdp"
+    android:layout_marginTop="@dimen/_1sdp"
+    android:layout_marginEnd="@dimen/_20sdp"
+    android:gravity="top"
+    android:hint="@string/antenna_height"
+    android:inputType="numberDecimal"
+    android:lines="1"
+    android:maxLines="1"
+    android:minLines="1"
+    android:scrollbars="vertical"
+    android:text=""
+    android:textColor="@color/black" />
+
+  <View
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:layout_marginTop="@dimen/_10sdp"
+    android:layout_marginBottom="@dimen/_10sdp"
+    android:background="@color/light_white" />
+
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_marginRight="@dimen/_30sdp"
+    android:layout_marginLeft="@dimen/_30sdp"
+    android:layout_marginBottom="@dimen/_20sdp"
+    android:layout_height="wrap_content">
+
+    <TextView
+      android:id="@+id/error_cancel"
+      style="@style/avenirnext_fontstyle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentStart="true"
+      android:text="@string/cancel"
+      android:textSize="@dimen/_16sdp" />
+
+    <TextView
+      android:id="@+id/error_ok"
+      style="@style/avenirnext_fontstyle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentEnd="true"
+      android:text="@string/save"
+      android:textColor="@color/colorPrimary"
+      android:textSize="@dimen/_16sdp" />
+  </RelativeLayout>
+</LinearLayout>

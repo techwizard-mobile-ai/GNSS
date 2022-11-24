@@ -97,11 +97,29 @@
         android:textSize="10sp" />
 
       <TextView
+        android:id="@+id/mvp_survey_survey_file_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_5sdp"
+        android:text="@string/antenna_height"
+        android:textColor="@color/black"
+        android:textSize="12sp" />
+
+      <TextView
         android:id="@+id/mvp_survey_survey_gps_data_antenna_height"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/_5sdp"
         android:text="@string/antenna_height"
+        android:textColor="@color/black"
+        android:textSize="12sp" />
+
+      <TextView
+        android:id="@+id/mvp_survey_survey_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_5sdp"
+        android:text="@string/settings"
         android:textColor="@color/black"
         android:textSize="12sp" />
     </LinearLayout>
@@ -176,28 +194,15 @@
         android:id="@+id/mvp_survey_point"
         style="@style/back_button_single"
         android:layout_marginBottom="@dimen/_10sdp"
-        android:layout_above="@id/mvp_survey_bottom"
+        android:layout_above="@id/mvp_survey_survey_back"
         android:text="@string/survey_point" />
-
-      <LinearLayout
-        android:id="@+id/mvp_survey_bottom"
-        android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:layout_height="wrap_content"
+      
+      <Button
+        android:id="@+id/mvp_survey_survey_back"
         android:layout_alignParentBottom="true"
-        android:orientation="vertical">
+        android:layout_width="match_parent"
+        style="@style/back_button_single" />
 
-        <Button
-          android:id="@+id/mvp_survey_survey_settings"
-          style="@style/back_button_single"
-          android:layout_width="match_parent"
-          android:text="@string/settings" />
-
-        <Button
-          android:id="@+id/mvp_survey_survey_back"
-          android:layout_width="match_parent"
-          style="@style/back_button_single" />
-      </LinearLayout>
     </RelativeLayout>
 
     <fragment

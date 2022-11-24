@@ -86,12 +86,34 @@
     </LinearLayout>
 
     <TextView
+      android:id="@+id/mvp_survey_survey_file_description"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_toLeftOf="@id/mvp_survey_survey_gps_data_antenna_height"
+      android:padding="@dimen/_5sdp"
+      android:text="@string/point_attribute"
+      android:textColor="@color/black"
+      android:textSize="12sp" />
+
+
+    <TextView
       android:id="@+id/mvp_survey_survey_gps_data_antenna_height"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_alignParentEnd="true"
+      android:layout_toLeftOf="@id/mvp_survey_survey_settings"
       android:padding="@dimen/_5sdp"
       android:text="@string/antenna_height"
+      android:textColor="@color/black"
+      android:textSize="12sp" />
+
+    <TextView
+      android:id="@+id/mvp_survey_survey_settings"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentEnd="true"
+
+      android:padding="@dimen/_5sdp"
+      android:text="@string/settings"
       android:textColor="@color/black"
       android:textSize="12sp" />
   </RelativeLayout>
@@ -163,28 +185,15 @@
         android:id="@+id/mvp_survey_point"
         style="@style/back_button_single"
         android:layout_marginBottom="@dimen/_10sdp"
-        android:layout_above="@id/mvp_survey_bottom"
+        android:layout_above="@id/mvp_survey_survey_back"
         android:layout_centerHorizontal="true"
         android:text="@string/survey_point" />
 
-      <LinearLayout
-        android:id="@+id/mvp_survey_bottom"
-        android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
+      <Button
+        android:id="@+id/mvp_survey_survey_back"
         android:layout_alignParentBottom="true"
-        android:orientation="vertical">
-
-        <Button
-          android:id="@+id/mvp_survey_survey_settings"
-          style="@style/back_button_single"
-          android:text="@string/settings" />
-
-        <Button
-          android:id="@+id/mvp_survey_survey_back"
-          style="@style/back_button_single" />
-      </LinearLayout>
+        android:layout_centerHorizontal="true"
+        style="@style/back_button_single" />
 
     </RelativeLayout>
 

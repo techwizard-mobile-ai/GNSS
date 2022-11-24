@@ -342,6 +342,7 @@ class MyData : Serializable {
   
   var mvp_orgs_project_name: String = ""
   var mvp_orgs_files_name: String = ""
+  var antenna_height: Double = 0.0
   
   @SerializedName("color_hex")
   @Expose
@@ -357,6 +358,7 @@ class MyData : Serializable {
   
   override fun toString(): String {
     return "MyData(" +
+            "antenna_height=$antenna_height, " +
             "id=$id, " +
             "org_id=$org_id, " +
             "user_id=$user_id, " +
