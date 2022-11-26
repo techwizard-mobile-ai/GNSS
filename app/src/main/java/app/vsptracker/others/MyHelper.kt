@@ -105,6 +105,18 @@ class MyHelper(var TAG: String, val context: Context) {
   var util: Util = Util()
   var transferUtility: TransferUtility? = util.getTransferUtility(context)
   
+  /**
+   * This method will take file name input including extension and output directory and it will return a file created with
+   * those parameters. The reason to create this method arose when working on same file name for images saved in Survey
+   * scan and names shown on Portal, files created by Android system were added with timestamp suffix and it was not required in our case.
+   */
+  fun createTempFile(file_name: String, outputDirectory: File): File {
+//    val tempDir = System.getProperty("java.io.tmpdir")
+//    val fileName = prefix + suffix
+//    return File(tempDir, fileName)
+    return File(outputDirectory, file_name)
+  }
+  
   fun isDecimal(toCheck: String): Boolean {
     return toCheck.toDoubleOrNull() != null
   }

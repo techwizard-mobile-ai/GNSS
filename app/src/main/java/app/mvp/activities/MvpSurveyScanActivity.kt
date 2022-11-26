@@ -267,6 +267,8 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     // Get a stable reference of the modifiable image capture use case
     val imageCapture = imageCapture ?: return
     
+    val file_name = "${myHelper.getOrgID()}_${myHelper.getUserID()}_${myData.project_id}_${myData.mvp_orgs_files_id}_${myHelper.getCurrentTimeMillis()}.jpg"
+    
     // Create time stamped name and MediaStore entry.
     val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US).format(System.currentTimeMillis())
     val contentValues = ContentValues().apply {
@@ -280,13 +282,9 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     val metadata = ImageCapture.Metadata()
     metadata.location = location1
     // Create output options object which contains file + metadata
-    
-    val photoFile = File.createTempFile(
-      SimpleDateFormat(FILENAME_FORMAT, Locale.US).format(System.currentTimeMillis()),
-      ".jpg",
-      getOutputDirectory()
-    )
-    
+
+//    val photoFile = File.createTempFile(name, ".jpg", getOutputDirectory())
+    val photoFile = myHelper.createTempFile(file_name, getOutputDirectory())
     val outputOptions = ImageCapture.OutputFileOptions
       .Builder(
         photoFile
@@ -315,14 +313,9 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
           map.addMarker(MarkerOptions().position(location).icon(myHelper.bitmapFromVector(R.drawable.ic_camera_scan)))
           val myData1 = MyData()
           val aws_path =
-            myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/Scan/${myHelper.getValidFileName(checkpoint_label)}/${myHelper.getOrgID()}_${
-              myHelper.getUserID()
-            }_${myData.project_id}_${myData.mvp_orgs_files_id}_${myHelper.getCurrentTimeMillis()}.jpg"
+            myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/Scan/${myHelper.getValidFileName(checkpoint_label)}/${file_name}"
           val relative_path =
-            myData.relative_path + "${myHelper.getLoginAPI().name}_${myHelper.getLoginAPI().id}/Data Collection/Scan/${checkpoint_label}/${myHelper.getOrgID()}_${myHelper.getUserID()}_${myData.project_id}_${
-              myData
-                .mvp_orgs_files_id
-            }_${myHelper.getCurrentTimeMillis()}.jpg"
+            myData.relative_path + "${myHelper.getLoginAPI().name}_${myHelper.getLoginAPI().id}/Data Collection/Scan/${checkpoint_label}/${file_name}"
           
           myData1.org_id = myHelper.getOrgID()
           myData1.user_id = myHelper.getUserID()
