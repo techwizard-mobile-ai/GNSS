@@ -38,7 +38,7 @@ class MvpSurveyHomeActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
   
   private lateinit var fusedLocationClient: FusedLocationProviderClient
   private lateinit var lastLocation: Location
-  private var locationManager: LocationManager? = null
+  private var locationManager1: LocationManager? = null
   
   private var mapGPSLocation: GPSLocation = GPSLocation()
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,7 +65,7 @@ class MvpSurveyHomeActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     mapFragment.getMapAsync(this)
     
     fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-    startGPS()
+    startGPS1()
     
     mvp_survey_home_back.setOnClickListener(this)
     mvp_survey_home_check_point.setOnClickListener(this)
@@ -99,14 +99,14 @@ class MvpSurveyHomeActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
   
   
   private fun startGPS1() {
-    myHelper.log("startGPS1111__called")
-    locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
+    myHelper.log("startGPS1")
+    locationManager1 = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
     try {
-      locationManager?.requestLocationUpdates(
+      locationManager1?.requestLocationUpdates(
         LocationManager.GPS_PROVIDER,
         1000,
         0f,
-        locationListener
+        locationListener1
       )
       
     }
@@ -120,9 +120,6 @@ class MvpSurveyHomeActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
   val locationListener1: LocationListener = object : LocationListener {
     @SuppressLint("SetTextI18n")
     override fun onLocationChanged(location: Location) {
-
-//            myHelper.log("location----$location")
-      
       myHelper.setGPSLayout(
         location,
         mvp_survey_home_gps_data_acc,
