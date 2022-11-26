@@ -196,7 +196,7 @@
         android:layout_marginBottom="@dimen/_10sdp"
         android:layout_above="@id/mvp_survey_survey_back"
         android:text="@string/survey_point" />
-      
+
       <Button
         android:id="@+id/mvp_survey_survey_back"
         android:layout_alignParentBottom="true"
