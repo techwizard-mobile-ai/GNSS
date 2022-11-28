@@ -101,7 +101,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/_5sdp"
-        android:text="@string/antenna_height"
+        android:text="@string/point_attribute"
         android:textColor="@color/black"
         android:textSize="12sp" />
 
@@ -172,7 +172,7 @@
           android:layout_marginTop="@dimen/_5sdp"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="Survey Label:"
+          android:text="@string/survey_label1"
           android:textColor="@color/black" />
 
         <GridView

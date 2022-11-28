@@ -55,7 +55,23 @@
     android:supportsRtl="true"
     android:theme="@style/AppTheme.NoActionBar">
     <activity
+      android:name="app.mvp.activities.MvpSurveysLabelsSettingsActivity"
+      android:configChanges="orientation"
+      android:screenOrientation="sensor"
+      android:exported="false">
+      <meta-data
+        android:name="android.app.lib_name"
+        android:value="" />
+    </activity>
+    <activity
+      android:name="app.mvp.activities.MvpSurveySettingsActivity"
+      android:configChanges="orientation"
+      android:exported="false"
+      android:screenOrientation="sensor" />
+    <activity
       android:name="app.mvp.activities.MvpOrgsCreateProjectActivity"
+      android:configChanges="orientation"
+      android:screenOrientation="sensor"
       android:exported="false">
       <meta-data
         android:name="android.app.lib_name"
@@ -70,6 +86,8 @@
     </activity>
     <activity
       android:name="app.mvp.activities.MvpCorrectionsSettingsActivity"
+      android:configChanges="orientation"
+      android:screenOrientation="sensor"
       android:exported="false">
       <meta-data
         android:name="android.app.lib_name"

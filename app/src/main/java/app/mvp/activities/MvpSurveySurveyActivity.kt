@@ -148,7 +148,7 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
         finish()
       }
       R.id.mvp_survey_survey_settings -> {
-        val intent = Intent(this, SettingsActivity::class.java)
+        val intent = Intent(this, MvpSurveySettingsActivity::class.java)
         myData.name = "Survey Settings"
         myData.type = MyEnum.SETTINGS_TYPE_MVP_SURVEY
         intent.putExtra("myData", myData)
