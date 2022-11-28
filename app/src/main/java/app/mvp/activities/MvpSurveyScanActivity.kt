@@ -399,7 +399,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
   
   val locationListener1: LocationListener = object : LocationListener {
     override fun onLocationChanged(location: Location) {
-      myHelper.log("Status onLocationChanged.")
+//      myHelper.log("Status onLocationChanged.")
       location1 = location
       myHelper.setGPSLayout(location, mvp_survey_scan_gps_data_acc, mvp_survey_scan_gps_data_lat, mvp_survey_scan_gps_data_long, mvp_survey_scan_gps_data_alt, mvp_survey_scan_gps_data_speed, mvp_survey_scan_gps_data_bearing, mvp_survey_scan_gps_data_time)
       
