@@ -104,7 +104,6 @@ class MvpSurveyCheckPointActivity : BaseActivity(), View.OnClickListener, OnMapR
             myData1.security_level = myHelper.getLoginAPI().role
             myData1.aws_path = aws_path
             myData1.relative_path = relative_path
-            myData1.file_description = mvp_survey_checkpoint_details.text.toString()
             myData1.loadingGPSLocation = gpsLocation
             myData1.unloadingGPSLocation = gpsLocation
             myData1.upload_status = 2
@@ -144,8 +143,8 @@ class MvpSurveyCheckPointActivity : BaseActivity(), View.OnClickListener, OnMapR
   val locationListener1: LocationListener = object : LocationListener {
     @SuppressLint("SetTextI18n")
     override fun onLocationChanged(location: Location) {
-      
-      myHelper.log("location1----$location1")
+
+//      myHelper.log("location1----$location1")
       location1 = location
       myHelper.setGPSLayout(
         location,

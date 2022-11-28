@@ -28,13 +28,13 @@
 # These options are the minimal options for a functioning application
 # using Proguard and the AWS SDK 2.1.5 for Android
 
-#-keep class org.apache.commons.logging.**               { *; }
-#-keep class com.amazonaws.org.apache.commons.logging.** { *; }
-#-keep class com.amazonaws.services.sqs.QueueUrlHandler  { *; }
-#-keep class com.amazonaws.javax.xml.transform.sax.*     { public *; }
-#-keep class com.amazonaws.javax.xml.stream.**           { *; }
-#-keep class com.amazonaws.services.**.model.*Exception* { *; }
-#-keep class com.amazonaws.internal.**                   { *; }
+-keep class org.apache.commons.logging.**               { *; }
+-keep class com.amazonaws.org.apache.commons.logging.** { *; }
+-keep class com.amazonaws.services.sqs.QueueUrlHandler  { *; }
+-keep class com.amazonaws.javax.xml.transform.sax.*     { public *; }
+-keep class com.amazonaws.javax.xml.stream.**           { *; }
+-keep class com.amazonaws.services.**.model.*Exception* { *; }
+-keep class com.amazonaws.internal.**                   { *; }
 #-keep class org.codehaus.**                             { *; }
 #-keep class org.joda.time.tz.Provider                   { *; }
 #-keep class org.joda.time.tz.NameProvider               { *; }
@@ -126,3 +126,4 @@
 # kept. Suspend functions are wrapped in continuations where the type argument
 # is used.
 -keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
+-keepclassmembers enum com.amazonaws.** { *; }

@@ -335,7 +335,6 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
             myData1.security_level = myHelper.getLoginAPI().role
             myData1.aws_path = aws_path
             myData1.relative_path = relative_path
-            myData1.file_description = checkpoint_label
             myData1.loadingGPSLocation = gpsLocation
             myData1.unloadingGPSLocation = gpsLocation
             myData1.upload_status = 2
