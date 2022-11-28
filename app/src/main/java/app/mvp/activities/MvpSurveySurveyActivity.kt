@@ -157,8 +157,8 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
       R.id.mvp_survey_point -> {
         myHelper.log("survey point:$selectedLabel")
         when {
-          selectedLabel.id == 0 -> myHelper.showErrorDialog("Empty Label!", "Please select a label to continue survey")
           location1 == null -> myHelper.showErrorDialog("No GPS Data", "Please change your location to continue.")
+          selectedLabel.id == 0 -> myHelper.showErrorDialog("Empty Label!", "Please select a label to continue survey")
           else -> {
             val location = LatLng(location1!!.latitude, location1!!.longitude)
             map.addMarker(MarkerOptions().position(location).icon(myHelper.bitmapFromVector(R.drawable.ic_circle_16)))

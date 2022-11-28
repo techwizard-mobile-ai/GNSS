@@ -40,7 +40,9 @@ class MvpSurveyCheckPointActivity : BaseActivity(), View.OnClickListener, OnMapR
   
   private lateinit var fusedLocationClient: FusedLocationProviderClient
   private lateinit var lastLocation: Location
-  private var locationManager: LocationManager? = null
+  private var locationManager1: LocationManager? = null
+  private var location1: Location? = null
+  
   
   private var mapGPSLocation: GPSLocation = GPSLocation()
   
@@ -87,15 +89,12 @@ class MvpSurveyCheckPointActivity : BaseActivity(), View.OnClickListener, OnMapR
         myHelper.log("checkpoint_label:${checkpoint_label.length}")
         myHelper.log(checkpoint_label)
         when {
-          checkpoint_label.isEmpty() -> {
-            myHelper.showErrorDialog("CheckPoint Details", "Please enter checkpoint details to record checkpoint.")
-          }
+          location1 == null -> myHelper.showErrorDialog("No GPS Data", "Please change your location to continue.")
+          checkpoint_label.isEmpty() -> myHelper.showErrorDialog("CheckPoint Details", "Please enter checkpoint details to record checkpoint.")
           else -> {
             val myData1 = MyData()
-            val aws_path =
-              myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/CheckPoints/${myHelper.getValidFileName(checkpoint_label)}_${myHelper.getOrgID()}_${myHelper.getUserID()}_${myData.project_id}_${myData.mvp_orgs_files_id}_${myHelper.getCurrentTimeMillis()}"
-            val relative_path =
-              myData.relative_path + "${myHelper.getLoginAPI().name}_${myHelper.getLoginAPI().id}/Data Collection/CheckPoints/${checkpoint_label}"
+            val aws_path = myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/CheckPoints/${myHelper.getValidFileName(checkpoint_label)}_${myHelper.getOrgID()}_${myHelper.getUserID()}_${myData.project_id}_${myData.mvp_orgs_files_id}_${myHelper.getCurrentTimeMillis()}"
+            val relative_path = myData.relative_path + "${myHelper.getLoginAPI().name}_${myHelper.getLoginAPI().id}/Data Collection/CheckPoints/${checkpoint_label}"
             
             myData1.org_id = myHelper.getOrgID()
             myData1.user_id = myHelper.getUserID()
@@ -125,9 +124,9 @@ class MvpSurveyCheckPointActivity : BaseActivity(), View.OnClickListener, OnMapR
   
   private fun startGPS1() {
     myHelper.log("startGPS1111__called")
-    locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
+    locationManager1 = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
     try {
-      locationManager?.requestLocationUpdates(
+      locationManager1?.requestLocationUpdates(
         LocationManager.GPS_PROVIDER,
         1000,
         0f,
@@ -145,8 +144,9 @@ class MvpSurveyCheckPointActivity : BaseActivity(), View.OnClickListener, OnMapR
   val locationListener1: LocationListener = object : LocationListener {
     @SuppressLint("SetTextI18n")
     override fun onLocationChanged(location: Location) {
-
-//            myHelper.log("location----$location")
+      
+      myHelper.log("location1----$location1")
+      location1 = location
       myHelper.setGPSLayout(
         location,
         mvp_survey_checkpoint_gps_data_acc,

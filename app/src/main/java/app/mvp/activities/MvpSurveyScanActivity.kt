@@ -58,10 +58,10 @@ import java.util.concurrent.Executors
 class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
                               GoogleMap.OnMarkerClickListener {
   
-  private lateinit var location1: Location
+  private var location1: Location? = null
   private val tag = this::class.java.simpleName
   private lateinit var lastLocation: Location
-  private var locationManager: LocationManager? = null
+  private var locationManager1: LocationManager? = null
   private var imageCapture: ImageCapture? = null
   private var videoCapture: VideoCapture<Recorder>? = null
   private var recording: Recording? = null
@@ -145,9 +145,8 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
         myHelper.log(checkpoint_label)
         
         when {
-          checkpoint_label.isEmpty() -> {
-            myHelper.showErrorDialog("Label Scan", "Please enter label scan to continue scan.")
-          }
+          location1 == null -> myHelper.showErrorDialog("No GPS Data", "Please change your location to continue.")
+          checkpoint_label.isEmpty() -> myHelper.showErrorDialog("Label Scan", "Please enter label scan to continue scan.")
           else -> {
             myHelper.log("isCapturingImage:$isCapturingImage")
             if (isCapturingImage) {
@@ -309,34 +308,45 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
         
         override fun onImageSaved(output: ImageCapture.OutputFileResults) {
           val msg = "Image saved successfully: ${output.savedUri}"
-          val location = LatLng(location1.latitude, location1.longitude)
-          map.addMarker(MarkerOptions().position(location).icon(myHelper.bitmapFromVector(R.drawable.ic_camera_scan)))
-          val myData1 = MyData()
-          val aws_path =
-            myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/Scan/${myHelper.getValidFileName(checkpoint_label)}/${file_name}"
-          val relative_path =
-            myData.relative_path + "${myHelper.getLoginAPI().name}_${myHelper.getLoginAPI().id}/Data Collection/Scan/${checkpoint_label}/${file_name}"
-          
-          myData1.org_id = myHelper.getOrgID()
-          myData1.user_id = myHelper.getUserID()
-          myData1.project_id = myData.project_id
-          myData1.mvp_orgs_files_id = myData.mvp_orgs_files_id
-          myData1.admin_file_type_id = MyEnum.ADMIN_FILE_TYPE_TAPU_SCAN
-          myData1.security_level = myHelper.getLoginAPI().role
-          myData1.aws_path = aws_path
-          myData1.relative_path = relative_path
-          myData1.file_description = checkpoint_label
-          myData1.loadingGPSLocation = gpsLocation
-          myData1.unloadingGPSLocation = gpsLocation
-          myData1.upload_status = 2
-          myData1.file_level = (relative_path.split("/").size - 1)
-          myData1.security_level = myHelper.getLoginAPI().role
-          myData1.size = photoFile.length().toInt()
-          myData1.file_details = "{ \"size\": ${photoFile.length()} }"
-          if (myDataPushSave.pushInsertSurveyRecordCheckPoint(myData1) > 0) myHelper.log("Scan recorded successfully") else myHelper.showErrorDialog("Scan image not captured!", "Please try again later.")
-          myHelper.log(msg)
-          
-          myHelper.awsFileUpload(aws_path, photoFile)
+          if (location1 == null) {
+            myHelper.showErrorDialog("No GPS Data", "Please change your location to continue.")
+            stopRepeatingTask()
+            mvp_survey_scan_pause.visibility = View.GONE
+            mvp_survey_scan_settings.visibility = View.VISIBLE
+            isCapturingImage = false
+            mvp_survey_scan_label.isEnabled = true
+            mvp_survey_scan_capture.text = resources.getString(R.string.start_image_capture)
+            mvp_survey_scan_label.text.clear()
+          } else {
+            
+            val location = LatLng(location1!!.latitude, location1!!.longitude)
+            map.addMarker(MarkerOptions().position(location).icon(myHelper.bitmapFromVector(R.drawable.ic_camera_scan)))
+            val myData1 = MyData()
+            val aws_path =
+              myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/Scan/${myHelper.getValidFileName(checkpoint_label)}/${file_name}"
+            val relative_path =
+              myData.relative_path + "${myHelper.getLoginAPI().name}_${myHelper.getLoginAPI().id}/Data Collection/Scan/${checkpoint_label}/${file_name}"
+            
+            myData1.org_id = myHelper.getOrgID()
+            myData1.user_id = myHelper.getUserID()
+            myData1.project_id = myData.project_id
+            myData1.mvp_orgs_files_id = myData.mvp_orgs_files_id
+            myData1.admin_file_type_id = MyEnum.ADMIN_FILE_TYPE_TAPU_SCAN
+            myData1.security_level = myHelper.getLoginAPI().role
+            myData1.aws_path = aws_path
+            myData1.relative_path = relative_path
+            myData1.file_description = checkpoint_label
+            myData1.loadingGPSLocation = gpsLocation
+            myData1.unloadingGPSLocation = gpsLocation
+            myData1.upload_status = 2
+            myData1.file_level = (relative_path.split("/").size - 1)
+            myData1.security_level = myHelper.getLoginAPI().role
+            myData1.size = photoFile.length().toInt()
+            myData1.file_details = "{ \"size\": ${photoFile.length()} }"
+            if (myDataPushSave.pushInsertSurveyRecordCheckPoint(myData1) > 0) myHelper.log("Scan recorded successfully") else myHelper.showErrorDialog("Scan image not captured!", "Please try again later.")
+            myHelper.log(msg)
+            myHelper.awsFileUpload(aws_path, photoFile)
+          }
         }
       }
     )
@@ -371,9 +381,9 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
   }
   
   private fun startGPS1() {
-    locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
+    locationManager1 = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
     try {
-      locationManager?.requestLocationUpdates(
+      locationManager1?.requestLocationUpdates(
         LocationManager.GPS_PROVIDER,
         1000,
         0f,
@@ -389,40 +399,15 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
   
   val locationListener1: LocationListener = object : LocationListener {
     override fun onLocationChanged(location: Location) {
+      myHelper.log("Status onLocationChanged.")
       location1 = location
-      myHelper.setGPSLayout(
-        location,
-        mvp_survey_scan_gps_data_acc,
-        mvp_survey_scan_gps_data_lat,
-        mvp_survey_scan_gps_data_long,
-        mvp_survey_scan_gps_data_alt,
-        mvp_survey_scan_gps_data_speed,
-        mvp_survey_scan_gps_data_bearing,
-        mvp_survey_scan_gps_data_time
-      )
-      
-      var zoomlevel: Float = map.cameraPosition.zoom
-//            myHelper.log("zoomlevel: $zoomlevel")
-      if (zoomlevel < 12.0f) {
-        zoomlevel = MAP_ZOOM_LEVEL
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location1.latitude, location1.longitude), zoomlevel))
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location1.latitude, location1.longitude), zoomlevel))
-      } else {
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location1.latitude, location1.longitude), zoomlevel))
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location1.latitude, location1.longitude), zoomlevel))
-      }
+      myHelper.setGPSLayout(location, mvp_survey_scan_gps_data_acc, mvp_survey_scan_gps_data_lat, mvp_survey_scan_gps_data_long, mvp_survey_scan_gps_data_alt, mvp_survey_scan_gps_data_speed, mvp_survey_scan_gps_data_bearing, mvp_survey_scan_gps_data_time)
       
       if (isCapturingImage) {
         when {
-          location.accuracy >= 1 -> {
-            mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.red))
-          }
-          location.accuracy <= 0.05 -> {
-            mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.green))
-          }
-          else -> {
-            mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.yellow))
-          }
+          location.accuracy >= 1 -> mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.red))
+          location.accuracy <= 0.05 -> mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.green))
+          else -> mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.yellow))
         }
       } else {
         mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.colorPrimary))
