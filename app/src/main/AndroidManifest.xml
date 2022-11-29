@@ -214,7 +214,10 @@
     <activity android:name=".activities.notused.LoadUnloadActivity" />
     <activity android:name=".activities.notused.FinishActivity" />
     <activity android:name=".activities.excavator.ELoadActivity" />
-    <activity android:name=".activities.LoginActivity" /> <!-- <activity android:name=".activities.notused.EHomeOldActivity" /> -->
+    <activity
+      android:name=".activities.LoginActivity"
+      android:configChanges="orientation"
+      android:screenOrientation="sensor" /> <!-- <activity android:name=".activities.notused.EHomeOldActivity" /> -->
     <meta-data
       android:name="com.google.android.gms.version"
       android:value="@integer/google_play_services_version" />
