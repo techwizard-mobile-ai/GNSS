@@ -320,7 +320,6 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
           } else {
             
             val location = LatLng(location1!!.latitude, location1!!.longitude)
-            map.addMarker(MarkerOptions().position(location).icon(myHelper.bitmapFromVector(R.drawable.ic_camera_scan)))
             val myData1 = MyData()
             val aws_path =
               myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/Scan/${myHelper.getValidFileName(checkpoint_label)}/${file_name}"
@@ -342,7 +341,11 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
             myData1.security_level = myHelper.getLoginAPI().role
             myData1.size = photoFile.length().toInt()
             myData1.file_details = "{ \"size\": ${photoFile.length()} }"
-            if (myDataPushSave.pushInsertSurveyRecordCheckPoint(myData1) > 0) myHelper.log("Scan recorded successfully") else myHelper.showErrorDialog("Scan image not captured!", "Please try again later.")
+            if (myDataPushSave.pushInsertSurveyRecordCheckPoint(myData1) > 0) {
+              myHelper.log("Scan recorded successfully")
+              val label_name1: String = myData1.relative_path.substringAfterLast("/")
+              map.addMarker(MarkerOptions().position(location).title(label_name1).icon(myHelper.bitmapFromVector(R.drawable.ic_camera_scan)))
+            } else myHelper.showErrorDialog("Scan image not captured!", "Please try again later.")
             myHelper.log(msg)
             myHelper.awsFileUpload(aws_path, photoFile)
           }
@@ -504,6 +507,16 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
           }
         }
       }
+    }
+    addMarkers()
+  }
+  
+  fun addMarkers() {
+    map.clear()
+    val selectedLabel_aws_path1 = myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/Scan/"
+    db.getMvpOrgsFiles(selectedLabel_aws_path1!!).forEach {
+      val label_name1: String = it.relative_path.substringAfterLast("/")
+      map.addMarker(MarkerOptions().position(LatLng(it.loadingGPSLocation.latitude, it.loadingGPSLocation.longitude)).title(label_name1).icon(myHelper.bitmapFromVector(R.drawable.ic_camera_scan)))
     }
   }
   

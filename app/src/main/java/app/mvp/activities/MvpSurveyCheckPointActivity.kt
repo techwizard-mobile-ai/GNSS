@@ -20,9 +20,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.android.material.navigation.NavigationView
 import com.google.maps.android.data.kml.KmlLayer
 import kotlinx.android.synthetic.main.activity_mvp_survey_check_point.*
@@ -112,6 +110,9 @@ class MvpSurveyCheckPointActivity : BaseActivity(), View.OnClickListener, OnMapR
             if (myDataPushSave.pushInsertSurveyRecordCheckPoint(myData1) > 0) {
               myHelper.toast("CheckPoint recorded successfully")
               mvp_survey_checkpoint_details.setText("")
+              val label_name1: String = myData1.relative_path.substringAfterLast("/")
+              map.addMarker(MarkerOptions().position(LatLng(myData1.loadingGPSLocation.latitude, myData1.loadingGPSLocation.longitude)).title(label_name1).icon(myHelper.bitmapFromVector(R.drawable.ic_circle_16)))
+              
             } else myHelper.showErrorDialog("CheckPoint not recorded", "Please try again later.")
             
           }
@@ -234,6 +235,16 @@ class MvpSurveyCheckPointActivity : BaseActivity(), View.OnClickListener, OnMapR
           }
         }
       }
+    }
+    addMarkers()
+  }
+  
+  fun addMarkers() {
+    map.clear()
+    val selectedLabel_aws_path1 = myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/CheckPoints/"
+    db.getMvpOrgsFiles(selectedLabel_aws_path1!!).forEach {
+      val label_name1: String = it.relative_path.substringAfterLast("/")
+      map.addMarker(MarkerOptions().position(LatLng(it.loadingGPSLocation.latitude, it.loadingGPSLocation.longitude)).title(label_name1).icon(myHelper.bitmapFromVector(R.drawable.ic_circle_16)))
     }
   }
   
