@@ -137,6 +137,8 @@ dependencies {
     implementation "androidx.camera:camera-video:${camerax_version}"
     implementation "androidx.camera:camera-view:${camerax_version}"
     implementation "androidx.camera:camera-extensions:${camerax_version}"
+
+    implementation 'com.pes.materialcolorpicker:library:1.2.5'
 }
 apply plugin: 'com.google.gms.google-services'
 

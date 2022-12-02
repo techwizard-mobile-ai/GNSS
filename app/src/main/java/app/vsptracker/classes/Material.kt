@@ -108,6 +108,7 @@ class Material : Serializable {
             "number='$number', " +
             "admin_file_type_id=$admin_file_type_id" +
             "is_favorite=$is_favorite" +
+            "color_hex=$color_hex" +
             ")"
   }
   

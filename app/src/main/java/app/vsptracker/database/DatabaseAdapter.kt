@@ -151,6 +151,7 @@ const val COL_IS_FAVORITE = "is_favorite"
 const val COL_COLOR_HEX = "color_hex"
 const val COL_COLOR_RGB = "color_rgb"
 const val COL_COLOR = "color"
+const val COL_DB_ID = "db_id"
 
 // Completed CheckForm Entry Type
 // 0 : automatically completed when due
@@ -585,6 +586,7 @@ const val createMvpOrgsFilesTable = "CREATE TABLE IF NOT EXISTS $TABLE_MVP_ORGS_
 
 const val createAdminMvpSurveysLabelsTable = "CREATE TABLE IF NOT EXISTS $TABLE_ADMIN_MVP_SURVEYS_LABELS ( " +
         "$COL_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+        "$COL_DB_ID INTEGER, " +
         "$COL_ORG_ID INTEGER, " +
         "$COL_USER_ID INTEGER, " +
         "$COL_NAME TEXT UNIQUE, " +
@@ -595,7 +597,7 @@ const val createAdminMvpSurveysLabelsTable = "CREATE TABLE IF NOT EXISTS $TABLE_
         "$COL_COLOR_HEX TEXT," +
         "$COL_COLOR_RGB TEXT," +
         "$COL_COLOR TEXT," +
-        "$COL_IS_FAVORITE INTEGER, " +
+        "$COL_IS_FAVORITE INTEGER DEFAULT 0, " +
         "$COL_IS_SYNC  INTEGER," +
         "$COL_STATUS INTEGER, " +
         "$COL_IS_DELETED INTEGER, " +
@@ -635,7 +637,7 @@ const val DROP_TABLE_ORGS_MAPS = "DROP TABLE IF EXISTS $TABLE_ORGS_MAPS"
 const val DROP_TABLE_MVP_ORGS_PROJECTS = "DROP TABLE IF EXISTS $TABLE_MVP_ORGS_PROJECTS"
 
 @SuppressLint("Range")
-class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.getString(R.string.db_name), null, 20) {
+class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.getString(R.string.db_name), null, 22) {
   
   val tag = "DatabaseAdapter"
   private var myHelper: MyHelper
@@ -715,45 +717,60 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
   
   fun insertAdminMvpSurveysLabels(data: ArrayList<MyData>) {
     myHelper.log("insertAdminMvpSurveysLabels:${data.size}")
-    myHelper.log("insertAdminMvpSurveysLabels:${data}")
+//    myHelper.log("insertAdminMvpSurveysLabels:${data}")
     val db = this.writableDatabase
     val cv = ContentValues()
     val tableName = TABLE_ADMIN_MVP_SURVEYS_LABELS
     
     for (datum in data) {
-      cv.put(COL_ID, datum.id)
-      cv.put(COL_ORG_ID, datum.org_id)
-      cv.put(COL_USER_ID, datum.user_id)
-      cv.put(COL_NAME, datum.name)
-      cv.put(COL_ADMIN_SURVEYS_LABELS_TYPE_ID, datum.admin_surveys_labels_type_id)
-      cv.put(COL_ADMIN_FILE_TYPE_ID, datum.admin_file_type_id)
-      cv.put(COL_FILE_DESCRIPTION, datum.file_description)
-      cv.put(COL_IS_FAVORITE, datum.is_favorite)
-      cv.put(COL_COLOR_HEX, datum.color_hex)
-      cv.put(COL_COLOR_RGB, datum.color_rgb)
-      cv.put(COL_COLOR, datum.color)
-      cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.loadingGPSLocation))
-      cv.put(COL_IS_SYNC, datum.isSync)
-      cv.put(COL_STATUS, datum.status)
-      cv.put(COL_IS_DELETED, datum.isDeleted)
-      cv.put(COL_CREATED_AT, datum.created_at)
-      cv.put(COL_UPDATED_AT, datum.updated_at)
-      
-      val insertedID = db.replace(tableName, null, cv)
-      myHelper.printInsertion(tableName, insertedID, datum)
+      val existingDatum = getAdminMvpSurveysLabel(1, datum.id.toString())
+      if (datum.id > 0 && existingDatum.id > 0) {
+        datum.id = existingDatum.id
+        if (datum.is_favorite == 0)
+          datum.is_favorite = existingDatum.is_favorite
+        updateAdminMvpSurveysLabels(2, datum)
+      } else {
+        cv.put(COL_DB_ID, datum.id)
+        cv.put(COL_ORG_ID, datum.org_id)
+        cv.put(COL_USER_ID, datum.user_id)
+        cv.put(COL_NAME, datum.name)
+        cv.put(COL_ADMIN_SURVEYS_LABELS_TYPE_ID, datum.admin_surveys_labels_type_id)
+        cv.put(COL_ADMIN_FILE_TYPE_ID, datum.admin_file_type_id)
+        cv.put(COL_FILE_DESCRIPTION, datum.file_description)
+        cv.put(COL_IS_FAVORITE, datum.is_favorite) // we are not updating this column as we are using replace when syncing data from server.
+        cv.put(COL_COLOR_HEX, datum.color_hex)
+        cv.put(COL_COLOR_RGB, datum.color_rgb)
+        cv.put(COL_COLOR, datum.color)
+        cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.loadingGPSLocation))
+        cv.put(COL_IS_SYNC, datum.isSync)
+        cv.put(COL_STATUS, datum.status)
+        cv.put(COL_IS_DELETED, datum.isDeleted)
+        cv.put(COL_CREATED_AT, datum.created_at)
+        cv.put(COL_UPDATED_AT, datum.updated_at)
+        val insertedID = db.insertWithOnConflict(tableName, null, cv, SQLiteDatabase.CONFLICT_REPLACE)
+        myHelper.printInsertion(tableName, insertedID, datum)
+      }
     }
   }
   
   /**
    * Here we are using number instead of name parameter as Adapter [CustomGridLMachine] is used and that is showing number instead of name.
+   * type 1: get all active labels
+   * type 2: get all favorite labels
+   * type 3: get only unfavorite labels
    */
-  fun getAdminMvpSurveysLabels(): ArrayList<Material> {
+  fun getAdminMvpSurveysLabels(type: Int = 1): ArrayList<Material> {
     
     val list: ArrayList<Material> = ArrayList()
     val db = this.readableDatabase
-    val query: String =
+    var query = ""
 //      "Select * from $TABLE_ADMIN_MVP_SURVEYS_LABELS  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 AND $COL_ORG_ID = ${myHelper.getLoginAPI().org_id}   ORDER BY $COL_NAME ASC"
-      "Select * from $TABLE_ADMIN_MVP_SURVEYS_LABELS  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 ORDER BY $COL_NAME ASC"
+    when {
+      type == 1 -> query = "Select * from $TABLE_ADMIN_MVP_SURVEYS_LABELS  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 ORDER BY $COL_NAME ASC"
+      type == 2 -> query = "Select * from $TABLE_ADMIN_MVP_SURVEYS_LABELS  WHERE  $COL_IS_FAVORITE = 1 AND  $COL_IS_DELETED = 0 AND $COL_STATUS = 1 ORDER BY $COL_NAME ASC"
+      type == 3 -> query = "Select * from $TABLE_ADMIN_MVP_SURVEYS_LABELS  WHERE  $COL_IS_FAVORITE = 0 AND  $COL_IS_DELETED = 0 AND $COL_STATUS = 1 ORDER BY $COL_NAME ASC"
+      else -> query = "Select * from $TABLE_ADMIN_MVP_SURVEYS_LABELS  WHERE $COL_IS_DELETED = 0 AND $COL_STATUS = 1 ORDER BY $COL_NAME ASC"
+    }
     
     val result = db.rawQuery(query, null)
     
@@ -776,6 +793,40 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     result.close()
     db.close()
     return list
+  }
+  
+  /**
+   * This method will return single record.
+   * type: 1, getByID
+   * type: 2, getByName
+   */
+  fun getAdminMvpSurveysLabel(type: Int = 1, param: String): MyData {
+    
+    val list: ArrayList<Material> = ArrayList()
+    val db = this.readableDatabase
+    var query = ""
+    when {
+      type == 1 -> query = "Select * from $TABLE_ADMIN_MVP_SURVEYS_LABELS  WHERE $COL_DB_ID = $param "
+      type == 2 -> query = "Select * from $TABLE_ADMIN_MVP_SURVEYS_LABELS  WHERE  $COL_NAME = '$param' "
+      else -> query = "Select * from $TABLE_ADMIN_MVP_SURVEYS_LABELS  WHERE $COL_DB_ID = $param "
+    }
+    
+    val result = db.rawQuery(query, null)
+    var datum = MyData()
+    if (result.moveToFirst()) {
+      datum.id = result.getInt(result.getColumnIndex(COL_ID))
+      datum.org_id = result.getInt(result.getColumnIndex(COL_ORG_ID))
+      datum.name = result.getString(result.getColumnIndex(COL_NAME))
+      datum.color_hex = result.getString(result.getColumnIndex(COL_COLOR_HEX))
+      datum.color_rgb = result.getString(result.getColumnIndex(COL_COLOR_RGB))
+      datum.color = result.getString(result.getColumnIndex(COL_COLOR))
+      datum.admin_file_type_id = result.getInt(result.getColumnIndex(COL_ADMIN_FILE_TYPE_ID))
+      datum.is_favorite = result.getInt(result.getColumnIndex(COL_IS_FAVORITE))
+    }
+    
+    result.close()
+//    db.close()
+    return datum
   }
   
   fun insertMvpOrgsFile(datum: MyData): Long {
@@ -821,7 +872,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     cv.put(COL_IS_DELETED, datum.isDeleted)
     
     val insertedID = db.insert(tableName, null, cv)
-    myHelper.printInsertion(tableName, insertedID, datum)
+//    myHelper.printInsertion(tableName, insertedID, datum)
     return insertedID
   }
   
@@ -950,7 +1001,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
       cv.put(COL_UPDATED_AT, datum.updated_at)
       
       val insertedID = db.replace(tableName, null, cv)
-      myHelper.printInsertion(tableName, insertedID, datum)
+//      myHelper.printInsertion(tableName, insertedID, datum)
     }
   }
   
@@ -4080,5 +4131,38 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
       val updatedID = db.update(TABLE_MVP_ORGS_FILES, cv, "$COL_ID = ${datum.id}", null)
       myHelper.log("updateMvpOrgsFiles:updateID:$updatedID")
     }
+  }
+  
+  /**
+   * This method will be used for updating admin_surveys_lables
+   * type: 1 // update favorite only, this is being used in labels settings
+   * type: 2 // update all data, this is being used on server sync data
+   */
+  fun updateAdminMvpSurveysLabels(type: Int = 1, datum: MyData) {
+    
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    when (type) {
+      1 -> cv.put(COL_IS_FAVORITE, datum.is_favorite)
+      2 -> {
+        cv.put(COL_ORG_ID, datum.org_id)
+        cv.put(COL_USER_ID, datum.user_id)
+        cv.put(COL_NAME, datum.name)
+        cv.put(COL_ADMIN_SURVEYS_LABELS_TYPE_ID, datum.admin_surveys_labels_type_id)
+        cv.put(COL_ADMIN_FILE_TYPE_ID, datum.admin_file_type_id)
+        cv.put(COL_FILE_DESCRIPTION, datum.file_description)
+        cv.put(COL_IS_FAVORITE, datum.is_favorite)
+        cv.put(COL_COLOR_HEX, datum.color_hex)
+        cv.put(COL_COLOR_RGB, datum.color_rgb)
+        cv.put(COL_COLOR, datum.color)
+        cv.put(COL_LOADING_GPS_LOCATION, myHelper.getGPSLocationToString(datum.loadingGPSLocation))
+        cv.put(COL_IS_SYNC, datum.isSync)
+        cv.put(COL_STATUS, datum.status)
+        cv.put(COL_IS_DELETED, datum.isDeleted)
+        cv.put(COL_CREATED_AT, datum.created_at)
+        cv.put(COL_UPDATED_AT, datum.updated_at)
+      }
+    }
+    val updatedID = db.updateWithOnConflict(TABLE_ADMIN_MVP_SURVEYS_LABELS, cv, "$COL_ID =?", arrayOf(datum.id.toString()), SQLiteDatabase.CONFLICT_REPLACE)
   }
 }

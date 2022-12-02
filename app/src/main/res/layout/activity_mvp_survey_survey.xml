@@ -172,7 +172,7 @@
           android:layout_marginTop="@dimen/_5sdp"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="@string/survey_label1"
+          android:text="@string/favorite_labels"
           android:textColor="@color/black" />
 
         <GridView

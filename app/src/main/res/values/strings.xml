@@ -397,4 +397,12 @@
   <string name="point_attribute">Point attribute</string>
   <string name="survey_label1">Survey Label:</string>
   <string name="survey_labels">Survey Labels</string>
+  <string name="survey_labels1">Survey Labels:</string>
+  <string name="all_labels">All labels:</string>
+  <string name="favorite_labels">Favorite Labels:</string>
+  <string name="new_label">New Label:</string>
+  <string name="create_new_label">Create new label</string>
+  <string name="point">Point</string>
+  <string name="line">Line</string>
+  <string name="alpha_numeric_name">Alpha numeric name</string>
 </resources>

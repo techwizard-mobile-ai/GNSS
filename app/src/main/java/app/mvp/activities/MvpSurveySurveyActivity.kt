@@ -49,6 +49,7 @@ private const val ZOOM_LEVEL: Float = 19.0f
 
 class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
   
+  private lateinit var adapter: CustomGridLMachine
   private var mvpOrgsProjects: ArrayList<Material> = ArrayList<Material>()
   private lateinit var gv: GridView
   private val tag = this::class.java.simpleName
@@ -82,17 +83,9 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
     startGPS1()
     
     gv = findViewById<GridView>(R.id.survey_labels_gridview)
-
-//    mvpOrgsProjects.add(Material(1, "Fence", ADMIN_FILE_TYPE_TAPU_SURVEY_LINE))
-//    mvpOrgsProjects.add(Material(2, "Well", ADMIN_FILE_TYPE_TAPU_SURVEY_POINT))
-//    mvpOrgsProjects.add(Material(3, "Pond", ADMIN_FILE_TYPE_TAPU_SURVEY_LINE))
-//    mvpOrgsProjects.add(Material(4, "Road", ADMIN_FILE_TYPE_TAPU_SURVEY_LINE))
-//    mvpOrgsProjects.add(Material(5, "Gas Station", ADMIN_FILE_TYPE_TAPU_SURVEY_POINT))
-//    mvpOrgsProjects.add(Material(6, "Pipeline", ADMIN_FILE_TYPE_TAPU_SURVEY_LINE))
+    mvpOrgsProjects = db.getAdminMvpSurveysLabels(2)
     
-    mvpOrgsProjects = db.getAdminMvpSurveysLabels()
-    
-    val adapter = CustomGridLMachine(this@MvpSurveySurveyActivity, mvpOrgsProjects, 1)
+    adapter = CustomGridLMachine(this@MvpSurveySurveyActivity, mvpOrgsProjects, 1)
     gv.adapter = adapter
     
     gv.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
@@ -262,6 +255,11 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
   
   override fun onResume() {
     super.onResume()
+    selectedLabel = Material()
+    mvpOrgsProjects = db.getAdminMvpSurveysLabels(2)
+    adapter = CustomGridLMachine(this@MvpSurveySurveyActivity, mvpOrgsProjects, 1)
+    gv.adapter = adapter
+    current_point.setText("")
     mvp_survey_survey_gps_data_antenna_height.text = "Antenna Height: ${myHelper.getLastJourney().antenna_height} m"
   }
   

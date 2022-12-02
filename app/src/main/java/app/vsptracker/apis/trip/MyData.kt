@@ -57,6 +57,7 @@ class MyData : Serializable {
   @SerializedName("id")
   @Expose
   var id: Int = 0
+  var db_id: Int = 0
   
   @SerializedName("org_id")
   @Expose
@@ -358,7 +359,6 @@ class MyData : Serializable {
   
   override fun toString(): String {
     return "MyData(" +
-            "antenna_height=$antenna_height, " +
             "id=$id, " +
             "org_id=$org_id, " +
             "user_id=$user_id, " +
