@@ -113,7 +113,7 @@ class MvpSurveysLabelsSettingsActivity : BaseActivity(), View.OnClickListener {
 //            datum.id =
             datum.org_id = myHelper.getOrgID()
             datum.user_id = myHelper.getUserID()
-            datum.name = myHelper.getValidFileName(name)
+            datum.name = name
             datum.admin_surveys_labels_type_id = 3 //1 created by admin, 2 created by orgs, 3 created by user
             datum.admin_file_type_id = admin_file_type_id
 //              datum.file_description =
