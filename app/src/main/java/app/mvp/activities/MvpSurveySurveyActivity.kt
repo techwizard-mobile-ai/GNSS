@@ -3,6 +3,7 @@ package app.mvp.activities
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -28,9 +29,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.android.material.navigation.NavigationView
 import com.google.maps.android.data.kml.KmlLayer
 import kotlinx.android.synthetic.main.activity_mvp_survey_survey.*
@@ -89,14 +88,12 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
     gv.adapter = adapter
     
     gv.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-      
-      myHelper.log(mvpOrgsProjects[position].toString())
       selected_label_position = position
       selectedLabel = mvpOrgsProjects[position]
       current_label_number = 0
       selectedLabel_aws_path = myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/Survey/${myHelper.getValidFileName(selectedLabel.number)}/${myHelper.getValidFileName("${selectedLabel.number}_${current_label_number}")}/"
       current_point.setText("${selectedLabel.number}_${current_label_number}_${db.getMvpOrgsFiles(selectedLabel_aws_path!!).size}")
-      addMarkers(db.getMvpOrgsFiles(selectedLabel_aws_path!!))
+      addMarkers()
     }
 
 //    mvp_survey_survey_gps_data_antenna_height.text = "Antenna Height: 2.000m"
@@ -113,7 +110,7 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
       if (current_label_number < 20) current_label_number++
       selectedLabel_aws_path = myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/Survey/${myHelper.getValidFileName(selectedLabel.number)}/${myHelper.getValidFileName("${selectedLabel.number}_${current_label_number}")}/"
       current_point.setText("${selectedLabel.number}_${current_label_number}_${db.getMvpOrgsFiles(selectedLabel_aws_path!!).size}")
-      addMarkers(db.getMvpOrgsFiles(selectedLabel_aws_path!!))
+      addMarkers()
     }
   }
   
@@ -123,7 +120,7 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
       if (current_label_number > 0) current_label_number--
       selectedLabel_aws_path = myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/Survey/${myHelper.getValidFileName(selectedLabel.number)}/${myHelper.getValidFileName("${selectedLabel.number}_${current_label_number}")}/"
       current_point.setText("${selectedLabel.number}_${current_label_number}_${db.getMvpOrgsFiles(selectedLabel_aws_path!!).size}")
-      addMarkers(db.getMvpOrgsFiles(selectedLabel_aws_path!!))
+      addMarkers()
     }
   }
   
@@ -153,8 +150,6 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
           location1 == null -> myHelper.showErrorDialog("No GPS Data", "Please change your location to continue.")
           selectedLabel.id == 0 -> myHelper.showErrorDialog("Empty Label!", "Please select a label to continue survey")
           else -> {
-            val location = LatLng(location1!!.latitude, location1!!.longitude)
-            map.addMarker(MarkerOptions().position(location).icon(myHelper.bitmapFromVector(R.drawable.ic_circle_16)))
             val file_name = "${selectedLabel.number}_${current_label_number}_${db.getMvpOrgsFiles(selectedLabel_aws_path!!).size + 1}"
             // get Point attribute and then reset value of point attribute as it should only be used for next point capturing
             val lastJourney = myHelper.getLastJourney()
@@ -183,7 +178,10 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
             myData1.security_level = myHelper.getLoginAPI().role
             myData1.size = 0
             myData1.file_details = "{ \"size\": 0 }"
-            if (myDataPushSave.pushInsertSurveyRecordCheckPoint(myData1) > 0) myHelper.log("Survey recorded successfully") else myHelper.showErrorDialog("Scan image not captured!", "Please try again later.")
+            if (myDataPushSave.pushInsertSurveyRecordCheckPoint(myData1) > 0) {
+              myHelper.log("Survey recorded successfully")
+              addMarker(myData1)
+            } else myHelper.showErrorDialog("Scan image not captured!", "Please try again later.")
             myHelper.log(myData1.toString())
           }
         }
@@ -355,15 +353,33 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
         }
       }
     }
+    addMarkers()
   }
   
-  fun addMarkers(myDataList: ArrayList<MyData>) {
+  fun getMarkerIcon(color: String?): BitmapDescriptor? {
+    val hsv = FloatArray(3)
+    Color.colorToHSV(Color.parseColor(color), hsv)
+    return BitmapDescriptorFactory.defaultMarker(hsv[0])
+  }
+  
+  fun addMarkers() {
     map.clear()
-    myDataList.forEach {
-      myHelper.log("AddMarker:${it.loadingGPSLocation.latitude}")
-      val location = LatLng(it.loadingGPSLocation.latitude, it.loadingGPSLocation.longitude)
-      map.addMarker(MarkerOptions().position(location).icon(myHelper.bitmapFromVector(R.drawable.ic_circle_16)))
+    val selectedLabel_aws_path1 = myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/Survey/"
+    db.getMvpOrgsFiles(selectedLabel_aws_path1!!).forEach {
+      addMarker(it)
+//      map.addMarker(MarkerOptions().position(location).icon(myHelper.bitmapFromVector(R.drawable.ic_circle_16)))
+//      map.addMarker(MarkerOptions().position(location).icon(getMarkerIcon(label.color_hex)))
     }
+  }
+  
+  fun addMarker(myData: MyData) {
+    val after: String? = myData.relative_path.substringAfterLast("/Survey/")
+    myHelper.log("after:$after")
+    val label_name: String = after!!.substringBefore("/")
+    val label_name1: String = after!!.substringAfterLast("/")
+    val label = db.getAdminMvpSurveysLabel(2, label_name)
+    val location = LatLng(myData.loadingGPSLocation.latitude, myData.loadingGPSLocation.longitude)
+    map.addMarker(MarkerOptions().position(location).title("$label_name1").icon(getMarkerIcon(label.color_hex)))
   }
   
   override fun onMarkerClick(p0: Marker) = false

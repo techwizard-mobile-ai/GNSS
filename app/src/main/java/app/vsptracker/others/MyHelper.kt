@@ -307,8 +307,7 @@ class MyHelper(var TAG: String, val context: Context) {
   fun refreshToken() {
     log("inside refreshToken")
     val client = skipSSLOkHttpClient().build()
-    val formBody =
-      FormBody.Builder().add("email", getLoginAPI().email).add("password", getLoginAPI().pass).add("role", MyEnum.ROLE_OPERATOR).add("ttl", MyEnum.TTL).build()
+    val formBody = FormBody.Builder().add("email", getLoginAPI().email).add("password", getLoginAPI().pass).add("role", MyEnum.ROLE_OPERATOR).add("ttl", MyEnum.TTL).build()
     val request = Request.Builder().url("${context.getString(R.string.api_url)}org/users/login1").post(formBody).build()
     
     client.newCall(request).enqueue(object : Callback {
@@ -516,10 +515,7 @@ class MyHelper(var TAG: String, val context: Context) {
   fun getFormattedTime(millis: Long): String {
     
     return String.format(
-      "%02d:%02d:%02d",
-      TimeUnit.MILLISECONDS.toHours(millis),
-      TimeUnit.MILLISECONDS.toMinutes(millis) % TimeUnit.HOURS.toMinutes(1),
-      TimeUnit.MILLISECONDS.toSeconds(millis) % TimeUnit.MINUTES.toSeconds(1)
+      "%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis), TimeUnit.MILLISECONDS.toMinutes(millis) % TimeUnit.HOURS.toMinutes(1), TimeUnit.MILLISECONDS.toSeconds(millis) % TimeUnit.MINUTES.toSeconds(1)
     )
   }
   
@@ -1099,8 +1095,7 @@ class MyHelper(var TAG: String, val context: Context) {
     linearLayout.orientation = LinearLayout.HORIZONTAL
     
     val imageView = ImageView(context)
-    val imageViewParam =
-      LinearLayout.LayoutParams(context.resources.getDimensionPixelSize(R.dimen._130sdp), context.resources.getDimensionPixelSize(R.dimen._130sdp))
+    val imageViewParam = LinearLayout.LayoutParams(context.resources.getDimensionPixelSize(R.dimen._130sdp), context.resources.getDimensionPixelSize(R.dimen._130sdp))
     imageViewParam.gravity = Gravity.CENTER
     
     imageView.layoutParams = imageViewParam
@@ -1150,8 +1145,7 @@ class MyHelper(var TAG: String, val context: Context) {
     val currentMonth = calendar.get((Calendar.MONTH)) + 1 // due to 0 based indexing we need to add 1 to get accurate month number
     val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
     
-    val path =
-      "${getLoginAPI().org_id}/$type/$currentYear/$currentMonth/$currentDay/${getMachineSettings().siteId}/${getMachineTypeID()}/${getMachineID()}/${getOperatorAPI().id}/"
+    val path = "${getLoginAPI().org_id}/$type/$currentYear/$currentMonth/$currentDay/${getMachineSettings().siteId}/${getMachineTypeID()}/${getMachineID()}/${getOperatorAPI().id}/"
     
     log("path:$path")
     return path
@@ -1405,8 +1399,7 @@ class MyHelper(var TAG: String, val context: Context) {
       // As this value will be compared with minimum days required for CheckForm to be Due
       if (adminCheckFormsCompleted != null) {
         if (adminCheckFormsCompleted.admin_checkforms_schedules_value != null && firstMachineHours.startTime > 0) {
-          lastDaysReading =
-            if ((adminCheckFormsCompleted.admin_checkforms_schedules_value!!.toDouble()) > (firstMachineHours.startTime) / MyEnum.ONE_DAY) adminCheckFormsCompleted.admin_checkforms_schedules_value!!.toDouble() else (firstMachineHours.startTime / MyEnum.ONE_DAY).toDouble()
+          lastDaysReading = if ((adminCheckFormsCompleted.admin_checkforms_schedules_value!!.toDouble()) > (firstMachineHours.startTime) / MyEnum.ONE_DAY) adminCheckFormsCompleted.admin_checkforms_schedules_value!!.toDouble() else (firstMachineHours.startTime / MyEnum.ONE_DAY).toDouble()
           log("adminCheckFormsCompleted_startTime:${getDateTime(adminCheckFormsCompleted.admin_checkforms_schedules_value!!.toLong())}")
         }
       } else {
@@ -1508,14 +1501,13 @@ class MyHelper(var TAG: String, val context: Context) {
   fun skipSSLOkHttpClient(): OkHttpClient.Builder {
     val okHttpClient = OkHttpClient.Builder()
     
-    okHttpClient.connectTimeout(3, TimeUnit.MINUTES).readTimeout(3, TimeUnit.MINUTES).writeTimeout(3, TimeUnit.MINUTES).retryOnConnectionFailure(false)
-      .addNetworkInterceptor(object : Interceptor {
-        @Throws(IOException::class)
-        override fun intercept(chain: Interceptor.Chain): Response {
-          val request = chain.request().newBuilder().addHeader("Connection", "close").build()
-          return chain.proceed(request)
-        }
-      })
+    okHttpClient.connectTimeout(3, TimeUnit.MINUTES).readTimeout(3, TimeUnit.MINUTES).writeTimeout(3, TimeUnit.MINUTES).retryOnConnectionFailure(false).addNetworkInterceptor(object : Interceptor {
+      @Throws(IOException::class)
+      override fun intercept(chain: Interceptor.Chain): Response {
+        val request = chain.request().newBuilder().addHeader("Connection", "close").build()
+        return chain.proceed(request)
+      }
+    })
     try {
       // Create a trust manager that does not validate certificate chains
       val trustAllCerts: Array<TrustManager> = arrayOf(object : X509TrustManager {
