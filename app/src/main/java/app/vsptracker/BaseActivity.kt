@@ -31,7 +31,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.work.WorkManager
 import app.mvp.activities.MvpCorrectionsSettingsActivity
 import app.mvp.activities.MvpHomeActivity
-import app.mvp.activities.MvpSurveyHomeActivity
+import app.mvp.activities.MvpStartDataCollectionActivity
 import app.vsptracker.activities.*
 import app.vsptracker.activities.common.MachineBreakdownActivity
 import app.vsptracker.activities.common.MachineStatusActivity
@@ -99,11 +99,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     gpsLocation = GPSLocation()
     db = DatabaseAdapter(this)
     
-    this.retrofit = Retrofit.Builder()
-      .baseUrl(getString(R.string.api_url))
-      .addConverterFactory(GsonConverterFactory.create())
-      .client(myHelper.skipSSLOkHttpClient().build())
-      .build()
+    this.retrofit = Retrofit.Builder().baseUrl(getString(R.string.api_url)).addConverterFactory(GsonConverterFactory.create()).client(myHelper.skipSSLOkHttpClient().build()).build()
     this.retrofitAPI = retrofit.create(RetrofitAPI::class.java)
     
     myDataPushSave = MyDataPushSave(this)
@@ -111,11 +107,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
     val navView: NavigationView = findViewById(R.id.base_nav_view)
     val toggle = ActionBarDrawerToggle(
-      this,
-      drawerLayout,
-      toolbar,
-      R.string.navigation_drawer_open,
-      R.string.navigation_drawer_close
+      this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
     )
     drawerLayout.addDrawerListener(toggle)
     toggle.syncState()
@@ -151,11 +143,9 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     val appAPI = myHelper.getLatestVSPTVersion()
     
     val versionTitle = if (appAPI.version_code > deviceDetails.VSPT_VERSION_CODE) {
-      "Latest Version:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${appAPI.version_name} (${appAPI.version_code})<br/>" +
-              "Installed Version: <font color=#FF382A>${deviceDetails.VSPT_VERSION_NAME} (${deviceDetails.VSPT_VERSION_CODE})</font>"
+      "Latest Version:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${appAPI.version_name} (${appAPI.version_code})<br/>" + "Installed Version: <font color=#FF382A>${deviceDetails.VSPT_VERSION_NAME} (${deviceDetails.VSPT_VERSION_CODE})</font>"
     } else {
-      "Latest Version:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${appAPI.version_name} (${appAPI.version_code})<br/>" +
-              "Installed Version:&nbsp;${deviceDetails.VSPT_VERSION_NAME} (${deviceDetails.VSPT_VERSION_CODE})"
+      "Latest Version:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${appAPI.version_name} (${appAPI.version_code})<br/>" + "Installed Version:&nbsp;${deviceDetails.VSPT_VERSION_NAME} (${deviceDetails.VSPT_VERSION_CODE})"
     }
     navTitle.text = HtmlCompat.fromHtml(versionTitle, HtmlCompat.FROM_HTML_MODE_LEGACY)
     navSubTitle.text = "${getString(R.string.override_name)}: ${getString(R.string.nav_header_subtitle)}"
@@ -180,10 +170,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
       val runningTime = System.currentTimeMillis() - myHelper.getAutoLogoutStartTime()
       val difference = runningTime - autoLogoutTime
       myHelper.log(
-        "\nLogout\nautoLogoutTime = $autoLogoutTime " +
-                "\nlogoutStartTime = ${myHelper.getAutoLogoutStartTime()}--${myHelper.getDateTime(myHelper.getAutoLogoutStartTime())}" +
-                "\nrunningTime = $runningTime" +
-                "\ndifference = $difference"
+        "\nLogout\nautoLogoutTime = $autoLogoutTime " + "\nlogoutStartTime = ${myHelper.getAutoLogoutStartTime()}--${myHelper.getDateTime(myHelper.getAutoLogoutStartTime())}" + "\nrunningTime = $runningTime" + "\ndifference = $difference"
       )
       if (difference > 0 && autoLogoutTime > 0) {
         myHelper.log("Logout Time Completed.")
@@ -319,34 +306,33 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     handler.postDelayed(r, autoLogoutTime)
   }
   
-  private val mOnNavigationItemSelectedListener =
-    BottomNavigationView.OnNavigationItemSelectedListener { item ->
-      
-      if (myHelper.isNavEnabled()) {
-        when (item.itemId) {
-          R.id.navb_map -> {
-            if (!myHelper.getIsMapOpened()) {
-              myHelper.setIsMapOpened(true)
-              val intent = Intent(this, Map1Activity::class.java)
-              startActivity(intent)
-            } else {
-              myHelper.toast(getString(R.string.map_already_opened))
-            }
-          }
-          R.id.navb_delay -> {
-            when {
-              myHelper.getIsMachineStopped() -> myHelper.toast(getString(R.string.start_machine_first))
-              myHelper.getMachineID() < 1 -> myHelper.toast(getString(R.string.select_machine_first))
-              else -> toggleDelay()
-            }
+  private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+    
+    if (myHelper.isNavEnabled()) {
+      when (item.itemId) {
+        R.id.navb_map -> {
+          if (!myHelper.getIsMapOpened()) {
+            myHelper.setIsMapOpened(true)
+            val intent = Intent(this, Map1Activity::class.java)
+            startActivity(intent)
+          } else {
+            myHelper.toast(getString(R.string.map_already_opened))
           }
         }
-      } else {
-        myHelper.toast(getString(R.string.proceed_to_next_screen))
+        R.id.navb_delay -> {
+          when {
+            myHelper.getIsMachineStopped() -> myHelper.toast(getString(R.string.start_machine_first))
+            myHelper.getMachineID() < 1 -> myHelper.toast(getString(R.string.select_machine_first))
+            else -> toggleDelay()
+          }
+        }
       }
-      
-      false
+    } else {
+      myHelper.toast(getString(R.string.proceed_to_next_screen))
     }
+    
+    false
+  }
   
   override fun onResume() {
     super.onResume()
@@ -363,16 +349,13 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
       
       when (myHelper.getMachineStoppedReason()) {
         MyEnum.STOP_REASON_WEATHER -> {
-          Glide.with(this).load(ContextCompat.getDrawable(this, R.drawable.ic_action_beach_access))
-            .into(base_machine_status_icon)
+          Glide.with(this).load(ContextCompat.getDrawable(this, R.drawable.ic_action_beach_access)).into(base_machine_status_icon)
         }
         MyEnum.STOP_REASON_OTHER1 -> {
-          Glide.with(this).load(ContextCompat.getDrawable(this, R.drawable.ic_action_restaurant))
-            .into(base_machine_status_icon)
+          Glide.with(this).load(ContextCompat.getDrawable(this, R.drawable.ic_action_restaurant)).into(base_machine_status_icon)
         }
         else -> {
-          Glide.with(this).load(ContextCompat.getDrawable(this, R.drawable.ic_action_report))
-            .into(base_machine_status_icon)
+          Glide.with(this).load(ContextCompat.getDrawable(this, R.drawable.ic_action_report)).into(base_machine_status_icon)
         }
       }
       
@@ -384,8 +367,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     }
     
     if (myHelper.isDailyModeStarted()) {
-      val text =
-        "<font color=#FF382A>Day Works is ON. </font><font color=#106d14><u>Switch Standard Mode</u>.</font>"
+      val text = "<font color=#FF382A>Day Works is ON. </font><font color=#106d14><u>Switch Standard Mode</u>.</font>"
       base_daily_mode.text = HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_LEGACY)
       base_daily_mode.visibility = View.VISIBLE
     } else {
@@ -529,9 +511,17 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         myHelper.setIsMapOpened(false)
       }
       R.id.nav_last_task -> {
-        val intent = Intent(this, MvpSurveyHomeActivity::class.java)
-        startActivity(intent)
         myHelper.setIsMapOpened(false)
+//        val intent = Intent(this, MvpSurveyHomeActivity::class.java)
+        if (myHelper.getLastJourney().project_id == 0 || myHelper.getLastJourney().mvp_orgs_files_id == 0) {
+          myHelper.showErrorDialog("No Last Task Selected!", "Please select site and task from Home screen.")
+//          val intent = Intent(this, MvpHomeActivity::class.java)
+//          intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+//          startActivity(intent)
+        } else {
+          val intent = Intent(this, MvpStartDataCollectionActivity::class.java)
+          startActivity(intent)
+        }
       }
     }
     val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
@@ -562,8 +552,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
   // Using this method as we have to make stop waiting and change works mode if it is days work.
   fun logout(machine_stop_reason_id: Int, gpsLocation: GPSLocation = GPSLocation(), sfinish_reading: String = myHelper.getMeterTimeForFinish()) {
     // If waiting is started then stop waiting
-    if (myHelper.isDelayStarted())
-      stopDelay()
+    if (myHelper.isDelayStarted()) stopDelay()
     myDataPushSave.logout(machine_stop_reason_id, gpsLocation, sfinish_reading)
   }
   
@@ -625,8 +614,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
       putExtra(Intent.EXTRA_EMAIL, addressees)
       putExtra(Intent.EXTRA_SUBJECT, "Error Reporting About Android App")
       putExtra(
-        Intent.EXTRA_TEXT,
-        "Hi, I like to notify you about an error I faced while using App. Device Details: $details"
+        Intent.EXTRA_TEXT, "Hi, I like to notify you about an error I faced while using App. Device Details: $details"
       )
       intent.type = "message/rfc822"
     }
@@ -640,10 +628,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
     try {
       locationManager?.requestLocationUpdates(
-        LocationManager.GPS_PROVIDER,
-        1000,
-        0f,
-        locationListener
+        LocationManager.GPS_PROVIDER, 1000, 0f, locationListener
       )
       
     }
@@ -667,8 +652,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         } else {
           myHelper.log("GPS Permission Permanently Denied.")
           myHelper.showPermissionDisabledAlertToUser(
-            resources.getString(R.string.gps_permission_title),
-            resources.getString(R.string.gps_permission_explanation)
+            resources.getString(R.string.gps_permission_title), resources.getString(R.string.gps_permission_explanation)
           )
         }
         return
@@ -678,8 +662,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         if ((grantResults.isNotEmpty() && grantResults[0] != PackageManager.PERMISSION_GRANTED)) {
           myHelper.log("Permission denied.")
           myHelper.showPermissionDisabledAlertToUser(
-            resources.getString(R.string.storage_permission_title),
-            resources.getString(R.string.storage_permission_explanation)
+            resources.getString(R.string.storage_permission_title), resources.getString(R.string.storage_permission_explanation)
           )
         }
         return
