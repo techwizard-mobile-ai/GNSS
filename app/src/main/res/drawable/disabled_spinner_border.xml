@@ -4,7 +4,7 @@
     <shape>
       <solid android:color="@color/gray"></solid>
 
-      <corners android:radius="@dimen/_5sdp" />
+      <corners android:radius="@dimen/button_radius" />
 
       <padding android:bottom="6dp" android:left="8dp" android:right="8dp" android:top="6dp" />
 

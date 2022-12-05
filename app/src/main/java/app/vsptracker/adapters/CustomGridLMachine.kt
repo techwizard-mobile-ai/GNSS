@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import app.mvp.activities.MvpSurveySurveyActivity
 import app.mvp.activities.MvpSurveysLabelsSettingsActivity
@@ -53,10 +54,16 @@ class CustomGridLMachine(private val mContext: Context, private val arrayList: A
       1 -> {
         val minus = grid.findViewById(R.id.grid_minus) as ImageView
         val plus = grid.findViewById(R.id.grid_image) as ImageView
+        val grid_row = grid.findViewById(R.id.grid_row) as RelativeLayout
         minus.setColorFilter(Color.parseColor(arrayList[position].color_hex))
         plus.setColorFilter(Color.parseColor(arrayList[position].color_hex))
         minus.setOnClickListener { (mContext as MvpSurveySurveyActivity).minus(position) }
         plus.setOnClickListener { (mContext as MvpSurveySurveyActivity).plus(position) }
+        if (arrayList[position].id == (mContext as MvpSurveySurveyActivity).selectedLabel.id) {
+          grid_row.setBackgroundResource(R.drawable.bdue_border)
+        } else {
+          grid_row.setBackgroundResource(R.drawable.disabled_spinner_border)
+        }
       }
       
       2 -> {

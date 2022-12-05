@@ -175,6 +175,21 @@
           android:text="@string/favorite_labels"
           android:textColor="@color/black" />
 
+        <TextView
+          android:id="@+id/no_survey_favorite_labels"
+          android:layout_centerInParent="true"
+          android:layout_width="match_parent"
+          android:layout_marginTop="@dimen/_10sdp"
+          android:layout_height="wrap_content"
+          android:text="Go to \nSettings -> Survey Labels"
+          android:visibility="visible"
+          style="@style/avenirnext_fontstyle"
+          android:textColor="@color/black"
+          android:layout_gravity="center_vertical"
+          android:gravity="center"
+          android:textSize="@dimen/_10sdp"
+          android:textStyle="bold" />
+
         <GridView
           android:id="@+id/survey_labels_gridview"
           android:layout_width="match_parent"

@@ -57,7 +57,7 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
   private lateinit var lastLocation: Location
   private var locationManager1: LocationManager? = null
   private var mapGPSLocation: GPSLocation = GPSLocation()
-  private var selectedLabel: Material = Material()
+  var selectedLabel: Material = Material()
   private var location1: Location? = null
   private var selectedLabel_aws_path: String? = null
   private var current_label_number = 0
@@ -94,6 +94,8 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
       selectedLabel_aws_path = myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/Survey/${myHelper.getValidFileName(selectedLabel.number)}/${myHelper.getValidFileName("${selectedLabel.number}_${current_label_number}")}/"
       current_point.setText("${selectedLabel.number}_${current_label_number}_${db.getMvpOrgsFiles(selectedLabel_aws_path!!).size}")
       addMarkers()
+      adapter = CustomGridLMachine(this@MvpSurveySurveyActivity, mvpOrgsProjects, 1)
+      gv.adapter = adapter
     }
 
 //    mvp_survey_survey_gps_data_antenna_height.text = "Antenna Height: 2.000m"
@@ -102,6 +104,7 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
     mvp_survey_survey_back.setOnClickListener(this)
     mvp_survey_survey_settings.setOnClickListener(this)
     mvp_survey_point.setOnClickListener(this)
+    no_survey_favorite_labels.setOnClickListener(this)
   }
   
   fun plus(position: Int) {
@@ -126,6 +129,13 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
   
   override fun onClick(view: View?) {
     when (view!!.id) {
+      R.id.no_survey_favorite_labels -> {
+        val intent = Intent(this, MvpSurveysLabelsSettingsActivity::class.java)
+        myData.name = "Survey Labels Settings"
+        myData.type = MyEnum.SETTINGS_TYPE_MVP_SURVEY
+        intent.putExtra("myData", myData)
+        startActivity(intent)
+      }
       R.id.mvp_survey_survey_gps_data_antenna_height -> {
         myHelper.log("last Journey:${myHelper.getLastJourney()}")
         showInputDialog(1, this)
@@ -255,6 +265,11 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
     super.onResume()
     selectedLabel = Material()
     mvpOrgsProjects = db.getAdminMvpSurveysLabels(2)
+    if (mvpOrgsProjects.size < 1)
+      no_survey_favorite_labels.visibility = View.VISIBLE
+    else
+      no_survey_favorite_labels.visibility = View.GONE
+    
     adapter = CustomGridLMachine(this@MvpSurveySurveyActivity, mvpOrgsProjects, 1)
     gv.adapter = adapter
     current_point.setText("")
