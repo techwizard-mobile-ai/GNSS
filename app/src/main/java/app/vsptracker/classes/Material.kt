@@ -93,7 +93,7 @@ class Material : Serializable {
   
   constructor(id: Int, name: String) {
     this.id = id
-    this.number = name
+    this.name = name
   }
   
   constructor(id: Int, name: String, admin_file_type_id: Int) {
@@ -105,6 +105,7 @@ class Material : Serializable {
   override fun toString(): String {
     return "Material(" +
             "id=$id, " +
+            "name='$name', " +
             "number='$number', " +
             "admin_file_type_id=$admin_file_type_id" +
             "is_favorite=$is_favorite" +
