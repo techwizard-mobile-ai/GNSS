@@ -1679,8 +1679,8 @@ class MyHelper(var TAG: String, val context: Context) {
     lat.text = "Latitude: ${roundToN(location.latitude, 8)}"
     long.text = "Longitude: ${roundToN(location.longitude, 8)}"
 //        long.text = "Longitude: ${location.longitude}"
-    alt.text = "Altitude: ${location.altitude}"
-    speed.text = "Speed: ${location.speed}"
+    alt.text = "Altitude: ${roundToN(location.altitude, 3)}"
+    speed.text = "Speed: ${roundToN(location.speed.toDouble(), 3)}"
     bearing.text = "Bearing: ${location.bearing}"
     time.text = "Time: ${getDateTimeWithSeconds(location.time)}"
   }
