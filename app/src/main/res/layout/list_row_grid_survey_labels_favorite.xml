@@ -22,7 +22,7 @@
     android:layout_centerVertical="true"
     android:layout_marginEnd="@dimen/_5sdp"
     android:layout_alignParentEnd="true"
-    android:src="@drawable/ic_favorite"
+    android:src="@drawable/ic_arrow_back"
     android:visibility="visible" />
 
 </RelativeLayout>

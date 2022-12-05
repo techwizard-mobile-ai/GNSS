@@ -405,4 +405,6 @@
   <string name="point">Point</string>
   <string name="line">Line</string>
   <string name="alpha_numeric_name">Alpha numeric name</string>
+  <string name="apply">Apply</string>
+  <string name="survey_labels_list">Survey Labels List:</string>
 </resources>

@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/colorPrimary"
         android:textSize="@dimen/_11sdp"
-        android:text="@string/survey_labels1" />
+        android:text="@string/survey_labels_list" />
 
       <GridView
         android:id="@+id/survey_labels_gridview"
@@ -164,6 +164,7 @@
         android:id="@+id/settings_back"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:text="@string/apply"
         style="@style/back_button_single" />
     </RelativeLayout>
 
