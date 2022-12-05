@@ -838,9 +838,8 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     datum.stopTime = currentTime
     datum.totalTime = 0
     
-    val time = System.currentTimeMillis()
-    datum.time = time.toString()
-    datum.date = myHelper.getDate(time.toString())
+    datum.time = currentTime.toString()
+    datum.date = myHelper.getDateTime(currentTime)
     
     val db = this.writableDatabase
     val cv = ContentValues()

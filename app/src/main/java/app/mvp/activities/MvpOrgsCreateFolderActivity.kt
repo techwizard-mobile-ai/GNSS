@@ -72,6 +72,12 @@ class MvpOrgsCreateFolderActivity : BaseActivity(), View.OnClickListener {
     
     val myData1 = MyData()
     
+    val currentTime = System.currentTimeMillis()
+    myData1.startTime = currentTime
+    myData1.stopTime = currentTime
+    myData1.totalTime = 0
+    myData1.time = currentTime.toString()
+    myData1.date = myHelper.getDateTime(currentTime)
     myData1.org_id = myHelper.getOrgID()
     myData1.admin_file_type_id = -1
     myData1.processing_status = -1
@@ -83,6 +89,8 @@ class MvpOrgsCreateFolderActivity : BaseActivity(), View.OnClickListener {
     myData1.file_level = (relative_path.split("/").size - 1)
     myData1.security_level = myHelper.getLoginAPI().role
     myData1.size = 0
+    myData1.loadingGPSLocationString = myHelper.getGPSLocationToString(gpsLocation)
+    myData1.unloadingGPSLocationString = myHelper.getGPSLocationToString(gpsLocation)
     
     selectedFiles.add(myData1)
     
