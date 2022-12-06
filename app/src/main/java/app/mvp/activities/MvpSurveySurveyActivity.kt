@@ -209,7 +209,7 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
         title = "Antenna Height"
         explanation = "Please enter valid antenna height in m."
         mDialogView.mvp_survey_dialog_input.hint = "Please enter decimal value for antenna height"
-        mDialogView.mvp_survey_dialog_input.setText(myHelper.getLastJourney().antenna_height.toString())
+        mDialogView.mvp_survey_dialog_input.setText(myHelper.getLastJourney().survey_antenna_height.toString())
       }
       2 -> {
         title = "Point Attribute"
@@ -243,9 +243,9 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
       when {
         type == 1 && myHelper.isDecimal(mDialogView.mvp_survey_dialog_input.text.toString()) -> {
           val lastJourney = myHelper.getLastJourney()
-          lastJourney.antenna_height = mDialogView.mvp_survey_dialog_input.text.toString().toDouble()
+          lastJourney.survey_antenna_height = mDialogView.mvp_survey_dialog_input.text.toString().toDouble()
           myHelper.setLastJourney(lastJourney)
-          mvp_survey_survey_gps_data_antenna_height.text = "Antenna Height: ${myHelper.getLastJourney().antenna_height} m"
+          mvp_survey_survey_gps_data_antenna_height.text = "Antenna Height: ${myHelper.getLastJourney().survey_antenna_height} m"
           mAlertDialog.dismiss()
         }
         type == 2 -> {
@@ -273,7 +273,7 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
     adapter = CustomGridLMachine(this@MvpSurveySurveyActivity, mvpOrgsProjects, 1)
     gv.adapter = adapter
     current_point.setText("")
-    mvp_survey_survey_gps_data_antenna_height.text = "Antenna Height: ${myHelper.getLastJourney().antenna_height} m"
+    mvp_survey_survey_gps_data_antenna_height.text = "Antenna Height: ${myHelper.getLastJourney().survey_antenna_height} m"
   }
   
   private fun startGPS1() {

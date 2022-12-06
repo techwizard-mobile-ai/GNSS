@@ -96,32 +96,46 @@
         android:textColor="@color/black"
         android:textSize="10sp" />
 
-      <TextView
+      <!--      <TextView-->
+      <!--        android:id="@+id/mvp_survey_survey_file_description"-->
+      <!--        android:layout_width="wrap_content"-->
+      <!--        android:layout_height="wrap_content"-->
+      <!--        android:padding="@dimen/_5sdp"-->
+      <!--        android:text="@string/point_attribute"-->
+      <!--        android:textColor="@color/black"-->
+      <!--        android:textSize="12sp" />-->
+
+      <!--      <TextView-->
+      <!--        android:id="@+id/mvp_survey_survey_gps_data_antenna_height"-->
+      <!--        android:layout_width="wrap_content"-->
+      <!--        android:layout_height="wrap_content"-->
+      <!--        android:padding="@dimen/_5sdp"-->
+      <!--        android:text="@string/antenna_height"-->
+      <!--        android:textColor="@color/black"-->
+      <!--        android:textSize="12sp" />-->
+
+      <!--      <TextView-->
+      <!--        android:id="@+id/mvp_survey_survey_settings"-->
+      <!--        android:layout_width="wrap_content"-->
+      <!--        android:layout_height="wrap_content"-->
+      <!--        android:padding="@dimen/_5sdp"-->
+      <!--        android:text="@string/settings"-->
+      <!--        android:textColor="@color/black"-->
+      <!--        android:textSize="12sp" />-->
+      <Button
         android:id="@+id/mvp_survey_survey_file_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/_5sdp"
         android:text="@string/point_attribute"
-        android:textColor="@color/black"
-        android:textSize="12sp" />
+        style="@style/survey_top_button" />
 
-      <TextView
+      <Button
         android:id="@+id/mvp_survey_survey_gps_data_antenna_height"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/_5sdp"
         android:text="@string/antenna_height"
-        android:textColor="@color/black"
-        android:textSize="12sp" />
+        style="@style/survey_top_button" />
 
-      <TextView
+      <Button
         android:id="@+id/mvp_survey_survey_settings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/_5sdp"
         android:text="@string/settings"
-        android:textColor="@color/black"
-        android:textSize="12sp" />
+        style="@style/survey_top_button" />
     </LinearLayout>
 
   </RelativeLayout>

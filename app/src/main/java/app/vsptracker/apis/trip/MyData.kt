@@ -343,7 +343,8 @@ class MyData : Serializable {
   
   var mvp_orgs_project_name: String = ""
   var mvp_orgs_files_name: String = ""
-  var antenna_height: Double = 0.0
+  var survey_antenna_height: Double = 0.0
+  var checkpoint_antenna_height: Double = 0.0
   
   @SerializedName("color_hex")
   @Expose
