@@ -32,7 +32,7 @@ class MvpSurveysLabelsSettingsActivity : BaseActivity(), View.OnClickListener {
     val contentFrameLayout = findViewById<FrameLayout>(app.vsptracker.R.id.base_content_frame)
     layoutInflater.inflate(app.vsptracker.R.layout.activity_mvp_surveys_labels_settings, contentFrameLayout)
     val navigationView = findViewById<NavigationView>(app.vsptracker.R.id.base_nav_view)
-    navigationView.menu.getItem(0).isChecked = true
+    navigationView.menu.getItem(5).isChecked = true
     myHelper.setTag(tag)
     
     val bundle: Bundle? = intent.extras
