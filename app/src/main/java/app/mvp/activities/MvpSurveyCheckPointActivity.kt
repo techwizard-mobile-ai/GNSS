@@ -7,8 +7,12 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.text.InputType
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
+import androidx.appcompat.app.AlertDialog
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
@@ -25,6 +29,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.maps.android.data.kml.KmlLayer
 import kotlinx.android.synthetic.main.activity_mvp_survey_check_point.*
 import kotlinx.android.synthetic.main.app_bar_base.*
+import kotlinx.android.synthetic.main.dialog_input.view.*
 import java.io.File
 import java.io.FileInputStream
 
@@ -63,8 +68,15 @@ class MvpSurveyCheckPointActivity : BaseActivity(), View.OnClickListener, OnMapR
     startGPS1()
     
     mvp_survey_checkpoint_back.setOnClickListener(this)
-    mvp_survey_checkpoint_settings.setOnClickListener(this)
     mvp_survey_checkpoint_record.setOnClickListener(this)
+    mvp_survey_checkpoint_file_description.setOnClickListener(this)
+    mvp_survey_checkpoint_gps_data_antenna_height.setOnClickListener(this)
+    mvp_survey_checkpoint_settings.setOnClickListener(this)
+  }
+  
+  override fun onResume() {
+    super.onResume()
+    mvp_survey_checkpoint_gps_data_antenna_height.text = "Antenna Height: ${myHelper.getLastJourney().checkpoint_antenna_height} m"
   }
   
   override fun onClick(view: View?) {
@@ -72,6 +84,15 @@ class MvpSurveyCheckPointActivity : BaseActivity(), View.OnClickListener, OnMapR
       R.id.mvp_survey_checkpoint_back -> {
         finish()
       }
+      R.id.mvp_survey_checkpoint_gps_data_antenna_height -> {
+        myHelper.log("last Journey:${myHelper.getLastJourney()}")
+        showInputDialog(1, this)
+      }
+      R.id.mvp_survey_checkpoint_file_description -> {
+        myHelper.log("last Journey:${myHelper.getLastJourney()}")
+        showInputDialog(2, this)
+      }
+      
       R.id.mvp_survey_checkpoint_settings -> {
         val intent = Intent(this, SettingsActivity::class.java)
         myData.name = "Record Check Point Settings"
@@ -121,6 +142,66 @@ class MvpSurveyCheckPointActivity : BaseActivity(), View.OnClickListener, OnMapR
     }
   }
   
+  
+  private fun showInputDialog(type: Int, context: Context) {
+    
+    val mDialogView = LayoutInflater.from(context).inflate(R.layout.dialog_input, null)
+    var title = "Antenna Height"
+    var explanation = "Please enter valid antenna height in m."
+    when (type) {
+      1 -> {
+        title = "Antenna Height"
+        explanation = "Please enter valid antenna height in m."
+        mDialogView.mvp_survey_dialog_input.hint = "Please enter decimal value for antenna height"
+        mDialogView.mvp_survey_dialog_input.setText(myHelper.getLastJourney().checkpoint_antenna_height.toString())
+      }
+      2 -> {
+        title = "Point Attribute"
+        explanation = "Please enter check point details for Record Check Point."
+        mDialogView.mvp_survey_dialog_input.hint = "Enter check point details"
+        mDialogView.mvp_survey_dialog_input.inputType = InputType.TYPE_CLASS_TEXT
+      }
+    }
+    
+    mDialogView.error_title.text = title
+    if (explanation.isNotBlank()) {
+      mDialogView.error_explanation.text = explanation
+      mDialogView.error_explanation.visibility = View.VISIBLE
+    }
+    
+    val mBuilder = AlertDialog.Builder(context).setView(mDialogView)
+    val mAlertDialog = mBuilder.show()
+    mAlertDialog.setCancelable(true)
+    
+    val window = mAlertDialog.window
+    val wlp = window!!.attributes
+    
+    wlp.gravity = Gravity.CENTER
+    window.attributes = wlp
+    
+    mDialogView.error_cancel.setOnClickListener {
+      mAlertDialog.dismiss()
+    }
+    
+    mDialogView.error_ok.setOnClickListener {
+      when {
+        type == 1 && myHelper.isDecimal(mDialogView.mvp_survey_dialog_input.text.toString()) -> {
+          val lastJourney = myHelper.getLastJourney()
+          lastJourney.checkpoint_antenna_height = mDialogView.mvp_survey_dialog_input.text.toString().toDouble()
+          myHelper.setLastJourney(lastJourney)
+          mvp_survey_checkpoint_gps_data_antenna_height.text = "Antenna Height: ${myHelper.getLastJourney().checkpoint_antenna_height} m"
+          mAlertDialog.dismiss()
+        }
+        type == 2 -> {
+          mvp_survey_checkpoint_details.setText(mDialogView.mvp_survey_dialog_input.text.toString())
+          mAlertDialog.dismiss()
+        }
+        else -> {
+          myHelper.toast("Please enter valid antenna height in m.")
+        }
+      }
+    }
+  }
   
   private fun startGPS1() {
     myHelper.log("startGPS1111__called")

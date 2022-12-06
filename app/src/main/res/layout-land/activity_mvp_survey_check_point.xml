@@ -84,15 +84,32 @@
         android:textSize="10sp" />
     </LinearLayout>
 
-    <TextView
+    <!--    <TextView-->
+    <!--      android:id="@+id/mvp_survey_checkpoint_settings"-->
+    <!--      android:layout_width="wrap_content"-->
+    <!--      android:layout_height="wrap_content"-->
+    <!--      android:layout_alignParentEnd="true"-->
+    <!--      android:padding="@dimen/_5sdp"-->
+    <!--      android:text="@string/settings"-->
+    <!--      android:textColor="@color/black"-->
+    <!--      android:textSize="12sp" />-->
+    <Button
+      android:id="@+id/mvp_survey_checkpoint_file_description"
+      android:text="@string/point_attribute"
+      android:layout_toLeftOf="@id/mvp_survey_checkpoint_gps_data_antenna_height"
+      style="@style/survey_top_button" />
+
+    <Button
+      android:id="@+id/mvp_survey_checkpoint_gps_data_antenna_height"
+      android:text="@string/antenna_height"
+      android:layout_toLeftOf="@id/mvp_survey_checkpoint_settings"
+      style="@style/survey_top_button" />
+
+    <Button
       android:id="@+id/mvp_survey_checkpoint_settings"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignParentEnd="true"
-      android:padding="@dimen/_5sdp"
       android:text="@string/settings"
-      android:textColor="@color/black"
-      android:textSize="12sp" />
+      android:layout_alignParentEnd="true"
+      style="@style/survey_top_button" />
   </RelativeLayout>
 
   <LinearLayout
