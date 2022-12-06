@@ -12,8 +12,10 @@ import app.vsptracker.adapters.CustomGridLMachine
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.Material
 import app.vsptracker.others.MyEnum
+import com.github.dhaval2404.colorpicker.MaterialColorPickerDialog
+import com.github.dhaval2404.colorpicker.model.ColorShape
+import com.github.dhaval2404.colorpicker.model.ColorSwatch
 import com.google.android.material.navigation.NavigationView
-import com.pes.androidmaterialcolorpickerdialog.ColorPicker
 import kotlinx.android.synthetic.main.activity_mvp_surveys_labels_settings.*
 
 class MvpSurveysLabelsSettingsActivity : BaseActivity(), View.OnClickListener {
@@ -76,25 +78,53 @@ class MvpSurveysLabelsSettingsActivity : BaseActivity(), View.OnClickListener {
         finish()
       }
       R.id.survey_label_hex_color -> {
-        val cp = ColorPicker(this@MvpSurveysLabelsSettingsActivity, selected_color_alpha, selected_color_r, selected_color_g, selected_color_b)
-        cp.show();
-        cp.enableAutoClose();
-        cp.setCallback { color ->
-          selected_color_alpha = Color.alpha(color)
-          selected_color_r = Color.red(color)
-          selected_color_g = Color.green(color)
-          selected_color_b = Color.blue(color)
-          myHelper.log("color:" + color)
-          myHelper.log("Alpha:" + Integer.toString(Color.alpha(color)))
-          myHelper.log("Red:" + Integer.toString(Color.red(color)))
-          myHelper.log("Green:" + Integer.toString(Color.green(color)))
-          myHelper.log("Blue:" + Integer.toString(Color.blue(color)))
-          myHelper.log("Pure Hex:" + Integer.toHexString(color))
-          myHelper.log("#Hex no alpha:" + String.format("#%06X", 0xFFFFFF and color))
-          myHelper.log("#Hex with alpha:" + String.format("#%08X", -0x1 and color))
-          survey_label_hex_color.setBackgroundColor(color)
-          cp.dismiss();
-        }
+        
+        MaterialColorPickerDialog
+          .Builder(this@MvpSurveysLabelsSettingsActivity) // Pass Activity Instance
+          .setColorShape(ColorShape.SQAURE) // Or ColorShape.CIRCLE
+//          .setColorShape(ColorShape.CIRCLE) // Or ColorShape.CIRCLE
+//          .setColorSwatch(ColorSwatch._300) // Default ColorSwatch._500
+          .setColorSwatch(ColorSwatch.A400) // Default ColorSwatch._500
+          .setDefaultColor("") // Pass Default Color
+          .setColorRes(resources.getIntArray(R.array.colors_array))
+//          .setColorRes(resources.getIntArray(R.array.colors_array_all))
+          .setColorListener { color, colorHex ->
+            selected_color_alpha = Color.alpha(color)
+            selected_color_r = Color.red(color)
+            selected_color_g = Color.green(color)
+            selected_color_b = Color.blue(color)
+            survey_label_hex_color.setBackgroundColor(color)
+            myHelper.log("color:$color")
+            myHelper.log("colorHex:$colorHex")
+            myHelper.log("Alpha:" + Integer.toString(Color.alpha(color)))
+            myHelper.log("Red:" + Integer.toString(Color.red(color)))
+            myHelper.log("Green:" + Integer.toString(Color.green(color)))
+            myHelper.log("Blue:" + Integer.toString(Color.blue(color)))
+            myHelper.log("Pure Hex:" + Integer.toHexString(color))
+            myHelper.log("#Hex no alpha:" + String.format("#%06X", 0xFFFFFF and color))
+            myHelper.log("#Hex with alpha:" + String.format("#%08X", -0x1 and color))
+          }
+          .show()
+
+//        val cp = ColorPicker(this@MvpSurveysLabelsSettingsActivity, selected_color_alpha, selected_color_r, selected_color_g, selected_color_b)
+//        cp.show();
+//        cp.enableAutoClose();
+//        cp.setCallback { color ->
+//          selected_color_alpha = Color.alpha(color)
+//          selected_color_r = Color.red(color)
+//          selected_color_g = Color.green(color)
+//          selected_color_b = Color.blue(color)
+//          myHelper.log("color:" + color)
+//          myHelper.log("Alpha:" + Integer.toString(Color.alpha(color)))
+//          myHelper.log("Red:" + Integer.toString(Color.red(color)))
+//          myHelper.log("Green:" + Integer.toString(Color.green(color)))
+//          myHelper.log("Blue:" + Integer.toString(Color.blue(color)))
+//          myHelper.log("Pure Hex:" + Integer.toHexString(color))
+//          myHelper.log("#Hex no alpha:" + String.format("#%06X", 0xFFFFFF and color))
+//          myHelper.log("#Hex with alpha:" + String.format("#%08X", -0x1 and color))
+//          survey_label_hex_color.setBackgroundColor(color)
+//          cp.dismiss();
+//        }
       }
       R.id.settings_save -> {
         val name = mvp_survey_label_name.text.toString()
