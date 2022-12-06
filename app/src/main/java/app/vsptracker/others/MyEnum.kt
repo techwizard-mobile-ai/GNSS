@@ -82,8 +82,6 @@ class MyEnum {
     const val MVP = "app.mvp"
     const val VSPT = "app.vsptracker"
     
-    const val MAP_ZOOM_LEVEL: Float = 20.0f
-    
     const val MOBILE_API_TYPE_GET_ALL: Int = 0
     const val MOBILE_API_TYPE_GET_VSPT_ALL: Int = 1
     const val MOBILE_API_TYPE_GET_MVP_ALL: Int = 2
@@ -98,5 +96,8 @@ class MyEnum {
     const val ADMIN_FILE_TYPE_TAPU_SCAN = 2
     const val ADMIN_FILE_TYPE_TAPU_SURVEY_POINT = 3
     const val ADMIN_FILE_TYPE_TAPU_SURVEY_LINE = 4
+    
+    //    const val MVP_ZOOM_LEVEL: Float = 19.0f
+    const val MVP_ZOOM_LEVEL: Float = 21.0f
   }
 }

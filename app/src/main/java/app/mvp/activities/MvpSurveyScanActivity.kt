@@ -34,7 +34,7 @@ import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.GPSLocation
 import app.vsptracker.others.MyEnum
-import app.vsptracker.others.MyEnum.Companion.MAP_ZOOM_LEVEL
+import app.vsptracker.others.MyEnum.Companion.MVP_ZOOM_LEVEL
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -476,13 +476,13 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
         if (location != null) {
           lastLocation = location
           val currentLatLng = LatLng(location.latitude, location.longitude)
-          map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, MAP_ZOOM_LEVEL))
-          map.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, MAP_ZOOM_LEVEL))
+          map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, MVP_ZOOM_LEVEL))
+          map.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, MVP_ZOOM_LEVEL))
         }
       }
       
-      map.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, MAP_ZOOM_LEVEL))
-      map.animateCamera(CameraUpdateFactory.newLatLngZoom(location1, MAP_ZOOM_LEVEL))
+      map.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, MVP_ZOOM_LEVEL))
+      map.animateCamera(CameraUpdateFactory.newLatLngZoom(location1, MVP_ZOOM_LEVEL))
       
     } else {
       map.isMyLocationEnabled = true
@@ -491,7 +491,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
         if (location != null) {
           lastLocation = location
           val currentLatLng = LatLng(location.latitude, location.longitude)
-          map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, MAP_ZOOM_LEVEL))
+          map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, MVP_ZOOM_LEVEL))
           try {
             val currentOrgsMap = db.getCurrentOrgsMap()
             if (currentOrgsMap !== null && !currentOrgsMap.aws_path.isNullOrEmpty()) {

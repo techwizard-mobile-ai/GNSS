@@ -23,6 +23,7 @@ import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.GPSLocation
 import app.vsptracker.classes.Material
 import app.vsptracker.others.MyEnum
+import app.vsptracker.others.MyEnum.Companion.MVP_ZOOM_LEVEL
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -42,9 +43,6 @@ import kotlinx.android.synthetic.main.dialog_input.*
 import kotlinx.android.synthetic.main.dialog_input.view.*
 import java.io.File
 import java.io.FileInputStream
-
-
-private const val ZOOM_LEVEL: Float = 19.0f
 
 class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
   
@@ -335,14 +333,14 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
         if (location != null) {
           lastLocation = location
           val currentLatLng = LatLng(location.latitude, location.longitude)
-          map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, ZOOM_LEVEL))
-          map.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, ZOOM_LEVEL))
-          map.animateCamera(CameraUpdateFactory.newLatLngZoom(location1, ZOOM_LEVEL))
+          map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, MVP_ZOOM_LEVEL))
+          map.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, MVP_ZOOM_LEVEL))
+          map.animateCamera(CameraUpdateFactory.newLatLngZoom(location1, MVP_ZOOM_LEVEL))
         }
       }
       
-      map.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, ZOOM_LEVEL))
-      map.animateCamera(CameraUpdateFactory.newLatLngZoom(location1, ZOOM_LEVEL))
+      map.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, MVP_ZOOM_LEVEL))
+      map.animateCamera(CameraUpdateFactory.newLatLngZoom(location1, MVP_ZOOM_LEVEL))
       
     } else {
       map.isMyLocationEnabled = true
@@ -351,7 +349,7 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
         if (location != null) {
           lastLocation = location
           val currentLatLng = LatLng(location.latitude, location.longitude)
-          map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, ZOOM_LEVEL))
+          map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, MVP_ZOOM_LEVEL))
           try {
             val currentOrgsMap = db.getCurrentOrgsMap()
             if (currentOrgsMap !== null && !currentOrgsMap.aws_path.isNullOrEmpty()) {

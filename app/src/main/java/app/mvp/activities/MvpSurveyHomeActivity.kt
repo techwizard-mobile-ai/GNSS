@@ -12,6 +12,7 @@ import android.widget.FrameLayout
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.classes.GPSLocation
+import app.vsptracker.others.MyEnum.Companion.MVP_ZOOM_LEVEL
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -27,8 +28,6 @@ import kotlinx.android.synthetic.main.activity_mvp_survey_home.*
 import kotlinx.android.synthetic.main.app_bar_base.*
 import java.io.File
 import java.io.FileInputStream
-
-private const val ZOOM_LEVEL: Float = 19.0f
 
 class MvpSurveyHomeActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
                               GoogleMap.OnMarkerClickListener {
@@ -176,14 +175,14 @@ class MvpSurveyHomeActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
         if (location != null) {
           lastLocation = location
           val currentLatLng = LatLng(location.latitude, location.longitude)
-          map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, ZOOM_LEVEL))
-          map.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, ZOOM_LEVEL))
-          map.animateCamera(CameraUpdateFactory.newLatLngZoom(location1, ZOOM_LEVEL))
+          map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, MVP_ZOOM_LEVEL))
+          map.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, MVP_ZOOM_LEVEL))
+          map.animateCamera(CameraUpdateFactory.newLatLngZoom(location1, MVP_ZOOM_LEVEL))
         }
       }
       
-      map.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, ZOOM_LEVEL))
-      map.animateCamera(CameraUpdateFactory.newLatLngZoom(location1, ZOOM_LEVEL))
+      map.moveCamera(CameraUpdateFactory.newLatLngZoom(location1, MVP_ZOOM_LEVEL))
+      map.animateCamera(CameraUpdateFactory.newLatLngZoom(location1, MVP_ZOOM_LEVEL))
       
     } else {
       map.isMyLocationEnabled = true
@@ -192,7 +191,7 @@ class MvpSurveyHomeActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
         if (location != null) {
           lastLocation = location
           val currentLatLng = LatLng(location.latitude, location.longitude)
-          map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, ZOOM_LEVEL))
+          map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, MVP_ZOOM_LEVEL))
 //                    val resourceID = R.raw.drury_xhunua
           try {
 //                        val fileName = "drury_xhunua"
