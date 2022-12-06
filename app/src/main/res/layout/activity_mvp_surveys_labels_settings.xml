@@ -14,6 +14,8 @@
     style="@style/activity_title"
     android:layout_alignParentTop="true"
     android:layout_centerHorizontal="true"
+    android:textSize="@dimen/_12sdp"
+    android:layout_marginBottom="@dimen/_10sdp"
     android:text="@string/settings" />
 
   <LinearLayout
@@ -33,7 +35,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/_11sdp"
         android:text="@string/survey_labels_list" />
 
       <GridView
@@ -63,7 +64,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/_11sdp"
         android:text="@string/favorite_labels" />
 
       <GridView
@@ -89,83 +89,121 @@
       android:nestedScrollingEnabled="true"
       android:layout_height="match_parent">
 
-      <TextView
+      <ScrollView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/_11sdp"
-        android:layout_centerHorizontal="true"
-        android:gravity="center_horizontal"
-        android:text="@string/new_label" />
+        android:layout_height="match_parent">
 
-      <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:overScrollMode="always"
-        android:orientation="vertical">
-
-        <EditText
-          android:id="@+id/mvp_survey_label_name"
-          style="@style/et_background"
-          android:inputType="text"
-          android:scrollbars="vertical"
-          android:text=""
-          android:hint="@string/alpha_numeric_name"
-          android:layout_marginTop="@dimen/_20sdp"
-          android:layout_marginBottom="@dimen/_10sdp"
-          android:textColor="@color/black" />
-
-        <RadioGroup
-          android:id="@+id/survey_label_type"
+        <LinearLayout
           android:layout_width="wrap_content"
-          android:orientation="horizontal"
-          android:layout_gravity="center_horizontal"
-          android:layout_marginBottom="@dimen/_4sdp"
-          android:layout_height="wrap_content">
-
-          <RadioButton
-            android:id="@+id/survey_label_type_point"
-            android:layout_width="wrap_content"
-            android:text="@string/point"
-            android:textSize="@dimen/_10sdp"
-            android:buttonTint="@color/colorPrimary"
-            android:textColor="@color/colorPrimary"
-            android:layout_height="wrap_content" />
-
-          <RadioButton
-            android:id="@+id/survey_label_type_line"
-            android:layout_width="wrap_content"
-            android:layout_marginLeft="@dimen/_20sdp"
-            android:textAlignment="textStart"
-            android:textSize="@dimen/_10sdp"
-            android:textColor="@color/colorPrimary"
-            android:buttonTint="@color/colorPrimary"
-            android:text="@string/line"
-            android:layout_height="wrap_content" />
-        </RadioGroup>
-
-        <ImageView
-          android:id="@+id/survey_label_hex_color"
-          android:layout_width="@dimen/_26sdp"
-          android:layout_height="@dimen/_26sdp"
-          android:layout_gravity="center_horizontal"
-          android:layout_marginBottom="@dimen/_10sdp"
-          android:background="@color/colorPrimary" />
-
-        <Button
-          android:id="@+id/settings_save"
-          style="@style/back_button_single"
           android:layout_height="wrap_content"
-          android:text="@string/save" />
-      </LinearLayout>
+          android:layout_centerHorizontal="true"
+          android:overScrollMode="always"
+          android:orientation="vertical">
 
-      <Button
-        android:id="@+id/settings_back"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="@string/apply"
-        style="@style/back_button_single" />
+          <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/_1sdp"
+            android:text="@string/search" />
+
+          <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:layout_height="wrap_content">
+
+            <EditText
+              android:id="@+id/mvp_survey_label_search"
+              style="@style/et_background"
+              android:layout_marginTop="@dimen/_1sdp"
+              android:inputType="text"
+              android:layout_width="@dimen/_70sdp"
+              android:layout_alignParentStart="true"
+              android:hint="@string/search_labels"
+              android:textColor="@color/black" />
+
+            <ImageView
+              android:id="@+id/mvp_survey_label_search_clear"
+              android:layout_width="@dimen/_20sdp"
+              android:layout_height="@dimen/_20sdp"
+              android:layout_marginTop="@dimen/_3sdp"
+              android:layout_toRightOf="@id/mvp_survey_label_search"
+              android:layout_marginLeft="@dimen/_1sdp"
+              android:src="@drawable/ic_cancel" />
+          </RelativeLayout>
+
+          <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/_1sdp"
+            android:text="@string/new_label" />
+
+          <EditText
+            android:id="@+id/mvp_survey_label_name"
+            style="@style/et_background"
+            android:inputType="text"
+            android:scrollbars="vertical"
+            android:text=""
+            android:layout_marginTop="@dimen/_1sdp"
+            android:hint="@string/alpha_numeric_name"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:textColor="@color/black" />
+
+          <RadioGroup
+            android:id="@+id/survey_label_type"
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/_4sdp"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+              android:id="@+id/survey_label_type_point"
+              android:layout_width="wrap_content"
+              android:text="@string/point"
+              android:textSize="@dimen/_10sdp"
+              android:buttonTint="@color/colorPrimary"
+              android:textColor="@color/colorPrimary"
+              android:layout_height="wrap_content" />
+
+            <RadioButton
+              android:id="@+id/survey_label_type_line"
+              android:layout_width="wrap_content"
+              android:layout_marginLeft="@dimen/_20sdp"
+              android:textAlignment="textStart"
+              android:textSize="@dimen/_10sdp"
+              android:textColor="@color/colorPrimary"
+              android:buttonTint="@color/colorPrimary"
+              android:text="@string/line"
+              android:layout_height="wrap_content" />
+          </RadioGroup>
+
+          <ImageView
+            android:id="@+id/survey_label_hex_color"
+            android:layout_width="@dimen/_26sdp"
+            android:layout_height="@dimen/_26sdp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:background="@color/colorPrimary" />
+
+          <Button
+            android:id="@+id/settings_save"
+            style="@style/back_button_single"
+            android:layout_height="wrap_content"
+            android:text="@string/save" />
+
+          <Button
+            android:id="@+id/settings_back"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="@string/apply"
+            style="@style/back_button_single" />
+        </LinearLayout>
+      </ScrollView>
+
     </RelativeLayout>
 
   </LinearLayout>

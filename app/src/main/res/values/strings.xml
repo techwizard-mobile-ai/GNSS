@@ -407,4 +407,6 @@
   <string name="alpha_numeric_name">Alpha numeric name</string>
   <string name="apply">Apply</string>
   <string name="survey_labels_list">Survey Labels List:</string>
+  <string name="search">Search:</string>
+  <string name="search_labels">Search labels</string>
 </resources>

@@ -5,17 +5,16 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.ImageView
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 import app.mvp.activities.MvpSurveySurveyActivity
 import app.mvp.activities.MvpSurveysLabelsSettingsActivity
 import app.vsptracker.R
 import app.vsptracker.classes.Material
 
-class CustomGridLMachine(private val mContext: Context, private val arrayList: ArrayList<Material>, private val type: Int = 0) :
-        BaseAdapter() {
+class CustomGridLMachine(private val mContext: Context, private var arrayList: ArrayList<Material>, private val type: Int = 0) : BaseAdapter(), Filterable {
+  
+  var mOriginalValues: ArrayList<Material> = arrayList
+  var inflater: LayoutInflater? = null
   
   override fun getCount(): Int {
     return arrayList.size
@@ -83,9 +82,27 @@ class CustomGridLMachine(private val mContext: Context, private val arrayList: A
       }
       
     }
-    
-    
-    
     return grid
+  }
+  
+  override fun getFilter(): Filter? {
+    return object : Filter() {
+      override fun publishResults(constraint: CharSequence?, results: FilterResults) {
+        arrayList = results.values as ArrayList<Material> // has the filtered values
+        notifyDataSetChanged() // notifies the data with new filtered values
+      }
+      
+      override fun performFiltering(constraint: CharSequence): FilterResults? {
+        var constraint = constraint
+        val results = FilterResults()
+        
+        if (constraint.isEmpty()) {
+          results.values = mOriginalValues
+        } else {
+          results.values = mOriginalValues.filter { p -> p.number.contains(constraint.toString(), true) }
+        }
+        return results
+      }
+    }
   }
 }

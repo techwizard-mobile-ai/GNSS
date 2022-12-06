@@ -2,6 +2,8 @@ package app.mvp.activities
 
 import android.graphics.Color
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.GridView
@@ -18,7 +20,10 @@ import com.github.dhaval2404.colorpicker.model.ColorSwatch
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_mvp_surveys_labels_settings.*
 
+
 class MvpSurveysLabelsSettingsActivity : BaseActivity(), View.OnClickListener {
+  private lateinit var adapter_labels: CustomGridLMachine
+  private lateinit var adapter_labels_favorite: CustomGridLMachine
   private val tag = this::class.java.simpleName
   private lateinit var gv: GridView
   private lateinit var gv_favorite: GridView
@@ -58,6 +63,7 @@ class MvpSurveysLabelsSettingsActivity : BaseActivity(), View.OnClickListener {
     settings_back.setOnClickListener(this@MvpSurveysLabelsSettingsActivity)
     settings_save.setOnClickListener(this@MvpSurveysLabelsSettingsActivity)
     survey_label_hex_color.setOnClickListener(this@MvpSurveysLabelsSettingsActivity)
+    mvp_survey_label_search_clear.setOnClickListener(this@MvpSurveysLabelsSettingsActivity)
     
     survey_label_type.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { group, checkedId ->
       when (checkedId) {
@@ -70,12 +76,27 @@ class MvpSurveysLabelsSettingsActivity : BaseActivity(), View.OnClickListener {
       }
     })
     
+    mvp_survey_label_search.addTextChangedListener(object : TextWatcher {
+      override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+        // Call back the Adapter with current character to Filter
+        adapter_labels.filter!!.filter(s.toString())
+        adapter_labels_favorite.filter!!.filter(s.toString())
+      }
+      
+      override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+      override fun afterTextChanged(s: Editable) {}
+    })
+    
   }
   
   override fun onClick(view: View?) {
     when (view!!.id) {
       R.id.settings_back -> {
         finish()
+      }
+      R.id.mvp_survey_label_search_clear -> {
+        mvp_survey_label_search.setText("")
+        refreshRv()
       }
       R.id.survey_label_hex_color -> {
         
@@ -170,7 +191,9 @@ class MvpSurveysLabelsSettingsActivity : BaseActivity(), View.OnClickListener {
   
   fun refreshRv() {
     gv.adapter = CustomGridLMachine(this@MvpSurveysLabelsSettingsActivity, db.getAdminMvpSurveysLabels(3), 2) // get only which are not favorite
+    adapter_labels = gv.adapter as CustomGridLMachine
     gv_favorite.adapter = CustomGridLMachine(this@MvpSurveysLabelsSettingsActivity, db.getAdminMvpSurveysLabels(2), 3) // get only favorite labels
+    adapter_labels_favorite = gv_favorite.adapter as CustomGridLMachine
   }
   
   fun updateFavoriteUnfavorite(datum: Material) {
