@@ -205,9 +205,9 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
     when (type) {
       1 -> {
         title = "Antenna Height"
-        explanation = "Please enter valid antenna height in m."
-        mDialogView.mvp_survey_dialog_input.hint = "Please enter decimal value for antenna height"
-        mDialogView.mvp_survey_dialog_input.setText(myHelper.getLastJourney().survey_antenna_height.toString())
+        explanation = "Please enter valid antenna height in meters up to three decimal places."
+        mDialogView.mvp_survey_dialog_input.hint = "Please enter three decimal value for antenna height"
+        mDialogView.mvp_survey_dialog_input.setText(myHelper.roundToN(myHelper.getLastJourney().survey_antenna_height, 3).toString())
       }
       2 -> {
         title = "Point Attribute"
@@ -243,7 +243,7 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
           val lastJourney = myHelper.getLastJourney()
           lastJourney.survey_antenna_height = mDialogView.mvp_survey_dialog_input.text.toString().toDouble()
           myHelper.setLastJourney(lastJourney)
-          mvp_survey_survey_gps_data_antenna_height.text = "Antenna Height: ${myHelper.getLastJourney().survey_antenna_height} m"
+          mvp_survey_survey_gps_data_antenna_height.text = "Antenna Height: ${myHelper.roundToN(myHelper.getLastJourney().survey_antenna_height, 3)} m"
           mAlertDialog.dismiss()
         }
         type == 2 -> {
@@ -271,7 +271,7 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
     adapter = CustomGridLMachine(this@MvpSurveySurveyActivity, mvpOrgsProjects, 1)
     gv.adapter = adapter
     current_point.setText("")
-    mvp_survey_survey_gps_data_antenna_height.text = "Antenna Height: ${myHelper.getLastJourney().survey_antenna_height} m"
+    mvp_survey_survey_gps_data_antenna_height.text = "Antenna Height: ${myHelper.roundToN(myHelper.getLastJourney().survey_antenna_height, 3)} m"
   }
   
   private fun startGPS1() {
