@@ -1,5 +1,6 @@
 package app.mvp.activities
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -15,6 +16,7 @@ import app.vsptracker.classes.Material
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_mvp_orgs_projects.*
+
 
 class MvpOrgsProjectsActivity : BaseActivity(), View.OnClickListener {
   
@@ -59,16 +61,21 @@ class MvpOrgsProjectsActivity : BaseActivity(), View.OnClickListener {
     mvp_orgs_projects_back.setOnClickListener(this)
   }
   
+  @SuppressLint("UseCompatLoadingForColorStateLists")
   override fun onResume() {
     super.onResume()
     base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
-    when {
-      myHelper.isOnline() -> {
-        mvp_orgs_projects_create.setBackgroundColor(resources.getColor(R.color.colorPrimary)); }
-      else -> {
-        mvp_orgs_projects_create.setBackgroundColor(resources.getColor(R.color.gray_dark));
-      }
-    }
+//    when {
+//      myHelper.isOnline() -> {
+////        mvp_orgs_projects_create.setBackgroundColor(resources.getColor(R.color.colorPrimary));
+//        mvp_orgs_projects_create.backgroundTintList = ContextCompat.getColorStateList(this, R.color.colorPrimary);
+//      }
+//
+//      else -> {
+////        mvp_orgs_projects_create.setBackgroundColor(resources.getColor(R.color.gray_dark));
+//        mvp_orgs_projects_create.backgroundTintList = ContextCompat.getColorStateList(this, R.color.gray_dark);
+//      }
+//    }
   }
   
   
@@ -103,8 +110,7 @@ class MvpOrgsProjectsActivity : BaseActivity(), View.OnClickListener {
     )
     call.enqueue(object : retrofit2.Callback<MvpOrgsProjectsResponse> {
       override fun onResponse(
-        call: retrofit2.Call<MvpOrgsProjectsResponse>,
-        response: retrofit2.Response<MvpOrgsProjectsResponse>
+        call: retrofit2.Call<MvpOrgsProjectsResponse>, response: retrofit2.Response<MvpOrgsProjectsResponse>
       ) {
         myHelper.hideProgressBar()
         try {

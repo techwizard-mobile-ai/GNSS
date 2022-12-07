@@ -78,13 +78,13 @@ class MvpOrgsFoldersActivity : BaseActivity(), View.OnClickListener {
   override fun onResume() {
     super.onResume()
     base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
-    when {
-      myHelper.isOnline() -> {
-        mvp_orgs_folders_create.setBackgroundColor(resources.getColor(R.color.colorPrimary)); }
-      else -> {
-        mvp_orgs_folders_create.setBackgroundColor(resources.getColor(R.color.gray_dark));
-      }
-    }
+//    when {
+//      myHelper.isOnline() -> {
+//        mvp_orgs_folders_create.setBackgroundColor(resources.getColor(R.color.colorPrimary)); }
+//      else -> {
+//        mvp_orgs_folders_create.setBackgroundColor(resources.getColor(R.color.gray_dark));
+//      }
+//    }
   }
   
   

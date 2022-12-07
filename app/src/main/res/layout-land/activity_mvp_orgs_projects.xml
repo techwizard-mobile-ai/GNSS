@@ -46,14 +46,14 @@
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:layout_centerHorizontal="true"
-    android:layout_margin="@dimen/_5sdp"
-    android:layout_marginStart="@dimen/_10sdp"
-    android:layout_marginRight="@dimen/_10sdp">
+    android:layout_margin="@dimen/_5sdp">
 
     <Button
       android:id="@+id/mvp_orgs_projects_create"
-      style="@style/back_button_single"
+      style="@style/next_button_single"
       android:layout_alignParentStart="true"
+      android:layout_marginBottom="@dimen/_1sdp"
+      android:layout_marginStart="@dimen/_1sdp"
       android:text="@string/create_new" />
 
     <Button
