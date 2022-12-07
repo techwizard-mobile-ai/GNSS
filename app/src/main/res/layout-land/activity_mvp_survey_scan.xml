@@ -84,15 +84,11 @@
         android:textSize="10sp" />
     </LinearLayout>
 
-    <TextView
+    <Button
       android:id="@+id/mvp_survey_scan_settings"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
       android:layout_alignParentEnd="true"
-      android:padding="@dimen/_5sdp"
       android:text="@string/settings"
-      android:textColor="@color/black"
-      android:textSize="12sp" />
+      style="@style/survey_top_button" />
   </RelativeLayout>
 
   <LinearLayout
