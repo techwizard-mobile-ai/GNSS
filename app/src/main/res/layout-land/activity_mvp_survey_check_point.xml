@@ -128,10 +128,11 @@
       android:layout_height="match_parent">
 
       <LinearLayout
+        android:id="@+id/mvp_survey_checkpoint_details_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/_20sdp"
         android:orientation="vertical">
 
         <TextView
@@ -161,6 +162,7 @@
       <Button
         android:id="@+id/mvp_survey_checkpoint_record"
         style="@style/back_button_single"
+        android:layout_below="@id/mvp_survey_checkpoint_details_layout"
         android:layout_centerInParent="true"
         android:layout_marginBottom="@dimen/_10sdp"
         android:text="@string/record_onto_check_point" />
@@ -168,6 +170,7 @@
       <Button
         android:id="@+id/mvp_survey_checkpoint_back"
         android:paddingTop="@dimen/_10sdp"
+        android:layout_centerInParent="true"
         style="@style/back_button_single"
         android:layout_alignParentBottom="true" />
     </RelativeLayout>

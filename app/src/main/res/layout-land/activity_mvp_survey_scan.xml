@@ -107,10 +107,11 @@
       android:padding="@dimen/_5sdp">
 
       <LinearLayout
+        android:id="@+id/mvp_survey_scan_label_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/_20sdp"
         android:orientation="vertical">
 
         <TextView
@@ -139,8 +140,10 @@
       </LinearLayout>
 
       <LinearLayout
+        android:id="@+id/mvp_survey_scan_capture_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/mvp_survey_scan_label_layout"
         android:layout_centerInParent="true"
         android:layout_marginBottom="@dimen/_10sdp"
         android:orientation="vertical">
