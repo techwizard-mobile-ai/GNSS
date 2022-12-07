@@ -371,6 +371,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
   override fun onResume() {
     super.onResume()
     base_nav_view.setCheckedItem(base_nav_view.menu.getItem(5))
+    refreshViews(location1)
   }
   
   
@@ -399,22 +400,39 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     
   }
   
+  fun refreshViews(location: Location?) {
+    
+    if (location != null) {
+      myHelper.setGPSLayout(location, mvp_survey_scan_gps_data_acc, mvp_survey_scan_gps_data_lat, mvp_survey_scan_gps_data_long, mvp_survey_scan_gps_data_alt, mvp_survey_scan_gps_data_speed, mvp_survey_scan_gps_data_bearing, mvp_survey_scan_gps_data_time)
+//      if (isCapturingImage) {
+      when {
+        location.accuracy >= 1 -> {
+//            mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.red))
+          mvp_survey_scan_capture.backgroundTintList = ContextCompat.getColorStateList(this@MvpSurveyScanActivity, R.color.red);
+        }
+        location.accuracy <= 0.05 -> {
+//            mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.green))
+          mvp_survey_scan_capture.backgroundTintList = ContextCompat.getColorStateList(this@MvpSurveyScanActivity, R.color.green);
+        }
+        else -> {
+//            mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.yellow))
+          mvp_survey_scan_capture.backgroundTintList = ContextCompat.getColorStateList(this@MvpSurveyScanActivity, R.color.yellow);
+        }
+      }
+
+//      } else {
+////        mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.colorPrimary))
+//        mvp_survey_scan_capture.backgroundTintList = ContextCompat.getColorStateList(this@MvpSurveyScanActivity, R.color.colorPrimary);
+//      }
+    }
+    
+  }
+  
   val locationListener1: LocationListener = object : LocationListener {
     override fun onLocationChanged(location: Location) {
 //      myHelper.log("Status onLocationChanged.")
       location1 = location
-      myHelper.setGPSLayout(location, mvp_survey_scan_gps_data_acc, mvp_survey_scan_gps_data_lat, mvp_survey_scan_gps_data_long, mvp_survey_scan_gps_data_alt, mvp_survey_scan_gps_data_speed, mvp_survey_scan_gps_data_bearing, mvp_survey_scan_gps_data_time)
-      
-      if (isCapturingImage) {
-        when {
-          location.accuracy >= 1 -> mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.red))
-          location.accuracy <= 0.05 -> mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.green))
-          else -> mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.yellow))
-        }
-      } else {
-        mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.colorPrimary))
-        
-      }
+      refreshViews(location1)
     }
     
     override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
