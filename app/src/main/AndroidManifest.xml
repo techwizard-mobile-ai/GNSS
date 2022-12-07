@@ -165,7 +165,10 @@
 
     <activity android:name=".activities.CheckFormTaskActivity" />
     <activity android:name=".activities.CheckFormsActivity" />
-    <activity android:name=".activities.ServerSyncActivity" />
+    <activity
+      android:name=".activities.ServerSyncActivity"
+      android:configChanges="orientation"
+      android:screenOrientation="sensor" />
     <activity android:name=".activities.HoursReportingActivity" />
     <activity android:name=".activities.common.MachineBreakdownActivity" />
     <activity
