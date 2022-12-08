@@ -10,11 +10,14 @@ import app.mvp.activities.MvpSurveySurveyActivity
 import app.mvp.activities.MvpSurveysLabelsSettingsActivity
 import app.vsptracker.R
 import app.vsptracker.classes.Material
+import app.vsptracker.others.MyHelper
 
 class CustomGridLMachine(private val mContext: Context, private var arrayList: ArrayList<Material>, private val type: Int = 0) : BaseAdapter(), Filterable {
   
+  private val tag = this::class.java.simpleName
   var mOriginalValues: ArrayList<Material> = arrayList
   var inflater: LayoutInflater? = null
+  var myHelper = MyHelper(tag, mContext)
   
   override fun getCount(): Int {
     return arrayList.size
@@ -38,6 +41,7 @@ class CustomGridLMachine(private val mContext: Context, private var arrayList: A
         1 -> inflater.inflate(R.layout.list_row_grid_survey, null)
         2 -> inflater.inflate(R.layout.list_row_grid_survey_labels, null)
         3 -> inflater.inflate(R.layout.list_row_grid_survey_labels_favorite, null)
+        4 -> inflater.inflate(R.layout.list_row_grid_folders, null)
         else -> inflater.inflate(R.layout.list_row_grid, null)
       }
     } else {
@@ -79,6 +83,12 @@ class CustomGridLMachine(private val mContext: Context, private var arrayList: A
         val myData = arrayList[position]
         myData.is_favorite = 0
         grid_make_unfavorite.setOnClickListener { (mContext as MvpSurveysLabelsSettingsActivity).updateFavoriteUnfavorite(myData) }
+      }
+      
+      4 -> { // add created_at date to sites/folders
+        val grid_text_created_at = grid.findViewById(R.id.grid_text_created_at) as TextView
+        grid_text_created_at.visibility = View.VISIBLE
+        grid_text_created_at.text = arrayList[position].created_at
       }
       
     }

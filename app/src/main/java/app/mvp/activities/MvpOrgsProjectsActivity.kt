@@ -113,16 +113,18 @@ class MvpOrgsProjectsActivity : BaseActivity(), View.OnClickListener {
         try {
           val responseBody = response.body()
           if (responseBody!!.success) {
-            myHelper.log("responseBodyTapu: $responseBody")
+//            myHelper.log("responseBodyTapu: $responseBody")
             responseBody.data?.forEach {
               val material = Material()
               material.id = it.id!!
               material.number = it.name.toString()
+              material.created_at = it.created_at
+              material.updated_at = it.updated_at
               myHelper.log("myData: $it")
               mvpOrgsProjects.add(material)
             }
 //            myHelper.log("mvpOrgsProjects: $mvpOrgsProjects")
-            val adapter = CustomGridLMachine(this@MvpOrgsProjectsActivity, mvpOrgsProjects)
+            val adapter = CustomGridLMachine(this@MvpOrgsProjectsActivity, mvpOrgsProjects, 4)
             gv.adapter = adapter
             
           } else {

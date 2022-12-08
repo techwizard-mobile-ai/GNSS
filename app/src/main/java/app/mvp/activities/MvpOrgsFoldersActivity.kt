@@ -108,7 +108,9 @@ class MvpOrgsFoldersActivity : BaseActivity(), View.OnClickListener {
   
   internal fun getOrgsFiles(mvpOrgsProjectId: Int) {
     myHelper.showProgressBar()
+    myHelper.log("n_days_tasks:${myHelper.getAppSettings().n_days_tasks}")
     val prefix = "taputapu/${myHelper.getCurrentYear()}/${myHelper.getCurrentMonth()}/${myHelper.getCurrentDay()}/"
+//    val prefix = "taputapu/${myHelper.getCurrentYear()}/${myHelper.getCurrentMonth()}/"
     myHelper.log("prefix:$prefix")
     val call = this.retrofitAPI.getMvpOrgsFiles(
       mvpOrgsProjectId,
@@ -116,6 +118,8 @@ class MvpOrgsFoldersActivity : BaseActivity(), View.OnClickListener {
       myHelper.getLoginAPI().role,
       false,
       myHelper.getLoginAPI().auth_token,
+      2,
+      myHelper.getAppSettings().n_days_tasks
     )
     call.enqueue(object : retrofit2.Callback<MvpOrgsFilesResponse> {
       override fun onResponse(
@@ -133,9 +137,11 @@ class MvpOrgsFoldersActivity : BaseActivity(), View.OnClickListener {
               material.aws_path = it.awsPath
               material.relative_path = it.relativePath
               material.number = it.fileFolder?.name!!.dropLast(1)
+              material.created_at = it.createdAt.toString()
+              material.updated_at = it.updatedAt.toString()
               mvpOrgsFolders.add(material)
             }
-            val adapter = CustomGridLMachine(this@MvpOrgsFoldersActivity, mvpOrgsFolders)
+            val adapter = CustomGridLMachine(this@MvpOrgsFoldersActivity, mvpOrgsFolders, 4)
             gv.adapter = adapter
             
           } else {

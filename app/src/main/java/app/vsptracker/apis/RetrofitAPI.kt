@@ -70,10 +70,7 @@ interface RetrofitAPI {
   @POST(LOGIN)
   @FormUrlEncoded
   fun getLogin(
-    @Field("email") email: String,
-    @Field("password") password: String,
-    @Field("role") role: Int = 1,
-    @Field("ttl") ttl: String = MyEnum.TTL
+    @Field("email") email: String, @Field("password") password: String, @Field("role") role: Int = 1, @Field("ttl") ttl: String = MyEnum.TTL
   ): Call<LoginResponse>
   
   @GET(ORGS_SERVER_SYNC_LIST)
@@ -91,14 +88,14 @@ interface RetrofitAPI {
     @Query("prefix") prefix: String = "",
     @Query("role") role: Int?,
     @Query("isAdminLoggedIn") isAdminLoggedIn: Boolean = false,
-    @Query("token") token: String?
+    @Query("token") token: String?,
+    @Query("type") type: Int = 2,
+    @Query("n_days_tasks") days: Int = -1,
   ): Call<MvpOrgsFilesResponse>
   
   @GET(MVP_ORGS_PROJECTS_LIST)
   fun listMvpProjects(
-    @Query("org_id") org_id: Int?,
-    @Query("showInactive") showInactive: Int?,
-    @Query("token") token: String?
+    @Query("org_id") org_id: Int?, @Query("showInactive") showInactive: Int?, @Query("token") token: String?
   ): Call<MvpOrgsProjectsResponse>
   
 }

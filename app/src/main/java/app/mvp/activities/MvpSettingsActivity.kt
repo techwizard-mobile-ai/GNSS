@@ -1,5 +1,6 @@
 package app.mvp.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
@@ -50,10 +51,13 @@ class MvpSettingsActivity : BaseActivity(), View.OnClickListener {
         myHelper.log("n_days_tasks:$appSettingsActivity.n_days_tasks")
         
         myHelper.setAppSettings(appSettingsActivity)
-        finish()
+        myHelper.toast("Settings updated successfully.")
+        val intent = Intent(this, MvpHomeActivity::class.java)
+        startActivity(intent)
       }
       R.id.settings_back -> {
-        finish()
+        val intent = Intent(this, MvpHomeActivity::class.java)
+        startActivity(intent)
       }
       R.id.timer_minus -> {
         

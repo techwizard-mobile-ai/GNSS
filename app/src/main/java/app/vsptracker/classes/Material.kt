@@ -89,6 +89,15 @@ class Material : Serializable {
   @Expose
   var color: String = ""
   
+  @SerializedName("created_at")
+  @Expose
+  var created_at: String = ""
+  
+  @SerializedName("updated_at")
+  @Expose
+  var updated_at: String = ""
+  
+  
   constructor()
   
   constructor(id: Int, name: String) {
@@ -107,9 +116,8 @@ class Material : Serializable {
             "id=$id, " +
             "name='$name', " +
             "number='$number', " +
-            "admin_file_type_id=$admin_file_type_id" +
-            "is_favorite=$is_favorite" +
-            "color_hex=$color_hex" +
+            "created_at=$created_at" +
+            "updated_at=$updated_at" +
             ")"
   }
   

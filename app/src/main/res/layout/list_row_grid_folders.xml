@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
+  android:padding="@dimen/_4sdp">
+
+  <LinearLayout
+    style="@style/grid_tv"
+    android:orientation="vertical">
+
+    <TextView
+      android:id="@+id/grid_text"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:textColor="@color/white"
+      android:textSize="@dimen/_16sdp"
+      android:gravity="center_horizontal"
+      android:visibility="visible"
+      android:text="@string/list_row_grid_grid_text_text" />
+
+    <TextView
+      android:id="@+id/grid_text_created_at"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:textColor="@color/white"
+      android:gravity="center_horizontal"
+      android:textSize="@dimen/_6sdp"
+      android:visibility="visible"
+      android:text="@string/list_row_grid_grid_text_text" />
+
+  </LinearLayout>
+
+</LinearLayout>
