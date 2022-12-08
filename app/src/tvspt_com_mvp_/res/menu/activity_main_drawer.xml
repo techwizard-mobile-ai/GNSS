@@ -8,32 +8,26 @@
       android:id="@+id/nav_home"
       android:icon="@drawable/ic_home"
       android:title="@string/home" />
-    <!--        <item-->
-    <!--                android:id="@+id/nav_settings"-->
-    <!--                android:visible="false"-->
-    <!--                android:icon="@drawable/ic_settings"-->
-    <!--                android:title="@string/settings"/>-->
-
     <item
       android:id="@+id/nav_delay"
       android:icon="@drawable/ic_wait1"
-      android:visible="false"
-      android:title="@string/delay" />
+      android:title="@string/delay"
+      android:visible="false" />
     <item
       android:id="@+id/nav_stop_machine"
       android:icon="@drawable/ic_stop_machine"
-      android:visible="false"
-      android:title="@string/stop_machine" />
+      android:title="@string/stop_machine"
+      android:visible="false" />
     <item
       android:id="@+id/nav_machine_breakdown"
       android:icon="@drawable/ic_action_report"
-      android:visible="false"
-      android:title="@string/machine_breakdown" />
+      android:title="@string/machine_breakdown"
+      android:visible="false" />
     <item
       android:id="@+id/nav_day_works"
       android:icon="@drawable/ic_action_departure_board"
-      android:visible="false"
-      android:title="@string/day_works" />
+      android:title="@string/day_works"
+      android:visible="false" />
     <item
       android:id="@+id/nav_last_task"
       android:icon="@drawable/ic_last_task"
@@ -49,28 +43,32 @@
     <item
       android:id="@+id/nav_load_history"
       android:icon="@drawable/ic_history"
-      android:visible="false"
-      android:title="@string/work_history" />
+      android:title="@string/work_history"
+      android:visible="false" />
     <item
       android:id="@+id/nav_change_machine"
       android:icon="@drawable/ic_change_machine"
-      android:visible="false"
-      android:title="@string/change_machine" />
+      android:title="@string/change_machine"
+      android:visible="false" />
     <item
       android:id="@+id/nav_hours_reporting"
       android:icon="@drawable/ic_hours_reporting"
-      android:visible="false"
-      android:title="@string/hours_reporting" />
+      android:title="@string/hours_reporting"
+      android:visible="false" />
     <item
       android:id="@+id/nav_checkforms"
       android:icon="@drawable/ic_checkform"
-      android:visible="false"
-      android:title="@string/checkform" />
+      android:title="@string/checkform"
+      android:visible="false" />
     <item
       android:id="@+id/nav_server_sync"
       android:icon="@drawable/ic_server_sync"
       android:title="@string/server_sync" />
-
+    <item
+      android:id="@+id/nav_settings"
+      android:icon="@drawable/ic_settings"
+      android:title="@string/settings"
+      android:visible="true" />
     <item
       android:id="@+id/nav_logout"
       android:icon="@drawable/ic_logout"

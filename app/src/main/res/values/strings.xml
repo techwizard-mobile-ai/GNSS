@@ -409,4 +409,5 @@
   <string name="survey_labels_list">Survey Labels List:</string>
   <string name="search">Search:</string>
   <string name="search_labels">Search labels</string>
+  <string name="days_last_tasks">Days Last Tasks</string>
 </resources>

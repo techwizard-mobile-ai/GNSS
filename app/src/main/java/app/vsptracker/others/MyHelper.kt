@@ -105,6 +105,11 @@ class MyHelper(var TAG: String, val context: Context) {
   var util: Util = Util()
   var transferUtility: TransferUtility? = util.getTransferUtility(context)
   
+  fun getAppSettings() = sessionManager.getAppSettings()
+  fun setAppSettings(myData: MyData) {
+    sessionManager.setAppSettings(myData)
+  }
+  
   /**
    * This method will take file name input including extension and output directory and it will return a file created with
    * those parameters. The reason to create this method arose when working on same file name for images saved in Survey

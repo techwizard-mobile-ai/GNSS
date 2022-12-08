@@ -20,6 +20,7 @@ private const val KEY_MACHINE_STOPPED_REASON = "machine_stopped_reason"
 private const val KEY_MACHINE_STOPPED_REASON_ID = "machine_stopped_reason_id"
 private const val KEY_NIGHT_MODE = "night_mode"
 private const val KEY_LAST_JOURNEY = "last_journey"
+private const val KEY_APP_SETTINGS = "app_settings"
 private const val KEY_METER = "meter"
 private const val KEY_LOGINAPI = "login_api"
 private const val KEY_OPERATORAPI = "operator_api"
@@ -38,6 +39,22 @@ class SessionManager(_context: Context) {
   
   init {
     editor = pref.run { edit() }
+  }
+  
+  fun getAppSettings(): MyData {
+    val gson = Gson()
+    val json = pref.getString(KEY_APP_SETTINGS, "")
+    return when (val obj = gson.fromJson(json, MyData::class.java)) {
+      null -> MyData()
+      else -> obj
+    }
+  }
+  
+  fun setAppSettings(myData: MyData) {
+    val gson = Gson()
+    val json = gson.toJson(myData)
+    editor.putString(KEY_APP_SETTINGS, json)
+    editor.commit()
   }
   
   /**

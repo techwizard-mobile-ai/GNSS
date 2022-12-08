@@ -315,6 +315,7 @@ class MyData : Serializable {
   var isMapOpened: Boolean = false
   var type: Int = 0
   var timer_interval: Long = 1000
+  var n_days_tasks: Int = 1
   
   @SerializedName("details")
   @Expose
@@ -361,6 +362,7 @@ class MyData : Serializable {
   override fun toString(): String {
     return "MyData(" +
             "id=$id, " +
+            "n_days_tasks=$n_days_tasks, " +
             "org_id=$org_id, " +
             "user_id=$user_id, " +
             "name=$name, " +

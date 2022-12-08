@@ -31,6 +31,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.work.WorkManager
 import app.mvp.activities.MvpCorrectionsSettingsActivity
 import app.mvp.activities.MvpHomeActivity
+import app.mvp.activities.MvpSettingsActivity
 import app.mvp.activities.MvpStartDataCollectionActivity
 import app.vsptracker.activities.*
 import app.vsptracker.activities.common.MachineBreakdownActivity
@@ -522,6 +523,14 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
           val intent = Intent(this, MvpStartDataCollectionActivity::class.java)
           startActivity(intent)
         }
+      }
+      R.id.nav_settings -> {
+        val intent = Intent(this, MvpSettingsActivity::class.java)
+        val appSettings = MyData()
+        appSettings.name = "App Settings"
+        intent.putExtra("myData", appSettings)
+        startActivity(intent)
+        myHelper.setIsMapOpened(false)
       }
     }
     val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
