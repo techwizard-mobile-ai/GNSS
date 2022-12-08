@@ -17,8 +17,8 @@ import app.vsptracker.apis.serverSync.ServerSyncAPI
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.ServerSyncModel
 import app.vsptracker.others.MyEnum
-import com.google.android.material.navigation.NavigationView
 import com.google.gson.GsonBuilder
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_server_sync.*
 import kotlinx.android.synthetic.main.ss_updated_notification.view.*
 import okhttp3.*
@@ -37,11 +37,14 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
     super.onCreate(savedInstanceState)
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_server_sync, contentFrameLayout)
-    val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(12).isChecked = true
     populateLists()
     
     server_sync_upload.setOnClickListener(this)
+  }
+  
+  override fun onResume() {
+    super.onResume()
+    base_nav_view.setCheckedItem(base_nav_view.menu.getItem(12))
   }
   
   private fun populateLists() {

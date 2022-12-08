@@ -17,7 +17,7 @@ import app.vsptracker.others.MyEnum
 import com.github.dhaval2404.colorpicker.MaterialColorPickerDialog
 import com.github.dhaval2404.colorpicker.model.ColorShape
 import com.github.dhaval2404.colorpicker.model.ColorSwatch
-import com.google.android.material.navigation.NavigationView
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_mvp_surveys_labels_settings.*
 
 
@@ -38,8 +38,7 @@ class MvpSurveysLabelsSettingsActivity : BaseActivity(), View.OnClickListener {
     
     val contentFrameLayout = findViewById<FrameLayout>(app.vsptracker.R.id.base_content_frame)
     layoutInflater.inflate(app.vsptracker.R.layout.activity_mvp_surveys_labels_settings, contentFrameLayout)
-    val navigationView = findViewById<NavigationView>(app.vsptracker.R.id.base_nav_view)
-    navigationView.menu.getItem(5).isChecked = true
+    
     myHelper.setTag(tag)
     
     val bundle: Bundle? = intent.extras
@@ -87,6 +86,11 @@ class MvpSurveysLabelsSettingsActivity : BaseActivity(), View.OnClickListener {
       override fun afterTextChanged(s: Editable) {}
     })
     
+  }
+  
+  override fun onResume() {
+    super.onResume()
+    base_nav_view.setCheckedItem(base_nav_view.menu.getItem(5))
   }
   
   override fun onClick(view: View?) {

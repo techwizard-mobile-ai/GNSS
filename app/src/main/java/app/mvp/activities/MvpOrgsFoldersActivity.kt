@@ -13,7 +13,6 @@ import app.vsptracker.adapters.CustomGridLMachine
 import app.vsptracker.apis.mvporgsfiles.MvpOrgsFilesResponse
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.Material
-import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_mvp_orgs_folders.*
 import kotlinx.android.synthetic.main.app_bar_base.*
@@ -29,8 +28,6 @@ class MvpOrgsFoldersActivity : BaseActivity(), View.OnClickListener {
     
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_mvp_orgs_folders, contentFrameLayout)
-    val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(0).isChecked = true
     
     myHelper.setTag(tag)
     myHelper.setProgressBar(mvp_orgs_files_pb)

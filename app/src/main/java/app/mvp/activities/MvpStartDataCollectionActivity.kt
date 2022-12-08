@@ -9,7 +9,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
-import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_mvp_start_data_collection.*
 
@@ -44,8 +43,6 @@ class MvpStartDataCollectionActivity : BaseActivity(), View.OnClickListener {
     super.onCreate(savedInstanceState)
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_mvp_start_data_collection, contentFrameLayout)
-    val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(0).isChecked = true
     
     myHelper.setTag(tag)
     
@@ -66,7 +63,7 @@ class MvpStartDataCollectionActivity : BaseActivity(), View.OnClickListener {
   
   override fun onResume() {
     super.onResume()
-    base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
+    base_nav_view.setCheckedItem(base_nav_view.menu.getItem(5))
   }
   
   override fun onClick(view: View?) {

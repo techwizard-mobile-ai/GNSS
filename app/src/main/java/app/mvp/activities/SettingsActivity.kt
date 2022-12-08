@@ -8,7 +8,7 @@ import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.others.MyEnum.Companion.SETTINGS_TYPE_MVP_SCAN
-import com.google.android.material.navigation.NavigationView
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_settings.*
 
 class SettingsActivity : BaseActivity(), View.OnClickListener {
@@ -20,8 +20,7 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
     
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_settings, contentFrameLayout)
-    val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(0).isChecked = true
+    
     myHelper.setTag(tag)
     
     val bundle: Bundle? = intent.extras
@@ -46,6 +45,11 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
     timer_plus.setOnClickListener(this@SettingsActivity)
     settings_back.setOnClickListener(this@SettingsActivity)
     settings_save.setOnClickListener(this@SettingsActivity)
+  }
+  
+  override fun onResume() {
+    super.onResume()
+    base_nav_view.setCheckedItem(base_nav_view.menu.getItem(5))
   }
   
   override fun onClick(view: View?) {

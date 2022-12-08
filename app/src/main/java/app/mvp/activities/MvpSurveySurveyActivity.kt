@@ -31,8 +31,8 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
-import com.google.android.material.navigation.NavigationView
 import com.google.maps.android.data.kml.KmlLayer
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_mvp_survey_survey.*
 import kotlinx.android.synthetic.main.app_bar_base.*
 import kotlinx.android.synthetic.main.dialog_error.view.*
@@ -65,8 +65,6 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
     super.onCreate(savedInstanceState)
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_mvp_survey_survey, contentFrameLayout)
-    val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(5).isChecked = true
     
     myHelper.setTag(tag)
     myData = myHelper.getLastJourney()
@@ -261,6 +259,7 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
   
   override fun onResume() {
     super.onResume()
+    base_nav_view.setCheckedItem(base_nav_view.menu.getItem(5))
     selectedLabel = Material()
     mvpOrgsProjects = db.getAdminMvpSurveysLabels(2)
     if (mvpOrgsProjects.size < 1)

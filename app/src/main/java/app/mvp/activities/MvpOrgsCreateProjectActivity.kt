@@ -10,8 +10,8 @@ import app.vsptracker.activities.LoginActivity
 import app.vsptracker.apis.login.LoginAPI
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.others.Utils.tag
-import com.google.android.material.navigation.NavigationView
 import com.google.gson.GsonBuilder
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_mvp_orgs_create_folder.back
 import kotlinx.android.synthetic.main.activity_mvp_orgs_create_folder.create
 import kotlinx.android.synthetic.main.activity_mvp_orgs_create_project.*
@@ -26,8 +26,6 @@ class MvpOrgsCreateProjectActivity : BaseActivity(), View.OnClickListener {
     
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_mvp_orgs_create_project, contentFrameLayout)
-    val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(0).isChecked = true
     
     myHelper.setTag(tag)
     
@@ -40,6 +38,11 @@ class MvpOrgsCreateProjectActivity : BaseActivity(), View.OnClickListener {
     back.setOnClickListener(this)
     create.setOnClickListener(this)
     
+  }
+  
+  override fun onResume() {
+    super.onResume()
+    base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
   }
   
   override fun onClick(view: View?) {

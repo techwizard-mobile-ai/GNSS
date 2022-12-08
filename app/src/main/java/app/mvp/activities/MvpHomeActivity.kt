@@ -14,7 +14,7 @@ import app.vsptracker.activities.LoginActivity
 import app.vsptracker.apis.login.LoginAPI
 import app.vsptracker.apis.trip.MyData
 import com.bumptech.glide.Glide
-import com.google.android.material.navigation.NavigationView
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_mvp_home.*
 import java.net.InetSocketAddress
 import java.net.Socket
@@ -28,8 +28,6 @@ class MvpHomeActivity : BaseActivity(), View.OnClickListener {
     
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_mvp_home, contentFrameLayout)
-    val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(0).isChecked = true
     myHelper.setTag(tag)
     
     Glide.with(this@MvpHomeActivity).load(ContextCompat.getDrawable(this@MvpHomeActivity, R.drawable.mvp_home_logo)).into(mvp_main_taputapu)
@@ -38,6 +36,11 @@ class MvpHomeActivity : BaseActivity(), View.OnClickListener {
     mvp_main_taputapu.setOnClickListener(this@MvpHomeActivity)
     mvp_main_portal.setOnClickListener(this@MvpHomeActivity)
     mvp_main_logout.setOnClickListener(this@MvpHomeActivity)
+  }
+  
+  override fun onResume() {
+    super.onResume()
+    base_nav_view.setCheckedItem(base_nav_view.menu.getItem(0))
   }
   
   override fun onClick(view: View?) {

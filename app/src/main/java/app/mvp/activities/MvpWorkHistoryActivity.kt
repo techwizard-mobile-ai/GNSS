@@ -11,7 +11,7 @@ import app.vsptracker.apis.trip.MyData
 import app.vsptracker.fragments.common.DelayHistoryFragment
 import app.vsptracker.fragments.truck.LoadingHistoryFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.navigation.NavigationView
+import kotlinx.android.synthetic.main.activity_base.*
 
 private const val LOADING_HISTORY: String = "LOADING_HISTORY"
 private const val DELAY_HISTORY: String = "DELAY_HISTORY"
@@ -28,8 +28,6 @@ class MvpWorkHistoryActivity : BaseActivity(), View.OnClickListener,
     
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_mvp_work_history, contentFrameLayout)
-    val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(7).isChecked = true
     
     myHelper.setTag(tag)
     
@@ -60,6 +58,11 @@ class MvpWorkHistoryActivity : BaseActivity(), View.OnClickListener,
     openFragment(eLoadingHistoryFragment, LOADING_HISTORY)
     
     myHelper.log("onCreate:${this::class.java.simpleName}")
+  }
+  
+  override fun onResume() {
+    super.onResume()
+    base_nav_view.setCheckedItem(base_nav_view.menu.getItem(7))
   }
   
   private fun openFragment(fragment: Fragment, FRAGMENT_TAG: String?) {

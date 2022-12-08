@@ -42,7 +42,6 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
-import com.google.android.material.navigation.NavigationView
 import com.google.maps.android.data.kml.KmlLayer
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_mvp_survey_scan.*
@@ -103,8 +102,6 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     super.onCreate(savedInstanceState)
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_mvp_survey_scan, contentFrameLayout)
-    val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(5).isChecked = true
     
     myHelper.setTag(tag)
     myData = myHelper.getLastJourney()
@@ -133,6 +130,13 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     mvp_survey_scan_pause.setOnClickListener(this)
     mvp_survey_scan_settings.setOnClickListener(this)
   }
+  
+  override fun onResume() {
+    super.onResume()
+    base_nav_view.setCheckedItem(base_nav_view.menu.getItem(5))
+    refreshViews(location1)
+  }
+  
   
   override fun onClick(view: View?) {
     when (view!!.id) {
@@ -367,13 +371,6 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     stopRepeatingTask()
     cameraExecutor.shutdown()
   }
-  
-  override fun onResume() {
-    super.onResume()
-    base_nav_view.setCheckedItem(base_nav_view.menu.getItem(5))
-    refreshViews(location1)
-  }
-  
   
   fun startRepeatingTask() {
     mStatusChecker.run()
