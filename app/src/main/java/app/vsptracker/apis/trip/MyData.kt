@@ -2,6 +2,7 @@ package app.vsptracker.apis.trip
 
 import app.vsptracker.classes.CheckFormData
 import app.vsptracker.classes.GPSLocation
+import app.vsptracker.others.MyEnum
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
@@ -315,7 +316,8 @@ class MyData : Serializable {
   var isMapOpened: Boolean = false
   var type: Int = 0
   var timer_interval: Long = 1000
-  var n_days_tasks: Int = 1
+  var n_days_tasks: Int = 3
+  var pictures_upload: Int = MyEnum.APP_SETTINGS_PICTURES_UPLOAD_MANUALLY
   
   @SerializedName("details")
   @Expose

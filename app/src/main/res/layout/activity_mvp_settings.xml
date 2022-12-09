@@ -29,7 +29,7 @@
       android:layout_height="wrap_content"
       android:text="@string/days_last_tasks"
       android:layout_gravity="center_horizontal"
-      android:textSize="@dimen/_14sdp" />
+      android:textSize="@dimen/_12sdp" />
 
     <LinearLayout
       android:id="@+id/settings_timer_layout"
@@ -71,6 +71,42 @@
         android:contentDescription="@string/add"
         android:src="@drawable/ic_add" />
     </LinearLayout>
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/pictures_upload"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginBottom="@dimen/_5sdp"
+      android:textSize="@dimen/_12sdp" />
+
+    <RadioGroup
+      android:id="@+id/pictures_upload_type"
+      android:layout_width="wrap_content"
+      android:orientation="horizontal"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginBottom="@dimen/_4sdp"
+      android:layout_height="wrap_content">
+
+      <RadioButton
+        android:id="@+id/pictures_upload_type_automatically"
+        android:layout_width="wrap_content"
+        android:text="@string/automatically"
+        android:textSize="@dimen/_12sdp"
+        android:buttonTint="@color/colorPrimary"
+        android:textColor="@color/colorPrimary"
+        android:layout_height="wrap_content" />
+
+      <RadioButton
+        android:id="@+id/pictures_upload_type_manually"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/manually"
+        android:layout_marginStart="@dimen/_20sdp"
+        android:textSize="@dimen/_12sdp"
+        android:textColor="@color/colorPrimary"
+        android:buttonTint="@color/colorPrimary" />
+    </RadioGroup>
   </LinearLayout>
 
   <RelativeLayout

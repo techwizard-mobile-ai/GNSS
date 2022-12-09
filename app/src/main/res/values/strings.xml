@@ -410,4 +410,7 @@
   <string name="search">Search:</string>
   <string name="search_labels">Search labels</string>
   <string name="days_last_tasks">Days Last Tasks</string>
+  <string name="automatically">Automatically</string>
+  <string name="manually">Manually</string>
+  <string name="pictures_upload">Pictures Upload</string>
 </resources>

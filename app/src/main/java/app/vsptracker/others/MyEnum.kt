@@ -97,6 +97,9 @@ class MyEnum {
     const val ADMIN_FILE_TYPE_TAPU_SURVEY_POINT = 3
     const val ADMIN_FILE_TYPE_TAPU_SURVEY_LINE = 4
     
+    const val APP_SETTINGS_PICTURES_UPLOAD_AUTOMATICALLY = 1
+    const val APP_SETTINGS_PICTURES_UPLOAD_MANUALLY = 2
+    
     //    const val MVP_ZOOM_LEVEL: Float = 19.0f
     const val MVP_ZOOM_LEVEL: Float = 21.0f
   }

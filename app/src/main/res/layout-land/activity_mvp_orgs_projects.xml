@@ -12,6 +12,8 @@
     style="@style/activity_title"
     android:layout_alignParentTop="true"
     android:layout_centerHorizontal="true"
+    android:layout_marginTop="@dimen/_1sdp"
+    android:layout_marginBottom="@dimen/_1sdp"
     android:text="@string/select_site" />
 
   <ProgressBar
