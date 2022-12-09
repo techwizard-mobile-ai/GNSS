@@ -71,6 +71,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
   private var mInterval: Long = 1000 // 1 seconds by default, can be changed later
   private var mHandler: Handler? = null
   private var isCapturingImage = false
+  private var isCapturingImagePause = false
   var checkpoint_label = "Label Scan"
   
   var mStatusChecker: Runnable = object : Runnable {
@@ -153,12 +154,13 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
           checkpoint_label.isEmpty() -> myHelper.showErrorDialog("Label Scan", "Please enter label scan to continue scan.")
           else -> {
             myHelper.log("isCapturingImage:$isCapturingImage")
-            if (isCapturingImage) {
+            if (isCapturingImage || isCapturingImagePause) {
               myHelper.log("stopRepeatingTask:$checkpoint_label")
               stopRepeatingTask()
               mvp_survey_scan_pause.visibility = View.GONE
               mvp_survey_scan_settings.visibility = View.VISIBLE
               isCapturingImage = false
+              isCapturingImagePause = false
               mvp_survey_scan_label.isEnabled = true
               mvp_survey_scan_capture.text = resources.getString(R.string.start_image_capture)
               mvp_survey_scan_label.text.clear()
@@ -166,6 +168,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
               myHelper.log("startRepeatingTask")
               mvp_survey_scan_label.isEnabled = false
               isCapturingImage = true
+              isCapturingImagePause = false
               mvp_survey_scan_pause.visibility = View.VISIBLE
               mvp_survey_scan_settings.visibility = View.GONE
               startRepeatingTask()
@@ -175,14 +178,14 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
         }
       }
       R.id.mvp_survey_scan_pause -> {
-        if (isCapturingImage) {
+        if (!isCapturingImagePause) {
           myHelper.log("pauseRepeatingTask")
           stopRepeatingTask()
-          isCapturingImage = false
+          isCapturingImagePause = true
           mvp_survey_scan_pause.text = "Resume"
         } else {
           myHelper.log("resumeRepeatingTask")
-          isCapturingImage = true
+          isCapturingImagePause = false
           startRepeatingTask()
           mvp_survey_scan_pause.text = "Pause"
         }
