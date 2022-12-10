@@ -404,28 +404,14 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     
     if (location != null) {
       myHelper.setGPSLayout(location, mvp_survey_scan_gps_data_acc, mvp_survey_scan_gps_data_lat, mvp_survey_scan_gps_data_long, mvp_survey_scan_gps_data_alt, mvp_survey_scan_gps_data_speed, mvp_survey_scan_gps_data_bearing, mvp_survey_scan_gps_data_time)
-//      if (isCapturingImage) {
-      when {
-        location.accuracy >= 1 -> {
-//            mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.red))
-          mvp_survey_scan_capture.backgroundTintList = ContextCompat.getColorStateList(this@MvpSurveyScanActivity, R.color.red);
-        }
-        location.accuracy <= 0.05 -> {
-//            mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.green))
-          mvp_survey_scan_capture.backgroundTintList = ContextCompat.getColorStateList(this@MvpSurveyScanActivity, R.color.green);
-        }
-        else -> {
-//            mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.yellow))
-          mvp_survey_scan_capture.backgroundTintList = ContextCompat.getColorStateList(this@MvpSurveyScanActivity, R.color.yellow);
-        }
+      when (location.accuracy) {
+        in 0F..0.02F -> mvp_survey_scan_capture.backgroundTintList = ContextCompat.getColorStateList(this@MvpSurveyScanActivity, R.color.green_A700)
+        in 0.02F..0.05F -> mvp_survey_scan_capture.backgroundTintList = ContextCompat.getColorStateList(this@MvpSurveyScanActivity, R.color.yellow_A700)
+        in 0.05F..0.10F -> mvp_survey_scan_capture.backgroundTintList = ContextCompat.getColorStateList(this@MvpSurveyScanActivity, R.color.orange_500)
+        in 0.10F..0.30F -> mvp_survey_scan_capture.backgroundTintList = ContextCompat.getColorStateList(this@MvpSurveyScanActivity, R.color.pink_500)
+        else -> mvp_survey_scan_capture.backgroundTintList = ContextCompat.getColorStateList(this@MvpSurveyScanActivity, R.color.red)
       }
-
-//      } else {
-////        mvp_survey_scan_capture.setBackgroundColor(resources.getColor(R.color.colorPrimary))
-//        mvp_survey_scan_capture.backgroundTintList = ContextCompat.getColorStateList(this@MvpSurveyScanActivity, R.color.colorPrimary);
-//      }
     }
-    
   }
   
   val locationListener1: LocationListener = object : LocationListener {

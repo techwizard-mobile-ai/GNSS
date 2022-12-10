@@ -1670,17 +1670,41 @@ class MyHelper(var TAG: String, val context: Context) {
     location: Location, acc: TextView, lat: TextView, long: TextView, alt: TextView, speed: TextView, bearing: TextView, time: TextView
   ) {
     acc.text = "Accuracy: ${location.accuracy}"
-    when {
-      location.accuracy >= 1 -> {
-        acc.setBackgroundColor(ContextCompat.getColor(context, R.color.red))
+//    when {
+//      location.accuracy >= 1 -> {
+//        acc.setBackgroundColor(ContextCompat.getColor(context, R.color.red))
+//      }
+//      location.accuracy <= 0.05 -> {
+//        acc.setBackgroundColor(ContextCompat.getColor(context, R.color.green))
+//      }
+//      else -> {
+//        acc.setBackgroundColor(ContextCompat.getColor(context, R.color.yellow))
+//      }
+//    }
+    
+    when (location.accuracy) {
+      in 0F..0.02F -> {
+        acc.setBackgroundColor(ContextCompat.getColor(context, R.color.green_A700))
+        acc.setTextColor(context.resources.getColor(R.color.white))
       }
-      location.accuracy <= 0.05 -> {
-        acc.setBackgroundColor(ContextCompat.getColor(context, R.color.green))
+      in 0.02F..0.05F -> {
+        acc.setBackgroundColor(ContextCompat.getColor(context, R.color.yellow_A700))
+        acc.setTextColor(context.resources.getColor(R.color.black))
+      }
+      in 0.05F..0.10F -> {
+        acc.setBackgroundColor(ContextCompat.getColor(context, R.color.orange_500))
+        acc.setTextColor(context.resources.getColor(R.color.white))
+      }
+      in 0.10F..0.30F -> {
+        acc.setBackgroundColor(ContextCompat.getColor(context, R.color.pink_500))
+        acc.setTextColor(context.resources.getColor(R.color.white))
       }
       else -> {
-        acc.setBackgroundColor(ContextCompat.getColor(context, R.color.yellow))
+        acc.setBackgroundColor(ContextCompat.getColor(context, R.color.red))
+        acc.setTextColor(context.resources.getColor(R.color.white))
       }
     }
+    
     lat.text = "Latitude: ${roundToN(location.latitude, 8)}"
     long.text = "Longitude: ${roundToN(location.longitude, 8)}"
 //        long.text = "Longitude: ${location.longitude}"
