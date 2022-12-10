@@ -113,19 +113,21 @@ class MvpOrgsProjectsActivity : BaseActivity(), View.OnClickListener {
         try {
           val responseBody = response.body()
           if (responseBody!!.success) {
-//            myHelper.log("responseBodyTapu: $responseBody")
-            responseBody.data?.forEach {
-              val material = Material()
-              material.id = it.id!!
-              material.number = it.name.toString()
-              material.created_at = it.created_at
-              material.updated_at = it.updated_at
-              myHelper.log("myData: $it")
-              mvpOrgsProjects.add(material)
+            if (responseBody.data?.isEmpty() == true) {
+              myHelper.showErrorDialogOnUi("No Site Created!", "Please create new site to continue.")
+            } else {
+              responseBody.data?.forEach {
+                val material = Material()
+                material.id = it.id!!
+                material.number = it.name.toString()
+                material.created_at = it.created_at
+                material.updated_at = it.updated_at
+                myHelper.log("myData: $it")
+                mvpOrgsProjects.add(material)
+              }
+              val adapter = CustomGridLMachine(this@MvpOrgsProjectsActivity, mvpOrgsProjects, 4)
+              gv.adapter = adapter
             }
-//            myHelper.log("mvpOrgsProjects: $mvpOrgsProjects")
-            val adapter = CustomGridLMachine(this@MvpOrgsProjectsActivity, mvpOrgsProjects, 4)
-            gv.adapter = adapter
             
           } else {
             myHelper.showErrorDialogOnUi(responseBody.message)
@@ -133,6 +135,7 @@ class MvpOrgsProjectsActivity : BaseActivity(), View.OnClickListener {
         }
         catch (e: Exception) {
           myHelper.log("getServerSync:${e.localizedMessage}")
+          myHelper.toastOnUi("getServerSync:${e.localizedMessage}")
           myHelper.hideProgressBar()
         }
       }
@@ -140,6 +143,7 @@ class MvpOrgsProjectsActivity : BaseActivity(), View.OnClickListener {
       override fun onFailure(call: retrofit2.Call<MvpOrgsProjectsResponse>, t: Throwable) {
         myHelper.hideProgressBar()
         myHelper.log("Failure" + t.message)
+        myHelper.toastOnUi("Failure" + t.message)
       }
     })
   }

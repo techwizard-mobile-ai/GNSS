@@ -113,49 +113,48 @@ class MvpOrgsFoldersActivity : BaseActivity(), View.OnClickListener {
 //    val prefix = "taputapu/${myHelper.getCurrentYear()}/${myHelper.getCurrentMonth()}/"
     myHelper.log("prefix:$prefix")
     val call = this.retrofitAPI.getMvpOrgsFiles(
-      mvpOrgsProjectId,
-      prefix,
-      myHelper.getLoginAPI().role,
-      false,
-      myHelper.getLoginAPI().auth_token,
-      2,
-      myHelper.getAppSettings().n_days_tasks
+      mvpOrgsProjectId, prefix, myHelper.getLoginAPI().role, false, myHelper.getLoginAPI().auth_token, 2, myHelper.getAppSettings().n_days_tasks
     )
     call.enqueue(object : retrofit2.Callback<MvpOrgsFilesResponse> {
       override fun onResponse(
-        call: retrofit2.Call<MvpOrgsFilesResponse>,
-        response: retrofit2.Response<MvpOrgsFilesResponse>
+        call: retrofit2.Call<MvpOrgsFilesResponse>, response: retrofit2.Response<MvpOrgsFilesResponse>
       ) {
         myHelper.hideProgressBar()
         try {
           val responseBody = response.body()
           if (responseBody!!.success) {
             myHelper.log("responseBodyTapu: $responseBody")
-            responseBody.separateFolders?.forEach {
-              val material = Material()
-              material.id = it.id!!
-              material.aws_path = it.awsPath
-              material.relative_path = it.relativePath
-              material.number = it.fileFolder?.name!!.dropLast(1)
-              material.created_at = it.createdAt.toString()
-              material.updated_at = it.updatedAt.toString()
-              mvpOrgsFolders.add(material)
+            if (responseBody.separateFolders?.isEmpty() == true) {
+              myHelper.showErrorDialogOnUi("No Tasks in ${myHelper.getAppSettings().n_days_tasks} days!", "Go to Settings and change Days Last Tasks \nOR\nCreate new Task.")
+            } else {
+              responseBody.separateFolders?.forEach {
+                val material = Material()
+                material.id = it.id!!
+                material.aws_path = it.awsPath
+                material.relative_path = it.relativePath
+                material.number = it.fileFolder?.name!!.dropLast(1)
+                material.created_at = it.createdAt.toString()
+                material.updated_at = it.updatedAt.toString()
+                mvpOrgsFolders.add(material)
+              }
+              val adapter = CustomGridLMachine(this@MvpOrgsFoldersActivity, mvpOrgsFolders, 4)
+              gv.adapter = adapter
             }
-            val adapter = CustomGridLMachine(this@MvpOrgsFoldersActivity, mvpOrgsFolders, 4)
-            gv.adapter = adapter
             
           } else {
-            myHelper.toast(responseBody.message)
+            myHelper.toastOnUi(responseBody.message)
           }
         }
         catch (e: Exception) {
           myHelper.log("getServerSync:${e.localizedMessage}")
+          myHelper.toastOnUi("getServerSync:${e.localizedMessage}")
         }
       }
       
       override fun onFailure(call: retrofit2.Call<MvpOrgsFilesResponse>, t: Throwable) {
         myHelper.hideProgressBar()
         myHelper.log("Failure" + t.message)
+        myHelper.toastOnUi("Failure" + t.message)
       }
     })
   }
