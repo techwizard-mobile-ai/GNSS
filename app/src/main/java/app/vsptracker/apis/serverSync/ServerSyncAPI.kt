@@ -30,7 +30,7 @@ class ServerSyncAPI : Serializable {
   @Expose
   var operatorAPIList = ArrayList<OperatorAPI>()
   
-  var servserSyncModel: ServerSyncModel? = null
+  var serverSyncModel: ServerSyncModel? = null
   
   override fun toString(): String {
     return "\n\nServerSyncAPI(" +

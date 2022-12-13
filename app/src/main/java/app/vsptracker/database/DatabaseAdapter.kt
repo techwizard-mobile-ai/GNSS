@@ -924,11 +924,18 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     return list
   }
   
-  fun getMvpOrgsFiles(admin_file_type_id: Int, orderBy: String = "DESC"): ArrayList<MyData> {
+  /**
+   * If type ==2 it means fet those files whose images are not uploaded to AWS S3
+   */
+  fun getMvpOrgsFiles(admin_file_type_id: Int, orderBy: String = "DESC", type: Int = 1): ArrayList<MyData> {
     
     val list: ArrayList<MyData> = ArrayList()
     val db = this.readableDatabase
-    val query = "Select * from $TABLE_MVP_ORGS_FILES WHERE $COL_ADMIN_FILE_TYPE_ID=${admin_file_type_id} ORDER BY $COL_ID $orderBy"
+    var query = "Select * from $TABLE_MVP_ORGS_FILES WHERE $COL_ADMIN_FILE_TYPE_ID=${admin_file_type_id} ORDER BY $COL_ID $orderBy"
+    when {
+      type == 1 -> query = "Select * from $TABLE_MVP_ORGS_FILES WHERE $COL_ADMIN_FILE_TYPE_ID=${admin_file_type_id} ORDER BY $COL_ID $orderBy"
+      type == 2 -> query = "Select * from $TABLE_MVP_ORGS_FILES WHERE $COL_ADMIN_FILE_TYPE_ID=${admin_file_type_id} AND $COL_UPLOAD_STATUS<2 ORDER BY $COL_ID $orderBy"
+    }
     val result = db.rawQuery(query, null)
     
     if (result.moveToFirst()) {
@@ -4116,6 +4123,22 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     myHelper.log("updateOrgsMap:updateID:$updatedID")
   }
   
+  fun updateMvpOrgsFile(datum: MyData): Int {
+    
+    val db = this.writableDatabase
+    val cv = ContentValues()
+    
+    cv.put(COL_MVP_ORGS_FILES_ID, datum.mvp_orgs_files_id)
+    cv.put(COL_PRESIGNED_URL, datum.presignedUrl)
+    cv.put(COL_CREATED_AT, datum.created_at)
+    cv.put(COL_UPDATED_AT, datum.updated_at)
+    cv.put(COL_UPLOAD_STATUS, datum.upload_status)
+    cv.put(COL_IS_SYNC, datum.isSync)
+    val updatedID = db.update(TABLE_MVP_ORGS_FILES, cv, "$COL_ID = ${datum.id}", null)
+    myHelper.log("updateMvpOrgsFiles:updateID:$updatedID")
+    return updatedID
+  }
+  
   fun updateMvpOrgsFiles(data: ArrayList<MyData>) {
     
     val db = this.writableDatabase
@@ -4126,6 +4149,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
       cv.put(COL_PRESIGNED_URL, datum.presignedUrl)
       cv.put(COL_CREATED_AT, datum.created_at)
       cv.put(COL_UPDATED_AT, datum.updated_at)
+      cv.put(COL_UPLOAD_STATUS, datum.upload_status)
       cv.put(COL_IS_SYNC, datum.isSync)
       val updatedID = db.update(TABLE_MVP_ORGS_FILES, cv, "$COL_ID = ${datum.id}", null)
       myHelper.log("updateMvpOrgsFiles:updateID:$updatedID")

@@ -27,8 +27,7 @@
       android:layout_height="wrap_content"
       android:text="@string/scan_interval"
       android:visibility="gone"
-      android:textSize="@dimen/_14sdp"
-      android:textColor="@color/black" />
+      android:textSize="@dimen/_14sdp" />
 
     <LinearLayout
       android:id="@+id/settings_timer_layout"
@@ -97,8 +96,7 @@
     <Button
       android:id="@+id/settings_back"
       style="@style/back_button_single"
-      android:layout_alignParentEnd="true"
-       />
+      android:layout_alignParentEnd="true" />
   </RelativeLayout>
 
 </RelativeLayout>

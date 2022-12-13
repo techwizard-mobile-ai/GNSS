@@ -65,6 +65,22 @@
         android:textColor="@color/red" />
     </LinearLayout>
 
+    <LinearLayout
+      android:id="@+id/ssl_remaining_size_layout"
+      android:visibility="gone"
+      style="@style/load_history_row_item">
+
+      <TextView
+        style="@style/server_sync_row"
+        android:text="Data" />
+
+      <TextView
+        android:id="@+id/ssl_remaining_size"
+        style="@style/load_history_desc"
+        android:text=":  0"
+        android:textColor="@color/red" />
+    </LinearLayout>
+
   </LinearLayout>
 
 </androidx.cardview.widget.CardView>

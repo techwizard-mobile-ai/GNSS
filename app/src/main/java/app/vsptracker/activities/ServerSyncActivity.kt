@@ -55,64 +55,67 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
     
     myDataPushSave.addToList(1, myHelper.getTypeName(1), db.getOperatorsHours("ASC"))?.let {
       serverSyncList.add(it)
-      it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+      it.serverSyncModel?.let { it1 -> adapterList.add(it1) }
     }
     myDataPushSave.addToList(2, myHelper.getTypeName(2), db.getTripsByTypes(MyEnum.TRUCK, "ASC"))?.let {
       serverSyncList.add(it)
-      it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+      it.serverSyncModel?.let { it1 -> adapterList.add(it1) }
     }
     myDataPushSave.addToList(3, myHelper.getTypeName(3), db.getTripsByTypes(MyEnum.SCRAPER, "ASC"))?.let {
       serverSyncList.add(it)
-      it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+      it.serverSyncModel?.let { it1 -> adapterList.add(it1) }
     }
     myDataPushSave.addToList(4, myHelper.getTypeName(4), db.getEWorks(MyEnum.SCRAPER_TRIMMING, "ASC"))?.let {
       serverSyncList.add(it)
-      it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+      it.serverSyncModel?.let { it1 -> adapterList.add(it1) }
     }
     myDataPushSave.addToList(5, myHelper.getTypeName(5), db.getELoadHistory("ASC"))?.let {
       serverSyncList.add(it)
-      it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+      it.serverSyncModel?.let { it1 -> adapterList.add(it1) }
     }
     myDataPushSave.addToList(6, myHelper.getTypeName(6), db.getEWorks(MyEnum.EXCAVATOR_TRENCHING, "ASC"))?.let {
       serverSyncList.add(it)
-      it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+      it.serverSyncModel?.let { it1 -> adapterList.add(it1) }
     }
     myDataPushSave.addToList(7, myHelper.getTypeName(7), db.getEWorks(MyEnum.EXCAVATOR_GEN_DIGGING, "ASC"))?.let {
       serverSyncList.add(it)
-      it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+      it.serverSyncModel?.let { it1 -> adapterList.add(it1) }
     }
-    // TODO uncomment this code when all machine stops entries are updated to Portal
-//        myDataPushSave.addToList(8, myHelper.getTypeName(8), db.getMachinesStops("ASC"))?.let {
-//            serverSyncList.add(it)
-//            it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
-//        }
+    myDataPushSave.addToList(8, myHelper.getTypeName(8), db.getMachinesStops("ASC"))?.let {
+      serverSyncList.add(it)
+      it.serverSyncModel?.let { it1 -> adapterList.add(it1) }
+    }
     myDataPushSave.addToList(9, myHelper.getTypeName(9), db.getMachinesHours("ASC"))?.let {
       serverSyncList.add(it)
-      it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+      it.serverSyncModel?.let { it1 -> adapterList.add(it1) }
     }
     myDataPushSave.addToList(10, myHelper.getTypeName(10), db.getWaits("ASC"))?.let {
       serverSyncList.add(it)
-      it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+      it.serverSyncModel?.let { it1 -> adapterList.add(it1) }
     }
     myDataPushSave.addToList(11, myHelper.getTypeName(11), db.getAdminCheckFormsCompleted("ASC"))?.let {
       serverSyncList.add(it)
-      it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+      it.serverSyncModel?.let { it1 -> adapterList.add(it1) }
     }
     myDataPushSave.addToList(12, myHelper.getTypeName(12), db.getMvpOrgsFiles(MyEnum.ADMIN_FILE_TYPE_TAPU_CHECKPOINT, "ASC"))?.let {
       serverSyncList.add(it)
-      it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+      it.serverSyncModel?.let { it1 -> adapterList.add(it1) }
     }
     myDataPushSave.addToList(13, myHelper.getTypeName(13), db.getMvpOrgsFiles(MyEnum.ADMIN_FILE_TYPE_TAPU_SCAN, "ASC"))?.let {
       serverSyncList.add(it)
-      it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+      it.serverSyncModel?.let { it1 -> adapterList.add(it1) }
     }
     myDataPushSave.addToList(14, myHelper.getTypeName(14), db.getMvpOrgsFiles(MyEnum.ADMIN_FILE_TYPE_TAPU_SURVEY_LINE, "ASC"))?.let {
       serverSyncList.add(it)
-      it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+      it.serverSyncModel?.let { it1 -> adapterList.add(it1) }
     }
     myDataPushSave.addToList(15, myHelper.getTypeName(15), db.getMvpOrgsFiles(MyEnum.ADMIN_FILE_TYPE_TAPU_SURVEY_POINT, "ASC"))?.let {
       serverSyncList.add(it)
-      it.servserSyncModel?.let { it1 -> adapterList.add(it1) }
+      it.serverSyncModel?.let { it1 -> adapterList.add(it1) }
+    }
+    myDataPushSave.addToList(16, myHelper.getTypeName(16), db.getMvpOrgsFiles(MyEnum.ADMIN_FILE_TYPE_TAPU_SCAN, "ASC", 2))?.let {
+      serverSyncList.add(it)
+      it.serverSyncModel?.let { it1 -> adapterList.add(it1) }
     }
     refreshAdapter()
   }
@@ -138,8 +141,15 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
         if (adapterList.size > 0) {
           if (myHelper.isOnline()) {
             val serverSyncAPI = serverSyncList.find { it.type == 11 }
+            val serverSyncAPIScanPictures = serverSyncList.find { it.type == 16 }
             if (serverSyncAPI != null) {
               serverSyncList.find { it.type == 11 }!!.myDataList = myHelper.uploadImagesToAWS(serverSyncAPI.myDataList)
+            }
+            if (serverSyncAPIScanPictures != null) {
+              myHelper.log("Upload images to S3")
+              serverSyncAPIScanPictures.myDataList.forEach {
+                myDataPushSave.awsFileUpload(it)
+              }
             }
             pushUpdateServerSync(serverSyncList)
           } else myHelper.showErrorDialog(resources.getString(R.string.no_internet_connection), resources.getString(R.string.no_internet_explanation))

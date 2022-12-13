@@ -43,6 +43,11 @@ class ServerSyncAdapter(
     holder.itemView.ssl_total.text = ":  ${datum.total}"
     holder.itemView.ssl_synced.text = ":  ${datum.synced}"
     holder.itemView.ssl_remaining.text = ":  ${datum.remaining}"
+    holder.itemView.ssl_remaining_size_layout.visibility = View.GONE
+    if (datum.size > 0) {
+      holder.itemView.ssl_remaining_size.text = ":  ${myHelper.formatSizeUnits(datum.size.toLong())}"
+      holder.itemView.ssl_remaining_size_layout.visibility = View.VISIBLE
+    }
     
   }
   

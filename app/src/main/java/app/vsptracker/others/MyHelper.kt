@@ -105,6 +105,34 @@ class MyHelper(var TAG: String, val context: Context) {
   var util: Util = Util()
   var transferUtility: TransferUtility? = util.getTransferUtility(context)
   
+  fun getFileNameFromAwsPath(aws_path: String): String {
+    var file_name = "";
+    try {
+      file_name = aws_path.substring(aws_path.lastIndexOf('/') + 1);
+      var file_name = file_name.split('?')[0];
+      
+    }
+    catch (err: Exception) {
+      log("getFileNameFromAwsPath: $err")
+    }
+    return file_name;
+  }
+  
+  fun formatSizeUnits(bytes: Long): String {
+    var formattedSize = "";
+    
+    when {
+      bytes >= 1099511627776 -> formattedSize = roundToN((bytes / 1099511627776).toDouble(), 2).toString() + " TB"
+      bytes >= 1073741824 -> formattedSize = roundToN((bytes / 1073741824).toDouble(), 2).toString() + " GB"
+      bytes >= 1048576 -> formattedSize = roundToN((bytes / 1048576).toDouble(), 2).toString() + " MB"
+      bytes >= 1024 -> formattedSize = roundToN((bytes / 1024).toDouble(), 2).toString() + " KB"
+      bytes >= 1 -> formattedSize = roundToN((bytes / 1).toDouble(), 2).toString() + " bytes"
+      bytes == 1L -> formattedSize = roundToN((bytes / 1).toDouble(), 2).toString() + " byte"
+      else -> formattedSize = "0 bytes"
+    }
+    return formattedSize;
+  }
+  
   fun getAppSettings() = sessionManager.getAppSettings()
   fun setAppSettings(myData: MyData) {
     sessionManager.setAppSettings(myData)
@@ -1585,9 +1613,10 @@ class MyHelper(var TAG: String, val context: Context) {
       10 -> typeName = context.getString(R.string.operators_waitings)
       11 -> typeName = context.getString(R.string.checkforms_completed)
       12 -> typeName = context.getString(R.string.survey_checkpoints)
-      13 -> typeName = context.getString(R.string.survey_scan)
+      13 -> typeName = context.getString(R.string.survey_scan_labels)
       14 -> typeName = context.getString(R.string.survey_point)
       15 -> typeName = context.getString(R.string.survey_polygon)
+      16 -> typeName = context.getString(R.string.survey_scan_pictures)
     }
     return typeName
   }

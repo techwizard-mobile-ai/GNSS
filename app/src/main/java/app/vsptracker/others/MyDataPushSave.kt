@@ -12,17 +12,23 @@ import app.vsptracker.apis.delay.EWork
 import app.vsptracker.apis.serverSync.ServerSyncAPI
 import app.vsptracker.apis.serverSync.ServerSyncResponse
 import app.vsptracker.apis.trip.MyData
+import app.vsptracker.aws.Util
 import app.vsptracker.classes.GPSLocation
 import app.vsptracker.classes.Material
 import app.vsptracker.classes.ServerSyncModel
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.autologout.ForegroundService
 import com.amazonaws.mobile.auth.core.internal.util.ThreadUtils.runOnUiThread
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility
 import com.google.gson.GsonBuilder
 import okhttp3.*
 import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
@@ -62,6 +68,40 @@ class MyDataPushSave(private val context: Context) {
   private var serverSyncList = ArrayList<ServerSyncAPI>()
   
   val workManager = WorkManager.getInstance(context)
+  
+  var util: Util = Util()
+  var transferUtility: TransferUtility? = util.getTransferUtility(context)
+  
+  fun awsFileUpload(myData: MyData) {
+    val mediaDir = context.externalMediaDirs.firstOrNull()?.let {
+      File(it, context.resources.getString(R.string.app_name)).apply { mkdirs() }
+    }
+    if (mediaDir != null && mediaDir.exists()) {
+      val file = File(mediaDir.path + "/${myHelper.getFileNameFromAwsPath(myData.aws_path)}")
+      val observer: TransferObserver = transferUtility!!.upload(myData.aws_path, file)
+      observer.setTransferListener(object : TransferListener {
+        override fun onStateChanged(id: Int, state: TransferState) {
+          myHelper.log("onStateChanged: $state -- $myData")
+          if (TransferState.COMPLETED == state) {
+            myHelper.log("onStateChanged_Upload completed:$myData")
+            myData.upload_status = 2
+            myData.isSync = 0
+            if (db.updateMvpOrgsFile(myData) > 0) {
+              checkUpdateServerSyncData()
+            }
+          }
+        }
+        
+        override fun onProgressChanged(id: Int, bytesCurrent: Long, bytesTotal: Long) {
+          myHelper.log("onProgressChanged:id:$id bytesCurrent:${bytesCurrent} bytesTotal:${bytesTotal} -- $myData")
+        }
+        
+        override fun onError(id: Int, ex: java.lang.Exception) {
+          myHelper.log("onError:$ex -- $myData")
+        }
+      })
+    }
+  }
   
   /**
    * All Company Data will be fetched from Server using API Calls by this Class only.
@@ -475,11 +515,28 @@ class MyDataPushSave(private val context: Context) {
     val total = list.size
     val synced = list.filter { it.isSync == 1 }.size
     val remaining = list.filter { it.isSync == 0 }
+    var synced_pictures = ArrayList<MyData>()
+    var remaining_pictures = ArrayList<MyData>()
+    var remaining_pictures_size = 0
+    when (type) {
+      16 -> {
+        synced_pictures = list.filter { it.upload_status == 2 } as ArrayList<MyData>
+        remaining_pictures = list.filter { it.upload_status < 2 } as ArrayList<MyData>
+        remaining_pictures_size = remaining_pictures.sumOf { it.size }
+        
+      }
+    }
     myHelper.log("$name:$total, isSynced:$synced, isRemaining:${remaining.size}")
     var serverSyncAPI: ServerSyncAPI? = null
-    if (remaining.isNotEmpty()) {
+    if (remaining_pictures.isNotEmpty()) {
       serverSyncAPI = ServerSyncAPI()
-      serverSyncAPI.servserSyncModel = ServerSyncModel(name, total, synced, remaining.size)
+      serverSyncAPI.serverSyncModel = ServerSyncModel(name, total, synced_pictures.size, remaining_pictures.size, remaining_pictures_size)
+      serverSyncAPI.type = type
+      serverSyncAPI.name = name
+      serverSyncAPI.myDataList.addAll(remaining_pictures)
+    } else if (remaining.isNotEmpty()) {
+      serverSyncAPI = ServerSyncAPI()
+      serverSyncAPI.serverSyncModel = ServerSyncModel(name, total, synced, remaining.size)
       serverSyncAPI.type = type
       serverSyncAPI.name = name
       serverSyncAPI.myDataList.addAll(remaining)
@@ -499,7 +556,7 @@ class MyDataPushSave(private val context: Context) {
     var serverSyncAPI: ServerSyncAPI? = null
     if (remaining.isNotEmpty()) {
       serverSyncAPI = ServerSyncAPI()
-      serverSyncAPI.servserSyncModel = ServerSyncModel(name, total, synced, remaining.size)
+      serverSyncAPI.serverSyncModel = ServerSyncModel(name, total, synced, remaining.size)
       serverSyncAPI.type = type
       serverSyncAPI.name = name
       serverSyncAPI.myEWorkList.addAll(remaining)

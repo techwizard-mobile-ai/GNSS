@@ -364,18 +364,12 @@ class MyData : Serializable {
   override fun toString(): String {
     return "MyData(" +
             "id=$id, " +
-            "n_days_tasks=$n_days_tasks, " +
+            "upload_status=$upload_status, " +
+            "admin_file_type_id=$admin_file_type_id, " +
             "org_id=$org_id, " +
             "user_id=$user_id, " +
-            "name=$name, " +
+            "isSync=$isSync, " +
             "aws_path='$aws_path', " +
-            "relative_path='$relative_path', " +
-            "file_description='$file_description', " +
-            "is_favorite='$is_favorite', " +
-            "loadingGPSLocationString='$loadingGPSLocationString', " +
-            "color_hex='$color_hex', " +
-            "color_rgb='$color_rgb', " +
-            "color='$color', " +
             "status=$status, " +
             "isDeleted=$isDeleted, " +
             ")"

@@ -390,6 +390,8 @@
   <string name="create_site">Create Site</string>
   <string name="survey_checkpoints">Survey CheckPoints</string>
   <string name="survey_scan">Survey Scan</string>
+  <string name="survey_scan_labels">Survey Scan Labels</string>
+  <string name="survey_scan_pictures">Survey Scan Pictures</string>
   <string name="last_task">Last Task</string>
   <string name="survey_polygon">Survey Polygon</string>
   <string name="scan_label">Scan Label:</string>

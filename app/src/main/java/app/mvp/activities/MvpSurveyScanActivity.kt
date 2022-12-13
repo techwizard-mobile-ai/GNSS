@@ -34,6 +34,7 @@ import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.GPSLocation
 import app.vsptracker.others.MyEnum
+import app.vsptracker.others.MyEnum.Companion.APP_SETTINGS_PICTURES_UPLOAD_AUTOMATICALLY
 import app.vsptracker.others.MyEnum.Companion.MVP_ZOOM_LEVEL
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -54,8 +55,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 
-class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
-                              GoogleMap.OnMarkerClickListener {
+class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
   
   private var location1: Location? = null
   private val tag = this::class.java.simpleName
@@ -210,14 +210,11 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
       val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
       
       // Preview
-      val preview = Preview.Builder()
-        .build()
-        .also {
-          it.setSurfaceProvider(viewFinder.surfaceProvider)
-        }
+      val preview = Preview.Builder().build().also {
+        it.setSurfaceProvider(viewFinder.surfaceProvider)
+      }
       
-      imageCapture = ImageCapture.Builder()
-        .build()
+      imageCapture = ImageCapture.Builder().build()
       
       // Select back camera as a default
       val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
@@ -240,8 +237,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
   }
   
   override fun onRequestPermissionsResult(
-    requestCode: Int, permissions: Array<String>, grantResults:
-    IntArray
+    requestCode: Int, permissions: Array<String>, grantResults: IntArray
   ) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     if (requestCode == REQUEST_CODE_PERMISSIONS) {
@@ -249,9 +245,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
         startCamera()
       } else {
         Toast.makeText(
-          this,
-          "Permissions not granted by the user.",
-          Toast.LENGTH_SHORT
+          this, "Permissions not granted by the user.", Toast.LENGTH_SHORT
         ).show()
         finish()
       }
@@ -263,7 +257,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
       File(it, resources.getString(R.string.app_name)).apply { mkdirs() }
     }
     return if (mediaDir != null && mediaDir.exists()) {
-      Log.i(TAG, mediaDir.path); mediaDir
+      myHelper.log("mediaDir.path: ${mediaDir.path}"); mediaDir
     } else {
       filesDir
     }
@@ -291,74 +285,80 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
 
 //    val photoFile = File.createTempFile(name, ".jpg", getOutputDirectory())
     val photoFile = myHelper.createTempFile(file_name, getOutputDirectory())
-    val outputOptions = ImageCapture.OutputFileOptions
-      .Builder(
-        photoFile
-      )
+    val outputOptions = ImageCapture.OutputFileOptions.Builder(
+      photoFile
+    )
 //      .Builder(
 //        contentResolver,
 //        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
 //        contentValues
 //      )
-      .setMetadata(metadata)
-      .build()
+      .setMetadata(metadata).build()
     
     // Set up image capture listener, which is triggered after photo has
     // been taken
-    imageCapture.takePicture(
-      outputOptions,
-      ContextCompat.getMainExecutor(this),
-      object : ImageCapture.OnImageSavedCallback {
-        override fun onError(exc: ImageCaptureException) {
-          myHelper.toast("Photo capture failed:" + exc.message)
-        }
-        
-        override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-          val msg = "Image saved successfully: ${output.savedUri}"
-          if (location1 == null) {
-            myHelper.showErrorDialog("No GPS Data", "Please change your location to continue.")
-            stopRepeatingTask()
-            mvp_survey_scan_pause.visibility = View.GONE
-            mvp_survey_scan_settings.visibility = View.VISIBLE
-            isCapturingImage = false
-            mvp_survey_scan_label.isEnabled = true
-            mvp_survey_scan_capture.text = resources.getString(R.string.start_image_capture)
-            mvp_survey_scan_label.text.clear()
-          } else {
-            
-            val location = LatLng(location1!!.latitude, location1!!.longitude)
-            val myData1 = MyData()
-            val aws_path =
-              myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/Scan/${myHelper.getValidFileName(checkpoint_label)}/${file_name}"
-            val relative_path =
-              myData.relative_path + "${myHelper.getLoginAPI().name}_${myHelper.getLoginAPI().id}/Data Collection/Scan/${checkpoint_label}/${file_name}"
-            
-            myData1.org_id = myHelper.getOrgID()
-            myData1.user_id = myHelper.getUserID()
-            myData1.project_id = myData.project_id
-            myData1.mvp_orgs_files_id = myData.mvp_orgs_files_id
-            myData1.admin_file_type_id = MyEnum.ADMIN_FILE_TYPE_TAPU_SCAN
-            myData1.security_level = myHelper.getLoginAPI().role
-            myData1.aws_path = aws_path
-            myData1.relative_path = relative_path
-            myData1.loadingGPSLocation = gpsLocation
-            myData1.unloadingGPSLocation = gpsLocation
-            myData1.upload_status = 2
-            myData1.file_level = (relative_path.split("/").size - 1)
-            myData1.security_level = myHelper.getLoginAPI().role
-            myData1.size = photoFile.length().toInt()
-            myData1.file_details = "{ \"size\": ${photoFile.length()} }"
-            if (myDataPushSave.pushInsertSurveyRecordCheckPoint(myData1) > 0) {
-              myHelper.log("Scan recorded successfully")
-              val label_name1: String = myData1.relative_path.substringAfterLast("/")
-              map.addMarker(MarkerOptions().position(location).title(label_name1).icon(myHelper.bitmapFromVector(R.drawable.ic_camera_scan)))
-            } else myHelper.showErrorDialog("Scan image not captured!", "Please try again later.")
-            myHelper.log(msg)
-            myHelper.awsFileUpload(aws_path, photoFile)
-          }
+    imageCapture.takePicture(outputOptions, ContextCompat.getMainExecutor(this), object : ImageCapture.OnImageSavedCallback {
+      override fun onError(exc: ImageCaptureException) {
+        myHelper.toast("Photo capture failed:" + exc.message)
+      }
+      
+      override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+        val msg = "Image saved successfully: ${output.savedUri}"
+        if (location1 == null) {
+          myHelper.showErrorDialog("No GPS Data", "Please change your location to continue.")
+          stopRepeatingTask()
+          mvp_survey_scan_pause.visibility = View.GONE
+          mvp_survey_scan_settings.visibility = View.VISIBLE
+          isCapturingImage = false
+          mvp_survey_scan_label.isEnabled = true
+          mvp_survey_scan_capture.text = resources.getString(R.string.start_image_capture)
+          mvp_survey_scan_label.text.clear()
+        } else {
+          
+          val location = LatLng(location1!!.latitude, location1!!.longitude)
+          val myData1 = MyData()
+          val aws_path = myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/Scan/${myHelper.getValidFileName(checkpoint_label)}/${file_name}"
+          val relative_path = myData.relative_path + "${myHelper.getLoginAPI().name}_${myHelper.getLoginAPI().id}/Data Collection/Scan/${checkpoint_label}/${file_name}"
+          
+          myData1.org_id = myHelper.getOrgID()
+          myData1.user_id = myHelper.getUserID()
+          myData1.project_id = myData.project_id
+          myData1.mvp_orgs_files_id = myData.mvp_orgs_files_id
+          myData1.admin_file_type_id = MyEnum.ADMIN_FILE_TYPE_TAPU_SCAN
+          myData1.security_level = myHelper.getLoginAPI().role
+          myData1.aws_path = aws_path
+          myData1.relative_path = relative_path
+          myData1.loadingGPSLocation = gpsLocation
+          myData1.unloadingGPSLocation = gpsLocation
+          myData1.upload_status = 0 // make it 0 by default and update status when uploading and uploaded file
+          myData1.file_level = (relative_path.split("/").size - 1)
+          myData1.security_level = myHelper.getLoginAPI().role
+          myData1.size = photoFile.length().toInt()
+          myData1.file_details = "{ \"size\": ${photoFile.length()} }"
+          val insertedID = myDataPushSave.pushInsertSurveyRecordCheckPoint(myData1)
+          if (insertedID > 0) {
+            myHelper.log("Scan recorded successfully: $insertedID")
+            myData1.id = insertedID.toInt()
+            val label_name1: String = myData1.relative_path.substringAfterLast("/")
+            map.addMarker(MarkerOptions().position(location).title(label_name1).icon(myHelper.bitmapFromVector(R.drawable.ic_camera_scan)))
+            if (myHelper.getAppSettings().pictures_upload == APP_SETTINGS_PICTURES_UPLOAD_AUTOMATICALLY) myDataPushSave.awsFileUpload(myData1)
+          } else myHelper.showErrorDialog("Scan image not captured!", "Please try again later.")
+          myHelper.log(msg)
         }
       }
-    )
+    })
+  }
+  
+  override fun onPause() {
+    super.onPause()
+//    myHelper.showErrorDialog("No GPS Data", "Please change your location to continue.")
+    stopRepeatingTask()
+    mvp_survey_scan_pause.visibility = View.GONE
+    mvp_survey_scan_settings.visibility = View.VISIBLE
+    isCapturingImage = false
+    mvp_survey_scan_label.isEnabled = true
+    mvp_survey_scan_capture.text = resources.getString(R.string.start_image_capture)
+//    mvp_survey_scan_label.text.clear()
   }
   
   private fun captureVideo() {}
@@ -387,10 +387,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     locationManager1 = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
     try {
       locationManager1?.requestLocationUpdates(
-        LocationManager.GPS_PROVIDER,
-        1000,
-        0f,
-        locationListener1
+        LocationManager.GPS_PROVIDER, 1000, 0f, locationListener1
       )
     }
     catch (ex: SecurityException) {
@@ -439,15 +436,14 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     private const val TAG = "CameraXApp"
     private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
     private const val REQUEST_CODE_PERMISSIONS = 10
-    private val REQUIRED_PERMISSIONS =
-      mutableListOf(
-        Manifest.permission.CAMERA,
+    private val REQUIRED_PERMISSIONS = mutableListOf(
+      Manifest.permission.CAMERA,
 //                Manifest.permission.RECORD_AUDIO
-      ).apply {
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-          add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        }
-      }.toTypedArray()
+    ).apply {
+      if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+        add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+      }
+    }.toTypedArray()
   }
   
   override fun onMapReady(googleMap: GoogleMap) {
@@ -467,9 +463,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
       myHelper.log("In SetupMap:$mapGPSLocation")
       val location1 = LatLng(lat, longitude)
       val marker = map.addMarker(
-        MarkerOptions()
-          .position(location1)
-          .title(mapGPSLocation.locationName)
+        MarkerOptions().position(location1).title(mapGPSLocation.locationName)
       )
       
       
