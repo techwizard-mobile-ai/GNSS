@@ -13,7 +13,6 @@
     android:background="@color/light_gray">
 
     <LinearLayout
-      android:id="@+id/gps_data_top"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_alignParentStart="true"
@@ -55,15 +54,6 @@
         android:textColor="@color/black"
         android:textSize="10sp" />
 
-    </LinearLayout>
-
-    <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_below="@id/gps_data_top"
-      android:layout_alignParentStart="true"
-      android:orientation="horizontal">
-
       <TextView
         android:id="@+id/mvp_survey_checkpoint_gps_data_speed"
         android:layout_width="wrap_content"
@@ -79,9 +69,9 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/_5sdp"
         android:text="@string/gps_location"
+        android:visibility="gone"
         android:textColor="@color/black"
-        android:textSize="10sp"
-        android:visibility="gone" />
+        android:textSize="10sp" />
 
       <TextView
         android:id="@+id/mvp_survey_checkpoint_gps_data_time"
@@ -89,59 +79,60 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/_5sdp"
         android:text="@string/gps_location"
+        android:visibility="gone"
         android:textColor="@color/black"
-        android:textSize="10sp"
-        android:visibility="gone" />
-
-      <!--      <TextView-->
-      <!--        android:id="@+id/mvp_survey_checkpoint_settings"-->
-      <!--        android:layout_width="wrap_content"-->
-      <!--        android:layout_height="wrap_content"-->
-      <!--        android:layout_alignParentEnd="true"-->
-      <!--        android:padding="@dimen/_5sdp"-->
-      <!--        android:text="@string/settings"-->
-      <!--        android:textColor="@color/black"-->
-      <!--        android:textSize="12sp" />-->
-
-      <Button
-        android:id="@+id/mvp_survey_checkpoint_file_description"
-        android:text="@string/point_attribute"
-        style="@style/survey_top_button" />
-
-      <Button
-        android:id="@+id/mvp_survey_checkpoint_gps_data_antenna_height"
-        android:text="@string/antenna_height"
-        style="@style/survey_top_button" />
-
-      <Button
-        android:id="@+id/mvp_survey_checkpoint_settings"
-        android:text="@string/settings"
-        style="@style/survey_top_button" />
-
+        android:textSize="10sp" />
     </LinearLayout>
 
+    <!--    <TextView-->
+    <!--      android:id="@+id/mvp_survey_checkpoint_settings"-->
+    <!--      android:layout_width="wrap_content"-->
+    <!--      android:layout_height="wrap_content"-->
+    <!--      android:layout_alignParentEnd="true"-->
+    <!--      android:padding="@dimen/_5sdp"-->
+    <!--      android:text="@string/settings"-->
+    <!--      android:textColor="@color/black"-->
+    <!--      android:textSize="12sp" />-->
+    <Button
+      android:id="@+id/mvp_survey_checkpoint_file_description"
+      android:text="@string/point_attribute"
+      android:layout_toLeftOf="@id/mvp_survey_checkpoint_gps_data_antenna_height"
+      style="@style/survey_top_button" />
+
+    <Button
+      android:id="@+id/mvp_survey_checkpoint_gps_data_antenna_height"
+      android:text="@string/antenna_height"
+      android:layout_toLeftOf="@id/mvp_survey_checkpoint_settings"
+      style="@style/survey_top_button" />
+
+    <Button
+      android:id="@+id/mvp_survey_checkpoint_settings"
+      android:text="@string/settings"
+      android:layout_alignParentEnd="true"
+      style="@style/survey_top_button" />
   </RelativeLayout>
 
   <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:layout_below="@id/gps_data"
+    android:layout_height="match_parent"
     android:orientation="horizontal">
 
     <RelativeLayout
       android:id="@+id/bottom_buttons"
       android:layout_width="0dp"
-      android:layout_height="match_parent"
-      android:layout_below="@id/gps_data"
       android:layout_weight="0.25"
+      android:layout_below="@id/gps_data"
       android:background="@color/gray"
-      android:padding="@dimen/_5sdp">
+      android:padding="@dimen/_5sdp"
+      android:layout_height="match_parent">
 
       <LinearLayout
+        android:id="@+id/mvp_survey_checkpoint_details_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/_20sdp"
         android:orientation="vertical">
 
         <TextView
@@ -153,33 +144,35 @@
         <EditText
           android:id="@+id/mvp_survey_checkpoint_details"
           style="@style/et_background"
-          android:layout_gravity="top"
           android:layout_marginStart="0dp"
           android:layout_marginTop="@dimen/_1sdp"
           android:layout_marginEnd="0dp"
-          android:gravity="top"
-          android:hint="@string/enter_checkpoint_details"
-          android:inputType="text|textMultiLine"
-          android:lines="4"
-          android:maxLines="4"
-          android:minLines="4"
+          android:inputType="text"
+          android:lines="1"
+          android:maxLines="1"
+          android:minLines="1"
           android:scrollbars="vertical"
+          android:layout_gravity="top"
+          android:gravity="top"
           android:text=""
+          android:hint="@string/enter_checkpoint_details"
           android:textColor="@color/black" />
       </LinearLayout>
 
       <Button
         android:id="@+id/mvp_survey_checkpoint_record"
         style="@style/back_button_single"
+        android:layout_below="@id/mvp_survey_checkpoint_details_layout"
         android:layout_centerInParent="true"
         android:layout_marginBottom="@dimen/_10sdp"
         android:text="@string/record_onto_check_point" />
 
       <Button
         android:id="@+id/mvp_survey_checkpoint_back"
+        android:paddingTop="@dimen/_10sdp"
+        android:layout_centerInParent="true"
         style="@style/back_button_single"
-        android:layout_alignParentBottom="true"
-        android:paddingTop="@dimen/_10sdp" />
+        android:layout_alignParentBottom="true" />
     </RelativeLayout>
 
 
@@ -188,8 +181,8 @@
       android:id="@+id/map"
       android:name="com.google.android.gms.maps.SupportMapFragment"
       android:layout_width="0dp"
-      android:layout_height="match_parent"
-      android:layout_weight="0.7" />
+      android:layout_weight="0.7"
+      android:layout_height="match_parent" />
   </LinearLayout>
 
 </RelativeLayout>

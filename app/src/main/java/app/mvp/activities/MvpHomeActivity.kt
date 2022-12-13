@@ -36,6 +36,8 @@ class MvpHomeActivity : BaseActivity(), View.OnClickListener {
     mvp_main_taputapu.setOnClickListener(this@MvpHomeActivity)
     mvp_main_portal.setOnClickListener(this@MvpHomeActivity)
     mvp_main_logout.setOnClickListener(this@MvpHomeActivity)
+    mvp_main_taputapu1.setOnClickListener(this@MvpHomeActivity)
+    mvp_main_portal1.setOnClickListener(this@MvpHomeActivity)
   }
   
   override fun onResume() {
@@ -45,7 +47,8 @@ class MvpHomeActivity : BaseActivity(), View.OnClickListener {
   
   override fun onClick(view: View?) {
     when (view!!.id) {
-      R.id.mvp_main_taputapu -> {
+      R.id.mvp_main_taputapu,
+      R.id.mvp_main_taputapu1 -> {
         when {
           !myHelper.isOnline() -> myHelper.showErrorDialog(getString(R.string.no_internet_connection), getString(R.string.no_internet_explanation))
           else -> {
@@ -55,7 +58,8 @@ class MvpHomeActivity : BaseActivity(), View.OnClickListener {
           }
         }
       }
-      R.id.mvp_main_portal -> {
+      R.id.mvp_main_portal,
+      R.id.mvp_main_portal1 -> {
         val url = getString(R.string.portal_url)
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
       }

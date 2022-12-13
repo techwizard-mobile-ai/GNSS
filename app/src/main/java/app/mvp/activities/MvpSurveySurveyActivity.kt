@@ -212,6 +212,7 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
         explanation = "Please enter point attribute for next survey point."
         mDialogView.mvp_survey_dialog_input.hint = "Please enter point attribute text"
         mDialogView.mvp_survey_dialog_input.inputType = InputType.TYPE_CLASS_TEXT
+        mDialogView.mvp_survey_dialog_input.setText(myHelper.getLastJourney().file_description)
       }
     }
     

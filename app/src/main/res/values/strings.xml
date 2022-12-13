@@ -415,4 +415,6 @@
   <string name="automatically">Automatically</string>
   <string name="manually">Manually</string>
   <string name="pictures_upload">Pictures Upload</string>
+  <string name="viewing">Viewing</string>
+  <string name="mapping">Mapping</string>
 </resources>
