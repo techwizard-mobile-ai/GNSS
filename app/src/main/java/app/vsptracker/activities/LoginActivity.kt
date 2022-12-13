@@ -39,6 +39,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     
     myHelper = MyHelper(tag, this)
     myHelper.setProgressBar(signin_pb)
+    myHelper.getOrientation()
     
     db = DatabaseAdapter(this)
     
@@ -139,6 +140,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
       })
     }
     
+  }
+  
+  override fun onResume() {
+    super.onResume()
+    myHelper.getOrientation()
   }
   
   fun fetchOrgData() {

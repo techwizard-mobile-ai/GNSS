@@ -10,6 +10,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+import android.content.pm.ActivityInfo
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
@@ -104,6 +105,12 @@ class MyHelper(var TAG: String, val context: Context) {
   // AWS Upload variables
   var util: Util = Util()
   var transferUtility: TransferUtility? = util.getTransferUtility(context)
+  
+  fun getOrientation() {
+    if (context.packageName.equals(MVP)) {
+      return (context as Activity).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    }
+  }
   
   fun getFileNameFromAwsPath(aws_path: String): String {
     var file_name = "";

@@ -45,6 +45,7 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
   override fun onResume() {
     super.onResume()
     base_nav_view.setCheckedItem(base_nav_view.menu.getItem(12))
+    myHelper.getOrientation()
   }
   
   private fun populateLists() {
