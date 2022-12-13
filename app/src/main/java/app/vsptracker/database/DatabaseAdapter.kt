@@ -14,6 +14,7 @@ import app.vsptracker.apis.operators.OperatorAPI
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.CheckFormData
 import app.vsptracker.classes.Material
+import app.vsptracker.others.MyEnum
 import app.vsptracker.others.MyHelper
 
 //const val DATABASE_NAME = "vsptracker"
@@ -840,6 +841,7 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     
     datum.time = currentTime.toString()
     datum.date = myHelper.getDateTime(currentTime)
+    datum.security_level = MyEnum.USER_ROLE_MVP_COMPANY_STANDARD_USER
     
     val db = this.writableDatabase
     val cv = ContentValues()

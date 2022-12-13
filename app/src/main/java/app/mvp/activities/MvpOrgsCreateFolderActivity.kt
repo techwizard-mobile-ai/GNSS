@@ -8,6 +8,7 @@ import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.activities.LoginActivity
 import app.vsptracker.apis.trip.MyData
+import app.vsptracker.others.MyEnum.Companion.USER_ROLE_MVP_COMPANY_STANDARD_USER
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_mvp_orgs_create_folder.*
@@ -90,7 +91,8 @@ class MvpOrgsCreateFolderActivity : BaseActivity(), View.OnClickListener {
     myData1.file_description = ""
     myData1.upload_status = 2
     myData1.file_level = (relative_path.split("/").size - 1)
-    myData1.security_level = myHelper.getLoginAPI().role
+//    myData1.security_level = myHelper.getLoginAPI().role
+    myData1.security_level = USER_ROLE_MVP_COMPANY_STANDARD_USER
     myData1.size = 0
     myData1.loadingGPSLocationString = myHelper.getGPSLocationToString(gpsLocation)
     myData1.unloadingGPSLocationString = myHelper.getGPSLocationToString(gpsLocation)

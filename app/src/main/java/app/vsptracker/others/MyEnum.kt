@@ -102,5 +102,16 @@ class MyEnum {
     
     //    const val MVP_ZOOM_LEVEL: Float = 19.0f
     const val MVP_ZOOM_LEVEL: Float = 21.0f
+    
+    const val USER_ROLE_MAIN_SUPER_ADMIN = 21 // Not implemented as of yet, might be used in Future
+    const val USER_ROLE_VSPT_SUPER_ADMIN = 15 // Admin Portal Login for VSPT
+    const val USER_ROLE_MVP_SUPER_ADMIN = 45 // Admin Portal Login for MVP
+    const val USER_ROLE_VSPT_COMPANY_SUPER_ADMIN = 1 // Company Admin Login for VSPT companies
+    const val USER_ROLE_VSPT_COMPANY_ADMIN = 6 // Company Admin Login for VSPT companies
+    const val USER_ROLE_VSPT_COMPANY_REFUELLING_COMPANY_ADMIN = 12  // Refuelling Company Admin which will be used for refuelling to VSPT Companies
+    const val USER_ROLE_MVP_COMPANY_SUPER_ADMIN = 31 // Company Admin Login for MVP companies
+    const val USER_ROLE_MVP_COMPANY_ADMIN = 36  // MVP Company Admin for MVP companies. Changing it from 44 to 36 as we might need extra roles between company admin and standard users.
+    const val USER_ROLE_MVP_COMPANY_STANDARD_USER = 46 // MVP Standard User
+    const val USER_ROLE_MVP_COMPANY_CONTRACTOR = 47 // MVP Contractor
   }
 }
