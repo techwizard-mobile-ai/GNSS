@@ -106,6 +106,7 @@
             android:textColor="@color/colorPrimary"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="@dimen/_1sdp"
+            android:visibility="gone"
             android:text="@string/search" />
 
           <RelativeLayout
@@ -128,6 +129,7 @@
               android:layout_width="@dimen/_20sdp"
               android:layout_height="@dimen/_20sdp"
               android:layout_marginTop="@dimen/_3sdp"
+              android:visibility="gone"
               android:layout_toRightOf="@id/mvp_survey_label_search"
               android:layout_marginLeft="@dimen/_1sdp"
               android:src="@drawable/ic_cancel" />
@@ -139,7 +141,7 @@
             android:textColor="@color/colorPrimary"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="@dimen/_1sdp"
-            android:text="@string/new_label" />
+            android:text="@string/create_new_label" />
 
           <EditText
             android:id="@+id/mvp_survey_label_name"
@@ -152,19 +154,45 @@
             android:layout_marginBottom="@dimen/_10sdp"
             android:textColor="@color/black" />
 
+          <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textColor="@color/colorPrimary"
+              android:layout_gravity="center_horizontal"
+              android:gravity="center_vertical"
+              android:layout_marginBottom="@dimen/_1sdp"
+              android:text="Choose colour:" />
+
+            <ImageView
+              android:id="@+id/survey_label_hex_color"
+              android:layout_width="@dimen/_26sdp"
+              android:layout_height="@dimen/_16sdp"
+              android:layout_marginStart="@dimen/_10sdp"
+              android:layout_gravity="center_horizontal"
+              android:layout_marginBottom="@dimen/_5sdp"
+              android:background="@color/vspt_primary_color" />
+          </LinearLayout>
+
           <RadioGroup
             android:id="@+id/survey_label_type"
             android:layout_width="wrap_content"
             android:orientation="horizontal"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="@dimen/_4sdp"
+            android:layout_marginBottom="@dimen/_2sdp"
             android:layout_height="wrap_content">
 
             <RadioButton
               android:id="@+id/survey_label_type_point"
               android:layout_width="wrap_content"
               android:text="@string/point"
-              android:textSize="@dimen/_10sdp"
+              android:textSize="@dimen/_8sdp"
               android:buttonTint="@color/colorPrimary"
               android:textColor="@color/colorPrimary"
               android:layout_height="wrap_content" />
@@ -174,20 +202,13 @@
               android:layout_width="wrap_content"
               android:layout_marginLeft="@dimen/_20sdp"
               android:textAlignment="textStart"
-              android:textSize="@dimen/_10sdp"
+              android:textSize="@dimen/_8sdp"
               android:textColor="@color/colorPrimary"
               android:buttonTint="@color/colorPrimary"
               android:text="@string/line"
               android:layout_height="wrap_content" />
           </RadioGroup>
 
-          <ImageView
-            android:id="@+id/survey_label_hex_color"
-            android:layout_width="@dimen/_26sdp"
-            android:layout_height="@dimen/_26sdp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="@dimen/_10sdp"
-            android:background="@color/colorPrimary" />
 
           <Button
             android:id="@+id/settings_save"

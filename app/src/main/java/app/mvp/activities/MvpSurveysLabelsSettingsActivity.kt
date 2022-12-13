@@ -29,9 +29,9 @@ class MvpSurveysLabelsSettingsActivity : BaseActivity(), View.OnClickListener {
   private lateinit var gv_favorite: GridView
   private var admin_file_type_id = 0;
   private var selected_color_alpha = 255
-  private var selected_color_r = 246
-  private var selected_color_g = 111
-  private var selected_color_b = 28
+  private var selected_color_r = 16
+  private var selected_color_g = 109
+  private var selected_color_b = 20
   
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
