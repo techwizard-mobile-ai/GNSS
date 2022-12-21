@@ -112,7 +112,10 @@ class MvpSurveyCheckPointActivity : BaseActivity(), View.OnClickListener, OnMapR
             val myData1 = MyData()
             val aws_path = myData.aws_path + "${myHelper.getValidFileName(myHelper.getLoginAPI().name)}_${myHelper.getLoginAPI().id}/Data_Collection/CheckPoints/${myHelper.getValidFileName(checkpoint_label)}_${myHelper.getOrgID()}_${myHelper.getUserID()}_${myData.project_id}_${myData.mvp_orgs_files_id}_${myHelper.getCurrentTimeMillis()}"
             val relative_path = myData.relative_path + "${myHelper.getLoginAPI().name}_${myHelper.getLoginAPI().id}/Data Collection/CheckPoints/${checkpoint_label}"
-            
+            val lastJourney = myHelper.getLastJourney()
+            val file_description = lastJourney.checkpoint_file_description
+            lastJourney.checkpoint_file_description = ""
+            myHelper.setLastJourney(lastJourney)
             myData1.org_id = myHelper.getOrgID()
             myData1.user_id = myHelper.getUserID()
             myData1.project_id = myData.project_id
@@ -121,11 +124,14 @@ class MvpSurveyCheckPointActivity : BaseActivity(), View.OnClickListener, OnMapR
             myData1.security_level = myHelper.getLoginAPI().role
             myData1.aws_path = aws_path
             myData1.relative_path = relative_path
+            myData1.file_description = file_description
+            gpsLocation.antenna_height = myHelper.getLastJourney().checkpoint_antenna_height
             myData1.loadingGPSLocation = gpsLocation
             myData1.unloadingGPSLocation = gpsLocation
             myData1.upload_status = 2
             myData1.file_level = (relative_path.split("/").size - 1)
             myData1.security_level = myHelper.getLoginAPI().role
+            myData1.file_details = "{ \"size\": 0,  \"device_details\": ${myHelper.getDeviceDetailsString()} }"
             if (myDataPushSave.pushInsertSurveyRecordCheckPoint(myData1) > 0) {
               myHelper.toast("CheckPoint recorded successfully")
               mvp_survey_checkpoint_details.setText("")
@@ -158,6 +164,7 @@ class MvpSurveyCheckPointActivity : BaseActivity(), View.OnClickListener, OnMapR
         explanation = "Please enter check point details for Record Check Point."
         mDialogView.mvp_survey_dialog_input.hint = "Enter check point details"
         mDialogView.mvp_survey_dialog_input.inputType = InputType.TYPE_CLASS_TEXT
+        mDialogView.mvp_survey_dialog_input.setText(myHelper.getLastJourney().checkpoint_file_description)
       }
     }
     
@@ -191,7 +198,9 @@ class MvpSurveyCheckPointActivity : BaseActivity(), View.OnClickListener, OnMapR
           mAlertDialog.dismiss()
         }
         type == 2 -> {
-          mvp_survey_checkpoint_details.setText(mDialogView.mvp_survey_dialog_input.text.toString())
+          val lastJourney = myHelper.getLastJourney()
+          lastJourney.checkpoint_file_description = mDialogView.mvp_survey_dialog_input.text.toString()
+          myHelper.setLastJourney(lastJourney)
           mAlertDialog.dismiss()
         }
         else -> {

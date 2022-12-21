@@ -15,6 +15,7 @@ class GPSLocation : Serializable {
   var altitude: Double = 0.0
   var longitude: Double = 0.0
   var latitude: Double = 0.0
+  var antenna_height: Double = 0.0
   var locationName: String = ""
   override fun toString(): String {
     return "GPSLocation(" +
@@ -27,6 +28,7 @@ class GPSLocation : Serializable {
             "altitude=$altitude, " +
             "longitude=$longitude, " +
             "latitude=$latitude, " +
+            "antenna_height=$antenna_height, " +
             "locationName='$locationName'" +
             ")"
   }

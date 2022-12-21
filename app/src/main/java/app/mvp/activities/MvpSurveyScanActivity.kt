@@ -334,7 +334,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
           myData1.file_level = (relative_path.split("/").size - 1)
           myData1.security_level = myHelper.getLoginAPI().role
           myData1.size = photoFile.length().toInt()
-          myData1.file_details = "{ \"size\": ${photoFile.length()} }"
+          myData1.file_details = "{ \"size\": ${photoFile.length()},  \"device_details\": ${myHelper.getDeviceDetailsString()} }"
           val insertedID = myDataPushSave.pushInsertSurveyRecordCheckPoint(myData1)
           if (insertedID > 0) {
             myHelper.log("Scan recorded successfully: $insertedID")

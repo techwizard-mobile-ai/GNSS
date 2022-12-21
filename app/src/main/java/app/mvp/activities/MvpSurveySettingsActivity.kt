@@ -97,7 +97,7 @@ class MvpSurveySettingsActivity : BaseActivity(), View.OnClickListener {
         explanation = "Please enter point attribute for next survey point."
         mDialogView.mvp_survey_dialog_input.hint = "Please enter point attribute text"
         mDialogView.mvp_survey_dialog_input.inputType = InputType.TYPE_CLASS_TEXT
-        mDialogView.mvp_survey_dialog_input.setText(myHelper.getLastJourney().file_description)
+        mDialogView.mvp_survey_dialog_input.setText(myHelper.getLastJourney().survey_file_description)
       }
     }
     
@@ -132,7 +132,7 @@ class MvpSurveySettingsActivity : BaseActivity(), View.OnClickListener {
         }
         type == 2 -> {
           val lastJourney = myHelper.getLastJourney()
-          lastJourney.file_description = mDialogView.mvp_survey_dialog_input.text.toString()
+          lastJourney.survey_file_description = mDialogView.mvp_survey_dialog_input.text.toString()
           myHelper.setLastJourney(lastJourney)
           mAlertDialog.dismiss()
         }

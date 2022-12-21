@@ -348,6 +348,8 @@ class MyData : Serializable {
   var mvp_orgs_files_name: String = ""
   var survey_antenna_height: Double = 0.0
   var checkpoint_antenna_height: Double = 0.0
+  var survey_file_description = ""
+  var checkpoint_file_description = ""
   
   @SerializedName("color_hex")
   @Expose

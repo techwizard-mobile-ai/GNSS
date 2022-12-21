@@ -159,8 +159,8 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
             val file_name = "${selectedLabel.number}_${current_label_number}_${db.getMvpOrgsFiles(selectedLabel_aws_path!!).size + 1}"
             // get Point attribute and then reset value of point attribute as it should only be used for next point capturing
             val lastJourney = myHelper.getLastJourney()
-            val file_description = lastJourney.file_description
-            lastJourney.file_description = ""
+            val file_description = lastJourney.survey_file_description
+            lastJourney.survey_file_description = ""
             myHelper.setLastJourney(lastJourney)
             current_point.setText(file_name)
             val myData1 = MyData()
@@ -177,13 +177,14 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
             myData1.aws_path = aws_path
             myData1.relative_path = relative_path
             myData1.file_description = file_description
+            gpsLocation.antenna_height = myHelper.getLastJourney().survey_antenna_height
             myData1.loadingGPSLocation = gpsLocation
             myData1.unloadingGPSLocation = gpsLocation
             myData1.upload_status = 2
             myData1.file_level = (relative_path.split("/").size - 1)
             myData1.security_level = myHelper.getLoginAPI().role
             myData1.size = 0
-            myData1.file_details = "{ \"size\": 0 }"
+            myData1.file_details = "{ \"size\": 0,  \"device_details\": ${myHelper.getDeviceDetailsString()} }"
             if (myDataPushSave.pushInsertSurveyRecordCheckPoint(myData1) > 0) {
               myHelper.log("Survey recorded successfully")
               addMarker(myData1)
@@ -212,7 +213,7 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
         explanation = "Please enter point attribute for next survey point."
         mDialogView.mvp_survey_dialog_input.hint = "Please enter point attribute text"
         mDialogView.mvp_survey_dialog_input.inputType = InputType.TYPE_CLASS_TEXT
-        mDialogView.mvp_survey_dialog_input.setText(myHelper.getLastJourney().file_description)
+        mDialogView.mvp_survey_dialog_input.setText(myHelper.getLastJourney().survey_file_description)
       }
     }
     
@@ -247,7 +248,7 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
         }
         type == 2 -> {
           val lastJourney = myHelper.getLastJourney()
-          lastJourney.file_description = mDialogView.mvp_survey_dialog_input.text.toString()
+          lastJourney.survey_file_description = mDialogView.mvp_survey_dialog_input.text.toString()
           myHelper.setLastJourney(lastJourney)
           mAlertDialog.dismiss()
         }
