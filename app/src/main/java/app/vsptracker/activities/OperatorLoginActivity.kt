@@ -24,6 +24,7 @@ import app.vsptracker.BuildConfig
 import app.vsptracker.R
 import app.vsptracker.activities.common.MachineStatusActivity
 import app.vsptracker.apis.RetrofitAPI
+import app.vsptracker.apis.login.LoginAPI
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.GPSLocation
 import app.vsptracker.database.DatabaseAdapter
@@ -134,8 +135,14 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
         launchHomeForLoggedIn()
       }
     } else {
+      myHelper.setLoginAPI(LoginAPI())
+      myHelper.setIsMapOpened(false)
+      myHelper.setOperatorAPI(MyData())
+      myHelper.setLastJourney(MyData())
       val intent = Intent(this, LoginActivity::class.java)
+      intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
       startActivity(intent)
+      
     }
     
     // Refresh AccessToken if there is Internet connection
