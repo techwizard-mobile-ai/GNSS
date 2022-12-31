@@ -700,6 +700,20 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
   
   private fun makeUseOfLocation(location1: Location) {
 //        myHelper.log("makeUseOfLocation ${location1.latitude}")
+    var verticalAccuracyMeters: Float = 0F
+    var speedAccuracyMetersPerSecond: Float = 0F
+    var bearingAccuracyDegrees: Float = 0F
+    var hasVerticalAccuracy = false
+    var hasSpeedAccuracy = false
+    var hasBearingAccuracy = false
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      verticalAccuracyMeters = location1.verticalAccuracyMeters
+      hasVerticalAccuracy = location1.hasVerticalAccuracy()
+      speedAccuracyMetersPerSecond = location1.speedAccuracyMetersPerSecond
+      hasSpeedAccuracy = location1.hasSpeedAccuracy()
+      bearingAccuracyDegrees = location1.bearingAccuracyDegrees
+      hasBearingAccuracy = location1.hasBearingAccuracy()
+    }
     latitude = location1!!.latitude
     longitude = location1.longitude
     location = location1
@@ -716,6 +730,12 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     gpsLocation.elapsedRealtimeNanos = location1.elapsedRealtimeNanos
 //        gpsLocation.extras = location1.extras
     gpsLocation.time = location1.time
+    gpsLocation.verticalAccuracyMeters = verticalAccuracyMeters
+    gpsLocation.speedAccuracyMetersPerSecond = speedAccuracyMetersPerSecond
+    gpsLocation.bearingAccuracyDegrees = bearingAccuracyDegrees
+    gpsLocation.hasVerticalAccuracy = hasVerticalAccuracy
+    gpsLocation.hasSpeedAccuracy = hasSpeedAccuracy
+    gpsLocation.hasBearingAccuracy = hasBearingAccuracy
     
   }
 }

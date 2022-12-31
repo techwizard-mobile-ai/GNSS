@@ -17,9 +17,21 @@ class GPSLocation : Serializable {
   var latitude: Double = 0.0
   var antenna_height: Double = 0.0
   var locationName: String = ""
+  var verticalAccuracyMeters: Float = 0F
+  var speedAccuracyMetersPerSecond: Float = 0F
+  var bearingAccuracyDegrees: Float = 0F
+  var hasVerticalAccuracy = false
+  var hasSpeedAccuracy = false
+  var hasBearingAccuracy = false
   override fun toString(): String {
     return "GPSLocation(" +
             "time=$time, " +
+            "hasVerticalAccuracy=$hasVerticalAccuracy, " +
+            "hasSpeedAccuracy=$hasSpeedAccuracy, " +
+            "hasBearingAccuracy=$hasBearingAccuracy, " +
+            "bearingAccuracyDegrees=$bearingAccuracyDegrees, " +
+            "speedAccuracyMetersPerSecond=$speedAccuracyMetersPerSecond, " +
+            "verticalAccuracyMeters=$verticalAccuracyMeters, " +
             "elapsedRealtimeNanos=$elapsedRealtimeNanos, " +
             "provider='$provider', " +
             "speed=$speed, " +
