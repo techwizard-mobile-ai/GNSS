@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.widget.RemoteViews
 import app.vsptracker.R
 import app.vsptracker.activities.OperatorLoginActivity
@@ -37,8 +38,13 @@ internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManage
 //    appWidgetManager.updateAppWidget(appWidgetId, views)
   
   val intent = Intent(context, OperatorLoginActivity::class.java)
-  val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
-  
+//  var pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+  // App crashing when launched from widget issue fixed.
+  val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+    PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
+  } else {
+    PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+  }
   val remoteViews = RemoteViews(context.packageName, R.layout.vsptwidget)
   
   remoteViews.setOnClickPendingIntent(R.id.appwidget_text, pendingIntent)
