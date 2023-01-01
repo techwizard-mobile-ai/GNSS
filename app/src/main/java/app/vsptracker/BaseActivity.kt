@@ -706,6 +706,8 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     var hasVerticalAccuracy = false
     var hasSpeedAccuracy = false
     var hasBearingAccuracy = false
+    var isComplete = false
+    var isMock = false
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
       verticalAccuracyMeters = location1.verticalAccuracyMeters
       hasVerticalAccuracy = location1.hasVerticalAccuracy()
@@ -714,6 +716,15 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
       bearingAccuracyDegrees = location1.bearingAccuracyDegrees
       hasBearingAccuracy = location1.hasBearingAccuracy()
     }
+    
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+      isMock = location1.isMock
+    }
+    
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+      isComplete = location1.isComplete
+    }
+    
     latitude = location1!!.latitude
     longitude = location1.longitude
     location = location1
@@ -736,6 +747,9 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     gpsLocation.hasVerticalAccuracy = hasVerticalAccuracy
     gpsLocation.hasSpeedAccuracy = hasSpeedAccuracy
     gpsLocation.hasBearingAccuracy = hasBearingAccuracy
+    gpsLocation.isComplete = isComplete
+    gpsLocation.isMock = isMock
+    gpsLocation.bearingTo = location1.bearingTo(location1)
     
   }
 }

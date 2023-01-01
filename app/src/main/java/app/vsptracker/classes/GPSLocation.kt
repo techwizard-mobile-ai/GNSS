@@ -23,9 +23,15 @@ class GPSLocation : Serializable {
   var hasVerticalAccuracy = false
   var hasSpeedAccuracy = false
   var hasBearingAccuracy = false
+  var isComplete = false
+  var isMock = false
+  var bearingTo: Float = 0F
+  
   override fun toString(): String {
     return "GPSLocation(" +
             "time=$time, " +
+            "isComplete=$isComplete, " +
+            "isMock=$isMock, " +
             "hasVerticalAccuracy=$hasVerticalAccuracy, " +
             "hasSpeedAccuracy=$hasSpeedAccuracy, " +
             "hasBearingAccuracy=$hasBearingAccuracy, " +
