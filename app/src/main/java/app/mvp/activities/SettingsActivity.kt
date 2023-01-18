@@ -65,7 +65,7 @@ class SettingsActivity : BaseActivity(), View.OnClickListener {
         catch (e: java.lang.Exception) {
           myHelper.log("Exception Timer: " + e.message)
         }
-        if (timer_value > 0.9) {
+        if (timer_value > 1) {
           mInterval -= 500
           timer.text = (timer_value - 0.5).toString()
           myHelper.log("mInterval:$mInterval")
