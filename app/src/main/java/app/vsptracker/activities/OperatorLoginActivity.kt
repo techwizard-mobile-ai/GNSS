@@ -74,34 +74,15 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
     
     gpsLocation = GPSLocation()
     
-    this.retrofit = Retrofit.Builder()
-      .baseUrl(getString(R.string.api_url))
-      .addConverterFactory(GsonConverterFactory.create())
-      .client(myHelper.skipSSLOkHttpClient().build())
-      .build()
+    this.retrofit = Retrofit.Builder().baseUrl(getString(R.string.api_url)).addConverterFactory(GsonConverterFactory.create()).client(myHelper.skipSSLOkHttpClient().build()).build()
     this.retrofitAPI = retrofit.create(RetrofitAPI::class.java)
     
     when (myHelper.getMachineTypeID()) {
-      1 -> {
-        Glide.with(this)
-          .load(ContextCompat.getDrawable(this, R.drawable.excavator))
-          .into(signin_image)
-      }
-      2 -> {
-        Glide.with(this)
-          .load(ContextCompat.getDrawable(this, R.drawable.scraper))
-          .into(signin_image)
-      }
-      3 -> {
-        Glide.with(this)
-          .load(ContextCompat.getDrawable(this, R.drawable.truck))
-          .into(signin_image)
-      }
-      else -> {
-        Glide.with(this)
-          .load(ContextCompat.getDrawable(this, R.drawable.welcomenew))
-          .into(signin_image)
-      }
+      1 -> Glide.with(this).load(ContextCompat.getDrawable(this, R.drawable.excavator_1)).into(signin_image)
+      2 -> Glide.with(this).load(ContextCompat.getDrawable(this, R.drawable.scraper_1)).into(signin_image)
+      3 -> Glide.with(this).load(ContextCompat.getDrawable(this, R.drawable.dump_truck_1)).into(signin_image)
+      4 -> Glide.with(this).load(ContextCompat.getDrawable(this, R.drawable.road_truck_1)).into(signin_image)
+      else -> Glide.with(this).load(ContextCompat.getDrawable(this, R.drawable.welcomenew)).into(signin_image)
     }
     
     startGPS()
@@ -269,8 +250,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
       mDialogView.error_explanation.visibility = View.VISIBLE
     }
     
-    val mBuilder = AlertDialog.Builder(this)
-      .setView(mDialogView)
+    val mBuilder = AlertDialog.Builder(this).setView(mDialogView)
     val mAlertDialog = mBuilder.show()
     mAlertDialog.setCancelable(false)
     
@@ -285,10 +265,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
       locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
       try {
         locationManager?.requestLocationUpdates(
-          LocationManager.GPS_PROVIDER,
-          1000,
-          0f,
-          locationListener
+          LocationManager.GPS_PROVIDER, 1000, 0f, locationListener
         )
         
       }
@@ -300,21 +277,15 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
   }
   
   private fun startGPS() {
-    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-      != PackageManager.PERMISSION_GRANTED
-    ) {
+    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
       showErrorDialog(
-        "Location permission needed",
-        "We require your location permission to access and track location-based information from your mobile device, while using the App and in the background, to provide certain location-based services also when the app is not is use."
+        "Location permission needed", "We require your location permission to access and track location-based information from your mobile device, while using the App and in the background, to provide certain location-based services also when the app is not is use."
       )
     } else {
       locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
       try {
         locationManager?.requestLocationUpdates(
-          LocationManager.GPS_PROVIDER,
-          1000,
-          0f,
-          locationListener
+          LocationManager.GPS_PROVIDER, 1000, 0f, locationListener
         )
         
       }
@@ -326,15 +297,12 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
   }
   
   private fun requestPermission() {
-    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-      != PackageManager.PERMISSION_GRANTED
-    ) {
+    if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
       // Permission is not granted
       
       // Should we show an explanation?
       if (ActivityCompat.shouldShowRequestPermissionRationale(
-          this,
-          Manifest.permission.ACCESS_FINE_LOCATION
+          this, Manifest.permission.ACCESS_FINE_LOCATION
         )
       ) {
         // Show an explanation to the user *asynchronously* -- don't block
@@ -342,17 +310,13 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
         // sees the explanation, try again to request the permission.
         
         ActivityCompat.requestPermissions(
-          this,
-          arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-          REQUEST_ACCESS_FINE_LOCATION
+          this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_ACCESS_FINE_LOCATION
         )
         
       } else {
         // No explanation needed, we can request the permission.
         ActivityCompat.requestPermissions(
-          this,
-          arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-          REQUEST_ACCESS_FINE_LOCATION
+          this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_ACCESS_FINE_LOCATION
         )
         
       }
@@ -364,10 +328,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
       if (locationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
         //                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, locationListener);
         locationManager!!.requestLocationUpdates(
-          LocationManager.GPS_PROVIDER,
-          1000,
-          0f,
-          locationListener
+          LocationManager.GPS_PROVIDER, 1000, 0f, locationListener
         )
       } else {
         showGPSDisabledAlertToUser()
@@ -378,16 +339,14 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
   private fun showGPSDisabledAlertToUser() {
     try {
       val alertDialogBuilder = AlertDialog.Builder(this, R.style.ThemeOverlay_AppCompat_Dialog)
-      alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
-        .setCancelable(false)
-        .setPositiveButton(
-          "Goto Settings Page\nTo Enable GPS"
-        ) { _, _ ->
-          val callGPSSettingIntent = Intent(
-            android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
-          )
-          startActivity(callGPSSettingIntent)
-        }
+      alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?").setCancelable(false).setPositiveButton(
+        "Goto Settings Page\nTo Enable GPS"
+      ) { _, _ ->
+        val callGPSSettingIntent = Intent(
+          android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
+        )
+        startActivity(callGPSSettingIntent)
+      }
       alertDialogBuilder.setNegativeButton(
         "Cancel"
       ) { dialog, _ -> dialog.cancel() }
@@ -422,22 +381,18 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
   
   private fun showSettings() {
     val snackbar = Snackbar.make(
-      findViewById(android.R.id.content),
-      "You have previously declined GPS permission.\n" + "You must approve this permission in \"Permissions\" in the app settings on your device.",
-      Snackbar.LENGTH_LONG
+      findViewById(android.R.id.content), "You have previously declined GPS permission.\n" + "You must approve this permission in \"Permissions\" in the app settings on your device.", Snackbar.LENGTH_LONG
     ).setAction(
       "Settings"
     ) {
       startActivity(
         Intent(
-          android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-          Uri.parse("package:" + BuildConfig.APPLICATION_ID)
+          android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + BuildConfig.APPLICATION_ID)
         )
       )
     }
     val snackbarView = snackbar.view
-    val textView =
-      snackbarView.findViewById(R.id.snackbar_text) as TextView
+    val textView = snackbarView.findViewById(R.id.snackbar_text) as TextView
     textView.maxLines = 5  //Or as much as you need
     snackbar.show()
   }

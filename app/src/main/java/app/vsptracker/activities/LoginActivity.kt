@@ -53,20 +53,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     this.retrofitAPI = retrofit.create(RetrofitAPI::class.java)
     
     when (myHelper.getMachineTypeID()) {
-      1 -> {
-        Glide.with(this).load(ContextCompat.getDrawable(this, R.drawable.excavator))
-          .into(signin_image)
-      }
-      2 -> {
-        Glide.with(this).load(ContextCompat.getDrawable(this, R.drawable.scraper)).into(signin_image)
-      }
-      3 -> {
-        Glide.with(this).load(ContextCompat.getDrawable(this, R.drawable.truck)).into(signin_image)
-      }
-      else -> {
-        Glide.with(this).load(ContextCompat.getDrawable(this, R.drawable.welcomenew))
-          .into(signin_image)
-      }
+      1 -> Glide.with(this).load(ContextCompat.getDrawable(this, R.drawable.excavator_1)).into(signin_image)
+      2 -> Glide.with(this).load(ContextCompat.getDrawable(this, R.drawable.scraper_1)).into(signin_image)
+      3 -> Glide.with(this).load(ContextCompat.getDrawable(this, R.drawable.dump_truck_1)).into(signin_image)
+      4 -> Glide.with(this).load(ContextCompat.getDrawable(this, R.drawable.road_truck_1)).into(signin_image)
+      else -> Glide.with(this).load(ContextCompat.getDrawable(this, R.drawable.welcomenew)).into(signin_image)
     }
     
     
