@@ -181,15 +181,15 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
     client.newCall(request).enqueue(object : Callback {
       override fun onResponse(call: Call, response: Response) {
         myHelper.hideDialog()
-        val responseString = response.body!!.string()
-        myHelper.log("pushUpdateServerSync:${response}")
-        val responseJObject = JSONObject(responseString)
-        myHelper.log("responseJObject:$responseJObject")
-        val success = responseJObject.getBoolean("success")
-        myHelper.log("success:$success")
-        val message = responseJObject.getString("message")
-        myHelper.log("message:$message")
         try {
+          val responseString = response.body!!.string()
+          myHelper.log("pushUpdateServerSync:${response}")
+          val responseJObject = JSONObject(responseString)
+          myHelper.log("responseJObject:$responseJObject")
+          val success = responseJObject.getBoolean("success")
+          myHelper.log("success:$success")
+          val message = responseJObject.getString("message")
+          myHelper.log("message:$message")
           if (success) {
             val gson = GsonBuilder().create()
 //                      this data is used for convert data arraylist into object to convert in gson
@@ -208,27 +208,32 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
                 mAdapter.notifyDataSetChanged()
                 updatedNotification()
               }
+            } else {
+              myHelper.showErrorDialogOnUi("Data update in app database failure", "Data synced with server successfully but not updated in Android app.")
             }
             
           } else {
             if (responseJObject.getString("message ") == "Token has expired") {
               myHelper.log("Token Expired:$responseJObject")
+              myHelper.showErrorDialogOnUi("Data upload failure", "Login token expired, please logout and login again. Message: " + responseJObject.getString("message"))
               myHelper.refreshToken()
             } else {
-              myHelper.toastOnUi(responseJObject.getString("message"))
+              myHelper.showErrorDialogOnUi("Data upload failure", "Success is false. Message: " + responseJObject.getString("message"))
               myHelper.log("message:${responseJObject.getString("message")}")
             }
           }
         }
         catch (e: Exception) {
-          myHelper.log("${e.message}")
+          myHelper.log("Exception: ${e.message}")
+          myHelper.showErrorDialogOnUi("Data upload failure", "Exception: ${e.message}")
         }
       }
       
       override fun onFailure(call: Call, e: IOException) {
         myHelper.run {
           hideDialog()
-          toastOnUi(e.message.toString())
+          toastOnUi("onFailure: ${e.message}")
+          showErrorDialogOnUi("API call failure", "onFailure: ${e.message}")
           log("Exception: ${e.printStackTrace()}")
         }
       }
