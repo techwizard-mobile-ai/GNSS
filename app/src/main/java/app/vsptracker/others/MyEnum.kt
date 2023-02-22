@@ -113,5 +113,11 @@ class MyEnum {
     const val USER_ROLE_MVP_COMPANY_ADMIN = 36  // MVP Company Admin for MVP companies. Changing it from 44 to 36 as we might need extra roles between company admin and standard users.
     const val USER_ROLE_MVP_COMPANY_STANDARD_USER = 46 // MVP Standard User
     const val USER_ROLE_MVP_COMPANY_CONTRACTOR = 47 // MVP Contractor
+    
+    const val ALL_DATA = 1
+    const val UNSYNC_DATA = 2
+    
+    const val EXPORT_TYPE_VSPT = 1
+    const val EXPORT_TYPE_MVP = 2
   }
 }

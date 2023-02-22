@@ -70,6 +70,11 @@
       android:title="@string/settings"
       android:visible="true" />
     <item
+      android:id="@+id/nav_export"
+      android:icon="@drawable/ic_export_data"
+      android:title="@string/export"
+      android:visible="false" />
+    <item
       android:id="@+id/nav_logout"
       android:icon="@drawable/ic_logout"
       android:title="@string/logout" />

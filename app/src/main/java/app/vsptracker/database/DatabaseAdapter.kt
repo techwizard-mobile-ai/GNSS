@@ -8,14 +8,19 @@ import android.content.Context
 import android.database.Cursor.FIELD_TYPE_STRING
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import app.vsptracker.R
 import app.vsptracker.apis.delay.EWork
 import app.vsptracker.apis.operators.OperatorAPI
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.CheckFormData
 import app.vsptracker.classes.Material
+import app.vsptracker.others.CSVWriter
 import app.vsptracker.others.MyEnum
+import app.vsptracker.others.MyEnum.Companion.ALL_DATA
+import app.vsptracker.others.MyEnum.Companion.UNSYNC_DATA
 import app.vsptracker.others.MyHelper
+import java.io.FileWriter
 
 //const val DATABASE_NAME = "vsptracker"
 const val TABLE_E_LOAD_HISTORY = "e_load_history"
@@ -3526,11 +3531,16 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
     return datum
   }
   
-  fun getTrips(): ArrayList<MyData> {
+  fun getTrips(type: Int = ALL_DATA): ArrayList<MyData> {
     
     val list: ArrayList<MyData> = ArrayList()
     val db = this.readableDatabase
-    val query = "Select * from $TABLE_TRIP  ORDER BY $COL_ID DESC"
+    var query = "Select * from $TABLE_TRIP  ORDER BY $COL_ID DESC"
+    when (type) {
+      UNSYNC_DATA -> query = "Select * from $TABLE_TRIP WHERE $COL_IS_SYNC = 0 ORDER BY $COL_ID DESC"
+      ALL_DATA -> query = "Select * from $TABLE_TRIP  ORDER BY $COL_ID DESC"
+    }
+    
     val result = db.rawQuery(query, null)
     
     if (result.moveToFirst()) {
@@ -4189,5 +4199,37 @@ class DatabaseAdapter(var context: Context) : SQLiteOpenHelper(context, context.
       }
     }
     val updatedID = db.updateWithOnConflict(TABLE_ADMIN_MVP_SURVEYS_LABELS, cv, "$COL_ID =?", arrayOf(datum.id.toString()), SQLiteDatabase.CONFLICT_REPLACE)
+  }
+  
+  fun exportVsptDb(type: Int = ALL_DATA) {
+    val file_name = "Export_All_Data_${myHelper.getLoginAPI().org_id}_${myHelper.getLoginAPI().id}_${myHelper.getCurrentDateTimeWithSeconds(2)}.csv"
+    val file = myHelper.createTempFile(file_name, myHelper.getOutputDirectory())
+    val db = this.readableDatabase
+    try {
+      val csvWrite = CSVWriter(FileWriter(file))
+      var query = "Select * from $TABLE_TRIP  ORDER BY $COL_ID DESC"
+      when (type) {
+        UNSYNC_DATA -> query = "Select * from $TABLE_TRIP WHERE $COL_IS_SYNC = 0 ORDER BY $COL_ID DESC"
+        ALL_DATA -> query = "Select * from $TABLE_TRIP  ORDER BY $COL_ID DESC"
+      }
+      
+      val curCSV = db.rawQuery(query, null)
+
+//      val db: SQLiteDatabase = this.readableDatabase
+//      val curCSV: Cursor = db.rawQuery("SELECT * FROM $TABLE_TRIP", null)
+      while (curCSV.moveToNext()) {
+        val lineString = ArrayList<String>()
+        for (i in 0 until curCSV.columnCount) {
+          lineString.add(curCSV.getString(i))
+        }
+        csvWrite.writeNext(lineString)
+      }
+      csvWrite.close()
+      curCSV.close()
+    }
+    catch (sqlEx: java.lang.Exception) {
+      Log.e("MainActivity", sqlEx.message, sqlEx)
+    }
+    db.close()
   }
 }

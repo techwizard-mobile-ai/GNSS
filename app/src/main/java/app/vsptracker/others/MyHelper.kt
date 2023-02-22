@@ -106,6 +106,17 @@ class MyHelper(var TAG: String, val context: Context) {
   var util: Util = Util()
   var transferUtility: TransferUtility? = util.getTransferUtility(context)
   
+  fun getOutputDirectory(): File {
+    val mediaDir = context.externalMediaDirs.firstOrNull()?.let {
+      File(it, context.resources.getString(R.string.app_name)).apply { mkdirs() }
+    }
+    return if (mediaDir != null && mediaDir.exists()) {
+      log("mediaDir.path: ${mediaDir.path}"); mediaDir
+    } else {
+      context.filesDir
+    }
+  }
+  
   fun getOrientation() {
     if (context.packageName.equals(MVP)) {
       return (context as Activity).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -593,9 +604,13 @@ class MyHelper(var TAG: String, val context: Context) {
     return timestamp
   }
   
-  fun getDateTimeWithSeconds(s: Long): String {
+  fun getDateTimeWithSeconds(s: Long, type: Int = 1): String {
     return try {
-      val sdf = SimpleDateFormat("dd MMM yyyy HH:mm:ss")
+      var sdf = SimpleDateFormat("dd MMM yyyy HH:mm:ss")
+      when (type) {
+        1 -> sdf = SimpleDateFormat("dd MMM yyyy HH:mm:ss")
+        2 -> sdf = SimpleDateFormat("yyyy_MM_dd__HH_mm_ss")
+      }
       val netDate = Date(s)
       sdf.format(netDate)
     }
@@ -605,9 +620,47 @@ class MyHelper(var TAG: String, val context: Context) {
     }
   }
   
-  fun getDateTime(s: Long): String {
+  fun getCurrentDateTimeWithSeconds(type: Int = 1): String {
+    val s = System.currentTimeMillis()
     return try {
-      val sdf = SimpleDateFormat("dd MMM yyyy HH:mm")
+      var sdf = SimpleDateFormat("dd MMM yyyy HH:mm:ss")
+      when (type) {
+        1 -> sdf = SimpleDateFormat("dd MMM yyyy HH:mm:ss")
+        2 -> sdf = SimpleDateFormat("yyyy_MM_dd__HH_mm_ss")
+      }
+      val netDate = Date(s)
+      sdf.format(netDate)
+    }
+    catch (e: Exception) {
+      log("getDatetime:${e}")
+      s.toString()
+    }
+  }
+  
+  fun getCurrentDateTime(type: Int = 1): String {
+    val s = System.currentTimeMillis()
+    return try {
+      var sdf = SimpleDateFormat("dd MMM yyyy HH:mm")
+      when (type) {
+        1 -> sdf = SimpleDateFormat("dd MMM yyyy HH:mm")
+        2 -> sdf = SimpleDateFormat("yyyy_MM_dd__HH_mm")
+      }
+      val netDate = Date(s)
+      sdf.format(netDate)
+    }
+    catch (e: Exception) {
+      log("getDatetime:${e}")
+      s.toString()
+    }
+  }
+  
+  fun getDateTime(s: Long, type: Int = 1): String {
+    return try {
+      var sdf = SimpleDateFormat("dd MMM yyyy HH:mm")
+      when (type) {
+        1 -> sdf = SimpleDateFormat("dd MMM yyyy HH:mm")
+        2 -> sdf = SimpleDateFormat("yyyy_MM_dd__HH_mm")
+      }
       val netDate = Date(s)
       sdf.format(netDate)
     }

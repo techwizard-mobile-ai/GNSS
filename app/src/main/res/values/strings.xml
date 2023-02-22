@@ -417,4 +417,11 @@
   <string name="pictures_upload">Pictures Upload</string>
   <string name="viewing">Viewing</string>
   <string name="mapping">Mapping</string>
+  <string name="export_data">Export Data</string>
+  <string name="total_entries">Total Entries</string>
+  <string name="export_all_data">Export All Data</string>
+  <string name="export">Export</string>
+  <string name="export_unsync_data">Export Unsynced Data</string>
+  <string name="export_csv">Export CSV</string>
+  <string name="total_entries_16">Total Entries : 16</string>
 </resources>

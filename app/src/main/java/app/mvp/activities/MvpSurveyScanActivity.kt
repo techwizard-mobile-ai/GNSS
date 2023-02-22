@@ -252,17 +252,6 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     }
   }
   
-  private fun getOutputDirectory(): File {
-    val mediaDir = externalMediaDirs.firstOrNull()?.let {
-      File(it, resources.getString(R.string.app_name)).apply { mkdirs() }
-    }
-    return if (mediaDir != null && mediaDir.exists()) {
-      myHelper.log("mediaDir.path: ${mediaDir.path}"); mediaDir
-    } else {
-      filesDir
-    }
-  }
-  
   private fun takePhoto() {
     // Get a stable reference of the modifiable image capture use case
     val imageCapture = imageCapture ?: return
@@ -284,7 +273,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     // Create output options object which contains file + metadata
 
 //    val photoFile = File.createTempFile(name, ".jpg", getOutputDirectory())
-    val photoFile = myHelper.createTempFile(file_name, getOutputDirectory())
+    val photoFile = myHelper.createTempFile(file_name, myHelper.getOutputDirectory())
     val outputOptions = ImageCapture.OutputFileOptions.Builder(
       photoFile
     )

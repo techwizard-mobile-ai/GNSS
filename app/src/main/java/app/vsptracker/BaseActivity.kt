@@ -532,6 +532,14 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         startActivity(intent)
         myHelper.setIsMapOpened(false)
       }
+      R.id.nav_export -> {
+        val intent = Intent(this, ExportDataActivity::class.java)
+        val appSettings = MyData()
+        appSettings.name = "Export Data"
+        intent.putExtra("myData", appSettings)
+        startActivity(intent)
+        myHelper.setIsMapOpened(false)
+      }
     }
     val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
     drawerLayout.closeDrawer(GravityCompat.START)
