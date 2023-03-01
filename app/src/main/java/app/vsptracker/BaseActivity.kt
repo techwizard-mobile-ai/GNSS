@@ -19,6 +19,9 @@ import android.os.Handler
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -52,8 +55,8 @@ import app.vsptracker.others.autologout.ForegroundService
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.app_bar_base.*
+//import kotlinx.android.synthetic.main.activity_base.*
+//import kotlinx.android.synthetic.main.app_bar_base.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
@@ -80,6 +83,17 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
   var autoLogoutTime = 0L
   private lateinit var workManager: WorkManager
   
+  lateinit var drawer_layout: androidx.drawerlayout.widget.DrawerLayout
+  lateinit var toolbar_title: TextView
+  lateinit var base_machine_status: TextView
+  lateinit var base_daily_mode: TextView
+  lateinit var no_internet: TextView
+  lateinit var base_content_frame: FrameLayout
+  lateinit var base_machine_status_layout: LinearLayout
+  lateinit var base_machine_status_icon: ImageView
+  lateinit var base_nav_view: com.google.android.material.navigation.NavigationView
+  
+  
   @SuppressLint("SetTextI18n")
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -89,6 +103,16 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     setContentView(R.layout.activity_base)
     val toolbar: Toolbar = findViewById(R.id.toolbar)
     setSupportActionBar(toolbar)
+    
+    drawer_layout = findViewById(R.id.drawer_layout)
+    toolbar_title = findViewById(R.id.toolbar_title)
+    base_machine_status = findViewById(R.id.base_machine_status)
+    base_daily_mode = findViewById(R.id.base_daily_mode)
+    base_content_frame = findViewById(R.id.base_content_frame)
+    base_machine_status_layout = findViewById(R.id.base_machine_status_layout)
+    base_machine_status_icon = findViewById(R.id.base_machine_status_icon)
+    no_internet = findViewById(R.id.no_internet)
+    base_nav_view = findViewById(R.id.base_nav_view)
     
     workManager = WorkManager.getInstance(application)
     

@@ -2,11 +2,14 @@
   <dictionary name="malikab">
     <words>
       <w>bnext</w>
+      <w>cftd</w>
       <w>checkform</w>
       <w>checkforms</w>
       <w>crushingplant</w>
       <w>digginghistory</w>
       <w>eload</w>
+      <w>elocation</w>
+      <w>ematerial</w>
       <w>ework</w>
       <w>gpslocation</w>
       <w>gson</w>
@@ -24,9 +27,16 @@
       <w>orgsserversync</w>
       <w>presigned</w>
       <w>respread</w>
+      <w>rload</w>
+      <w>sfinish</w>
+      <w>shome</w>
+      <w>signin</w>
       <w>snackbar</w>
       <w>tapu</w>
+      <w>taputapu</w>
+      <w>thome</w>
       <w>trenchinghistory</w>
+      <w>trload</w>
       <w>unfavorite</w>
       <w>unsync</w>
       <w>vspt</w>

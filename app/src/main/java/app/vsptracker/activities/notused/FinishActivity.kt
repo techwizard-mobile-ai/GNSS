@@ -3,12 +3,12 @@ package app.vsptracker.activities.notused
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.FrameLayout
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.activities.LoginActivity
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_finish.*
 
 class FinishActivity : BaseActivity(), View.OnClickListener {
   override fun onClick(view: View?) {
@@ -21,6 +21,7 @@ class FinishActivity : BaseActivity(), View.OnClickListener {
     }
   }
   
+  lateinit var finish_next: Button
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 //        setContentView(R.layout.activity_finish)
@@ -30,6 +31,8 @@ class FinishActivity : BaseActivity(), View.OnClickListener {
     layoutInflater.inflate(R.layout.activity_finish, contentFrameLayout)
     val navigationView = findViewById(R.id.base_nav_view) as NavigationView
     navigationView.menu.getItem(0).isChecked = true
+    
+    finish_next = findViewById(R.id.finish_next)
     
     finish_next.setOnClickListener(this)
     

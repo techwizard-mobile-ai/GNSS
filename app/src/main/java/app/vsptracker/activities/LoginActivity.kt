@@ -3,7 +3,7 @@ package app.vsptracker.activities
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import app.vsptracker.BuildConfig
@@ -13,7 +13,6 @@ import app.vsptracker.apis.login.LoginResponse
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.*
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.activity_login.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -26,6 +25,14 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
   private lateinit var retrofit: Retrofit
   private lateinit var retrofitAPI: RetrofitAPI
   private lateinit var myDataPushSave: MyDataPushSave
+  lateinit var signin_pb: ProgressBar
+  lateinit var signin_image: ImageView
+  lateinit var signin_email: EditText
+  lateinit var signin_pass: EditText
+  lateinit var login_main_layout: ScrollView
+  lateinit var signin_signin: TextView
+  lateinit var signin_forgot_pass: TextView
+  
   
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -36,6 +43,14 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
     }
+    
+    signin_pb = findViewById(R.id.signin_pb)
+    signin_image = findViewById(R.id.signin_image)
+    signin_email = findViewById(R.id.signin_email)
+    signin_pass = findViewById(R.id.signin_pass)
+    login_main_layout = findViewById(R.id.login_main_layout)
+    signin_signin = findViewById(R.id.signin_signin)
+    signin_forgot_pass = findViewById(R.id.signin_forgot_pass)
     
     myHelper = MyHelper(tag, this)
     myHelper.setProgressBar(signin_pb)

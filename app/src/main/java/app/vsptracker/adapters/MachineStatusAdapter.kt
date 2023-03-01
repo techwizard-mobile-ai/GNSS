@@ -4,6 +4,7 @@ import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import app.vsptracker.R
 import app.vsptracker.activities.common.MachineStatusActivity
@@ -11,8 +12,6 @@ import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.Material
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyHelper
-import kotlinx.android.synthetic.main.activity_machine_status.*
-import kotlinx.android.synthetic.main.list_row_machine_status.view.*
 
 class MachineStatusAdapter(
   private val myContext: Activity,
@@ -37,23 +36,25 @@ class MachineStatusAdapter(
   }
   
   override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    val v = holder.itemView
+    val machine_status_rv_title = v.findViewById<TextView>(R.id.machine_status_rv_title)
     
     val material = dataList[position]
     
-    holder.itemView.machine_status_rv_title.text = material.name
-    holder.itemView.machine_status_rv_title.setOnClickListener {
+    machine_status_rv_title.text = material.name
+    machine_status_rv_title.setOnClickListener {
 //            myHelper.toast("Machine Stopped due to : " + material.name)
       
       val data = MyData()
       data.machine_stop_reason_id = material.id
-      data.totalHours = myContext.sfinish_reading.text.toString()
+      data.totalHours = (myContext as MachineStatusActivity).sfinish_reading.text.toString()
       
-      if (!startReading.equals(myContext.sfinish_reading.text.toString(), true)) {
+      if (!startReading.equals((myContext as MachineStatusActivity).sfinish_reading.text.toString(), true)) {
         data.isTotalHoursCustom = 1
-        myHelper.log("Custom Time : True, Original reading:${myHelper.getMeterTimeForStart()}, New Reading: ${myContext.sfinish_reading.text}")
+        myHelper.log("Custom Time : True, Original reading:${myHelper.getMeterTimeForStart()}, New Reading: ${(myContext as MachineStatusActivity).sfinish_reading.text}")
       } else {
         data.isTotalHoursCustom = 0
-        myHelper.log("Custom Time : False, Original reading:${myHelper.getMeterTimeForStart()}, New Reading: ${myContext.sfinish_reading.text}")
+        myHelper.log("Custom Time : False, Original reading:${myHelper.getMeterTimeForStart()}, New Reading: ${(myContext as MachineStatusActivity).sfinish_reading.text}")
       }
       
       myHelper.log("totalHours:${data.totalHours}")

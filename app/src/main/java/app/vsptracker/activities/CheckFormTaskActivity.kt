@@ -10,7 +10,10 @@ import android.os.Environment
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,9 +28,9 @@ import app.vsptracker.classes.GPSLocation
 import app.vsptracker.classes.Images
 import app.vsptracker.others.MyDataPushSave
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_check_form_task.*
-import kotlinx.android.synthetic.main.dialog_save_checkform.view.*
-import kotlinx.android.synthetic.main.list_row_check_form_task.view.*
+//import kotlinx.android.synthetic.main.activity_check_form_task.*
+//import kotlinx.android.synthetic.main.dialog_save_checkform.view.*
+//import kotlinx.android.synthetic.main.list_row_check_form_task.view.*
 import java.io.File
 import java.io.IOException
 
@@ -50,12 +53,26 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
   val PICK_FILE_REQUEST = 1
   val CAMERA_REQUEST = 1888
   
+  lateinit var cft_title: TextView
+  lateinit var cftd_sub_title: TextView
+  lateinit var cft_finish: Button
+  lateinit var cft_skip: Button
+  lateinit var cft_finish_layout: LinearLayout
+  lateinit var cft_rv: androidx.recyclerview.widget.RecyclerView
+  
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_check_form_task, contentFrameLayout)
     val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
     navigationView.menu.getItem(10).isChecked = true
+    
+    cft_title = findViewById(R.id.cft_title)
+    cft_rv = findViewById(R.id.cft_rv)
+    cft_finish = findViewById(R.id.cft_finish)
+    cft_skip = findViewById(R.id.cft_skip)
+    cft_finish_layout = findViewById(R.id.cft_finish_layout)
+    cftd_sub_title = findViewById(R.id.cftd_sub_title)
     
     myHelper.setTag(tag)
     
@@ -127,21 +144,28 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
     
     
     val mDialogView = LayoutInflater.from(this).inflate(R.layout.dialog_save_checkform, null)
+    val cftd_sub_title = mDialogView.findViewById<TextView>(R.id.cftd_sub_title)
+    val save_checkform_yes = mDialogView.findViewById<TextView>(R.id.save_checkform_yes)
+    val save_checkform_no = mDialogView.findViewById<TextView>(R.id.save_checkform_no)
+    val cftd_save_bottom = mDialogView.findViewById<View>(R.id.cftd_save_bottom)
+    val cftd_title_layout_bottom = mDialogView.findViewById<View>(R.id.cftd_title_layout_bottom)
+    val cftd_title_layout = mDialogView.findViewById<LinearLayout>(R.id.cftd_title_layout)
+    
     
     if (questionsList.size > checkFormDataList.size) {
       val txt =
         "Total Questions:${questionsList.size}\nRemaining Questions: ${questionsList.size - checkFormDataList.size}\n\nPlease complete all questions to save checkform."
-      mDialogView.cftd_sub_title.text = txt
-      mDialogView.save_checkform_yes.visibility = View.GONE
-      mDialogView.cftd_save_bottom.visibility = View.GONE
+      cftd_sub_title.text = txt
+      save_checkform_yes.visibility = View.GONE
+      cftd_save_bottom.visibility = View.GONE
       
       myHelper.log("Checkform not completed.")
     } else {
-      mDialogView.cftd_title_layout.visibility = View.GONE
-      mDialogView.cftd_title_layout_bottom.visibility = View.GONE
+      cftd_title_layout.visibility = View.GONE
+      cftd_title_layout_bottom.visibility = View.GONE
     }
     
-    mDialogView.save_checkform_yes.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
+    save_checkform_yes.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
     
     val mBuilder = AlertDialog.Builder(this)
       .setView(mDialogView)
@@ -154,12 +178,12 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
     wlp.gravity = Gravity.CENTER
     window.attributes = wlp
     
-    mDialogView.save_checkform_yes.setOnClickListener {
+    save_checkform_yes.setOnClickListener {
       mAlertDialog.dismiss()
       saveCompletedCheckForm()
       
     }
-    mDialogView.save_checkform_no.setOnClickListener {
+    save_checkform_no.setOnClickListener {
       mAlertDialog.dismiss()
     }
     
@@ -188,16 +212,23 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
   private fun skipCheckFormDialog() {
     
     val mDialogView = LayoutInflater.from(this).inflate(R.layout.dialog_save_checkform, null)
+    
+    val cftd_sub_title = mDialogView.findViewById<TextView>(R.id.cftd_sub_title)
+    val save_checkform_yes = mDialogView.findViewById<TextView>(R.id.save_checkform_yes)
+    val save_checkform_no = mDialogView.findViewById<TextView>(R.id.save_checkform_no)
+    val cftd_title_layout_bottom = mDialogView.findViewById<View>(R.id.cftd_title_layout_bottom)
+    val cftd_title_layout = mDialogView.findViewById<LinearLayout>(R.id.cftd_title_layout)
+    
     if (questionsList.size > checkFormDataList.size) {
       val txt =
         "Total Questions:${questionsList.size}\nRemaining Questions: ${questionsList.size - checkFormDataList.size}\n\nPlease complete all questions."
-      mDialogView.cftd_sub_title.text = txt
-      mDialogView.save_checkform_yes.text = getString(R.string.save_unfinished_form)
+      cftd_sub_title.text = txt
+      save_checkform_yes.text = getString(R.string.save_unfinished_form)
       myHelper.log("Checkform not completed.")
     } else {
-      mDialogView.save_checkform_yes.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
-      mDialogView.cftd_title_layout.visibility = View.GONE
-      mDialogView.cftd_title_layout_bottom.visibility = View.GONE
+      save_checkform_yes.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary))
+      cftd_title_layout.visibility = View.GONE
+      cftd_title_layout_bottom.visibility = View.GONE
     }
     
     val mBuilder = AlertDialog.Builder(this)
@@ -212,11 +243,11 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
     wlp.gravity = Gravity.CENTER
     window.attributes = wlp
     
-    mDialogView.save_checkform_yes.setOnClickListener {
+    save_checkform_yes.setOnClickListener {
       mAlertDialog.dismiss()
       saveCompletedCheckForm()
     }
-    mDialogView.save_checkform_no.setOnClickListener {
+    save_checkform_no.setOnClickListener {
       mAlertDialog.dismiss()
     }
   }

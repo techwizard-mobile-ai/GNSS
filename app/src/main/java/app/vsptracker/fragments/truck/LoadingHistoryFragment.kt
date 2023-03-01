@@ -15,7 +15,6 @@ import app.vsptracker.adapters.LoadingHistoryAdapter
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyHelper
-import kotlinx.android.synthetic.main.fragment_loading_history.*
 
 
 class LoadingHistoryFragment : Fragment() {
@@ -49,6 +48,8 @@ class LoadingHistoryFragment : Fragment() {
   
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    val v = view
+    val flh_rv = root!!.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.flh_rv)
     
     val mAdapter = LoadingHistoryAdapter(context as Activity, loadingHistory as ArrayList<MyData>)
     flh_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)

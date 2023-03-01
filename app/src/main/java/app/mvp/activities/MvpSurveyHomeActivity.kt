@@ -8,7 +8,9 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.TextView
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.classes.GPSLocation
@@ -23,9 +25,9 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.data.kml.KmlLayer
-import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_mvp_survey_home.*
-import kotlinx.android.synthetic.main.app_bar_base.*
+//import kotlinx.android.synthetic.main.activity_base.*
+//import kotlinx.android.synthetic.main.activity_mvp_survey_home.*
+//import kotlinx.android.synthetic.main.app_bar_base.*
 import java.io.File
 import java.io.FileInputStream
 
@@ -40,12 +42,35 @@ class MvpSurveyHomeActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
   private var locationManager1: LocationManager? = null
   
   private var mapGPSLocation: GPSLocation = GPSLocation()
+  lateinit var mvp_survey_home_gps_data_acc: TextView
+  lateinit var mvp_survey_home_gps_data_lat: TextView
+  lateinit var mvp_survey_home_gps_data_long: TextView
+  lateinit var mvp_survey_home_gps_data_alt: TextView
+  lateinit var mvp_survey_home_gps_data_speed: TextView
+  lateinit var mvp_survey_home_gps_data_bearing: TextView
+  lateinit var mvp_survey_home_gps_data_time: TextView
+  
+  lateinit var mvp_survey_home_check_point: Button
+  lateinit var mvp_survey_home_back: Button
+  lateinit var mvp_survey_home_start_survey: Button
+  lateinit var mvp_survey_home_start_scan: Button
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_mvp_survey_home, contentFrameLayout)
     
+    mvp_survey_home_gps_data_acc = findViewById(R.id.mvp_survey_home_gps_data_acc)
+    mvp_survey_home_gps_data_lat = findViewById(R.id.mvp_survey_home_gps_data_lat)
+    mvp_survey_home_gps_data_long = findViewById(R.id.mvp_survey_home_gps_data_long)
+    mvp_survey_home_gps_data_alt = findViewById(R.id.mvp_survey_home_gps_data_alt)
+    mvp_survey_home_gps_data_speed = findViewById(R.id.mvp_survey_home_gps_data_speed)
+    mvp_survey_home_gps_data_bearing = findViewById(R.id.mvp_survey_home_gps_data_bearing)
+    mvp_survey_home_gps_data_time = findViewById(R.id.mvp_survey_home_gps_data_time)
+    mvp_survey_home_back = findViewById(R.id.mvp_survey_home_back)
+    mvp_survey_home_check_point = findViewById(R.id.mvp_survey_home_check_point)
+    mvp_survey_home_start_survey = findViewById(R.id.mvp_survey_home_start_survey)
+    mvp_survey_home_start_scan = findViewById(R.id.mvp_survey_home_start_scan)
     myHelper.setTag(tag)
     myData = myHelper.getLastJourney()
     myHelper.log("myData:$myData")

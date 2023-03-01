@@ -3,7 +3,7 @@ package app.vsptracker.activities.common
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.FrameLayout
+import android.widget.*
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,21 +13,38 @@ import app.vsptracker.activities.HourMeterStartActivity
 import app.vsptracker.adapters.MachineStatusAdapter
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.others.MyEnum
-import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_machine_status.*
 
 class MachineStatusActivity : BaseActivity(), View.OnClickListener {
   
   private val tag = this::class.java.simpleName
   private var startReading = ""
+  lateinit var machine_status_title: TextView
+  lateinit var machine_stopped_reason: TextView
+  lateinit var machine_start_layout: LinearLayout
+  lateinit var machine_status_logout: Button
+  lateinit var machine_status_back: Button
+  lateinit var machine_status_start: Button
+  lateinit var sfinish_reading: EditText
+  lateinit var sfinish_minus: ImageView
+  lateinit var sfinish_plus: ImageView
+  lateinit var machine_status_rv: androidx.recyclerview.widget.RecyclerView
+  
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_machine_status, contentFrameLayout)
-    val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(2).isChecked = true
+    
+    machine_status_title = findViewById(R.id.machine_status_title)
+    machine_start_layout = findViewById(R.id.machine_start_layout)
+    machine_status_rv = findViewById(R.id.machine_status_rv)
+    machine_stopped_reason = findViewById(R.id.machine_stopped_reason)
+    machine_status_logout = findViewById(R.id.machine_status_logout)
+    machine_status_back = findViewById(R.id.machine_status_back)
+    sfinish_reading = findViewById(R.id.sfinish_reading)
+    machine_status_start = findViewById(R.id.machine_status_start)
+    sfinish_minus = findViewById(R.id.sfinish_minus)
+    sfinish_plus = findViewById(R.id.sfinish_plus)
     
     myHelper.setTag(tag)
     
@@ -78,6 +95,11 @@ class MachineStatusActivity : BaseActivity(), View.OnClickListener {
     machine_status_back.setOnClickListener(this)
     sfinish_minus.setOnClickListener(this)
     sfinish_plus.setOnClickListener(this)
+  }
+  
+  override fun onResume() {
+    super.onResume()
+    base_nav_view.setCheckedItem(base_nav_view.menu.getItem(2))
   }
   
   override fun onClick(view: View?) {

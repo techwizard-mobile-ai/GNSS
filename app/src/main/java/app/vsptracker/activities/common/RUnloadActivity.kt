@@ -4,14 +4,13 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
-import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_runload.*
 
 private const val REQUEST_MATERIAL = 2
 private const val REQUEST_LOCATION = 3
@@ -19,14 +18,26 @@ private const val REQUEST_WEIGHT = 4
 
 class RUnloadActivity : BaseActivity(), View.OnClickListener {
   private val tag = this::class.java.simpleName
-  
+  lateinit var trul_task: TextView
+  lateinit var trul_material: TextView
+  lateinit var trul_location: TextView
+  lateinit var trul_weight: TextView
+  lateinit var trunload_unload: Button
+  lateinit var runload_home: Button
+  lateinit var runload_finish: Button
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_runload, contentFrameLayout)
-    val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(0).isChecked = true
+    
+    trul_task = findViewById(R.id.trul_task)
+    trul_material = findViewById(R.id.trul_material)
+    trul_location = findViewById(R.id.trul_location)
+    trul_weight = findViewById(R.id.trul_weight)
+    trunload_unload = findViewById(R.id.trunload_unload)
+    runload_home = findViewById(R.id.runload_home)
+    runload_finish = findViewById(R.id.runload_finish)
     
     myHelper.setTag(tag)
     myData = myHelper.getLastJourney()

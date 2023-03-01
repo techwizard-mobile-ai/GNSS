@@ -15,7 +15,6 @@ import app.vsptracker.adapters.ETHistoryAdapter
 import app.vsptracker.apis.delay.EWork
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyHelper
-import kotlinx.android.synthetic.main.fragment_etrenching_history.view.*
 
 
 class ETrenchingHistoryFragment : Fragment() {
@@ -57,13 +56,16 @@ class ETrenchingHistoryFragment : Fragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     
+    val v = view
+    val eth_rv = root!!.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.eth_rv)
+    
     val workType = 2
     val mAdapter = ETHistoryAdapter(
       context as Activity, trenchingHistory as ArrayList<EWork>,
       FRAGMENT_TAG, workType
     )
-    root!!.eth_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
-    root!!.eth_rv!!.adapter = mAdapter
+    eth_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
+    eth_rv!!.adapter = mAdapter
   }
   
   fun onButtonPressed(uri: Uri) {

@@ -3,6 +3,7 @@ package app.vsptracker.activities.scrapper
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.FrameLayout
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
@@ -10,21 +11,31 @@ import app.vsptracker.activities.common.MaterialActivity
 import app.vsptracker.activities.common.UnloadTaskActivity
 import app.vsptracker.activities.excavator.ESideCastingActivity
 import app.vsptracker.others.MyHelper
-import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_shome.*
 
 class SHomeActivity : BaseActivity(), View.OnClickListener {
   
   private val tag = this::class.java.simpleName
+  
+  lateinit var shome_load: FrameLayout
+  lateinit var shome_unload: FrameLayout
+  lateinit var shome_logout: Button
+  lateinit var shome_trimming: Button
+  lateinit var shome_load_button: com.google.android.material.floatingactionbutton.FloatingActionButton
+  lateinit var shome_unload_button: com.google.android.material.floatingactionbutton.FloatingActionButton
+  
   
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_shome, contentFrameLayout)
-    val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(0).isChecked = true
+    
+    shome_load = findViewById(R.id.shome_load)
+    shome_load_button = findViewById(R.id.shome_load_button)
+    shome_unload_button = findViewById(R.id.shome_unload_button)
+    shome_unload = findViewById(R.id.shome_unload)
+    shome_logout = findViewById(R.id.shome_logout)
+    shome_trimming = findViewById(R.id.shome_trimming)
     
     myHelper = MyHelper(tag, this)
     

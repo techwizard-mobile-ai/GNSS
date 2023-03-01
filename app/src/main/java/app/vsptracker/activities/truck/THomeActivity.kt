@@ -3,27 +3,32 @@ package app.vsptracker.activities.truck
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.FrameLayout
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.activities.common.LMachineActivity
 import app.vsptracker.activities.common.UnloadTaskActivity
 import app.vsptracker.others.MyHelper
-import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_thome.*
 
 class THomeActivity : BaseActivity(), View.OnClickListener {
   private val tag = this::class.java.simpleName
-  
-  
+  lateinit var thome_logout: Button
+  lateinit var thome_load: FrameLayout
+  lateinit var thome_unload: FrameLayout
+  lateinit var thome_load_button: com.google.android.material.floatingactionbutton.FloatingActionButton
+  lateinit var thome_unload_button: com.google.android.material.floatingactionbutton.FloatingActionButton
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_thome, contentFrameLayout)
-    val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(0).isChecked = true
+    
+    thome_load_button = findViewById(R.id.thome_load_button)
+    thome_unload_button = findViewById(R.id.thome_unload_button)
+    thome_load = findViewById(R.id.thome_load)
+    thome_unload = findViewById(R.id.thome_unload)
+    thome_logout = findViewById(R.id.thome_logout)
     
     myHelper = MyHelper(tag, this)
 

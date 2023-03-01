@@ -5,7 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.View
+import android.widget.Button
+import android.widget.Chronometer
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.vsptracker.BaseActivity
@@ -16,8 +19,7 @@ import app.vsptracker.adapters.EOffLoadingAdapter
 import app.vsptracker.apis.delay.EWork
 import app.vsptracker.apis.trip.MyData
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_etoff_loading.*
+
 
 private const val REQUEST_MATERIAL = 2
 
@@ -28,6 +30,16 @@ class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
   private var isWorking = false
   private var eWorkID = 0
   private var startTime1 = 0L
+  lateinit var ework_title: TextView
+  lateinit var ework_action_text: TextView
+  lateinit var et_offload_material: TextView
+  lateinit var ework_offload_action: FrameLayout
+  lateinit var ework_offload_load: FrameLayout
+  lateinit var ework_offload_home: Button
+  lateinit var ework_offload_finish: Button
+  lateinit var chronometer1: Chronometer
+  lateinit var eoff_rv: androidx.recyclerview.widget.RecyclerView
+  
   
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -36,6 +48,16 @@ class ETOffLoadingActivity : BaseActivity(), View.OnClickListener {
     layoutInflater.inflate(R.layout.activity_etoff_loading, contentFrameLayout)
     val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
     navigationView.menu.getItem(0).isChecked = true
+    
+    ework_title = findViewById(R.id.ework_title)
+    ework_offload_action = findViewById(R.id.ework_offload_action)
+    ework_offload_load = findViewById(R.id.ework_offload_load)
+    ework_offload_home = findViewById(R.id.ework_offload_home)
+    ework_offload_finish = findViewById(R.id.ework_offload_finish)
+    et_offload_material = findViewById(R.id.et_offload_material)
+    ework_action_text = findViewById(R.id.ework_action_text)
+    chronometer1 = findViewById(R.id.chronometer1)
+    eoff_rv = findViewById(R.id.eoff_rv)
     
     myHelper.setTag(tag)
     

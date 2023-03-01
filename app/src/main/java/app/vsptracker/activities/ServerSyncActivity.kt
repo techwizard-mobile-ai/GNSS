@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,9 +20,6 @@ import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.ServerSyncModel
 import app.vsptracker.others.MyEnum
 import com.google.gson.GsonBuilder
-import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_server_sync.*
-import kotlinx.android.synthetic.main.ss_updated_notification.view.*
 import okhttp3.*
 import org.json.JSONObject
 import java.io.IOException
@@ -32,11 +31,19 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
   private val adapterList = ArrayList<ServerSyncModel>()
   
   private val serverSyncList = ArrayList<ServerSyncAPI>()
+  lateinit var server_sync_upload: Button
+  lateinit var no_server_sync_data: TextView
+  lateinit var ss_rv: androidx.recyclerview.widget.RecyclerView
   
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_server_sync, contentFrameLayout)
+    
+    server_sync_upload = findViewById(R.id.server_sync_upload)
+    ss_rv = findViewById(R.id.ss_rv)
+    no_server_sync_data = findViewById(R.id.no_server_sync_data)
+    
     populateLists()
     
     server_sync_upload.setOnClickListener(this)
@@ -244,6 +251,8 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
   private fun updatedNotification() {
     
     val mDialogView = LayoutInflater.from(this).inflate(R.layout.ss_updated_notification, null)
+    val delete_conversation_yes = mDialogView.findViewById<TextView>(R.id.delete_conversation_yes)
+    val delete_conversation_cancel = mDialogView.findViewById<TextView>(R.id.delete_conversation_cancel)
     val mBuilder = AlertDialog.Builder(this)
       .setView(mDialogView)
     val mAlertDialog = mBuilder.show()
@@ -257,11 +266,11 @@ class ServerSyncActivity : BaseActivity(), View.OnClickListener {
     window.attributes = wlp
     
     
-    mDialogView.delete_conversation_yes.setOnClickListener {
+    delete_conversation_yes.setOnClickListener {
       mAlertDialog.dismiss()
       myHelper.startHomeActivityByType(MyData())
     }
-    mDialogView.delete_conversation_cancel.setOnClickListener {
+    delete_conversation_cancel.setOnClickListener {
       mAlertDialog.dismiss()
       myHelper.startHomeActivityByType(MyData())
     }

@@ -6,13 +6,15 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.HorizontalScrollView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import app.vsptracker.R
 import app.vsptracker.classes.CheckFormData
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyHelper
-import kotlinx.android.synthetic.main.list_row_check_forms_data.view.*
 
 class CheckFormsDataAdapter(
   val context: Activity,
@@ -24,12 +26,8 @@ class CheckFormsDataAdapter(
   lateinit var myHelper: MyHelper
   private lateinit var db: DatabaseAdapter
   
-  override fun onCreateViewHolder(
-    parent: ViewGroup,
-    viewType: Int
-  ): ViewHolder {
-    val v = LayoutInflater.from(parent.context)
-      .inflate(R.layout.list_row_check_forms_data, parent, false)
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    val v = LayoutInflater.from(parent.context).inflate(R.layout.list_row_check_forms_data, parent, false)
     myHelper = MyHelper(tag, context)
     db = DatabaseAdapter(context)
     return ViewHolder(v)
@@ -37,36 +35,41 @@ class CheckFormsDataAdapter(
   
   @SuppressLint("SetTextI18n")
   override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    val v = holder.itemView
+    val cfd_question = v.findViewById<TextView>(R.id.cfd_question)
+    val cfd_answer = v.findViewById<TextView>(R.id.cfd_answer)
+    val cfd_comment = v.findViewById<TextView>(R.id.cfd_comment)
+    val photo_layout_main = v.findViewById<HorizontalScrollView>(R.id.photo_layout_main)
+    val photo_layout = v.findViewById<LinearLayout>(R.id.photo_layout)
     
     val datum = dataList[position]
     myHelper.log(datum.toString())
-    holder.itemView.cfd_question.text = "${db.getQuestionByID(datum.admin_questions_id).name}"
+    cfd_question.text = "${db.getQuestionByID(datum.admin_questions_id).name}"
     
     holder.setIsRecyclable(false)
     
     when (datum.answer) {
-      "1" -> {
-        holder.itemView.cfd_answer.text = context.resources.getString(R.string.acceptable)
-      }
+      "1" -> cfd_answer.text = context.resources.getString(R.string.acceptable)
+      
       "0" -> {
-        holder.itemView.cfd_answer.text = context.resources.getString(R.string.unacceptable)
-        holder.itemView.cfd_answer.setTextColor(ContextCompat.getColor(context, R.color.red))
+        cfd_answer.text = context.resources.getString(R.string.unacceptable)
+        cfd_answer.setTextColor(ContextCompat.getColor(context, R.color.red))
         when (datum.answerDataObj.comment.length) {
           0 -> {
-            holder.itemView.cfd_comment.visibility = View.GONE
+            cfd_comment.visibility = View.GONE
           }
           else -> {
-            holder.itemView.cfd_comment.text = datum.answerDataObj.comment
-            holder.itemView.cfd_comment.visibility = View.VISIBLE
-            holder.itemView.cfd_comment.setTextColor(ContextCompat.getColor(context, R.color.red))
+            cfd_comment.text = datum.answerDataObj.comment
+            cfd_comment.visibility = View.VISIBLE
+            cfd_comment.setTextColor(ContextCompat.getColor(context, R.color.red))
           }
           
         }
         if (datum.answerDataObj.imagesList.size > 0) {
-          holder.itemView.photo_layout_main.visibility = View.VISIBLE
-          holder.itemView.photo_layout.visibility = View.VISIBLE
+          photo_layout_main.visibility = View.VISIBLE
+          photo_layout.visibility = View.VISIBLE
           datum.answerDataObj.imagesList.forEach {
-            holder.itemView.photo_layout.addView(
+            photo_layout.addView(
               myHelper.addImageToPhotoLayout(
                 context,
                 null,
@@ -77,8 +80,8 @@ class CheckFormsDataAdapter(
             )
           }
         } else {
-          holder.itemView.photo_layout_main.visibility = View.GONE
-          holder.itemView.photo_layout.visibility = View.GONE
+          photo_layout_main.visibility = View.GONE
+          photo_layout.visibility = View.GONE
         }
       }
     }

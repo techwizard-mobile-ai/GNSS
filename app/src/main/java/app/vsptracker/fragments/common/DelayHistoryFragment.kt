@@ -15,8 +15,6 @@ import app.vsptracker.adapters.DelayHistoryAdapter
 import app.vsptracker.apis.delay.EWork
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyHelper
-import kotlinx.android.synthetic.main.fragment_delay_history.view.*
-
 
 class DelayHistoryFragment : Fragment() {
   private var listener: OnFragmentInteractionListener? = null
@@ -48,11 +46,13 @@ class DelayHistoryFragment : Fragment() {
   
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    val v = view
+    val dh_rv = root!!.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.dh_rv)
     
     val dataList = db.getWaits()
     val mAdapter = DelayHistoryAdapter(context as Activity, dataList)
-    root!!.dh_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
-    root!!.dh_rv!!.adapter = mAdapter
+    dh_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
+    dh_rv!!.adapter = mAdapter
   }
   
   override fun onAttach(context: Context) {

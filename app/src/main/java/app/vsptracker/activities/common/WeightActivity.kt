@@ -4,26 +4,28 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
 import android.widget.FrameLayout
+import android.widget.TextView
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.others.MyHelper
-import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_weight.*
 
 class WeightActivity : BaseActivity(), View.OnClickListener {
   
   private val tag = this::class.java.simpleName
   
+  lateinit var w1_next: TextView
+  lateinit var sload_weight: EditText
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_weight, contentFrameLayout)
-    val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(0).isChecked = true
+    
+    w1_next = findViewById(R.id.w1_next)
+    sload_weight = findViewById(R.id.sload_weight)
     
     myHelper = MyHelper(tag, this)
     

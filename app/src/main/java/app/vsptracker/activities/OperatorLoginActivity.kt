@@ -14,7 +14,7 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -36,8 +36,6 @@ import app.vsptracker.others.Utils
 import app.vsptracker.others.autologout.ForegroundService
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_operator_login.*
-import kotlinx.android.synthetic.main.dialog_error.view.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -55,6 +53,13 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
   private lateinit var retrofit: Retrofit
   private lateinit var retrofitAPI: RetrofitAPI
   private lateinit var myDataPushSave: MyDataPushSave
+  lateinit var signin_pb: ProgressBar
+  lateinit var signin_image: ImageView
+  lateinit var signin_pin: EditText
+  lateinit var login_main_layout: ScrollView
+  lateinit var signin_signin: TextView
+  lateinit var company_signin: TextView
+  
   
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -65,6 +70,13 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
     }
+    
+    signin_pb = findViewById(R.id.signin_pb)
+    signin_image = findViewById(R.id.signin_image)
+    signin_pin = findViewById(R.id.signin_pin)
+    login_main_layout = findViewById(R.id.login_main_layout)
+    signin_signin = findViewById(R.id.signin_signin)
+    company_signin = findViewById(R.id.company_signin)
     
     myHelper = MyHelper(tag, this)
     myHelper.setProgressBar(signin_pb)
@@ -244,10 +256,14 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
   fun showErrorDialog(title: String, explanation: String = "") {
     
     val mDialogView = LayoutInflater.from(this).inflate(R.layout.dialog_error, null)
-    mDialogView.error_title.text = title
+    val error_title = mDialogView.findViewById<TextView>(R.id.error_title)
+    val error_explanation = mDialogView.findViewById<TextView>(R.id.error_explanation)
+    val error_ok = mDialogView.findViewById<TextView>(R.id.error_ok)
+    
+    error_title.text = title
     if (explanation.isNotBlank()) {
-      mDialogView.error_explanation.text = explanation
-      mDialogView.error_explanation.visibility = View.VISIBLE
+      error_explanation.text = explanation
+      error_explanation.visibility = View.VISIBLE
     }
     
     val mBuilder = AlertDialog.Builder(this).setView(mDialogView)
@@ -260,7 +276,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
     wlp.gravity = Gravity.CENTER
     window.attributes = wlp
     
-    mDialogView.error_ok.setOnClickListener {
+    error_ok.setOnClickListener {
       mAlertDialog.dismiss()
       locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager?
       try {

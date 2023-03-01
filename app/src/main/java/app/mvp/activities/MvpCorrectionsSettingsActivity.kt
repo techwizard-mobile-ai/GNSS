@@ -6,23 +6,32 @@ import android.view.View
 import android.widget.FrameLayout
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
+import app.vsptracker.databinding.ActivityMvpCorrectionsSettingsBinding
 import app.vsptracker.others.Utils.tag
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_mvp_corrections_settings.*
+
+//import kotlinx.android.synthetic.main.activity_mvp_corrections_settings.*
 
 class MvpCorrectionsSettingsActivity : BaseActivity(), View.OnClickListener {
+  private lateinit var binding: ActivityMvpCorrectionsSettingsBinding
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    binding = ActivityMvpCorrectionsSettingsBinding.inflate(layoutInflater)
+    val view = binding.root
     
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_mvp_corrections_settings, contentFrameLayout)
     val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
     navigationView.menu.getItem(6).isChecked = true
     myHelper.setTag(tag)
-    
-    mvp_corrections_bluetooth_settings.setOnClickListener(this);
-    mvp_corrections_receiver_settings.setOnClickListener(this);
-    mvp_corrections_ntrip_settings.setOnClickListener(this);
+
+
+//    mvp_corrections_bluetooth_settings.setOnClickListener(this);
+    binding.mvpCorrectionsBluetoothSettings.setOnClickListener(this)
+//    mvp_corrections_receiver_settings.setOnClickListener(this);
+    binding.mvpCorrectionsReceiverSettings.setOnClickListener(this)
+    binding.mvpCorrectionsNtripSettings.setOnClickListener(this)
+//    mvp_corrections_ntrip_settings.setOnClickListener(this);
     
   }
   

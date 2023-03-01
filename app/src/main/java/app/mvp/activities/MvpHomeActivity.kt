@@ -6,16 +6,19 @@ import android.os.Bundle
 import android.os.RemoteException
 import android.util.Base64
 import android.view.View
+import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.activities.LoginActivity
 import app.vsptracker.apis.login.LoginAPI
 import app.vsptracker.apis.trip.MyData
+//import app.vsptracker.databinding.ActivityMvpHomeBinding
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_mvp_home.*
+//import kotlinx.android.synthetic.main.activity_base.*
+//import kotlinx.android.synthetic.main.activity_mvp_home.*
 import java.net.InetSocketAddress
 import java.net.Socket
 import java.net.SocketAddress
@@ -23,21 +26,44 @@ import java.net.SocketAddress
 
 class MvpHomeActivity : BaseActivity(), View.OnClickListener {
   private val tag = this::class.java.simpleName
+  
+  lateinit var mvp_main_taputapu: ImageView
+  lateinit var mvp_main_portal: ImageView
+  lateinit var mvp_main_logout: Button
+  lateinit var mvp_main_taputapu1: Button
+  lateinit var mvp_main_portal1: Button
+  
+  //  private lateinit var binding: ActivityMvpHomeBinding
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+//    binding = ActivityMvpHomeBinding.inflate(layoutInflater)
+//    val view = binding.root
     
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_mvp_home, contentFrameLayout)
     myHelper.setTag(tag)
     
+    mvp_main_taputapu = findViewById(R.id.mvp_main_taputapu)
+    mvp_main_portal = findViewById(R.id.mvp_main_portal)
+    mvp_main_logout = findViewById(R.id.mvp_main_logout)
+    mvp_main_taputapu1 = findViewById(R.id.mvp_main_taputapu1)
+    mvp_main_portal1 = findViewById(R.id.mvp_main_portal1)
+    
     Glide.with(this@MvpHomeActivity).load(ContextCompat.getDrawable(this@MvpHomeActivity, R.drawable.mvp_home_logo)).into(mvp_main_taputapu)
     Glide.with(this@MvpHomeActivity).load(ContextCompat.getDrawable(this@MvpHomeActivity, R.drawable.hub_logo_complete)).into(mvp_main_portal)
+//    Glide.with(this@MvpHomeActivity).load(ContextCompat.getDrawable(this@MvpHomeActivity, R.drawable.mvp_home_logo)).into(binding.mvpMainTaputapu)
+//    Glide.with(this@MvpHomeActivity).load(ContextCompat.getDrawable(this@MvpHomeActivity, R.drawable.hub_logo_complete)).into(binding.mvpMainPortal)
     
     mvp_main_taputapu.setOnClickListener(this@MvpHomeActivity)
+//    binding.mvpMainTaputapu.setOnClickListener(this@MvpHomeActivity)
     mvp_main_portal.setOnClickListener(this@MvpHomeActivity)
+//    binding.mvpMainPortal.setOnClickListener(this@MvpHomeActivity)
     mvp_main_logout.setOnClickListener(this@MvpHomeActivity)
+//    binding.mvpMainLogout.setOnClickListener(this@MvpHomeActivity)
     mvp_main_taputapu1.setOnClickListener(this@MvpHomeActivity)
+//    binding.mvpMainTaputapu1.setOnClickListener(this@MvpHomeActivity)
     mvp_main_portal1.setOnClickListener(this@MvpHomeActivity)
+//    binding.mvpMainPortal1.setOnClickListener(this@MvpHomeActivity)
   }
   
   override fun onResume() {

@@ -3,6 +3,8 @@ package app.mvp.activities
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
+import android.widget.EditText
 import android.widget.FrameLayout
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
@@ -10,9 +12,9 @@ import app.vsptracker.activities.LoginActivity
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.others.MyEnum.Companion.USER_ROLE_MVP_COMPANY_STANDARD_USER
 import com.google.gson.GsonBuilder
-import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_mvp_orgs_create_folder.*
-import kotlinx.android.synthetic.main.app_bar_base.*
+//import kotlinx.android.synthetic.main.activity_base.*
+//import kotlinx.android.synthetic.main.activity_mvp_orgs_create_folder.*
+//import kotlinx.android.synthetic.main.app_bar_base.*
 import okhttp3.*
 import okio.IOException
 import org.json.JSONObject
@@ -21,13 +23,18 @@ import org.json.JSONObject
 class MvpOrgsCreateFolderActivity : BaseActivity(), View.OnClickListener {
   
   private val tag = this::class.java.simpleName
-  
+  lateinit var back: Button
+  lateinit var create: Button
+  lateinit var folder_name: EditText
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_mvp_orgs_create_folder, contentFrameLayout)
     
+    back = findViewById(R.id.back)
+    create = findViewById(R.id.create)
+    folder_name = findViewById(R.id.folder_name)
     myHelper.setTag(tag)
     
     val bundle: Bundle? = intent.extras

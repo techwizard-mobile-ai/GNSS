@@ -5,13 +5,12 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.TextView
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
-import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_rload.*
 
 private const val REQUEST_MACHINE = 1
 private const val REQUEST_MATERIAL = 2
@@ -21,13 +20,25 @@ private const val REQUEST_WEIGHT = 4
 class RLoadActivity : BaseActivity(), View.OnClickListener {
   
   private val tag = this::class.java.simpleName
-  
+  lateinit var trload_load: Button
+  lateinit var rload_home: Button
+  lateinit var rload_finish: Button
+  lateinit var trload_weight: TextView
+  lateinit var trload_machine: TextView
+  lateinit var trload_material: TextView
+  lateinit var trload_location: TextView
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_rload, contentFrameLayout)
-    val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(0).isChecked = true
+    
+    trload_load = findViewById(R.id.trload_load)
+    trload_weight = findViewById(R.id.trload_weight)
+    trload_machine = findViewById(R.id.trload_machine)
+    trload_material = findViewById(R.id.trload_material)
+    trload_location = findViewById(R.id.trload_location)
+    rload_home = findViewById(R.id.rload_home)
+    rload_finish = findViewById(R.id.rload_finish)
     
     myHelper.setTag(tag)
     

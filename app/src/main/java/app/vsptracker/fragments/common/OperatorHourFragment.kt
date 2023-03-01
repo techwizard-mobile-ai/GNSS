@@ -15,7 +15,6 @@ import app.vsptracker.adapters.OperatorHourAdapter
 import app.vsptracker.apis.delay.EWork
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyHelper
-import kotlinx.android.synthetic.main.fragment_operator_hour.view.*
 
 
 class OperatorHourFragment : Fragment() {
@@ -49,10 +48,13 @@ class OperatorHourFragment : Fragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     
+    val v = view
+    val oh_rv = root!!.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.oh_rv)
+    
     val dataList = db.getOperatorsHours()
     val mAdapter = OperatorHourAdapter(context as Activity, dataList)
-    root!!.oh_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
-    root!!.oh_rv!!.adapter = mAdapter
+    oh_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
+    oh_rv!!.adapter = mAdapter
   }
   
   override fun onAttach(context: Context) {

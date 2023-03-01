@@ -4,25 +4,29 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.TextView
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.activities.common.LocationActivity
 import app.vsptracker.apis.trip.MyData
-import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_ehome.*
 
 class EHomeActivity : BaseActivity(), View.OnClickListener {
   private val tag = this::class.java.simpleName
   
-  
+  lateinit var ehome_logout: TextView
+  lateinit var ehome_loading: TextView
+  lateinit var ehome_trenching: TextView
+  lateinit var ehome_digging: TextView
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_ehome, contentFrameLayout)
-    val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(0).isChecked = true
+    
+    ehome_logout = findViewById(R.id.ehome_logout)
+    ehome_loading = findViewById(R.id.ehome_loading)
+    ehome_trenching = findViewById(R.id.ehome_trenching)
+    ehome_digging = findViewById(R.id.ehome_digging)
     
     myHelper.setTag(tag)
     

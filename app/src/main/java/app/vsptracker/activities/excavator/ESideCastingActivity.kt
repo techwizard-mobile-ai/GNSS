@@ -5,16 +5,16 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.View
+import android.widget.Button
+import android.widget.Chronometer
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.activities.HourMeterStopActivity
 import app.vsptracker.apis.delay.EWork
 import app.vsptracker.apis.trip.MyData
-import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_eside_casting.*
 
 class ESideCastingActivity : BaseActivity(), View.OnClickListener {
   private val tag = this::class.java.simpleName
@@ -23,14 +23,28 @@ class ESideCastingActivity : BaseActivity(), View.OnClickListener {
   private var isWorking = false
   private var startTime1 = 0L
   private lateinit var eWork: EWork
+  lateinit var ework_title: TextView
+  lateinit var ework_action_text: TextView
+  lateinit var ework_action: FrameLayout
+  lateinit var ework_home: Button
+  lateinit var ework_finish: Button
+  lateinit var chronometer1: Chronometer
+  lateinit var ework_action_fab: com.google.android.material.floatingactionbutton.FloatingActionButton
+  
   
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_eside_casting, contentFrameLayout)
-    val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(0).isChecked = true
+    
+    ework_title = findViewById(R.id.ework_title)
+    ework_action = findViewById(R.id.ework_action)
+    ework_home = findViewById(R.id.ework_home)
+    ework_finish = findViewById(R.id.ework_finish)
+    ework_action_fab = findViewById(R.id.ework_action_fab)
+    ework_action_text = findViewById(R.id.ework_action_text)
+    chronometer1 = findViewById(R.id.chronometer1)
     
     myHelper.setTag(tag)
     

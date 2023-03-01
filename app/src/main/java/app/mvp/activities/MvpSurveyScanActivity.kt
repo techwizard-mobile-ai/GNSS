@@ -16,8 +16,7 @@ import android.os.Handler
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.widget.FrameLayout
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -44,9 +43,9 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.maps.android.data.kml.KmlLayer
-import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_mvp_survey_scan.*
-import kotlinx.android.synthetic.main.app_bar_base.*
+//import kotlinx.android.synthetic.main.activity_base.*
+//import kotlinx.android.synthetic.main.activity_mvp_survey_scan.*
+//import kotlinx.android.synthetic.main.app_bar_base.*
 import java.io.File
 import java.io.FileInputStream
 import java.text.SimpleDateFormat
@@ -73,6 +72,20 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
   private var isCapturingImage = false
   private var isCapturingImagePause = false
   var checkpoint_label = "Label Scan"
+  
+  lateinit var mvp_survey_scan_capture: Button
+  lateinit var mvp_survey_scan_back: Button
+  lateinit var mvp_survey_scan_pause: Button
+  lateinit var mvp_survey_scan_settings: Button
+  lateinit var mvp_survey_scan_label: EditText
+  lateinit var viewFinder: androidx.camera.view.PreviewView
+  lateinit var mvp_survey_scan_gps_data_acc: TextView
+  lateinit var mvp_survey_scan_gps_data_lat: TextView
+  lateinit var mvp_survey_scan_gps_data_long: TextView
+  lateinit var mvp_survey_scan_gps_data_alt: TextView
+  lateinit var mvp_survey_scan_gps_data_speed: TextView
+  lateinit var mvp_survey_scan_gps_data_bearing: TextView
+  lateinit var mvp_survey_scan_gps_data_time: TextView
   
   var mStatusChecker: Runnable = object : Runnable {
     override fun run() {
@@ -103,6 +116,19 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     super.onCreate(savedInstanceState)
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_mvp_survey_scan, contentFrameLayout)
+    
+    mvp_survey_scan_capture = findViewById(R.id.mvp_survey_scan_capture)
+    mvp_survey_scan_back = findViewById(R.id.mvp_survey_scan_back)
+    mvp_survey_scan_pause = findViewById(R.id.mvp_survey_scan_pause)
+    mvp_survey_scan_settings = findViewById(R.id.mvp_survey_scan_settings)
+    mvp_survey_scan_label = findViewById(R.id.mvp_survey_scan_label)
+    viewFinder = findViewById(R.id.viewFinder)
+    mvp_survey_scan_gps_data_acc = findViewById(R.id.mvp_survey_scan_gps_data_acc)
+    mvp_survey_scan_gps_data_lat = findViewById(R.id.mvp_survey_scan_gps_data_lat)
+    mvp_survey_scan_gps_data_long = findViewById(R.id.mvp_survey_scan_gps_data_long)
+    mvp_survey_scan_gps_data_alt = findViewById(R.id.mvp_survey_scan_gps_data_alt)
+    mvp_survey_scan_gps_data_speed = findViewById(R.id.mvp_survey_scan_gps_data_speed)
+    mvp_survey_scan_gps_data_bearing = findViewById(R.id.mvp_survey_scan_gps_data_bearing)
     
     myHelper.setTag(tag)
     myData = myHelper.getLastJourney()
@@ -142,7 +168,8 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
   override fun onClick(view: View?) {
     when (view!!.id) {
       R.id.mvp_survey_scan_back -> {
-        finish()
+//        finish()
+        myHelper.log("mInterval:$mInterval")
       }
       R.id.mvp_survey_scan_capture -> {
         checkpoint_label = mvp_survey_scan_label.text.toString()
@@ -402,7 +429,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
   
   val locationListener1: LocationListener = object : LocationListener {
     override fun onLocationChanged(location: Location) {
-//      myHelper.log("Status onLocationChanged.")
+      myHelper.log("onLocationChanged")
       location1 = location
       refreshViews(location1)
     }

@@ -366,6 +366,7 @@ class MyData : Serializable {
   override fun toString(): String {
     return "MyData(" +
             "id=$id, " +
+            "timer_interval=$timer_interval, " +
             "upload_status=$upload_status, " +
             "admin_file_type_id=$admin_file_type_id, " +
             "org_id=$org_id, " +

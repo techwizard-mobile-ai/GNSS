@@ -67,13 +67,6 @@
       android:layout_weight="0.3"
       android:text="@string/finish" />
 
-    <!--        <Button-->
-    <!--            android:id="@+id/eload_back"-->
-    <!--            style="@style/back_button"-->
-    <!--            android:layout_width="0dp"-->
-    <!--            android:layout_weight=".3"-->
-    <!--            android:background="@color/colorPrimary"-->
-    <!--            android:text="@string/finish" />-->
 
     <Button
       android:id="@+id/eload_finish"

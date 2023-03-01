@@ -4,13 +4,13 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
-import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_mvp_start_data_collection.*
 
 private const val REQUEST_MACHINE = 1
 private const val REQUEST_MATERIAL = 2
@@ -20,6 +20,11 @@ private const val REQUEST_WEIGHT = 4
 class MvpStartDataCollectionActivity : BaseActivity(), View.OnClickListener {
   
   private val tag = this::class.java.simpleName
+  lateinit var mvp_load_project: TextView
+  lateinit var mvp_load_title: TextView
+  lateinit var mvp_load_folder: TextView
+  lateinit var mvp_load_home: Button
+  lateinit var mvp_load_load: Button
   
   var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
     if (result.resultCode == Activity.RESULT_OK) {
@@ -48,6 +53,12 @@ class MvpStartDataCollectionActivity : BaseActivity(), View.OnClickListener {
     
     myData = myHelper.getLastJourney()
     myHelper.log("myData:$myData")
+    
+    mvp_load_project = findViewById(R.id.mvp_load_project)
+    mvp_load_title = findViewById(R.id.mvp_load_title)
+    mvp_load_folder = findViewById(R.id.mvp_load_folder)
+    mvp_load_home = findViewById(R.id.mvp_load_home)
+    mvp_load_load = findViewById(R.id.mvp_load_load)
     
     mvp_load_title.text = getString(R.string.data_collection_details)
     

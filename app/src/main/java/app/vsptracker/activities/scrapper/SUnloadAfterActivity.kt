@@ -3,28 +3,32 @@ package app.vsptracker.activities.scrapper
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.FrameLayout
 import app.vsptracker.BaseActivity
-import app.vsptracker.others.MyHelper
 import app.vsptracker.R
 import app.vsptracker.activities.HourMeterStopActivity
 import app.vsptracker.activities.common.MaterialActivity
 import app.vsptracker.activities.common.RLoadActivity
 import app.vsptracker.apis.trip.MyData
-import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_sunload_after.*
+import app.vsptracker.others.MyHelper
 
 class SUnloadAfterActivity : BaseActivity(), View.OnClickListener {
   private val tag = this::class.java.simpleName
-  
+  lateinit var tul_back_load: Button
+  lateinit var sul_after_new: Button
+  lateinit var sul_after_repeat: Button
+  lateinit var sul_after_finish: Button
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_sunload_after, contentFrameLayout)
-    val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(0).isChecked = true
+    
+    tul_back_load = findViewById(R.id.tul_back_load)
+    sul_after_new = findViewById(R.id.sul_after_new)
+    sul_after_repeat = findViewById(R.id.sul_after_repeat)
+    sul_after_finish = findViewById(R.id.sul_after_finish)
     
     myHelper = MyHelper(tag, this)
     

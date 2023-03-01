@@ -3,25 +3,40 @@ package app.vsptracker.activities.common
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
-import android.widget.FrameLayout
+import android.widget.*
 import androidx.core.content.ContextCompat
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
-import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_machine_breakdown.*
 
 class MachineBreakdownActivity : BaseActivity(), View.OnClickListener {
   
   private val tag = this::class.java.simpleName
   private var startReading = ""
+  lateinit var machine_breakdown_title: TextView
+  lateinit var machine_breakdown_action_text: TextView
+  lateinit var sfinish_reading: EditText
+  lateinit var machine_breakdown_back: Button
+  lateinit var machine_breakdown_action: FrameLayout
+  lateinit var sfinish_minus: ImageView
+  lateinit var sfinish_plus: ImageView
+  lateinit var day_works_button: com.google.android.material.floatingactionbutton.FloatingActionButton
+  
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_machine_breakdown, contentFrameLayout)
-    val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(3).isChecked = true
+    
+    machine_breakdown_title = findViewById(R.id.machine_breakdown_title)
+    day_works_button = findViewById(R.id.day_works_button)
+    machine_breakdown_action_text = findViewById(R.id.machine_breakdown_action_text)
+    sfinish_reading = findViewById(R.id.sfinish_reading)
+    machine_breakdown_back = findViewById(R.id.machine_breakdown_back)
+    machine_breakdown_action = findViewById(R.id.machine_breakdown_action)
+    sfinish_minus = findViewById(R.id.sfinish_minus)
+    sfinish_plus = findViewById(R.id.sfinish_plus)
+    
     myHelper.setTag(tag)
     
     if (!myHelper.getIsMachineStopped()) {
@@ -50,6 +65,11 @@ class MachineBreakdownActivity : BaseActivity(), View.OnClickListener {
     machine_breakdown_action.setOnClickListener(this)
     sfinish_minus.setOnClickListener(this)
     sfinish_plus.setOnClickListener(this)
+  }
+  
+  override fun onResume() {
+    super.onResume()
+    base_nav_view.setCheckedItem(base_nav_view.menu.getItem(3))
   }
   
   override fun onClick(view: View?) {

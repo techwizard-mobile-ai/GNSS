@@ -6,9 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.TextView
 import app.vsptracker.R
 import app.vsptracker.classes.Material
-import kotlinx.android.synthetic.main.list_row_select_material.view.*
+
 
 class SelectMachineNumberAdapter(context: Activity, private var materialList: List<Material>) :
         BaseAdapter() {
@@ -31,7 +32,8 @@ class SelectMachineNumberAdapter(context: Activity, private var materialList: Li
   override fun getView(i: Int, view: View?, viewGroup: ViewGroup): View {
     
     val row = flater.inflate(R.layout.list_row_select_material, null)
-    row.list_row_select_material_name.setText(materialList[i].number)
+    val list_row_select_material_name = row.findViewById<TextView>(R.id.list_row_select_material_name)
+    list_row_select_material_name.setText(materialList[i].number)
     return row
     
   }

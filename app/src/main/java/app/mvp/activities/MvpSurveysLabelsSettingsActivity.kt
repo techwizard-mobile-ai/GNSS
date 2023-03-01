@@ -5,9 +5,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.FrameLayout
-import android.widget.GridView
-import android.widget.RadioGroup
+import android.widget.*
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.adapters.CustomGridLMachine
@@ -17,8 +15,6 @@ import app.vsptracker.others.MyEnum
 import com.github.dhaval2404.colorpicker.MaterialColorPickerDialog
 import com.github.dhaval2404.colorpicker.model.ColorShape
 import com.github.dhaval2404.colorpicker.model.ColorSwatch
-import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_mvp_surveys_labels_settings.*
 
 
 class MvpSurveysLabelsSettingsActivity : BaseActivity(), View.OnClickListener {
@@ -33,11 +29,28 @@ class MvpSurveysLabelsSettingsActivity : BaseActivity(), View.OnClickListener {
   private var selected_color_g = 109
   private var selected_color_b = 20
   
+  lateinit var mvp_survey_label_name: EditText
+  lateinit var mvp_survey_label_search: EditText
+  lateinit var settings_title: TextView
+  lateinit var settings_back: Button
+  lateinit var settings_save: Button
+  lateinit var survey_label_hex_color: ImageView
+  lateinit var mvp_survey_label_search_clear: ImageView
+  lateinit var survey_label_type: RadioGroup
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     
     val contentFrameLayout = findViewById<FrameLayout>(app.vsptracker.R.id.base_content_frame)
     layoutInflater.inflate(app.vsptracker.R.layout.activity_mvp_surveys_labels_settings, contentFrameLayout)
+    
+    mvp_survey_label_name = findViewById(R.id.mvp_survey_label_name)
+    settings_title = findViewById(R.id.settings_title)
+    settings_back = findViewById(R.id.settings_back)
+    settings_save = findViewById(R.id.settings_save)
+    survey_label_hex_color = findViewById(R.id.survey_label_hex_color)
+    mvp_survey_label_search_clear = findViewById(R.id.mvp_survey_label_search_clear)
+    survey_label_type = findViewById(R.id.survey_label_type)
+    mvp_survey_label_search = findViewById(R.id.mvp_survey_label_search)
     
     myHelper.setTag(tag)
     

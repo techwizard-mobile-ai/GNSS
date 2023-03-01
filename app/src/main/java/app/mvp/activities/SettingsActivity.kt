@@ -3,23 +3,41 @@ package app.mvp.activities
 import android.app.Activity
 import android.os.Bundle
 import android.view.View
-import android.widget.FrameLayout
+import android.widget.*
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.others.MyEnum.Companion.SETTINGS_TYPE_MVP_SCAN
-import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_settings.*
+
+//import kotlinx.android.synthetic.main.activity_base.*
+//import kotlinx.android.synthetic.main.activity_settings.*
 
 class SettingsActivity : BaseActivity(), View.OnClickListener {
   private val tag = this::class.java.simpleName
   private var mInterval: Long = 1000 // 1 seconds by default, can be changed later
   
+  lateinit var settings_title: TextView
+  lateinit var timer: TextView
+  lateinit var settings_timer_title: TextView
+  lateinit var settings_timer_layout: LinearLayout
+  lateinit var timer_minus: ImageView
+  lateinit var timer_plus: ImageView
+  lateinit var settings_back: Button
+  lateinit var settings_save: Button
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_settings, contentFrameLayout)
+    
+    settings_title = findViewById(R.id.settings_title)
+    timer = findViewById(R.id.timer)
+    settings_timer_layout = findViewById(R.id.settings_timer_layout)
+    settings_timer_title = findViewById(R.id.settings_timer_title)
+    timer_minus = findViewById(R.id.timer_minus)
+    timer_plus = findViewById(R.id.timer_plus)
+    settings_back = findViewById(R.id.settings_back)
+    settings_save = findViewById(R.id.settings_save)
     
     myHelper.setTag(tag)
     

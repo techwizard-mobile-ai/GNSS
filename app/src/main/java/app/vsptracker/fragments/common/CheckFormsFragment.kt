@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,8 +22,6 @@ import app.vsptracker.apis.trip.MyData
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyEnum
 import app.vsptracker.others.MyHelper
-import kotlinx.android.synthetic.main.fragment_check_forms.*
-import kotlinx.android.synthetic.main.fragment_check_forms.view.*
 
 
 class CheckFormsFragment : Fragment() {
@@ -55,6 +55,11 @@ class CheckFormsFragment : Fragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     
+    val no_cf = root!!.findViewById<TextView>(R.id.no_cf)
+    val cf_title = root!!.findViewById<TextView>(R.id.cf_title)
+    val checkforms_upload = root!!.findViewById<Button>(R.id.checkforms_upload)
+    val cf_rv = root!!.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.cf_rv)
+    
     myHelper.log("type: $type")
     
     var title = ""
@@ -79,8 +84,8 @@ class CheckFormsFragment : Fragment() {
           }
           else -> {
             val mAdapter = CheckFormsAdapter(context as Activity, dueCheckForms, type)
-            root!!.cf_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
-            root!!.cf_rv!!.adapter = mAdapter
+            cf_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
+            cf_rv!!.adapter = mAdapter
           }
         }
       }
@@ -94,8 +99,8 @@ class CheckFormsFragment : Fragment() {
           }
           else -> {
             val mAdapter = CheckFormsAdapter(context as Activity, allCheckForms, type)
-            root!!.cf_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
-            root!!.cf_rv!!.adapter = mAdapter
+            cf_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
+            cf_rv!!.adapter = mAdapter
           }
         }
       }
@@ -109,9 +114,9 @@ class CheckFormsFragment : Fragment() {
           }
           else -> {
             val mAdapter = CheckFormsCompletedAdapter(context as Activity, completedCheckForms, type, supportFragmentManager1)
-            root!!.cf_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
-            root!!.cf_rv!!.adapter = mAdapter
-            root!!.checkforms_upload.visibility = View.GONE
+            cf_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
+            cf_rv!!.adapter = mAdapter
+            checkforms_upload.visibility = View.GONE
 /*                        root!!.checkforms_upload.setOnClickListener {
                             
                             completedCheckForms.forEach { completedCheckForm ->
@@ -149,8 +154,8 @@ class CheckFormsFragment : Fragment() {
           }
           else -> {
             val mAdapter = CheckFormsDataAdapter(context as Activity, checkFormData)
-            root!!.cf_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
-            root!!.cf_rv!!.adapter = mAdapter
+            cf_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
+            cf_rv!!.adapter = mAdapter
           }
         }
       }
@@ -164,9 +169,9 @@ class CheckFormsFragment : Fragment() {
           }
           else -> {
             val mAdapter = CheckFormsCompletedAdapter(context as Activity, completedServerCheckForms, type, supportFragmentManager1)
-            root!!.cf_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
-            root!!.cf_rv!!.adapter = mAdapter
-            root!!.checkforms_upload.visibility = View.GONE
+            cf_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
+            cf_rv!!.adapter = mAdapter
+            checkforms_upload.visibility = View.GONE
           }
         }
       }

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,8 +16,6 @@ import app.vsptracker.adapters.EOffLoadingAdapter
 import app.vsptracker.apis.delay.EWork
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyHelper
-import kotlinx.android.synthetic.main.fragment_eoffloading_loads.*
-import kotlinx.android.synthetic.main.fragment_eoffloading_loads.view.*
 
 
 class EOffloadingLoadsFragment : Fragment() {
@@ -54,6 +53,9 @@ class EOffloadingLoadsFragment : Fragment() {
   
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    val v = view
+    val eoff_fragment_rv = root!!.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.eoff_fragment_rv)
+    val offloading_loads_title = root!!.findViewById<TextView>(R.id.offloading_loads_title)
     
     if (eWork.workType == 1) {
       offloading_loads_title.text = getString(R.string.general_digging_loads_history)
@@ -66,9 +68,9 @@ class EOffloadingLoadsFragment : Fragment() {
         eWork.id
       )
     )
-    root!!.eoff_fragment_rv.layoutManager =
+    eoff_fragment_rv.layoutManager =
       LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
-    root!!.eoff_fragment_rv!!.adapter = mAdapter
+    eoff_fragment_rv!!.adapter = mAdapter
   }
   
   fun onButtonPressed(uri: Uri) {

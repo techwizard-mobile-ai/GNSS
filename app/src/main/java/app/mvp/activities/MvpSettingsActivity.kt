@@ -3,20 +3,29 @@ package app.mvp.activities
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.FrameLayout
-import android.widget.RadioGroup
+import android.widget.*
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.others.MyEnum.Companion.APP_SETTINGS_PICTURES_UPLOAD_AUTOMATICALLY
 import app.vsptracker.others.MyEnum.Companion.APP_SETTINGS_PICTURES_UPLOAD_MANUALLY
-import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_mvp_settings.*
+
+//import kotlinx.android.synthetic.main.activity_base.*
+//import kotlinx.android.synthetic.main.activity_mvp_settings.*
 
 class MvpSettingsActivity : BaseActivity(), View.OnClickListener {
   private val tag = this::class.java.simpleName
   private var mInterval: Int = 1
   private var pictures_upload: Int = APP_SETTINGS_PICTURES_UPLOAD_MANUALLY
+  lateinit var settings_title: TextView
+  lateinit var timer: TextView
+  lateinit var settings_save: Button
+  lateinit var settings_back: Button
+  lateinit var timer_minus: ImageView
+  lateinit var timer_plus: ImageView
+  lateinit var pictures_upload_type: RadioGroup
+  lateinit var pictures_upload_type_automatically: RadioButton
+  lateinit var pictures_upload_type_manually: RadioButton
   
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -31,6 +40,16 @@ class MvpSettingsActivity : BaseActivity(), View.OnClickListener {
       myHelper.log("myData:$myData")
       settings_title.text = myData.name
     }
+    settings_title = findViewById(R.id.settings_title)
+    settings_save = findViewById(R.id.settings_save)
+    settings_back = findViewById(R.id.settings_back)
+    timer_minus = findViewById(R.id.timer_minus)
+    timer_plus = findViewById(R.id.timer_plus)
+    pictures_upload_type = findViewById(R.id.pictures_upload_type)
+    timer = findViewById(R.id.timer)
+    pictures_upload_type_automatically = findViewById(R.id.pictures_upload_type_automatically)
+    pictures_upload_type_manually = findViewById(R.id.pictures_upload_type_manually)
+    
     
     settings_save.setOnClickListener(this@MvpSettingsActivity)
     settings_back.setOnClickListener(this@MvpSettingsActivity)

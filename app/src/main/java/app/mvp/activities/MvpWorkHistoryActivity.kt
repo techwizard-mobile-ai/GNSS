@@ -11,7 +11,8 @@ import app.vsptracker.apis.trip.MyData
 import app.vsptracker.fragments.common.DelayHistoryFragment
 import app.vsptracker.fragments.truck.LoadingHistoryFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.android.synthetic.main.activity_base.*
+
+//import kotlinx.android.synthetic.main.activity_base.*
 
 private const val LOADING_HISTORY: String = "LOADING_HISTORY"
 private const val DELAY_HISTORY: String = "DELAY_HISTORY"

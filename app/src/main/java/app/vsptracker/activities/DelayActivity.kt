@@ -4,31 +4,38 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.View
+import android.widget.Chronometer
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.apis.delay.EWork
 import app.vsptracker.classes.GPSLocation
-import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_delay.*
 
 class DelayActivity : BaseActivity(),
                       View.OnClickListener {
   
   private val tag = this::class.java.simpleName
   private lateinit var eWork: EWork
+  lateinit var day_works_chronometer: Chronometer
+  lateinit var day_work_title: TextView
+  lateinit var day_works_action_text: TextView
+  lateinit var day_works_action: FrameLayout
+  
+  lateinit var day_works_button: com.google.android.material.floatingactionbutton.FloatingActionButton
+  
   
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    val contentFrameLayout =
-      findViewById<FrameLayout>(R.id.base_content_frame)
-    layoutInflater.inflate(
-      R.layout.activity_delay,
-      contentFrameLayout
-    )
-    val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(1).isChecked = true
+    val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
+    layoutInflater.inflate(R.layout.activity_delay, contentFrameLayout)
+    
+    day_works_chronometer = findViewById(R.id.day_works_chronometer)
+    day_work_title = findViewById(R.id.day_work_title)
+    day_works_action_text = findViewById(R.id.day_works_action_text)
+    day_works_button = findViewById(R.id.day_works_button)
+    day_works_action = findViewById(R.id.day_works_action)
     
     myHelper.setTag(tag)
     eWork = EWork()
@@ -64,6 +71,10 @@ class DelayActivity : BaseActivity(),
     day_works_action.setOnClickListener(this)
   }
   
+  override fun onResume() {
+    super.onResume()
+    base_nav_view.setCheckedItem(base_nav_view.menu.getItem(1))
+  }
   
   override fun onClick(view: View?) {
     when (view!!.id) {

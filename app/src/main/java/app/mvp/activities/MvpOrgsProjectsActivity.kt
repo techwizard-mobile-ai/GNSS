@@ -4,17 +4,16 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.AdapterView
-import android.widget.FrameLayout
-import android.widget.GridView
+import android.widget.*
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.adapters.CustomGridLMachine
 import app.vsptracker.apis.mvporgsfiles.MvpOrgsProjectsResponse
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.Material
-import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_mvp_orgs_projects.*
+
+//import kotlinx.android.synthetic.main.activity_base.*
+//import kotlinx.android.synthetic.main.activity_mvp_orgs_projects.*
 
 
 class MvpOrgsProjectsActivity : BaseActivity(), View.OnClickListener {
@@ -22,13 +21,17 @@ class MvpOrgsProjectsActivity : BaseActivity(), View.OnClickListener {
   private val mvpOrgsProjects: ArrayList<Material> = ArrayList<Material>()
   private lateinit var gv: GridView
   private val tag = this::class.java.simpleName
-  
+  lateinit var mvp_orgs_projects_pb: ProgressBar
+  lateinit var mvp_orgs_projects_create: Button
+  lateinit var mvp_orgs_projects_back: Button
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_mvp_orgs_projects, contentFrameLayout)
-    
+    mvp_orgs_projects_pb = findViewById(R.id.mvp_orgs_projects_pb)
+    mvp_orgs_projects_create = findViewById(R.id.mvp_orgs_projects_create)
+    mvp_orgs_projects_back = findViewById(R.id.mvp_orgs_projects_back)
     myHelper.setTag(tag)
     myHelper.setProgressBar(mvp_orgs_projects_pb)
     

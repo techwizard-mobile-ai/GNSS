@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.location.Location
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.FrameLayout
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
@@ -18,7 +19,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.data.kml.KmlLayer
-import kotlinx.android.synthetic.main.activity_map1.*
 import java.io.File
 import java.io.FileInputStream
 
@@ -34,12 +34,14 @@ class Map1Activity : BaseActivity(), View.OnClickListener, OnMapReadyCallback,
   private lateinit var lastLocation: Location
   
   private var mapGPSLocation: GPSLocation = GPSLocation()
-  
+  lateinit var map1_finish: Button
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_map1, contentFrameLayout)
+    
+    map1_finish = findViewById(R.id.map1_finish)
     
     myHelper.setTag(tag)
     

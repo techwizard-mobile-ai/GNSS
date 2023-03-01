@@ -15,7 +15,6 @@ import app.vsptracker.adapters.MachineStopAdapter
 import app.vsptracker.apis.delay.EWork
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyHelper
-import kotlinx.android.synthetic.main.fragment_machine_stop.view.*
 
 class MachineStopFragment : Fragment() {
   private var listener: OnFragmentInteractionListener? = null
@@ -48,11 +47,14 @@ class MachineStopFragment : Fragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     
+    val v = view
+    val ms_rv = root!!.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.ms_rv)
+    
     val dataList = db.getMachinesStops()
     myHelper.log("MachineStops:${db.getMachinesStops()}")
     val mAdapter = MachineStopAdapter(context as Activity, dataList)
-    root!!.ms_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
-    root!!.ms_rv!!.adapter = mAdapter
+    ms_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
+    ms_rv!!.adapter = mAdapter
   }
   
   override fun onAttach(context: Context) {

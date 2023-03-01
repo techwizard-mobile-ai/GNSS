@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.FrameLayout
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.drawerlayout.widget.DrawerLayout
 import app.vsptracker.BaseActivity
@@ -14,9 +14,6 @@ import app.vsptracker.apis.serverSync.ServerSyncAPI
 import app.vsptracker.classes.ServerSyncModel
 import app.vsptracker.others.MyEnum
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_hour_meter_stop.*
-import kotlinx.android.synthetic.main.logout_notification.view.*
 
 class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
   
@@ -25,6 +22,26 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
   private val adapterList = ArrayList<ServerSyncModel>()
   private val serverSyncList = ArrayList<ServerSyncAPI>()
   private var isAutoLogoutCall = false
+  lateinit var hm_layout: LinearLayout
+  lateinit var sfinish_reading: EditText
+  lateinit var hm_summary_operator: TextView
+  lateinit var hm_summary_login: TextView
+  lateinit var hm_summary_machine: TextView
+  lateinit var hm_summary_working_time: TextView
+  lateinit var hm_summary_prod_dig: TextView
+  lateinit var hm_summary_trenching: TextView
+  lateinit var hm_summary_gen_dig: TextView
+  lateinit var hm_summary_trips: TextView
+  lateinit var hm_summary_trimming: TextView
+  lateinit var sm_summary_prod_dig_layout: LinearLayout
+  lateinit var sm_summary_trenching_layout: LinearLayout
+  lateinit var sm_summary_gen_dig_layout: LinearLayout
+  lateinit var sm_summary_trips_layout: LinearLayout
+  lateinit var sm_summary_trimming_layout: LinearLayout
+  lateinit var sfinish_minus: ImageView
+  lateinit var sfinish_plus: ImageView
+  lateinit var hm_stop_logout: Button
+  
   
   @SuppressLint("SetTextI18n")
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +51,26 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
     layoutInflater.inflate(R.layout.activity_hour_meter_stop, contentFrameLayout)
     val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
     navigationView.menu.getItem(11).isChecked = true
+    
+    hm_layout = findViewById(R.id.hm_layout)
+    sfinish_reading = findViewById(R.id.sfinish_reading)
+    hm_summary_operator = findViewById(R.id.hm_summary_operator)
+    hm_summary_login = findViewById(R.id.hm_summary_login)
+    hm_summary_machine = findViewById(R.id.hm_summary_machine)
+    hm_summary_working_time = findViewById(R.id.hm_summary_working_time)
+    sm_summary_prod_dig_layout = findViewById(R.id.sm_summary_prod_dig_layout)
+    hm_summary_prod_dig = findViewById(R.id.hm_summary_prod_dig)
+    sm_summary_trenching_layout = findViewById(R.id.sm_summary_trenching_layout)
+    hm_summary_trenching = findViewById(R.id.hm_summary_trenching)
+    hm_summary_gen_dig = findViewById(R.id.hm_summary_gen_dig)
+    sm_summary_gen_dig_layout = findViewById(R.id.sm_summary_gen_dig_layout)
+    sm_summary_trips_layout = findViewById(R.id.sm_summary_trips_layout)
+    hm_summary_trips = findViewById(R.id.hm_summary_trips)
+    sm_summary_trimming_layout = findViewById(R.id.sm_summary_trimming_layout)
+    hm_summary_trimming = findViewById(R.id.hm_summary_trimming)
+    sfinish_minus = findViewById(R.id.sfinish_minus)
+    sfinish_plus = findViewById(R.id.sfinish_plus)
+    hm_stop_logout = findViewById(R.id.hm_stop_logout)
     
     myHelper.setTag(tag)
     
@@ -91,6 +128,11 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
     hm_stop_logout.setOnClickListener(this)
   }
   
+  override fun onResume() {
+    super.onResume()
+    base_nav_view.setCheckedItem(base_nav_view.menu.getItem(11))
+  }
+  
   override fun onClick(view: View?) {
     when (view!!.id) {
       R.id.sfinish_minus -> {
@@ -124,6 +166,8 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
   private fun updatedNotification() {
     
     val mDialogView = LayoutInflater.from(this).inflate(R.layout.logout_notification, null)
+    val logout_ok_btn = mDialogView.findViewById<TextView>(R.id.logout_ok_btn)
+    val logout_cancel_btn = mDialogView.findViewById<TextView>(R.id.logout_cancel_btn)
     val mBuilder = AlertDialog.Builder(this)
       .setView(mDialogView)
     val mAlertDialog = mBuilder.show()
@@ -137,11 +181,11 @@ class HourMeterStopActivity : BaseActivity(), View.OnClickListener {
     window.attributes = wlp
     
     
-    mDialogView.logout_ok_btn.setOnClickListener {
+    logout_ok_btn.setOnClickListener {
       mAlertDialog.dismiss()
       logout()
     }
-    mDialogView.logout_cancel_btn.setOnClickListener {
+    logout_cancel_btn.setOnClickListener {
       mAlertDialog.dismiss()
     }
     

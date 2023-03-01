@@ -3,6 +3,8 @@ package app.mvp.activities
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
+import android.widget.EditText
 import android.widget.FrameLayout
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
@@ -11,22 +13,28 @@ import app.vsptracker.apis.login.LoginAPI
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.others.Utils.tag
 import com.google.gson.GsonBuilder
-import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_mvp_orgs_create_folder.back
-import kotlinx.android.synthetic.main.activity_mvp_orgs_create_folder.create
-import kotlinx.android.synthetic.main.activity_mvp_orgs_create_project.*
-import kotlinx.android.synthetic.main.app_bar_base.*
+//import kotlinx.android.synthetic.main.activity_base.*
+//import kotlinx.android.synthetic.main.activity_mvp_orgs_create_folder.back
+//import kotlinx.android.synthetic.main.activity_mvp_orgs_create_folder.create
+//import kotlinx.android.synthetic.main.activity_mvp_orgs_create_project.*
+//import kotlinx.android.synthetic.main.app_bar_base.*
 import okhttp3.*
 import okio.IOException
 import org.json.JSONObject
 
 class MvpOrgsCreateProjectActivity : BaseActivity(), View.OnClickListener {
+  lateinit var back: Button
+  lateinit var create: Button
+  lateinit var project_name: EditText
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_mvp_orgs_create_project, contentFrameLayout)
     
+    back = findViewById(R.id.back)
+    create = findViewById(R.id.create)
+    project_name = findViewById(R.id.project_name)
     myHelper.setTag(tag)
     
     val bundle: Bundle? = intent.extras

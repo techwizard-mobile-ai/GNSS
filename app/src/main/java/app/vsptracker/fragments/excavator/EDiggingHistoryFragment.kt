@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,8 +16,6 @@ import app.vsptracker.adapters.ETHistoryAdapter
 import app.vsptracker.apis.delay.EWork
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyHelper
-import kotlinx.android.synthetic.main.fragment_edigging_history.*
-import kotlinx.android.synthetic.main.fragment_edigging_history.view.*
 
 
 class EDiggingHistoryFragment : Fragment() {
@@ -55,6 +54,10 @@ class EDiggingHistoryFragment : Fragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     
+    val v = view
+    val edh_rv = root!!.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.edh_rv)
+    val e_digging_f_title = root!!.findViewById<TextView>(R.id.e_digging_f_title)
+    
     when (workType) {
       1 -> e_digging_f_title.text = getString(R.string.general_digging_history)
       3 -> e_digging_f_title.text = getString(R.string.scraper_trimming)
@@ -63,8 +66,8 @@ class EDiggingHistoryFragment : Fragment() {
       context as Activity, diggingHistory as ArrayList<EWork>,
       FRAGMENT_TAG, workType
     )
-    root!!.edh_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
-    root!!.edh_rv!!.adapter = mAdapter
+    edh_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
+    edh_rv!!.adapter = mAdapter
   }
   
   fun onButtonPressed(uri: Uri) {

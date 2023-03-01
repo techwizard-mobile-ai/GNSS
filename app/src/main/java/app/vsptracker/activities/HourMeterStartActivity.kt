@@ -3,7 +3,7 @@ package app.vsptracker.activities
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.FrameLayout
+import android.widget.*
 import androidx.drawerlayout.widget.DrawerLayout
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
@@ -11,34 +11,37 @@ import app.vsptracker.apis.trip.MyData
 import app.vsptracker.apis.trip.MyDataListResponse
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyEnum
-import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_hour_meter_start.*
 
 private const val REQUEST_ACCESS_FINE_LOCATION = 1
 
 class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
   private val tag = this::class.java.simpleName
   private var startReading = ""
+  lateinit var hour_meter_main_layout: RelativeLayout
+  lateinit var ms_reading: EditText
+  lateinit var ms_minus: ImageView
+  lateinit var ms_plus: ImageView
+  lateinit var ms_continue: Button
+  lateinit var ms_change_machine: Button
+  
   
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-//        Utils.onActivityCreateSetTheme(this)
-//        setContentView(R.layout.activity_hour_meter_start)
     
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_hour_meter_start, contentFrameLayout)
-    val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(7).isChecked = true
-
-//        if(myHelper.getIsMachineStopped()){
+    
     drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-//        }
-//        myHelper = MyHelper(tag, this)
+    
+    hour_meter_main_layout = findViewById(R.id.hour_meter_main_layout)
+    ms_reading = findViewById(R.id.ms_reading)
+    ms_minus = findViewById(R.id.ms_minus)
+    ms_plus = findViewById(R.id.ms_plus)
+    ms_continue = findViewById(R.id.ms_continue)
+    ms_change_machine = findViewById(R.id.ms_change_machine)
+    
     myHelper.TAG = tag
-
-
-//        myHelper.setTag(tag)
+    
     db = DatabaseAdapter(this)
     myData = MyData()
     myHelper.hideKeyboardOnClick(hour_meter_main_layout)
@@ -64,6 +67,11 @@ class HourMeterStartActivity : BaseActivity(), View.OnClickListener {
 //        ms_reading.setText(myHelper.getRoundedDecimal(myHelper.getMachineTotalTime()/60.0).toString())
 //        ms_reading.setText(myHelper.getMeterTimeForStart())
     
+  }
+  
+  override fun onResume() {
+    super.onResume()
+    base_nav_view.setCheckedItem(base_nav_view.menu.getItem(7))
   }
   
   override fun onClick(view: View?) {

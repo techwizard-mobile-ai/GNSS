@@ -5,9 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.AdapterView
-import android.widget.FrameLayout
-import android.widget.GridView
+import android.widget.*
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
 import app.vsptracker.activities.excavator.ELoadActivity
@@ -15,23 +13,22 @@ import app.vsptracker.adapters.CustomGrid
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.Material
 import app.vsptracker.others.MyHelper
-import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_material.*
 
 class MaterialActivity : BaseActivity(), View.OnClickListener {
   
   
   private val tag = this::class.java.simpleName
-  
+  lateinit var material_title: TextView
+  lateinit var ematerial1_back: Button
   
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_material, contentFrameLayout)
-    val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(0).isChecked = true
+    
+    material_title = findViewById(R.id.material_title)
+    ematerial1_back = findViewById(R.id.ematerial1_back)
     
     myHelper = MyHelper(tag, this)
     

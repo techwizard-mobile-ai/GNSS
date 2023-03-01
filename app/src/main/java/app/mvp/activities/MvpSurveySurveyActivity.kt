@@ -12,9 +12,7 @@ import android.text.InputType
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.AdapterView
-import android.widget.FrameLayout
-import android.widget.GridView
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
@@ -32,15 +30,15 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.maps.android.data.kml.KmlLayer
-import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_mvp_survey_survey.*
-import kotlinx.android.synthetic.main.app_bar_base.*
-import kotlinx.android.synthetic.main.dialog_error.view.*
-import kotlinx.android.synthetic.main.dialog_error.view.error_explanation
-import kotlinx.android.synthetic.main.dialog_error.view.error_ok
-import kotlinx.android.synthetic.main.dialog_error.view.error_title
-import kotlinx.android.synthetic.main.dialog_input.*
-import kotlinx.android.synthetic.main.dialog_input.view.*
+//import kotlinx.android.synthetic.main.activity_base.*
+//import kotlinx.android.synthetic.main.activity_mvp_survey_survey.*
+//import kotlinx.android.synthetic.main.app_bar_base.*
+//import kotlinx.android.synthetic.main.dialog_error.view.*
+//import kotlinx.android.synthetic.main.dialog_error.view.error_explanation
+//import kotlinx.android.synthetic.main.dialog_error.view.error_ok
+//import kotlinx.android.synthetic.main.dialog_error.view.error_title
+//import kotlinx.android.synthetic.main.dialog_input.*
+//import kotlinx.android.synthetic.main.dialog_input.view.*
 import java.io.File
 import java.io.FileInputStream
 
@@ -61,10 +59,40 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
   private var current_label_number = 0
   private var selected_label_position = -1
   
+  lateinit var current_point: EditText
+  lateinit var mvp_survey_survey_gps_data_antenna_height: Button
+  lateinit var mvp_survey_survey_file_description: Button
+  lateinit var mvp_survey_survey_back: Button
+  lateinit var mvp_survey_survey_settings: Button
+  lateinit var mvp_survey_point: Button
+  lateinit var no_survey_favorite_labels: TextView
+  lateinit var mvp_survey_survey_gps_data_acc: TextView
+  lateinit var mvp_survey_survey_gps_data_lat: TextView
+  lateinit var mvp_survey_survey_gps_data_long: TextView
+  lateinit var mvp_survey_survey_gps_data_alt: TextView
+  lateinit var mvp_survey_survey_gps_data_speed: TextView
+  lateinit var mvp_survey_survey_gps_data_bearing: TextView
+  lateinit var mvp_survey_survey_gps_data_time: TextView
+  
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_mvp_survey_survey, contentFrameLayout)
+    
+    current_point = findViewById(R.id.current_point)
+    mvp_survey_survey_gps_data_antenna_height = findViewById(R.id.mvp_survey_survey_gps_data_antenna_height)
+    mvp_survey_survey_file_description = findViewById(R.id.mvp_survey_survey_file_description)
+    mvp_survey_survey_back = findViewById(R.id.mvp_survey_survey_back)
+    mvp_survey_survey_settings = findViewById(R.id.mvp_survey_survey_settings)
+    mvp_survey_point = findViewById(R.id.mvp_survey_point)
+    no_survey_favorite_labels = findViewById(R.id.no_survey_favorite_labels)
+    mvp_survey_survey_gps_data_acc = findViewById(R.id.mvp_survey_survey_gps_data_acc)
+    mvp_survey_survey_gps_data_lat = findViewById(R.id.mvp_survey_survey_gps_data_lat)
+    mvp_survey_survey_gps_data_long = findViewById(R.id.mvp_survey_survey_gps_data_long)
+    mvp_survey_survey_gps_data_alt = findViewById(R.id.mvp_survey_survey_gps_data_alt)
+    mvp_survey_survey_gps_data_speed = findViewById(R.id.mvp_survey_survey_gps_data_speed)
+    mvp_survey_survey_gps_data_bearing = findViewById(R.id.mvp_survey_survey_gps_data_bearing)
+    mvp_survey_survey_gps_data_time = findViewById(R.id.mvp_survey_survey_gps_data_time)
     
     myHelper.setTag(tag)
     myData = myHelper.getLastJourney()
@@ -199,28 +227,34 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
   private fun showInputDialog(type: Int, context: Context) {
     
     val mDialogView = LayoutInflater.from(context).inflate(R.layout.dialog_input, null)
+    val mvp_survey_dialog_input = mDialogView.findViewById<EditText>(R.id.mvp_survey_dialog_input)
+    val error_title = mDialogView.findViewById<TextView>(R.id.error_title)
+    val error_explanation = mDialogView.findViewById<TextView>(R.id.error_explanation)
+    val error_cancel = mDialogView.findViewById<TextView>(R.id.error_cancel)
+    val error_ok = mDialogView.findViewById<TextView>(R.id.error_ok)
+    
     var title = "Antenna Height"
     var explanation = "Please enter valid antenna height in m."
     when (type) {
       1 -> {
         title = "Antenna Height"
         explanation = "Please enter valid antenna height in meters up to three decimal places."
-        mDialogView.mvp_survey_dialog_input.hint = "Please enter three decimal value for antenna height"
-        mDialogView.mvp_survey_dialog_input.setText(myHelper.roundToN(myHelper.getLastJourney().survey_antenna_height, 3).toString())
+        mvp_survey_dialog_input.hint = "Please enter three decimal value for antenna height"
+        mvp_survey_dialog_input.setText(myHelper.roundToN(myHelper.getLastJourney().survey_antenna_height, 3).toString())
       }
       2 -> {
         title = "Point Attribute"
         explanation = "Please enter point attribute for next survey point."
-        mDialogView.mvp_survey_dialog_input.hint = "Please enter point attribute text"
-        mDialogView.mvp_survey_dialog_input.inputType = InputType.TYPE_CLASS_TEXT
-        mDialogView.mvp_survey_dialog_input.setText(myHelper.getLastJourney().survey_file_description)
+        mvp_survey_dialog_input.hint = "Please enter point attribute text"
+        mvp_survey_dialog_input.inputType = InputType.TYPE_CLASS_TEXT
+        mvp_survey_dialog_input.setText(myHelper.getLastJourney().survey_file_description)
       }
     }
     
-    mDialogView.error_title.text = title
+    error_title.text = title
     if (explanation.isNotBlank()) {
-      mDialogView.error_explanation.text = explanation
-      mDialogView.error_explanation.visibility = View.VISIBLE
+      error_explanation.text = explanation
+      error_explanation.visibility = View.VISIBLE
     }
     
     val mBuilder = AlertDialog.Builder(context).setView(mDialogView)
@@ -233,22 +267,22 @@ class MvpSurveySurveyActivity : BaseActivity(), View.OnClickListener, OnMapReady
     wlp.gravity = Gravity.CENTER
     window.attributes = wlp
     
-    mDialogView.error_cancel.setOnClickListener {
+    error_cancel.setOnClickListener {
       mAlertDialog.dismiss()
     }
     
-    mDialogView.error_ok.setOnClickListener {
+    error_ok.setOnClickListener {
       when {
-        type == 1 && myHelper.isDecimal(mDialogView.mvp_survey_dialog_input.text.toString()) -> {
+        type == 1 && myHelper.isDecimal(mvp_survey_dialog_input.text.toString()) -> {
           val lastJourney = myHelper.getLastJourney()
-          lastJourney.survey_antenna_height = mDialogView.mvp_survey_dialog_input.text.toString().toDouble()
+          lastJourney.survey_antenna_height = mvp_survey_dialog_input.text.toString().toDouble()
           myHelper.setLastJourney(lastJourney)
           mvp_survey_survey_gps_data_antenna_height.text = "Antenna Height: ${myHelper.roundToN(myHelper.getLastJourney().survey_antenna_height, 3)} m"
           mAlertDialog.dismiss()
         }
         type == 2 -> {
           val lastJourney = myHelper.getLastJourney()
-          lastJourney.survey_file_description = mDialogView.mvp_survey_dialog_input.text.toString()
+          lastJourney.survey_file_description = mvp_survey_dialog_input.text.toString()
           myHelper.setLastJourney(lastJourney)
           mAlertDialog.dismiss()
         }

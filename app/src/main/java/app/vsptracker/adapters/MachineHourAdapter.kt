@@ -5,12 +5,13 @@ import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import app.vsptracker.R
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyHelper
-import kotlinx.android.synthetic.main.list_row_machine_hour.view.*
 
 class MachineHourAdapter(
   val context: Activity,
@@ -36,72 +37,91 @@ class MachineHourAdapter(
   @SuppressLint("SetTextI18n")
   override fun onBindViewHolder(holder: ViewHolder, position: Int) {
     
+    val v = holder.itemView
+    val eth_site = v.findViewById<TextView>(R.id.eth_site)
+    val eth_machine_type = v.findViewById<TextView>(R.id.eth_machine_type)
+    val eth_sync = v.findViewById<TextView>(R.id.eth_sync)
+    val eth_record_number = v.findViewById<TextView>(R.id.eth_record_number)
+    val eth_operator = v.findViewById<TextView>(R.id.eth_operator)
+    val eth_machine_number = v.findViewById<TextView>(R.id.eth_machine_number)
+    val eth_start_time = v.findViewById<TextView>(R.id.eth_start_time)
+    val eth_end_time = v.findViewById<TextView>(R.id.eth_end_time)
+    val eth_duration = v.findViewById<TextView>(R.id.eth_duration)
+    val mh_start_hours = v.findViewById<TextView>(R.id.mh_start_hours)
+    val mh_total_hours = v.findViewById<TextView>(R.id.mh_total_hours)
+    val eth_mode = v.findViewById<TextView>(R.id.eth_mode)
+    val mh_gps_loading = v.findViewById<TextView>(R.id.mh_gps_loading)
+    val lhr_gps_unloading = v.findViewById<TextView>(R.id.lhr_gps_unloading)
+    val eth_remarks = v.findViewById<TextView>(R.id.eth_remarks)
+    val lhr_gps_loading_layout = v.findViewById<LinearLayout>(R.id.lhr_gps_loading_layout)
+    val mh_gps_unloading_layout = v.findViewById<LinearLayout>(R.id.mh_gps_unloading_layout)
+    
     val eWork = dataList[position]
     
     myHelper.log(eWork.toString())
     
-    holder.itemView.eth_site.text = ":  ${db.getSiteByID(eWork.siteId).name}"
-    holder.itemView.eth_machine_type.text = ":  ${db.getMachineTypeByID(eWork.machineTypeId).name}"
-    holder.itemView.eth_sync.text = if (eWork.isSync == 1) context.getString(R.string.yes) else context.getString(R.string.no)
-    holder.itemView.eth_record_number.text = ":  " + (dataList.size - position)
+    eth_site.text = ":  ${db.getSiteByID(eWork.siteId).name}"
+    eth_machine_type.text = ":  ${db.getMachineTypeByID(eWork.machineTypeId).name}"
+    eth_sync.text = if (eWork.isSync == 1) context.getString(R.string.yes) else context.getString(R.string.no)
+    eth_record_number.text = ":  " + (dataList.size - position)
     val operatorName = db.getOperatorByID(eWork.operatorId).name
-    holder.itemView.eth_operator.text = ":  $operatorName"
+    eth_operator.text = ":  $operatorName"
     
     val machineNumber = db.getMachineByID(eWork.machineId).number
-    holder.itemView.eth_machine_number.text = ":  $machineNumber"
+    eth_machine_number.text = ":  $machineNumber"
     
     if (eWork.startTime > 0)
-      holder.itemView.eth_start_time.text = ":  " + myHelper.getDateTime(eWork.startTime) + " Hrs"
+      eth_start_time.text = ":  " + myHelper.getDateTime(eWork.startTime) + " Hrs"
     if (eWork.stopTime > 0)
-      holder.itemView.eth_end_time.text = ":  " + myHelper.getDateTime(eWork.stopTime) + " Hrs"
-    holder.itemView.eth_duration.text = ":  " + myHelper.getFormattedTime(eWork.totalTime) + " Hrs"
+      eth_end_time.text = ":  " + myHelper.getDateTime(eWork.stopTime) + " Hrs"
+    eth_duration.text = ":  " + myHelper.getFormattedTime(eWork.totalTime) + " Hrs"
     
     when (eWork.machine_stop_reason_id) {
       -3 -> {
-        holder.itemView.eth_remarks.text = ":  Auto Logout"
+        eth_remarks.text = ":  Auto Logout"
       }
       -2 -> {
-        holder.itemView.eth_remarks.text = ":  Machine Changed"
+        eth_remarks.text = ":  Machine Changed"
       }
       -1 -> {
-        holder.itemView.eth_remarks.text = ":  Logout"
+        eth_remarks.text = ":  Logout"
       }
       else -> {
         if (eWork.machine_stop_reason_id > 0)
-          holder.itemView.eth_remarks.text = ":  ${db.getStopReasonByID(eWork.machine_stop_reason_id).name}"
-        else holder.itemView.eth_remarks.text = ":  Unknown"
+          eth_remarks.text = ":  ${db.getStopReasonByID(eWork.machine_stop_reason_id).name}"
+        else eth_remarks.text = ":  Unknown"
       }
     }
     
     
-    holder.itemView.mh_start_hours.text = ":  ${eWork.startHours} Hrs"
-    holder.itemView.mh_total_hours.text = ":  ${eWork.totalHours} Hrs"
+    mh_start_hours.text = ":  ${eWork.startHours} Hrs"
+    mh_total_hours.text = ":  ${eWork.totalHours} Hrs"
     
     when {
       eWork.isDayWorks > 0 -> {
-        holder.itemView.eth_mode.text = context.getString(R.string.day_works_text)
+        eth_mode.text = context.getString(R.string.day_works_text)
       }
-      else -> holder.itemView.eth_mode.text = context.getString(R.string.standard_mode_text)
+      else -> eth_mode.text = context.getString(R.string.standard_mode_text)
     }
     
     
-    holder.itemView.mh_gps_loading.text =
+    mh_gps_loading.text =
       ": ${myHelper.getRoundedDecimal(eWork.loadingGPSLocation.latitude)} / ${
         myHelper.getRoundedDecimal(
           eWork.loadingGPSLocation.longitude
         )
       } "
-    holder.itemView.lhr_gps_unloading.text =
+    lhr_gps_unloading.text =
       ": ${myHelper.getRoundedDecimal(eWork.unloadingGPSLocation.latitude)} / ${
         myHelper.getRoundedDecimal(
           eWork.unloadingGPSLocation.longitude
         )
       } "
     
-    holder.itemView.lhr_gps_loading_layout.setOnClickListener {
+    lhr_gps_loading_layout.setOnClickListener {
       myHelper.showOnMap(eWork.loadingGPSLocation, "Delay Location")
     }
-    holder.itemView.mh_gps_unloading_layout.setOnClickListener {
+    mh_gps_unloading_layout.setOnClickListener {
       myHelper.showOnMap(eWork.unloadingGPSLocation, "Delay Location")
     }
   }

@@ -4,8 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView
-import android.widget.FrameLayout
+import android.widget.*
 import androidx.core.content.ContextCompat
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
@@ -15,7 +14,6 @@ import app.vsptracker.apis.trip.MyData
 import app.vsptracker.classes.Material
 import app.vsptracker.others.MyEnum.Companion.LOGOUT_TYPE_MACHINE_CHANGED
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_machine_change.*
 
 private const val REQUEST_ACCESS_FINE_LOCATION = 1
 
@@ -27,6 +25,14 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
   private var selectedMachineLocation = Material(0, "Select Machine Location")
   private var selectedMachineNumber = Material(0, "Select Machine Number")
   private val tag = this::class.java.simpleName
+  lateinit var machine_number1: androidx.appcompat.widget.AppCompatSpinner
+  lateinit var machine_location: androidx.appcompat.widget.AppCompatSpinner
+  lateinit var mt_site: androidx.appcompat.widget.AppCompatSpinner
+  lateinit var machine_type: androidx.appcompat.widget.AppCompatSpinner
+  lateinit var machine_type_main_layout: LinearLayout
+  lateinit var machine_save: Button
+  lateinit var machine_number: EditText
+  
   
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -37,6 +43,14 @@ class MachineTypeActivity : BaseActivity(), View.OnClickListener {
     layoutInflater.inflate(R.layout.activity_machine_change, contentFrameLayout)
     val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
     navigationView.menu.getItem(9).isChecked = true
+    
+    machine_number1 = findViewById(R.id.machine_number1)
+    machine_location = findViewById(R.id.machine_location)
+    machine_type_main_layout = findViewById(R.id.machine_type_main_layout)
+    machine_type = findViewById(R.id.machine_type)
+    machine_save = findViewById(R.id.machine_save)
+    mt_site = findViewById(R.id.mt_site)
+    machine_number = findViewById(R.id.machine_number)
     
     myHelper.log("meter.hourStartGPSLocation:${myHelper.getMeter().hourStartGPSLocation}")
 //        if(myHelper.getIsMachineStopped() || myHelper.getMachineID() <1){

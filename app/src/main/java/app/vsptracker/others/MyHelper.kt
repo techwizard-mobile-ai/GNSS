@@ -74,8 +74,6 @@ import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import kotlinx.android.synthetic.main.dialog_error.view.*
-import kotlinx.android.synthetic.main.dialog_permissions.view.*
 import okhttp3.*
 import okio.Buffer
 import org.json.JSONObject
@@ -1247,10 +1245,14 @@ class MyHelper(var TAG: String, val context: Context) {
   fun showErrorDialog(title: String, explanation: String = "") {
     
     val mDialogView = LayoutInflater.from(context).inflate(R.layout.dialog_error, null)
-    mDialogView.error_title.text = title
+    val error_title = mDialogView.findViewById<TextView>(R.id.error_title)
+    val error_explanation = mDialogView.findViewById<TextView>(R.id.error_explanation)
+    val error_ok = mDialogView.findViewById<TextView>(R.id.error_ok)
+    
+    error_title.text = title
     if (explanation.isNotBlank()) {
-      mDialogView.error_explanation.text = explanation
-      mDialogView.error_explanation.visibility = View.VISIBLE
+      error_explanation.text = explanation
+      error_explanation.visibility = View.VISIBLE
     }
     
     
@@ -1264,7 +1266,7 @@ class MyHelper(var TAG: String, val context: Context) {
     wlp.gravity = Gravity.CENTER
     window.attributes = wlp
     
-    mDialogView.error_ok.setOnClickListener {
+    error_ok.setOnClickListener {
       mAlertDialog.dismiss()
     }
   }
@@ -1273,10 +1275,14 @@ class MyHelper(var TAG: String, val context: Context) {
     
     runOnUiThread(Runnable {
       val mDialogView = LayoutInflater.from(context).inflate(R.layout.dialog_error, null)
-      mDialogView.error_title.text = title
+      val error_title = mDialogView.findViewById<TextView>(R.id.error_title)
+      val error_explanation = mDialogView.findViewById<TextView>(R.id.error_explanation)
+      val error_ok = mDialogView.findViewById<TextView>(R.id.error_ok)
+      
+      error_title.text = title
       if (explanation.isNotBlank()) {
-        mDialogView.error_explanation.text = explanation
-        mDialogView.error_explanation.visibility = View.VISIBLE
+        error_explanation.text = explanation
+        error_explanation.visibility = View.VISIBLE
       }
       val mBuilder = AlertDialog.Builder(context).setView(mDialogView)
       val mAlertDialog = mBuilder.show()
@@ -1285,7 +1291,7 @@ class MyHelper(var TAG: String, val context: Context) {
       val wlp = window!!.attributes
       wlp.gravity = Gravity.CENTER
       window.attributes = wlp
-      mDialogView.error_ok.setOnClickListener {
+      error_ok.setOnClickListener {
         mAlertDialog.dismiss()
       }
     })
@@ -1298,14 +1304,19 @@ class MyHelper(var TAG: String, val context: Context) {
   fun showGPSDisabledAlertToUser() {
     try {
       val mDialogView = LayoutInflater.from(context).inflate(R.layout.dialog_permissions, null)
+      val permissions_title = mDialogView.findViewById<TextView>(R.id.permissions_title)
+      val permissions_sub_title = mDialogView.findViewById<TextView>(R.id.permissions_sub_title)
+      val permissions_yes = mDialogView.findViewById<TextView>(R.id.permissions_yes)
+      val permissions_no = mDialogView.findViewById<TextView>(R.id.permissions_no)
+      val cftd_save_bottom = mDialogView.findViewById<View>(R.id.cftd_save_bottom)
       
-      mDialogView.permissions_title.text = context.resources.getString(R.string.gps_permission_title)
-      mDialogView.permissions_sub_title.text = context.resources.getString(R.string.gps_permission_explanation)
-      mDialogView.permissions_yes.text = context.resources.getString(R.string.gps_location_settings)
-      mDialogView.permissions_no.text = context.resources.getString(R.string.cancel)
+      permissions_title.text = context.resources.getString(R.string.gps_permission_title)
+      permissions_sub_title.text = context.resources.getString(R.string.gps_permission_explanation)
+      permissions_yes.text = context.resources.getString(R.string.gps_location_settings)
+      permissions_no.text = context.resources.getString(R.string.cancel)
       
-      mDialogView.cftd_save_bottom.visibility = View.VISIBLE
-      mDialogView.permissions_no.visibility = View.VISIBLE
+      cftd_save_bottom.visibility = View.VISIBLE
+      permissions_no.visibility = View.VISIBLE
       
       
       val mBuilder = AlertDialog.Builder(context).setView(mDialogView)
@@ -1318,14 +1329,14 @@ class MyHelper(var TAG: String, val context: Context) {
       wlp.gravity = Gravity.CENTER
       window.attributes = wlp
       
-      mDialogView.permissions_yes.setOnClickListener {
+      permissions_yes.setOnClickListener {
         mAlertDialog.dismiss()
         val callGPSSettingIntent = Intent(
           android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
         )
         context.startActivity(callGPSSettingIntent)
       }
-      mDialogView.permissions_no.setOnClickListener {
+      permissions_no.setOnClickListener {
         mAlertDialog.dismiss()
       }
       
@@ -1394,9 +1405,12 @@ class MyHelper(var TAG: String, val context: Context) {
   fun showPermissionDisabledAlertToUser(title: String, sub_title: String) {
     
     val mDialogView = LayoutInflater.from(context).inflate(R.layout.dialog_permissions, null)
+    val permissions_title = mDialogView.findViewById<TextView>(R.id.permissions_title)
+    val permissions_sub_title = mDialogView.findViewById<TextView>(R.id.permissions_sub_title)
+    val permissions_yes = mDialogView.findViewById<TextView>(R.id.permissions_yes)
     
-    mDialogView.permissions_title.text = title
-    mDialogView.permissions_sub_title.text = sub_title
+    permissions_title.text = title
+    permissions_sub_title.text = sub_title
     
     val mBuilder = AlertDialog.Builder(context).setView(mDialogView)
     val mAlertDialog = mBuilder.show()
@@ -1408,7 +1422,7 @@ class MyHelper(var TAG: String, val context: Context) {
     wlp.gravity = Gravity.CENTER
     window.attributes = wlp
     
-    mDialogView.permissions_yes.setOnClickListener {
+    permissions_yes.setOnClickListener {
       mAlertDialog.dismiss()
       val intent = Intent(
         Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", context.packageName, null)

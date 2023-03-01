@@ -4,7 +4,9 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.vsptracker.BaseActivity
@@ -15,9 +17,6 @@ import app.vsptracker.activities.common.MaterialActivity
 import app.vsptracker.adapters.ELoadingAdapter
 import app.vsptracker.apis.trip.MyData
 import app.vsptracker.others.MyHelper
-import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_base.*
-import kotlinx.android.synthetic.main.activity_eload.*
 
 private const val REQUEST_MATERIAL = 2
 private const val REQUEST_LOCATION = 3
@@ -25,14 +24,25 @@ private const val REQUEST_LOCATION = 3
 class ELoadActivity : BaseActivity(), View.OnClickListener {
   
   private val tag = this::class.java.simpleName
+  lateinit var eload_material: TextView
+  lateinit var eload_location: TextView
+  lateinit var load_truck_load: FrameLayout
+  lateinit var eload_back: Button
+  lateinit var eload_finish: Button
+  lateinit var elh_rv: androidx.recyclerview.widget.RecyclerView
   
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_eload, contentFrameLayout)
-    val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(0).isChecked = true
+    
+    eload_material = findViewById(R.id.eload_material)
+    eload_location = findViewById(R.id.eload_location)
+    load_truck_load = findViewById(R.id.load_truck_load)
+    eload_back = findViewById(R.id.eload_back)
+    eload_finish = findViewById(R.id.eload_finish)
+    elh_rv = findViewById(R.id.elh_rv)
     
     myHelper = MyHelper(tag, this)
     

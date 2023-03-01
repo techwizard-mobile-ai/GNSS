@@ -15,7 +15,6 @@ import app.vsptracker.adapters.MachineHourAdapter
 import app.vsptracker.apis.delay.EWork
 import app.vsptracker.database.DatabaseAdapter
 import app.vsptracker.others.MyHelper
-import kotlinx.android.synthetic.main.fragment_machine_hour.view.*
 
 
 class MachineHourFragment : Fragment() {
@@ -48,11 +47,13 @@ class MachineHourFragment : Fragment() {
   
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    val v = view
+    val mh_rv = root!!.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.mh_rv)
     
     val dataList = db.getMachinesHours()
     val mAdapter = MachineHourAdapter(context as Activity, dataList)
-    root!!.mh_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
-    root!!.mh_rv!!.adapter = mAdapter
+    mh_rv.layoutManager = LinearLayoutManager(context as Activity, RecyclerView.VERTICAL, false)
+    mh_rv!!.adapter = mAdapter
   }
   
   override fun onAttach(context: Context) {
