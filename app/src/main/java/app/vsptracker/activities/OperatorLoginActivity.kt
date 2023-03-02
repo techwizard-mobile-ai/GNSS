@@ -375,6 +375,7 @@ class OperatorLoginActivity : AppCompatActivity(), View.OnClickListener {
   }
   
   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     when (requestCode) {
       REQUEST_ACCESS_FINE_LOCATION -> {
         // If request is cancelled, the result arrays are empty.

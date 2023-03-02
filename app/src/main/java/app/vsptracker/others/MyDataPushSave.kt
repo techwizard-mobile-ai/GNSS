@@ -455,7 +455,8 @@ class MyDataPushSave(private val context: Context) {
     val myWorkRequest = OneTimeWorkRequestBuilder<ServerSyncCoroutineWorker>()
       .setBackoffCriteria(
         BackoffPolicy.LINEAR,
-        OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
+//        OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
+        MyEnum.MIN_BACKOFF_MILLIS,
         TimeUnit.MILLISECONDS
       )
       .setInputData(data.build())

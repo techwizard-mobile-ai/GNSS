@@ -10,7 +10,10 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import androidx.work.*
+import androidx.work.BackoffPolicy
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import app.vsptracker.R
 import app.vsptracker.activities.OperatorLoginActivity
 import app.vsptracker.others.MyEnum
@@ -37,7 +40,8 @@ class ForegroundService : Service() {
         .setInitialDelay(duration, TimeUnit.MINUTES)
         .setBackoffCriteria(
           BackoffPolicy.LINEAR,
-          OneTimeWorkRequest.MIN_BACKOFF_MILLIS,
+//          OneTimeWorkRequest.DEFAULT_BACKOFF_DELAY_MILLIS,
+          MyEnum.MIN_BACKOFF_MILLIS,
           TimeUnit.MILLISECONDS
         )
         .addTag(MyEnum.WORKER_TAG_AUTO_LOGOUT)

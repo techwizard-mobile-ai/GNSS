@@ -119,5 +119,7 @@ class MyEnum {
     
     const val EXPORT_TYPE_VSPT = 1
     const val EXPORT_TYPE_MVP = 2
+    
+    const val MIN_BACKOFF_MILLIS = 60 * 1000L // 60 seconds delays for service run and other background tasks
   }
 }

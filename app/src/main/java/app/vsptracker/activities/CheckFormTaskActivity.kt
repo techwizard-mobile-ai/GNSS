@@ -54,7 +54,8 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
   val CAMERA_REQUEST = 1888
   
   lateinit var cft_title: TextView
-  lateinit var cftd_sub_title: TextView
+  
+  //  lateinit var cftd_sub_title: TextView
   lateinit var cft_finish: Button
   lateinit var cft_skip: Button
   lateinit var cft_finish_layout: LinearLayout
@@ -72,7 +73,7 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
     cft_finish = findViewById(R.id.cft_finish)
     cft_skip = findViewById(R.id.cft_skip)
     cft_finish_layout = findViewById(R.id.cft_finish_layout)
-    cftd_sub_title = findViewById(R.id.cftd_sub_title)
+//    cftd_sub_title = findViewById(R.id.cftd_sub_title)
     
     myHelper.setTag(tag)
     
@@ -272,7 +273,7 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
         
         val imagePath = filePath.toString()
         checkFormData = addImageToCheckFormData(selectedQuestionID, imagePath)
-        cft_rv.findViewHolderForAdapterPosition(mAdapterPosition)!!.itemView.photo_layout.addView(
+        cft_rv.findViewHolderForAdapterPosition(mAdapterPosition)!!.itemView.findViewById<LinearLayout>(R.id.photo_layout).addView(
           myHelper.addImageToPhotoLayout(
             this,
             null,
@@ -280,7 +281,7 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
             checkFormData.answerDataObj.imagesList
           )
         )
-        cft_rv.findViewHolderForAdapterPosition(mAdapterPosition)!!.itemView.photo_layout.visibility = View.VISIBLE
+        cft_rv.findViewHolderForAdapterPosition(mAdapterPosition)!!.itemView.findViewById<LinearLayout>(R.id.photo_layout).visibility = View.VISIBLE
         myHelper.toast("Image attached successfully.")
         
       }
@@ -288,7 +289,8 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
       
       myHelper.log("onResult:$imageToUploadUri")
       checkFormData = addImageToCheckFormData(selectedQuestionID, imageToUploadUri.toString())
-      cft_rv.findViewHolderForAdapterPosition(mAdapterPosition)!!.itemView.photo_layout.addView(
+//      cft_rv.findViewHolderForAdapterPosition(mAdapterPosition)!!.itemView.photo_layout.addView(
+      cft_rv.findViewHolderForAdapterPosition(mAdapterPosition)!!.itemView.findViewById<LinearLayout>(R.id.photo_layout).addView(
         myHelper.addImageToPhotoLayout(
           this,
           null,
@@ -296,7 +298,8 @@ class CheckFormTaskActivity : BaseActivity(), View.OnClickListener {
           checkFormData.answerDataObj.imagesList
         )
       )
-      cft_rv.findViewHolderForAdapterPosition(mAdapterPosition)!!.itemView.photo_layout.visibility = View.VISIBLE
+//      cft_rv.findViewHolderForAdapterPosition(mAdapterPosition)!!.itemView.photo_layout.visibility = View.VISIBLE
+      cft_rv.findViewHolderForAdapterPosition(mAdapterPosition)!!.itemView.findViewById<LinearLayout>(R.id.photo_layout).visibility = View.VISIBLE
       myHelper.toast("Captured image attached successfully.")
     } else {
       myHelper.toast("No image attached.")
