@@ -33,6 +33,7 @@ class MvpSettingsActivity : BaseActivity(), View.OnClickListener {
     layoutInflater.inflate(R.layout.activity_mvp_settings, contentFrameLayout)
     
     myHelper.setTag(tag)
+    settings_title = findViewById(R.id.settings_title)
     
     val bundle: Bundle? = intent.extras
     if (bundle != null) {
@@ -40,7 +41,6 @@ class MvpSettingsActivity : BaseActivity(), View.OnClickListener {
       myHelper.log("myData:$myData")
       settings_title.text = myData.name
     }
-    settings_title = findViewById(R.id.settings_title)
     settings_save = findViewById(R.id.settings_save)
     settings_back = findViewById(R.id.settings_back)
     timer_minus = findViewById(R.id.timer_minus)
