@@ -25,13 +25,6 @@ import app.vsptracker.others.MyEnum
 
 class MvpSurveySettingsActivity : BaseActivity(), View.OnClickListener {
   private val tag = this::class.java.simpleName
-  lateinit var mvp_survey_home_gps_data_acc: TextView
-  lateinit var mvp_survey_home_gps_data_lat: TextView
-  lateinit var mvp_survey_home_gps_data_long: TextView
-  lateinit var mvp_survey_home_gps_data_alt: TextView
-  lateinit var mvp_survey_home_gps_data_speed: TextView
-  lateinit var mvp_survey_home_gps_data_bearing: TextView
-  lateinit var mvp_survey_home_gps_data_time: TextView
   lateinit var settings_title: TextView
   lateinit var settings_back: Button
   lateinit var survey_settings_labels: Button
@@ -44,13 +37,6 @@ class MvpSurveySettingsActivity : BaseActivity(), View.OnClickListener {
     
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_mvp_survey_settings, contentFrameLayout)
-    mvp_survey_home_gps_data_acc = findViewById(R.id.mvp_survey_home_gps_data_acc)
-    mvp_survey_home_gps_data_lat = findViewById(R.id.mvp_survey_home_gps_data_lat)
-    mvp_survey_home_gps_data_long = findViewById(R.id.mvp_survey_home_gps_data_long)
-    mvp_survey_home_gps_data_alt = findViewById(R.id.mvp_survey_home_gps_data_alt)
-    mvp_survey_home_gps_data_speed = findViewById(R.id.mvp_survey_home_gps_data_speed)
-    mvp_survey_home_gps_data_bearing = findViewById(R.id.mvp_survey_home_gps_data_bearing)
-    mvp_survey_home_gps_data_time = findViewById(R.id.mvp_survey_home_gps_data_time)
     settings_title = findViewById(R.id.settings_title)
     settings_back = findViewById(R.id.settings_back)
     survey_settings_labels = findViewById(R.id.survey_settings_labels)

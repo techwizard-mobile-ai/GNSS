@@ -129,6 +129,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
     mvp_survey_scan_gps_data_alt = findViewById(R.id.mvp_survey_scan_gps_data_alt)
     mvp_survey_scan_gps_data_speed = findViewById(R.id.mvp_survey_scan_gps_data_speed)
     mvp_survey_scan_gps_data_bearing = findViewById(R.id.mvp_survey_scan_gps_data_bearing)
+    mvp_survey_scan_gps_data_time = findViewById(R.id.mvp_survey_scan_gps_data_time)
     
     myHelper.setTag(tag)
     myData = myHelper.getLastJourney()
@@ -168,8 +169,7 @@ class MvpSurveyScanActivity : BaseActivity(), View.OnClickListener, OnMapReadyCa
   override fun onClick(view: View?) {
     when (view!!.id) {
       R.id.mvp_survey_scan_back -> {
-//        finish()
-        myHelper.log("mInterval:$mInterval")
+        finish()
       }
       R.id.mvp_survey_scan_capture -> {
         checkpoint_label = mvp_survey_scan_label.text.toString()
