@@ -1,2 +1,5 @@
 include ':app'
-rootProject.name='vsptracker'
+rootProject.name = 'vsptracker'
+include ':libbluetooth_gnss_service'
+include ':libecodroidgnss_parse'
+include ':libecodroidbluetooth'

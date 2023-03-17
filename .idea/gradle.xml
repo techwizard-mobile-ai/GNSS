@@ -12,6 +12,9 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/libbluetooth_gnss_service" />
+            <option value="$PROJECT_DIR$/libecodroidbluetooth" />
+            <option value="$PROJECT_DIR$/libecodroidgnss_parse" />
           </set>
         </option>
       </GradleProjectSettings>

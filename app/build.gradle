@@ -141,6 +141,9 @@ dependencies {
 
     implementation 'com.pes.materialcolorpicker:library:1.2.5'
     implementation 'com.github.Dhaval2404:ColorPicker:2.3'
+    implementation project(':libbluetooth_gnss_service')
+    implementation project(':libecodroidgnss_parse')
+    implementation project(':libecodroidbluetooth')
 }
 apply plugin: 'com.google.gms.google-services'
 

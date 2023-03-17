@@ -1,0 +1,34 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    xmlns:tools="http://schemas.android.com/tools"
+4    package="com.clearevo.libbluetooth_gnss_service" >
+5
+6    <uses-sdk android:minSdkVersion="21" />
+6-->/Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml
+7
+8    <uses-permission android:name="android.permission.BLUETOOTH" />
+8-->/Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:5:3-66
+8-->/Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:5:20-63
+9    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+9-->/Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:6:3-72
+9-->/Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:6:20-69
+10    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+10-->/Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:7:3-79
+10-->/Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:7:20-76
+11  >
+12    <application
+12-->/Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:9:3-15:17
+13        android:allowBackup="true"
+13-->/Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:10:5-31
+14        android:label="@string/app_name"
+14-->/Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:11:5-37
+15        android:supportsRtl="true"
+15-->/Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:12:5-31
+16        tools:replace="android:label" >
+16-->/Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:13:5-34
+17        <service android:name="com.clearevo.libbluetooth_gnss_service.bluetooth_gnss_service" />
+17-->/Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:14:5-93
+17-->/Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:14:14-90
+18    </application>
+19
+20</manifest>

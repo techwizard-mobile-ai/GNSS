@@ -1,0 +1,53 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:1:1-17:12
+INJECTED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:1:1-17:12
+INJECTED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:1:1-17:12
+	package
+		ADDED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:3:3-51
+		INJECTED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml
+		INJECTED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml
+	xmlns:tools
+		ADDED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:2:3-49
+	xmlns:android
+		ADDED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:1:11-69
+uses-permission#android.permission.BLUETOOTH
+ADDED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:5:3-66
+	android:name
+		ADDED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:5:20-63
+uses-permission#android.permission.BLUETOOTH_ADMIN
+ADDED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:6:3-72
+	android:name
+		ADDED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:6:20-69
+uses-permission#android.permission.ACCESS_COARSE_LOCATION
+ADDED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:7:3-79
+	android:name
+		ADDED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:7:20-76
+application
+ADDED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:9:3-15:17
+	android:supportsRtl
+		ADDED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:12:5-31
+	android:label
+		ADDED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:11:5-37
+	android:allowBackup
+		ADDED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:10:5-31
+	tools:replace
+		ADDED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:13:5-34
+service#com.clearevo.libbluetooth_gnss_service.bluetooth_gnss_service
+ADDED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:14:5-93
+	android:name
+		ADDED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml:14:14-90
+uses-sdk
+INJECTED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml
+INJECTED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml
+INJECTED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml
+INJECTED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml
+		ADDED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml
+		INJECTED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml
+		ADDED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml
+		INJECTED from /Users/malikab/Lysaan/AndroidStudioProjects/vsptracker/libbluetooth_gnss_service/src/main/AndroidManifest.xml
