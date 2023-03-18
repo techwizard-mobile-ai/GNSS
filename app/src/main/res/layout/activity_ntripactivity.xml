@@ -1,14 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_gravity="center_horizontal"
+    android:gravity="center_horizontal"
   tools:context="app.mvp.bluetooth_gnss.NTRIPActivity">
 
+  <TextView
+      android:id="@+id/tv"
+      android:layout_width="match_parent"
+      android:layout_gravity="center_horizontal"
+      android:text="Text"
+      android:gravity="center_horizontal"
+      android:textSize="@dimen/_14sdp"
+      android:layout_marginBottom="@dimen/_10sdp"
+      android:layout_marginTop="@dimen/_10sdp"
+      android:textColor="@color/colorPrimary"
+      android:layout_height="wrap_content"/>
   <Button
     android:id="@+id/connect"
     android:layout_centerInParent="true"
     style="@style/next_button_single"
     android:text="Conntect" />
-</RelativeLayout>
+</LinearLayout>

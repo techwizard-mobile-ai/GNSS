@@ -24,6 +24,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.net.Uri;
 
@@ -55,7 +56,7 @@ public class NTRIPActivity extends BaseActivity implements View.OnClickListener 
   Handler m_handler;
   final int MESSAGE_PARAMS_MAP = 0;
   final int MESSAGE_SETTINGS_MAP = 1;
-
+TextView tv;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +69,7 @@ public class NTRIPActivity extends BaseActivity implements View.OnClickListener 
     navigationView.getMenu().getItem(6).setChecked(true);
 
     connect = findViewById(R.id.connect);
+    tv = findViewById(R.id.tv);
     connect.setOnClickListener(this);
 
   }
@@ -200,6 +202,9 @@ D/btgnss_mainactvty(15208): 	at com.clearevo.bluetooth_gnss.MainActivity$1.handl
 
     if (id == R.id.connect) {
       myHelper.log("connect");
+//      myHelper.log(rfcomm_conn_mgr.get_bd_map().toString());
+      Intent intent = new Intent(this, bluetooth_gnss_service.class);
+      bindService(intent, connection, Context.BIND_AUTO_CREATE);
     }
   }
 
@@ -295,14 +300,14 @@ D/btgnss_mainactvty(15208): 	at com.clearevo.bluetooth_gnss.MainActivity$1.handl
     super.onStart();
     // Bind to LocalService
     Intent intent = new Intent(this, bluetooth_gnss_service.class);
-    bindService(intent, connection, Context.BIND_AUTO_CREATE);
+//    bindService(intent, connection, Context.BIND_AUTO_CREATE);
   }
 
   @Override
   protected void onStop() {
     Log.d(TAG, "onStop()");
     super.onStop();
-    unbindService(connection);
+//    unbindService(connection);
     mBound = false;
 
   }
@@ -317,6 +322,11 @@ D/btgnss_mainactvty(15208): 	at com.clearevo.bluetooth_gnss.MainActivity$1.handl
   protected void onResume() {
     Log.d(TAG, "onResume()");
     super.onResume();
+    tv.setText(
+            "Is Bluetooth ON:" +rfcomm_conn_mgr.is_bluetooth_on()
+            +"\nBluetooth: " + rfcomm_conn_mgr.get_bd_map()
+//            +"\nNTRIP connected: " + m_service.is_ntrip_connected()
+    );
   }
 
   /**
@@ -328,7 +338,7 @@ D/btgnss_mainactvty(15208): 	at com.clearevo.bluetooth_gnss.MainActivity$1.handl
     public void onServiceConnected(ComponentName className,
                                    IBinder service) {
 
-      Log.d(TAG, "onServiceConnected()");
+      myHelper.log( "onServiceConnected()");
 
       // We've bound to LocalService, cast the IBinder and get LocalService instance
       bluetooth_gnss_service.LocalBinder binder = (bluetooth_gnss_service.LocalBinder) service;
@@ -339,7 +349,7 @@ D/btgnss_mainactvty(15208): 	at com.clearevo.bluetooth_gnss.MainActivity$1.handl
 
     @Override
     public void onServiceDisconnected(ComponentName arg0) {
-      Log.d(TAG, "onServiceDisconnected()");
+      myHelper.log( "onServiceDisconnected()");
       mBound = false;
       m_service.set_callback((gnss_sentence_parser.gnss_parser_callbacks) null);
     }
