@@ -45,7 +45,7 @@ import androidx.annotation.NonNull;
 
 import android.content.SharedPreferences;
 
-public class NTRIPActivity extends BaseActivity implements View.OnClickListener {
+public class NTRIPActivity extends BaseActivity implements View.OnClickListener, gnss_sentence_parser.gnss_parser_callbacks {
 
   Button connect;
 
@@ -204,10 +204,73 @@ D/btgnss_mainactvty(15208): 	at com.clearevo.bluetooth_gnss.MainActivity$1.handl
       myHelper.log("connect");
 //      myHelper.log(rfcomm_conn_mgr.get_bd_map().toString());
       Intent intent = new Intent(this, bluetooth_gnss_service.class);
-      bindService(intent, connection, Context.BIND_AUTO_CREATE);
+//      bindService(intent, connection, Context.BIND_AUTO_CREATE);
+      connect();
+//      getMountPointList();
     }
   }
 
+  public void getMountPointList(){
+    String host = "http://60.234.42.123";
+    String port = "4809";
+    String user = "pilbrow4";
+    String pass = "rodney4";
+    int ret_code = 0;
+    new Thread() {
+      public void run() {
+        ArrayList<String> ret = new ArrayList<String>(); //init with empty list in case get fails
+        try {
+          ret = get_mountpoint_list(host, Integer.parseInt(port), user, pass);
+          if (ret == null) {
+            ret = new ArrayList<String>(); //init with empty list in case get fails - can't push null into concurrenthashmap
+          }
+          Log.d(TAG, "get_mountpoint_list ret: " + ret);
+        } catch (Exception e) {
+          Log.d(TAG, "on_updated_nmea_params sink update exception: " + Log.getStackTraceString(e));
+          toast("Get mountpoint_list fialed: " + e);
+        }
+        ConcurrentHashMap<String, Object> cbmap = new ConcurrentHashMap<String, Object>();
+        cbmap.put("callback_src", "get_mountpoint_list");
+        cbmap.put("callback_payload", ret);
+        Message msg = m_handler.obtainMessage(MESSAGE_SETTINGS_MAP, cbmap);
+        msg.sendToTarget();
+      }
+    }.start();
+  }
+  public void connect() {
+    final GnssConnectionParams gnssConnectionParams = new GnssConnectionParams();
+    gnssConnectionParams.setBdaddr("C4:DD:57:67:3D:81");
+    gnssConnectionParams.setSecure(true);
+    gnssConnectionParams.setReconnect(true);
+    gnssConnectionParams.setLogBtRx(true);
+    gnssConnectionParams.setDisableNtrip(true);
+    gnssConnectionParams.setDisableNtrip(true);
+    gnssConnectionParams.setGapMode(true);
+    gnssConnectionParams.getExtraParams().put("ntrip_host", "http://60.234.42.123");
+    gnssConnectionParams.getExtraParams().put("ntrip_port", "4809");
+    gnssConnectionParams.getExtraParams().put("ntrip_mountpoint", "AUCKsingleADV4");
+    gnssConnectionParams.getExtraParams().put("ntrip_user", "pilbrow4");
+    gnssConnectionParams.getExtraParams().put("ntrip_pass", "rodney4");
+//    for (String pk : bluetooth_gnss_service.REQUIRED_INTENT_EXTRA_PARAM_KEYS) {
+//      gnssConnectionParams.getExtraParams().put(pk, "call.argument(pk)");
+//    }
+    final Context context = getApplicationContext();
+
+    new Thread() {
+      public void run() {
+        try {
+          //getcanonicalname somehow returns null, getname() would return something with $ at the end so wont work to launch the activity from the service notification, so just use a string literal here
+          Util.connect("NTRIPActivity", context, gnssConnectionParams);
+        } catch (Throwable tr) {
+          Log.d(TAG, "connect() exception: " + Log.getStackTraceString(tr));
+        }
+      }
+    }.start();
+
+    int ret = 0;
+    Log.d(TAG, "connect() ret: " + ret);
+//    result.success(true);
+  }
   public boolean open_phone_settings() {
     try {
       startActivity(new Intent(android.provider.Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS));
