@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
@@ -8,28 +8,25 @@
   tools:context="app.mvp.activities.MvpCorrectionsSettingsActivity">
 
   <TextView
+    android:id="@+id/title"
     style="@style/activity_title"
+    android:layout_alignParentTop="true"
+    android:layout_centerHorizontal="true"
     android:text="Corrections Settings" />
 
   <LinearLayout
-    android:gravity="center_horizontal"
-    style="@style/default_linearlayout">
+    android:layout_below="@id/title"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
 
     <Button
-      android:id="@+id/mvp_corrections_bluetooth_settings"
-      style="@style/next_button_single_corrections"
-      android:text="Bluetooth Settings" />
-
-    <Button
-      android:id="@+id/mvp_corrections_receiver_settings"
-      style="@style/next_button_single_corrections"
-      android:text="Receiver Settings" />
-
-    <Button
-      android:id="@+id/mvp_corrections_ntrip_settings"
-      style="@style/next_button_single_corrections"
-      android:text="NTRIP settings" />
+      android:id="@+id/connect"
+      style="@style/next_button_single"
+      android:layout_height="wrap_content"
+      android:text="Connect" />
   </LinearLayout>
 
 
-</LinearLayout>
+</RelativeLayout>

@@ -19,6 +19,7 @@
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
   <uses-permission android:name="android.permission.GET_TASKS" />
   <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
   <uses-permission
     android:name="android.permission.PACKAGE_USAGE_STATS"
     tools:ignore="ProtectedPermissions" />
@@ -39,12 +40,8 @@
 
   <uses-permission android:name="android.permission.CAMERA" />
   <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
-  <uses-permission
-    android:name="android.permission.BLUETOOTH"
-    android:maxSdkVersion="30" />
-  <uses-permission
-    android:name="android.permission.BLUETOOTH_ADMIN"
-    android:maxSdkVersion="30" />
+  <uses-permission android:name="android.permission.BLUETOOTH" />
+  <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
   <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
   <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
   <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
@@ -61,11 +58,6 @@
     android:supportsRtl="true"
     android:theme="@style/AppTheme.NoActionBar"
     tools:replace="android:label">
-    <activity
-      android:name="app.mvp.bluetooth_gnss.NTRIPActivity"
-      android:configChanges="orientation|keyboardHidden"
-      android:screenOrientation="landscape"
-      android:exported="false" />
     <activity
       android:name="app.vsptracker.activities.ExportDataActivity"
       android:exported="false" />

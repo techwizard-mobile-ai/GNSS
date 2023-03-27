@@ -1,53 +1,44 @@
 package app.mvp.activities
 
-import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
+import android.widget.Button
 import android.widget.FrameLayout
 import app.vsptracker.BaseActivity
 import app.vsptracker.R
-import app.vsptracker.databinding.ActivityMvpCorrectionsSettingsBinding
 import app.vsptracker.others.Utils.tag
-import com.google.android.material.navigation.NavigationView
-
-//import kotlinx.android.synthetic.main.activity_mvp_corrections_settings.*
 
 class MvpCorrectionsSettingsActivity : BaseActivity(), View.OnClickListener {
-  private lateinit var binding: ActivityMvpCorrectionsSettingsBinding
+  lateinit var connect: Button
+  var mBound = false
+  var m_handler: Handler? = null
+  val MESSAGE_PARAMS_MAP = 0
+  val MESSAGE_SETTINGS_MAP = 1
+  
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    binding = ActivityMvpCorrectionsSettingsBinding.inflate(layoutInflater)
-    val view = binding.root
     
     val contentFrameLayout = findViewById<FrameLayout>(R.id.base_content_frame)
     layoutInflater.inflate(R.layout.activity_mvp_corrections_settings, contentFrameLayout)
-    val navigationView = findViewById<NavigationView>(R.id.base_nav_view)
-    navigationView.menu.getItem(6).isChecked = true
+    connect = findViewById(R.id.connect)
     myHelper.setTag(tag)
-
-
-//    mvp_corrections_bluetooth_settings.setOnClickListener(this);
-    binding.mvpCorrectionsBluetoothSettings.setOnClickListener(this)
-//    mvp_corrections_receiver_settings.setOnClickListener(this);
-    binding.mvpCorrectionsReceiverSettings.setOnClickListener(this)
-    binding.mvpCorrectionsNtripSettings.setOnClickListener(this)
-//    mvp_corrections_ntrip_settings.setOnClickListener(this);
     
+    connect.setOnClickListener(this)
+    
+  }
+  
+  override fun onResume() {
+    super.onResume()
+    base_nav_view.setCheckedItem(base_nav_view.menu.getItem(6))
   }
   
   override fun onClick(view: View?) {
     when (view!!.id) {
-      R.id.mvp_corrections_bluetooth_settings -> {
+      R.id.connect -> {
         myHelper.log("mvp_corrections_bluetooth_settings")
-        val intent = Intent(this, MvpBluetoothSettingsActivity::class.java)
-        startActivity(intent)
-      }
-      R.id.mvp_corrections_receiver_settings -> {
-        myHelper.log("mvp_corrections_receiver_settings")
-      }
-      R.id.mvp_corrections_ntrip_settings -> {
-        myHelper.log("mvp_corrections_ntrip_settings")
       }
     }
   }
+  
 }

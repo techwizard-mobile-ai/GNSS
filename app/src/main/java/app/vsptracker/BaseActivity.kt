@@ -36,7 +36,6 @@ import app.mvp.activities.MvpCorrectionsSettingsActivity
 import app.mvp.activities.MvpHomeActivity
 import app.mvp.activities.MvpSettingsActivity
 import app.mvp.activities.MvpStartDataCollectionActivity
-import app.mvp.bluetooth_gnss.NTRIPActivity
 import app.vsptracker.activities.*
 import app.vsptracker.activities.common.MachineBreakdownActivity
 import app.vsptracker.activities.common.MachineStatusActivity
@@ -532,8 +531,7 @@ open class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
       }
       R.id.nav_ntrip_client -> {
 //        myHelper.launchNtripClient()
-//        val intent = Intent(this, MvpCorrectionsSettingsActivity::class.java)
-        val intent = Intent(this, NTRIPActivity::class.java)
+        val intent = Intent(this, MvpCorrectionsSettingsActivity::class.java)
         startActivity(intent)
         myHelper.setIsMapOpened(false)
       }
