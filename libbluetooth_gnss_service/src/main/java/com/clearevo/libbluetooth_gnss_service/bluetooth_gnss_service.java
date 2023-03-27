@@ -38,6 +38,7 @@ import android.location.Location;
 
 import androidx.core.app.NotificationCompat;
 import androidx.documentfile.provider.DocumentFile;
+//import androidx.documentfile.provider.DocumentFile;
 
 import java.io.File;
 import java.io.OutputStream;
@@ -117,6 +118,7 @@ public class bluetooth_gnss_service extends Service implements rfcomm_conn_callb
 
                     m_log_bt_rx = intent.getBooleanExtra("log_bt_rx", false);
                     m_disable_ntrip = intent.getBooleanExtra("disable_ntrip", false);
+                    log(TAG, "onStartCommand--m_bdaddr: " + m_bdaddr);
                     log(TAG, "m_secure_rfcomm: " + m_secure_rfcomm);
                     log(TAG, "m_log_bt_rx: " + m_log_bt_rx);
                     log(TAG, "m_disable_ntrip: " + m_disable_ntrip);
@@ -141,9 +143,11 @@ public class bluetooth_gnss_service extends Service implements rfcomm_conn_callb
                     }
 
                     if (m_auto_reconnect) {
+                        Log.d(TAG, "start_auto_reconnect_thread");
                         start_auto_reconnect_thread();
                     } else {
                         connect();
+                        Log.d(TAG, "connect---");
                     }
                 }
             } catch (Exception e) {
@@ -163,6 +167,7 @@ public class bluetooth_gnss_service extends Service implements rfcomm_conn_callb
     public static final String log_uri_pref_key = "flutter.pref_log_uri";
     void connect()
     {
+        Log.d(TAG, "malik1");
         if (m_ble_gap_scan_mode) {
             log(TAG, "onStartCommand pre call start_forground m_ble_gap_scan_mode "+m_ble_gap_scan_mode);
             start_foreground("Scanning GPS broadcasts...", "", "");
@@ -204,6 +209,7 @@ public class bluetooth_gnss_service extends Service implements rfcomm_conn_callb
     private ScanCallback leScanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
+            log(TAG, "onScanResult malik");
             if (result == null) {
                 log(TAG, "WARNING: onScanResult got null result");
                 return;
@@ -218,6 +224,20 @@ public class bluetooth_gnss_service extends Service implements rfcomm_conn_callb
             //ex: 02 01 1A 04 09 45 44 47 03 03 AA FE 12 16 AA FE 30 00 E1 6A 6D FD 03 10 9B 91 3C 38 50 32 28 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
             parse_scan_record_bytes_and_set_location(scan_record_bytes);
             m_last_BLE_GAP_DEV_NAME = result.getDevice().getName();
+        }
+
+        @Override
+        public void onBatchScanResults(List<ScanResult> results) {
+            System.out.println("BLE// onBatchScanResults");
+            for (ScanResult sr : results) {
+                Log.i("ScanResult - Results", sr.toString());
+            }
+        }
+
+        @Override
+        public void onScanFailed(int errorCode) {
+            System.out.println("BLE// onScanFailed");
+            Log.e("Scan Failed", "Error Code: " + errorCode);
         }
     };
 
@@ -299,6 +319,7 @@ public class bluetooth_gnss_service extends Service implements rfcomm_conn_callb
 
                             while (ble_gap_scan_thread == this) {
                                 log(TAG, "btLeScanner.startScan(leScanCallback); START");
+//                                log(TAG, btLeScanner.)
                                 btLeScanner.startScan(filters, settings, leScanCallback);
                                 log(TAG, "btLeScanner.startScan(leScanCallback); DONE");
                                 Thread.sleep(BLE_GAP_SCAN_LOOP_DURAITON_MILLIS);
@@ -368,9 +389,12 @@ public class bluetooth_gnss_service extends Service implements rfcomm_conn_callb
     public boolean is_bt_connected()
     {
         if (m_ble_gap_scan_mode) {
+            Log.d(TAG, "malik:m_ble_gap_scan_mode:" + m_ble_gap_scan_mode);
             if (System.currentTimeMillis() - m_last_BLE_GAP_SCAN_MODE_SETMOCK_ts < BLE_GAP_SCAN_MODE_SETMOCK_INTERVAL*3) {
+                Log.d(TAG, "malik:m_ble_gap_scan_mode:true-" + m_ble_gap_scan_mode);
                 return true;
             }
+            Log.d(TAG, "malik:m_ble_gap_scan_mode:false-" + m_ble_gap_scan_mode);
             return false;
         }
         if (g_rfcomm_mgr != null && g_rfcomm_mgr.is_bt_connected()) {
@@ -426,6 +450,8 @@ public class bluetooth_gnss_service extends Service implements rfcomm_conn_callb
                         while (m_auto_reconnect_thread == this && m_auto_reconnect) {
 
                             //connect() must be run from main service thread in case it needs to post
+                            Log.d(TAG, "malik1: is_bt_connected:" + is_bt_connected() + " -- is_trying_bt_connect:" + is_trying_bt_connect());
+//                            Log.d(TAG, " g_rfcomm_mgr.is_bt_connected():" +  g_rfcomm_mgr.is_bt_connected());
                             if (!is_bt_connected() && !is_trying_bt_connect()) {
                                 log(TAG, "auto-reconnect thread - has target dev and not connected - try reconnect...");
                                 m_handler.post(new Runnable() {
@@ -467,6 +493,7 @@ public class bluetooth_gnss_service extends Service implements rfcomm_conn_callb
 
         try {
 
+            Log.d(TAG, "malik: connect()-bdaddr:" + bdaddr + "-secure:" +secure );
 
             if (is_trying_bt_connect()) {
                 toast("connection already starting - please wait...");
@@ -975,7 +1002,7 @@ public class bluetooth_gnss_service extends Service implements rfcomm_conn_callb
 
         Intent notificationIntent = new Intent(this.getApplicationContext(), m_target_activity_class);
         PendingIntent pendingIntent =
-                PendingIntent.getActivity(this.getApplicationContext(), 0, notificationIntent, 0);
+                PendingIntent.getActivity(this.getApplicationContext(), 0, notificationIntent, PendingIntent.FLAG_MUTABLE);
 
 
         NotificationManager mNotificationManager =
@@ -1225,6 +1252,16 @@ public class bluetooth_gnss_service extends Service implements rfcomm_conn_callb
     {
         //TODO - later set per detected device or adjustable by user in settings
         return DEFAULT_CEP;
+    }
+
+    @Override
+    public void onListen(Object args) {
+
+    }
+
+    @Override
+    public void onCancel(Object args) {
+
     }
 
     @Override

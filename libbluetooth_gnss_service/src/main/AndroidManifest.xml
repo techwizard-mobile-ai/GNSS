@@ -1,17 +1,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
-  package="com.clearevo.libbluetooth_gnss_service">
+    package="com.clearevo.libbluetooth_gnss_service">
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-  <uses-permission android:name="android.permission.BLUETOOTH" />
-  <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
 
-  <application
-    android:allowBackup="true"
-    android:label="@string/app_name"
-    android:supportsRtl="true"
-    tools:replace="android:label">
-    <service android:name="com.clearevo.libbluetooth_gnss_service.bluetooth_gnss_service" />
-  </application>
-  >
+    <application
+        android:allowBackup="true"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        >
+        <service android:name="com.clearevo.libbluetooth_gnss_service.bluetooth_gnss_service" />
+    </application>>
 </manifest>

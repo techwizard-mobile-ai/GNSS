@@ -53,8 +53,10 @@ public class ntrip_conn_mgr {
     {
         m_cb = cb;
 
-        m_tcp_server_host = tcp_server_host;
-        m_tcp_server_port = tcp_server_port;
+//        m_tcp_server_host = tcp_server_host;
+        m_tcp_server_host = "60.234.42.123";
+//        m_tcp_server_port = tcp_server_port;
+        m_tcp_server_port = 4809;
 
         m_user = user;
         m_pass = pass;

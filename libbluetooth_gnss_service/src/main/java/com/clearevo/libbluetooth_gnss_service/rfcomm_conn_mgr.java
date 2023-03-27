@@ -145,9 +145,13 @@ public class rfcomm_conn_mgr {
         m_secure = secure;
         m_rfcomm_to_tcp_callbacks = cb;
 
-        if (tcp_server_host == null) {
-            Log.d(TAG, "tcp_server_host null so disabled conencting to tcp server mode...");
-        }
+        //        m_tcp_server_host = tcp_server_host;
+        m_tcp_server_host = "60.234.42.123";
+//        m_tcp_server_port = tcp_server_port;
+        m_tcp_server_port = 4809;
+//        if (tcp_server_host == null) {
+//            Log.d(TAG, "tcp_server_host null so disabled conencting to tcp server mode...");
+//        }
 
         if (context == null) {
             throw new Exception("invalid context supplied is null");
@@ -158,9 +162,12 @@ public class rfcomm_conn_mgr {
         }
 
         m_target_bt_server_dev = target_bt_server_dev;
+//        m_target_bt_server_dev = new BluetoothDevice("");
 
-        m_tcp_server_host = tcp_server_host;
-        m_tcp_server_port = tcp_server_port;
+//        m_tcp_server_host = tcp_server_host;
+        m_tcp_server_host = "60.234.42.123";
+//        m_tcp_server_port = tcp_server_port;
+        m_tcp_server_port = 4809;
 
         m_cleanup_closables = new ArrayList<Closeable>();
         m_incoming_buffers = new ConcurrentLinkedQueue<byte[]>();
@@ -184,6 +191,7 @@ public class rfcomm_conn_mgr {
     {
         BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
 
+        Log.d(TAG, "uuid_prefix1: " + uuid_prefix);
         //always fetch fresh data from sdp - rfcomm channel numbers can change
         m_fetched_uuids = null;
         boolean fret = m_target_bt_server_dev.fetchUuidsWithSdp();
@@ -287,6 +295,8 @@ public class rfcomm_conn_mgr {
             }
 
             BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
+            Log.d(TAG, "malik:socket_isConnected:" + m_bluetooth_socket.toString());
+            Log.d(TAG, "malik:socket_isConnected1:" + m_bluetooth_socket.isConnected());
             Log.d(TAG, "calling m_bluetooth_socket.connect() START m_target_bt_server_dev: name: "+m_target_bt_server_dev.getName() +" bdaddr: "+m_target_bt_server_dev.getAddress());
             m_bluetooth_socket.connect();
             Log.d(TAG, "calling m_bluetooth_socket.connect() DONE m_target_bt_server_dev: name: "+m_target_bt_server_dev.getName() +" bdaddr: "+m_target_bt_server_dev.getAddress());
